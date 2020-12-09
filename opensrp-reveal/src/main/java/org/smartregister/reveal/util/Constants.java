@@ -69,6 +69,11 @@ public interface Constants {
 
     String READ_ONLY = "READ_ONLY";
 
+    String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
+    String MDA_TASK_COUNT = "mda_task_count";
+    String MDA_ADHERENCE_COMPLETE_COUNT = "mda_adherence_complete_count";
+    String MDA_DRUG_RECON_COMPLETE_COUNT = "mda_drug_recon_complete_count";
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";

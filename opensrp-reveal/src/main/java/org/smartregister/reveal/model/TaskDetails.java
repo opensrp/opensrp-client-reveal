@@ -5,6 +5,8 @@ import android.location.Location;
 import androidx.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
+import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.Utils;
 
 import java.io.Serializable;
@@ -31,6 +33,10 @@ import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_DRUG_RECON;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.MDA_ADHERENCE_COMPLETE_COUNT;
+import static org.smartregister.reveal.util.Constants.MDA_DISPENSE_TASK_COUNT;
+import static org.smartregister.reveal.util.Constants.MDA_DRUG_RECON_COMPLETE_COUNT;
+import static org.smartregister.reveal.util.Constants.MDA_TASK_COUNT;
 
 /**
  * Created by samuelgithengi on 3/20/19.
@@ -82,6 +88,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
     private boolean familyNoTaskRegistered;
 
     private int mdaTasksCount;
+
+    private boolean eligibleNonCompleted;
 
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
@@ -231,6 +239,14 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         this.notEligible = notEligible;
     }
 
+    public boolean isEligibleNonCompleted() {
+        return eligibleNonCompleted;
+    }
+
+    public void setEligibleNonCompleted(boolean eligibleNonCompleted) {
+        this.eligibleNonCompleted = eligibleNonCompleted;
+    }
+
     public void setGroupedTaskCodeStatus(String groupedTaskCodeStatusString) {
         setFamilyRegistered(false);
         setBednetDistributed(false);
@@ -240,13 +256,19 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
             return;
         }
         String[] groupedTaskCodeStatusArray = groupedTaskCodeStatusString.split(COMMA);
-        String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
 
         Map<String, Integer> mdaStatusMap = new HashMap<>();
         mdaStatusMap.put(SMC_COMPLETE, 0);
         mdaStatusMap.put(NOT_DISPENSED, 0);
         mdaStatusMap.put(INELIGIBLE, 0);
         mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, 0);
+        mdaStatusMap.put(MDA_TASK_COUNT, 0);
+        mdaStatusMap.put(MDA_ADHERENCE, 0);
+        mdaStatusMap.put(MDA_DRUG_RECON, 0);
+        mdaStatusMap.put(MDA_ADHERENCE_COMPLETE_COUNT, 0);
+        mdaStatusMap.put(MDA_DRUG_RECON_COMPLETE_COUNT, 0);
+        mdaStatusMap.put(MDA_ADHERENCE_COMPLETE_COUNT, 0);
+        mdaStatusMap.put(MDA_DRUG_RECON_COMPLETE_COUNT, 0);
 
         boolean bloodScreeningExists = false;
         boolean caseConfirmed = false;
@@ -275,12 +297,23 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
                     caseConfirmed = COMPLETE.equals(taskCodeStatusArray[1]);
                     break;
                 case MDA_ADHERENCE:
+                    mdaStatusMap.put(MDA_TASK_COUNT, mdaStatusMap.get(MDA_TASK_COUNT) + 1);
+                    mdaStatusMap.put(MDA_ADHERENCE, mdaStatusMap.get(MDA_ADHERENCE) + 1);
+                    if (SPAQ_COMPLETE.equals(taskCodeStatusArray[1])) {
+                        mdaStatusMap.put(MDA_ADHERENCE_COMPLETE_COUNT, mdaStatusMap.get(MDA_ADHERENCE_COMPLETE_COUNT) + 1);
+                    }
                     this.mdaAdhered = TASKS_INCOMPLETE.equals(taskCodeStatusArray[1]) || COMPLETE.equals(taskCodeStatusArray[1]);
                     break;
                 case MDA_DRUG_RECON:
+                    mdaStatusMap.put(MDA_TASK_COUNT, mdaStatusMap.get(MDA_TASK_COUNT) + 1);
+                    mdaStatusMap.put(MDA_DRUG_RECON, mdaStatusMap.get(MDA_DRUG_RECON) + 1);
+                    if (COMPLETE.equals(taskCodeStatusArray[1])) {
+                        mdaStatusMap.put(MDA_DRUG_RECON_COMPLETE_COUNT, mdaStatusMap.get(MDA_DRUG_RECON_COMPLETE_COUNT) + 1);
+                    }
                     this.mdaAdhered = COMPLETE.equals(taskCodeStatusArray[1]);
                     break;
                 case MDA_DISPENSE:
+                    mdaStatusMap.put(MDA_TASK_COUNT, mdaStatusMap.get(MDA_TASK_COUNT) + 1);
                     mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) + 1);
                     switch (taskCodeStatusArray[1]) {
                         case SMC_COMPLETE:
@@ -302,14 +335,54 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
             setBloodScreeningDone(true);
         }
 
-        setFullyReceived(mdaStatusMap.get(SMC_COMPLETE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
-        setNoneReceived(mdaStatusMap.get(NOT_DISPENSED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
-        setNotEligible(mdaStatusMap.get(INELIGIBLE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
-        setPartiallyReceived(!isFullyReceived() && (mdaStatusMap.get(SMC_COMPLETE) > 0));
+        //setFullyReceived(mdaStatusMap.get(SMC_COMPLETE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+        //setNoneReceived(mdaStatusMap.get(NOT_DISPENSED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+        //setNotEligible(mdaStatusMap.get(INELIGIBLE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+        //setPartiallyReceived(!isFullyReceived() && (mdaStatusMap.get(SMC_COMPLETE) > 0));
         setMdaTasksCount(mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+        setCompositeBusinessStatus(mdaStatusMap);
 
 
         setAggregateBusinessStatus(calculateAggregateBusinessStatus());
+    }
+
+    private void setCompositeBusinessStatus(Map<String, Integer> mdaStatusMap) {
+        int completeMdaTasks = mdaStatusMap.get(SMC_COMPLETE)
+                + mdaStatusMap.get(MDA_ADHERENCE_COMPLETE_COUNT)
+                + mdaStatusMap.get(MDA_DRUG_RECON_COMPLETE_COUNT);
+        // in complete tasks
+        boolean hasCompletedDispence = mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)
+                == (mdaStatusMap.get(SMC_COMPLETE) + mdaStatusMap.get(NOT_DISPENSED) + mdaStatusMap.get(INELIGIBLE));
+
+        boolean hasCompletedAdherence = mdaStatusMap.get(MDA_ADHERENCE_COMPLETE_COUNT) == mdaStatusMap.get(MDA_ADHERENCE);
+
+        boolean hasCompletedDrugRecon = mdaStatusMap.get(MDA_DRUG_RECON_COMPLETE_COUNT) == mdaStatusMap.get(MDA_DRUG_RECON);
+
+        boolean hasNonCompletedTasks = !(hasCompletedDispence && hasCompletedAdherence && hasCompletedDrugRecon);
+
+        //no child treated
+        boolean inEligibleNotDispensed = (mdaStatusMap.get(INELIGIBLE) + mdaStatusMap.get(NOT_DISPENSED)) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT);
+
+        // no complete task
+        boolean hasNoCompletedMDATask = (mdaStatusMap.get(MDA_TASK_COUNT) > 0)
+                && (mdaStatusMap.get(MDA_ADHERENCE_COMPLETE_COUNT) == 0)
+                && (mdaStatusMap.get(MDA_DRUG_RECON_COMPLETE_COUNT) == 0)
+                && ((mdaStatusMap.get(SMC_COMPLETE) + mdaStatusMap.get(NOT_DISPENSED) + mdaStatusMap.get(INELIGIBLE)) ==0);
+
+        if (completeMdaTasks == mdaStatusMap.get(MDA_TASK_COUNT)){
+            setFullyReceived(true);
+        } else if (mdaStatusMap.get(INELIGIBLE) == mdaStatusMap.get(MDA_TASK_COUNT)) {
+            setNotEligible(true);
+        } else if (hasNonCompletedTasks
+                && ((mdaStatusMap.get(NOT_DISPENSED) > 0) || (mdaStatusMap.get(INELIGIBLE) > 0) || (mdaStatusMap.get(SMC_COMPLETE) > 0))
+                && ((mdaStatusMap.get(NOT_DISPENSED) != mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)) )) { // not the only diepense task
+            setPartiallyReceived(true);
+        } else if (hasNoCompletedMDATask) {
+            setEligibleNonCompleted(true);
+        } else {
+            setNoneReceived(true);
+        }
+
     }
 
     /**
@@ -329,7 +402,7 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
                 return BLOOD_SCREENING_COMPLETE;
             }
         } else if (Utils.isMDA()) {
-            if (isFamilyRegisteredOrNoTaskExists() && isMdaAdhered()) {
+            if (isFamilyRegisteredOrNoTaskExists() && isMdaAdhered() && BuildConfig.BUILD_COUNTRY != Country.NIGERIA) {
                 return COMPLETE;
             } else if (isFamilyRegisteredOrNoTaskExists() && isFullyReceived()) {
                 return SPAQ_COMPLETE;
@@ -337,6 +410,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
                 return PARTIALLY_RECEIVED;
             } else if (isFamilyRegisteredOrNoTaskExists() && isNoneReceived()) {
                 return NOT_DISPENSED;
+            } else if (isFamilyRegisteredOrNoTaskExists() && isEligibleNonCompleted()) {
+                return FAMILY_REGISTERED;
             } else if (isFamilyRegisteredOrNoTaskExists()) {
                 return FAMILY_REGISTERED;
             }
