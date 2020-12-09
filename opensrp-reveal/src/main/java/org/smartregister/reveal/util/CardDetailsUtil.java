@@ -56,9 +56,6 @@ public class CardDetailsUtil {
                 break;
             case BusinessStatus.NOT_SPRAYED:
             case BusinessStatus.NOT_DISPENSED:
-            case BusinessStatus.NO_SPAQ_SICK:
-            case BusinessStatus.NO_SPAQ_ALLERGY_SAE:
-            case BusinessStatus.NO_SPAQ_REFUSED:
             case BusinessStatus.IN_PROGRESS:
                 cardDetails.setStatusColor(R.color.unsprayed);
                 cardDetails.setStatusMessage(R.string.details_not_sprayed);

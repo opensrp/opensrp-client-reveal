@@ -68,10 +68,7 @@
             "Not Sprayed",
             "Incomplete",
             "In Progress",
-            "Not Dispensed",
-            "No SPAQ - SICK",
-            "No SPAQ - ALLERGY/SAE",
-            "No SPAQ - REFUSED"
+            "Not Dispensed"
           ],
           "hsl(3, 71%, 54%)",
           [
@@ -181,17 +178,13 @@
             "Not Sprayed",
             "Incomplete",
             "In Progress",
-            "Not Dispensed",
-            "No SPAQ - SICK",
-            "No SPAQ - ALLERGY/SAE",
-            "No SPAQ - REFUSED"
+            "Not Dispensed"
           ],
           "hsl(3, 71%, 54%)",
           [
             "Sprayed",
             "Complete",
             "Fully Received",
-            "Drug Recon Complete",
             "All Tasks Complete"
           ],
           "hsl(89, 52%, 48%)",

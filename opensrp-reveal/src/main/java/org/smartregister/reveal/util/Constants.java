@@ -273,14 +273,10 @@ public interface Constants {
         //MDA status
         String SMC_COMPLETE = "SMC Complete";
         String SPAQ_COMPLETE = "SPAQ Complete";
-        String SPAQ_NO_ADDITIONAL_DOSE = "SPAQ No Additional Dose";
         String INELIGIBLE = "Ineligible";
         String TASKS_INCOMPLETE = "Tasks Incomplete";
         String NOT_DISPENSED = "Not Dispensed";
         String FAMILY_NO_TASK_REGISTERED = "Family No Task Registered";
-        String NO_SPAQ_SICK = "No SPAQ - SICK";
-        String NO_SPAQ_ALLERGY_SAE = "No SPAQ - ALLERGY/SAE";
-        String NO_SPAQ_REFUSED = "No SPAQ - REFUSED";
         String PARTIALLY_RECEIVED= "Partially Received";
 
         // Following are for grouped structure tasks. Not synced to server
