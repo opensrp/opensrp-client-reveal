@@ -267,8 +267,6 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         mdaStatusMap.put(MDA_DRUG_RECON, 0);
         mdaStatusMap.put(MDA_ADHERENCE_COMPLETE_COUNT, 0);
         mdaStatusMap.put(MDA_DRUG_RECON_COMPLETE_COUNT, 0);
-        mdaStatusMap.put(MDA_ADHERENCE_COMPLETE_COUNT, 0);
-        mdaStatusMap.put(MDA_DRUG_RECON_COMPLETE_COUNT, 0);
 
         boolean bloodScreeningExists = false;
         boolean caseConfirmed = false;
@@ -340,7 +338,9 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         //setNotEligible(mdaStatusMap.get(INELIGIBLE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
         //setPartiallyReceived(!isFullyReceived() && (mdaStatusMap.get(SMC_COMPLETE) > 0));
         setMdaTasksCount(mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
-        setCompositeBusinessStatus(mdaStatusMap);
+        if (BuildConfig.BUILD_COUNTRY == Country.NIGERIA) {
+            setCompositeBusinessStatus(mdaStatusMap);
+        }
 
 
         setAggregateBusinessStatus(calculateAggregateBusinessStatus());
