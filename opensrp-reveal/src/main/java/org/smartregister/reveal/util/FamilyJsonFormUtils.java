@@ -163,7 +163,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 form.put(CURRENT_OPENSRP_ID, Utils.getValue(client.getColumnmaps(), UNIQUE_ID, false));
 
                 //inject opensrp id into the form
-                String[] stepNames = new String[]{STEP1, STEP2};
+                String[] stepNames = new String[]{STEP1};
 
                 for(String stepName : stepNames) {
                     JSONObject stepTwo = form.getJSONObject(stepName);
