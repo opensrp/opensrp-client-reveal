@@ -254,9 +254,15 @@ public class GeoJsonUtils {
     }
 
     private static void setCompositeBusinessStatus(Map<String, Integer> mdaStatusMap, StateWrapper state) {
-        int completeMdaTasks = mdaStatusMap.get(SMC_COMPLETE)
+        boolean singleStatusCompleteMdaTasks = (mdaStatusMap.get(SMC_COMPLETE)
                 + mdaStatusMap.get(MDA_ADHERENCE_COMPLETE_COUNT)
-                + mdaStatusMap.get(MDA_DRUG_RECON_COMPLETE_COUNT);
+                + mdaStatusMap.get(MDA_DRUG_RECON_COMPLETE_COUNT))
+                == mdaStatusMap.get(MDA_TASK_COUNT);
+        boolean multiStatusCompleteMdaTasks = (mdaStatusMap.get(SMC_COMPLETE)
+                + mdaStatusMap.get(INELIGIBLE)
+                + mdaStatusMap.get(MDA_ADHERENCE_COMPLETE_COUNT)
+                + mdaStatusMap.get(MDA_DRUG_RECON_COMPLETE_COUNT))
+                == mdaStatusMap.get(MDA_TASK_COUNT) ;
         // in complete tasks
         boolean hasCompletedDispence = mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)
                 == (mdaStatusMap.get(SMC_COMPLETE) + mdaStatusMap.get(NOT_DISPENSED) + mdaStatusMap.get(INELIGIBLE));
@@ -267,22 +273,31 @@ public class GeoJsonUtils {
 
         boolean hasNonCompletedTasks = !(hasCompletedDispence && hasCompletedAdherence && hasCompletedDrugRecon);
 
-        //no child treated
-        boolean inEligibleNotDispensed = (mdaStatusMap.get(INELIGIBLE) + mdaStatusMap.get(NOT_DISPENSED)) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT);
-
         // no complete task
         boolean hasNoCompletedMDATask = (mdaStatusMap.get(MDA_TASK_COUNT) > 0)
                 && (mdaStatusMap.get(MDA_ADHERENCE_COMPLETE_COUNT) == 0)
                 && (mdaStatusMap.get(MDA_DRUG_RECON_COMPLETE_COUNT) == 0)
                 && ((mdaStatusMap.get(SMC_COMPLETE) + mdaStatusMap.get(NOT_DISPENSED) + mdaStatusMap.get(INELIGIBLE)) ==0);
 
-        if (completeMdaTasks == mdaStatusMap.get(MDA_TASK_COUNT)){
+        // multi status households
+        boolean hasSMCComplete = mdaStatusMap.get(SMC_COMPLETE) > 0;
+        boolean hasNotDispensed = mdaStatusMap.get(NOT_DISPENSED) > 0;
+        boolean hasInEligible = mdaStatusMap.get(INELIGIBLE) > 0;
+        boolean hasNotDispensedAndInEligibleOnly = hasNotDispensed && hasInEligible && (mdaStatusMap.get(INELIGIBLE) + mdaStatusMap.get(NOT_DISPENSED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+        boolean hasNotDispensedAndSMCCompleteOnly = hasNotDispensed && hasSMCComplete && (mdaStatusMap.get(SMC_COMPLETE) + mdaStatusMap.get(NOT_DISPENSED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+        boolean hasNotDispensedAndSMCCompleteAndInEligible = hasNotDispensed && hasSMCComplete && hasInEligible && (mdaStatusMap.get(SMC_COMPLETE) + mdaStatusMap.get(NOT_DISPENSED) + mdaStatusMap.get(INELIGIBLE)  == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+
+        if (hasNotDispensedAndInEligibleOnly
+                || hasNotDispensedAndSMCCompleteOnly
+                || hasNotDispensedAndSMCCompleteAndInEligible) {
+            state.nonReceived = true;
+        } else if (singleStatusCompleteMdaTasks || multiStatusCompleteMdaTasks){
             state.fullyReceived = true;
-        } else if (mdaStatusMap.get(INELIGIBLE) == mdaStatusMap.get(MDA_TASK_COUNT)) {
+        } else if (mdaStatusMap.get(INELIGIBLE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)) {
             state.nonEligible = true;
         } else if (hasNonCompletedTasks
                 && ((mdaStatusMap.get(NOT_DISPENSED) > 0) || (mdaStatusMap.get(INELIGIBLE) > 0) || (mdaStatusMap.get(SMC_COMPLETE) > 0))
-                && ((mdaStatusMap.get(NOT_DISPENSED) != mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)) )) { // not the only diepense task
+                && ((mdaStatusMap.get(NOT_DISPENSED) != mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)) )) { // not the only dispense task
             state.partiallyReceived = true;
         } else if (hasNoCompletedMDATask) {
             state.eligibleNonCompleted = true;
