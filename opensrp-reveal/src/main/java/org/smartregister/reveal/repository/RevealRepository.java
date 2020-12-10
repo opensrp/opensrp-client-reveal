@@ -125,12 +125,15 @@ public class RevealRepository extends Repository {
                     break;
                 case 9:
                     upgradeToVersion9(db);
-
+                    break;
                 case 10:
                     upgradeToVersion10(db);
                     break;
                 case 11:
                     upgradeToVersion11(db);
+                    break;
+                case 12:
+                    upgradeToVersion12(db);
                     break;
                 default:
                     break;
@@ -277,6 +280,10 @@ public class RevealRepository extends Repository {
         db.delete(SPRAYED_STRUCTURES, null, null);
 
         clientProcessEvents(Arrays.asList(SPRAY_EVENT, REGISTER_STRUCTURE_EVENT));
+    }
+
+    private void upgradeToVersion12(SQLiteDatabase db) {
+        TaskRepository.updatePriorityToEnumAndAddRestrictions(db);
     }
 
     private void clientProcessEvents(List<String> eventTypes) {
