@@ -266,7 +266,8 @@
             "text": "Age unknown?",
             "text_size": "18px",
             "value": "false"
-          }        ],
+          }
+        ],
         "relevance": {
           "step1:dob_unknown": {
             "type": "string",

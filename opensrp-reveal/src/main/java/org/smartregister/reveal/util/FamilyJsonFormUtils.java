@@ -43,6 +43,7 @@ import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.STREET;
 import static org.smartregister.family.util.DBConstants.KEY.UNIQUE_ID;
 import static org.smartregister.family.util.DBConstants.KEY.VILLAGE_TOWN;
+import static org.smartregister.reveal.util.Constants.JsonForm.AGE_UNKNOWN;
 import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM.NIGERIA_FAMILY_HEAD_REGISTER;
 
 /**
@@ -275,6 +276,9 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 jsonObject.put(VALUE, isFamilyHead);
                 break;
 
+            case AGE_UNKNOWN:
+                computeAgeUnknown(jsonObject, client);
+
             default:
                 String db_key = jsonDbMap.get(jsonObject.getString(KEY).toLowerCase());
                 if (StringUtils.isNotBlank(db_key)) {
@@ -305,6 +309,14 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         jsonObject.put(READ_ONLY, false);
         JSONObject optionsObject = jsonObject.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
         optionsObject.put(VALUE, Utils.getValue(client.getColumnmaps(), JSON_FORM_KEY.DOB_UNKNOWN, false));
+    }
+
+    private void computeAgeUnknown(JSONObject jsonObject, CommonPersonObjectClient client) throws JSONException {
+        jsonObject.put(READ_ONLY, false);
+        JSONObject optionsObject = jsonObject.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
+        if (client.getColumnmaps().get(AGE_UNKNOWN) != null) {
+            optionsObject.put(VALUE, true);
+        }
     }
 
     private void computeDOB(JSONObject jsonObject, CommonPersonObjectClient client) throws JSONException {
