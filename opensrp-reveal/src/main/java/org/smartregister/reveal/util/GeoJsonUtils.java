@@ -18,7 +18,9 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.BLOOD_SCREE
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_NO_TASK_REGISTERED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.FULLY_RECEIVED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INELIGIBLE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NONE_RECEIVED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_DISPENSED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
@@ -65,6 +67,9 @@ public class GeoJsonUtils {
             StringBuilder interventionList = new StringBuilder();
 
             Map<String, Integer> mdaStatusMap = new HashMap<>();
+            mdaStatusMap.put(FULLY_RECEIVED, 0);
+            mdaStatusMap.put(NONE_RECEIVED, 0);
+            mdaStatusMap.put(NOT_ELIGIBLE, 0);
             mdaStatusMap.put(SMC_COMPLETE, 0);
             mdaStatusMap.put(NOT_DISPENSED, 0);
             mdaStatusMap.put(INELIGIBLE, 0);
@@ -82,10 +87,6 @@ public class GeoJsonUtils {
                 calculateState(task, state, mdaStatusMap);
 
                 taskProperties = new HashMap<>();
-                //temporary fix to errorneous business status in Nigeria
-//                if (task.getBusinessStatus().equals("0")) {
-//                    task.setBusinessStatus(FAMILY_NO_TASK_REGISTERED);
-//                }
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
                 if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA && PARTIALLY_SPRAYED.equals(task.getBusinessStatus())) { // Set here for non residential structures
                     taskProperties.put(TASK_BUSINESS_STATUS, SPRAYED);
@@ -144,6 +145,7 @@ public class GeoJsonUtils {
                     state.caseConfirmed = COMPLETE.equals(task.getBusinessStatus());
                     break;
                 case MDA_ADHERENCE:
+                    state.mdaAdhered = COMPLETE.equals(task.getBusinessStatus()) || NOT_ELIGIBLE.equals(task.getBusinessStatus());
                     mdaStatusMap.put(MDA_TASK_COUNT, mdaStatusMap.get(MDA_TASK_COUNT) + 1);
                     mdaStatusMap.put(MDA_ADHERENCE, mdaStatusMap.get(MDA_ADHERENCE) + 1);
                     if (SPAQ_COMPLETE.equals(task.getBusinessStatus())) {
@@ -170,20 +172,19 @@ public class GeoJsonUtils {
 
     private static void populateMDAStatus(Task task, Map<String, Integer> mdaStatusMap) {
         mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) + 1);
+        if (Utils.isCountryBuild(Country.NIGERIA)) {
+            populateSMCDispenceStatus(task, mdaStatusMap);
+            return;
+        }
         switch (task.getBusinessStatus()) {
-            case SMC_COMPLETE:
-            //case COMPLETE:
-            //case SPAQ_COMPLETE:
-                mdaStatusMap.put(SMC_COMPLETE, mdaStatusMap.get(SMC_COMPLETE) + 1);
+            case FULLY_RECEIVED:
+                mdaStatusMap.put(FULLY_RECEIVED, mdaStatusMap.get(FULLY_RECEIVED) + 1);
                 break;
-            case NOT_DISPENSED:
-                mdaStatusMap.put(NOT_DISPENSED, mdaStatusMap.get(NOT_DISPENSED) + 1);
+            case NONE_RECEIVED:
+                mdaStatusMap.put(NONE_RECEIVED, mdaStatusMap.get(NONE_RECEIVED) + 1);
                 break;
-            case INELIGIBLE:
-                mdaStatusMap.put(INELIGIBLE, mdaStatusMap.get(INELIGIBLE) + 1);
-                break;
-            case NOT_VISITED:
-                mdaStatusMap.put(NOT_VISITED, mdaStatusMap.get(NOT_VISITED) + 1);
+            case NOT_ELIGIBLE:
+                mdaStatusMap.put(NOT_ELIGIBLE, mdaStatusMap.get(NOT_ELIGIBLE) + 1);
                 break;
         }
     }
@@ -196,6 +197,7 @@ public class GeoJsonUtils {
             boolean familyRegTaskMissingOrFamilyRegComplete = state.familyRegistered || !state.familyRegTaskExists;
 
             if (Utils.isFocusInvestigation()) {
+
                 if (familyRegTaskMissingOrFamilyRegComplete &&
                         state.bednetDistributed && state.bloodScreeningDone) {
                     taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
@@ -214,16 +216,12 @@ public class GeoJsonUtils {
 
             } else if (Utils.isMDA()) {
 
-                int taskCount = mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT);
 
-
-                if (BuildConfig.BUILD_COUNTRY != Country.NIGERIA) {
-                    state.fullyReceived = mdaStatusMap.get(SMC_COMPLETE) == taskCount;
-                    //state.allMdaTasksVisited = mdaStatusMap.get(NOT_VISITED) == 0;
-                    state.nonReceived = mdaStatusMap.get(NOT_DISPENSED) == taskCount;
-                    state.nonEligible = mdaStatusMap.get(INELIGIBLE) == taskCount;
-                    state.partiallyReceived = (!state.fullyReceived && (mdaStatusMap.get(SMC_COMPLETE) > 0));
-                    state.fullyReceived = mdaStatusMap.get(SMC_COMPLETE) == taskCount;
+                if (!Utils.isCountryBuild(Country.NIGERIA)) {
+                    state.fullyReceived = (mdaStatusMap.get(FULLY_RECEIVED).equals(mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)));
+                    state.nonReceived = (mdaStatusMap.get(NONE_RECEIVED).equals(mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)));
+                    state.nonEligible = (mdaStatusMap.get(NOT_ELIGIBLE).equals(mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)));
+                    state.partiallyReceived = (!state.fullyReceived && (mdaStatusMap.get(FULLY_RECEIVED) > 0));
                 } else {
                     setCompositeBusinessStatus(mdaStatusMap, state);
                 }
@@ -231,7 +229,7 @@ public class GeoJsonUtils {
                 if (familyRegTaskMissingOrFamilyRegComplete) {
                     if (mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) == 0) {
                         taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_NO_TASK_REGISTERED);
-                    } else if (state.fullyReceived /*|| (taskCount > 0 && state.allMdaTasksVisited)*/) {
+                    } else if (state.fullyReceived) {
                         taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
                     } else if (state.partiallyReceived) {
                         taskProperties.put(TASK_BUSINESS_STATUS, PARTIALLY_RECEIVED);
@@ -250,6 +248,39 @@ public class GeoJsonUtils {
 
             }
 
+        }
+    }
+
+    private static class StateWrapper {
+        private boolean familyRegistered = false;
+        private boolean bednetDistributed = false;
+        private boolean bloodScreeningDone = false;
+        private boolean familyRegTaskExists = false;
+        private boolean caseConfirmed = false;
+        private boolean mdaAdhered = false;
+        private boolean fullyReceived;
+        private boolean nonReceived;
+        private boolean nonEligible;
+        private boolean partiallyReceived;
+        private boolean bloodScreeningExists = false;
+        private boolean ineligibleForFamReg = false;
+        private boolean eligibleNonCompleted;
+    }
+
+    private static void populateSMCDispenceStatus(Task task, Map<String, Integer> mdaStatusMap) {
+        switch (task.getBusinessStatus()) {
+            case SMC_COMPLETE:
+                mdaStatusMap.put(SMC_COMPLETE, mdaStatusMap.get(SMC_COMPLETE) + 1);
+                break;
+            case NOT_DISPENSED:
+                mdaStatusMap.put(NOT_DISPENSED, mdaStatusMap.get(NOT_DISPENSED) + 1);
+                break;
+            case INELIGIBLE:
+                mdaStatusMap.put(INELIGIBLE, mdaStatusMap.get(INELIGIBLE) + 1);
+                break;
+            case NOT_VISITED:
+                mdaStatusMap.put(NOT_VISITED, mdaStatusMap.get(NOT_VISITED) + 1);
+                break;
         }
     }
 
@@ -305,21 +336,5 @@ public class GeoJsonUtils {
             state.nonReceived = true;
         }
 
-    }
-
-    private static class StateWrapper {
-        private boolean familyRegistered = false;
-        private boolean bednetDistributed = false;
-        private boolean bloodScreeningDone = false;
-        private boolean familyRegTaskExists = false;
-        private boolean caseConfirmed = false;
-        private boolean allMdaTasksVisited = false;
-        private boolean fullyReceived;
-        private boolean nonReceived;
-        private boolean nonEligible;
-        private boolean partiallyReceived;
-        private boolean bloodScreeningExists = false;
-        private boolean ineligibleForFamReg = false;
-        private boolean eligibleNonCompleted;
     }
 }

@@ -5,7 +5,6 @@ import android.location.Location;
 import androidx.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.Utils;
 
