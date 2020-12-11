@@ -17,7 +17,6 @@ import org.smartregister.family.util.Constants.JSON_FORM_KEY;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 import org.smartregister.location.helper.LocationHelper;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.FormKeys;
@@ -43,8 +42,9 @@ import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.STREET;
 import static org.smartregister.family.util.DBConstants.KEY.UNIQUE_ID;
 import static org.smartregister.family.util.DBConstants.KEY.VILLAGE_TOWN;
-import static org.smartregister.reveal.util.Constants.JsonForm.AGE_UNKNOWN;
-import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM.NIGERIA_FAMILY_HEAD_REGISTER;
+import static org.smartregister.reveal.util.FamilyConstants.FormKeys.AGE_UNKNOWN;
+import static org.smartregister.reveal.util.FamilyConstants.FormKeys.CHILD_STAY_PERM;
+import static org.smartregister.reveal.util.FamilyConstants.FormKeys.DOb_UNKOWN_NOTE;
 
 /**
  * Created by samuelgithengi on 5/24/19.
@@ -197,11 +197,6 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         try {
 
             // get the event and the client from ec model
-
-            if (Country.NIGERIA == BuildConfig.BUILD_COUNTRY && isFamilyHead) {
-                formName = NIGERIA_FAMILY_HEAD_REGISTER;
-            }
-
             JSONObject form = formUtils.getFormJson(formName);
             if (form != null) {
                 form.put(ENTITY_ID, client.getCaseId());
@@ -277,7 +272,16 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 break;
 
             case AGE_UNKNOWN:
-                computeAgeUnknown(jsonObject, client);
+                computeAgeUnknown(jsonObject, client, isFamilyHead);
+                break;
+
+            case CHILD_STAY_PERM:
+            case DOb_UNKOWN_NOTE:
+                if (isFamilyHead) {
+                    jsonObject.put("type", "hidden");
+                }
+                break;
+
 
             default:
                 String db_key = jsonDbMap.get(jsonObject.getString(KEY).toLowerCase());
@@ -311,7 +315,11 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         optionsObject.put(VALUE, Utils.getValue(client.getColumnmaps(), JSON_FORM_KEY.DOB_UNKNOWN, false));
     }
 
-    private void computeAgeUnknown(JSONObject jsonObject, CommonPersonObjectClient client) throws JSONException {
+    private void computeAgeUnknown(JSONObject jsonObject, CommonPersonObjectClient client, boolean isFamilyHead) throws JSONException {
+        if (isFamilyHead){
+            jsonObject.put("type", "hidden");
+            return;
+        }
         jsonObject.put(READ_ONLY, false);
         JSONObject optionsObject = jsonObject.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
         if (client.getColumnmaps().get(AGE_UNKNOWN) != null) {

@@ -212,7 +212,7 @@
         ]
       },
       {
-        "key": "dobUnknownNote",
+        "key": "dob_unknown_note",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -384,7 +384,7 @@
         }
       },
       {
-        "key": "childStayPerm",
+        "key": "child_stay_perm",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",

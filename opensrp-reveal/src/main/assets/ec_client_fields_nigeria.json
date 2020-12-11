@@ -352,11 +352,11 @@
           }
         },
         {
-          "column_name": "childStayPerm",
+          "column_name": "child_stay_perm",
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "childStayPerm"
+            "concept": "child_stay_perm"
           }
         },
         {

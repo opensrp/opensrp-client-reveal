@@ -46,7 +46,6 @@ public interface FamilyConstants {
         String NIGERIA_FAMILY_REGISTER = "nigeria_family_register";
         String NIGERIA_FAMILY_UPDATE = "nigeria_family_update";
         String NIGERIA_FAMILY_MEMBER_REGISTER = "nigeria_family_member_register";
-        String NIGERIA_FAMILY_HEAD_REGISTER = "nigeria_family_head_register";
     }
 
     interface RELATIONSHIP {
@@ -85,6 +84,9 @@ public interface FamilyConstants {
         String SAME_AS_FAM_FIRST_NAME = "first_name_as_fam_name";
         String SURNAME = "surname";
         String FIRST_NAME = "first_name";
+        String AGE_UNKNOWN = "age_unknown";
+        String CHILD_STAY_PERM = "child_stay_perm";
+        String DOb_UNKOWN_NOTE= "dob_unknown_note";
     }
 
 
