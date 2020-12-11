@@ -435,4 +435,8 @@ public class Utils {
         return multiPolygonCoords;
     }
 
+    public static boolean isCountryBuild(Country country){
+        return BuildConfig.BUILD_COUNTRY == country;
+    }
+
 }

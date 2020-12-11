@@ -51,6 +51,10 @@ public interface Constants {
 
     String COMMA = ",";
 
+    String TILDE = "~";
+
+    String UNDERSCRORE = "_";
+
     int STORAGE_PERMISSIONS = 1;
 
     String NULL_KEY = "NULL";
@@ -271,6 +275,11 @@ public interface Constants {
         String IN_PROGRESS = "In Progress";
 
         //MDA status
+        String FULLY_RECEIVED = "Fully Received";
+        String NONE_RECEIVED = "None Received";
+        String ADHERENCE_VISIT_DONE = "Adherence Visit Done";
+
+        // Nigeria SMC workflow
         String SMC_COMPLETE = "SMC Complete";
         String SPAQ_COMPLETE = "SPAQ Complete";
         String INELIGIBLE = "Ineligible";
