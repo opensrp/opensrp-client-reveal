@@ -43,7 +43,7 @@ public abstract class BaseUnitTest {
     protected static final String DUMMY_USERNAME = "myusername";
     protected static final char[] DUMMY_PASSWORD = "mypassword".toCharArray();
 
-    protected final int ASYNC_TIMEOUT = 3000;
+    protected final int ASYNC_TIMEOUT = 5000;
 
     protected static Gson taskGson = new GsonBuilder().registerTypeAdapter(DateTime.class, new DateTimeTypeConverter("yyyy-MM-dd'T'HHmm"))
             .serializeNulls().create();
