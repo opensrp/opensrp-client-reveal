@@ -387,4 +387,5 @@
     <string name="daily_summary_evening">Enter HF-level Drug Evening Form</string>
     <string name="not_dispensed">Not Dispensed</string>
     <string name="drug_recon_complete">Drug Recon Complete</string>
+    <string name="family_information">Family Information</string>
 </resources>

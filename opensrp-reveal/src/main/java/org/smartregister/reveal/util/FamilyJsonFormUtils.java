@@ -1,8 +1,9 @@
 package org.smartregister.reveal.util;
 
 import android.content.Context;
-import androidx.annotation.StringRes;
 import android.util.Log;
+
+import androidx.annotation.StringRes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -10,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
-import org.smartregister.domain.Location;
 import org.smartregister.domain.Obs;
 import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.family.util.Constants.JSON_FORM_KEY;
@@ -31,10 +31,8 @@ import java.util.UUID;
 import timber.log.Timber;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.CHECK_BOX;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.READ_ONLY;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.HIDDEN;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.AllConstants.OPTIONS;
 import static org.smartregister.AllConstants.TEXT;
 import static org.smartregister.family.util.DBConstants.KEY.DOB;
@@ -45,6 +43,9 @@ import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.STREET;
 import static org.smartregister.family.util.DBConstants.KEY.UNIQUE_ID;
 import static org.smartregister.family.util.DBConstants.KEY.VILLAGE_TOWN;
+import static org.smartregister.reveal.util.FamilyConstants.FormKeys.AGE_UNKNOWN;
+import static org.smartregister.reveal.util.FamilyConstants.FormKeys.CHILD_STAY_PERM;
+import static org.smartregister.reveal.util.FamilyConstants.FormKeys.DOb_UNKOWN_NOTE;
 
 /**
  * Created by samuelgithengi on 5/24/19.
@@ -197,7 +198,6 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         try {
 
             // get the event and the client from ec model
-
             JSONObject form = formUtils.getFormJson(formName);
             if (form != null) {
                 form.put(ENTITY_ID, client.getCaseId());
@@ -272,6 +272,18 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 jsonObject.put(VALUE, isFamilyHead);
                 break;
 
+            case AGE_UNKNOWN:
+                computeAgeUnknown(jsonObject, client, isFamilyHead);
+                break;
+
+            case CHILD_STAY_PERM:
+            case DOb_UNKOWN_NOTE:
+                if (isFamilyHead) {
+                    jsonObject.put(TYPE, HIDDEN);
+                }
+                break;
+
+
             default:
                 String db_key = jsonDbMap.get(jsonObject.getString(KEY).toLowerCase());
                 if (StringUtils.isNotBlank(db_key)) {
@@ -302,6 +314,18 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         jsonObject.put(READ_ONLY, false);
         JSONObject optionsObject = jsonObject.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
         optionsObject.put(VALUE, Utils.getValue(client.getColumnmaps(), JSON_FORM_KEY.DOB_UNKNOWN, false));
+    }
+
+    private void computeAgeUnknown(JSONObject jsonObject, CommonPersonObjectClient client, boolean isFamilyHead) throws JSONException {
+        if (isFamilyHead){
+            jsonObject.put(TYPE, HIDDEN);
+            return;
+        }
+        jsonObject.put(READ_ONLY, false);
+        JSONObject optionsObject = jsonObject.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
+        if (client.getColumnmaps().get(AGE_UNKNOWN) != null) {
+            optionsObject.put(VALUE, true);
+        }
     }
 
     private void computeDOB(JSONObject jsonObject, CommonPersonObjectClient client) throws JSONException {

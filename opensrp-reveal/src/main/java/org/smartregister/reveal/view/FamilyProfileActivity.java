@@ -15,6 +15,7 @@ import org.smartregister.family.activity.BaseFamilyProfileActivity;
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.family.util.Utils;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.fragment.FamilyProfileMemberFragment;
@@ -22,6 +23,7 @@ import org.smartregister.reveal.fragment.StructureTasksFragment;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.presenter.FamilyProfilePresenter;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Country;
 
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
@@ -119,6 +121,9 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
         inflater.inflate(R.menu.profile_menu, menu);
 
         menu.findItem(R.id.archive_family).setVisible(false);
+        if (BuildConfig.BUILD_COUNTRY == Country.NIGERIA) {
+            menu.findItem(R.id.edit_family).setTitle(getString(R.string.family_information));
+        }
 
         return true;
     }

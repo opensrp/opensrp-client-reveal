@@ -212,7 +212,7 @@
         ]
       },
       {
-        "key": "dobUnknownNote",
+        "key": "dob_unknown_note",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -266,7 +266,8 @@
             "text": "Age unknown?",
             "text_size": "18px",
             "value": "false"
-          }        ],
+          }
+        ],
         "relevance": {
           "step1:dob_unknown": {
             "type": "string",
@@ -383,9 +384,9 @@
         }
       },
       {
-        "key": "childStayPerm",
+        "key": "child_stay_perm",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
+        "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
         "label": "Does this child live here permanently?",

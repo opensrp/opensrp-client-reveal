@@ -454,7 +454,6 @@ public interface Constants {
         String DISTRICT_NAME = "districtName";
         String PROVINCE_NAME = "provinceName";
 
-
         /**
          * Non-Task Related Forms
          */
