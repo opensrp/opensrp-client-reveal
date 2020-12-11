@@ -31,6 +31,7 @@ import java.util.UUID;
 import timber.log.Timber;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.CHECK_BOX;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.HIDDEN;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
 import static org.smartregister.AllConstants.OPTIONS;
 import static org.smartregister.AllConstants.TEXT;
@@ -278,7 +279,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
             case CHILD_STAY_PERM:
             case DOb_UNKOWN_NOTE:
                 if (isFamilyHead) {
-                    jsonObject.put("type", "hidden");
+                    jsonObject.put(TYPE, HIDDEN);
                 }
                 break;
 
@@ -317,7 +318,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
     private void computeAgeUnknown(JSONObject jsonObject, CommonPersonObjectClient client, boolean isFamilyHead) throws JSONException {
         if (isFamilyHead){
-            jsonObject.put("type", "hidden");
+            jsonObject.put(TYPE, HIDDEN);
             return;
         }
         jsonObject.put(READ_ONLY, false);
