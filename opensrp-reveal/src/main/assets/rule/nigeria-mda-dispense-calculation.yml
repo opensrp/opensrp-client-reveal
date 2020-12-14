@@ -4,5 +4,5 @@ description: Business status calculation
 priority: 1
 condition: "true"
 actions:
-  - "calculation = ('1'.equals(step1_currently_present) && 'Yes'.equals(step1_administeredSpaq)) ? 'SMC Complete' : ('1'.equals(step1_currently_present)  &&  'No'.equals(step1_administeredSpaq)) ? 'Not Dispensed' :  ('0'.equals(step1_currently_present) && '0'.equals(step1_child_present_days)) ? 'Ineligible' : 'Not Dispensed'"
+  - "calculation = ('1'.equals(step1_currently_present) && 'Yes'.equals(step1_administeredSpaq)) ? 'SMC Complete' : ('1'.equals(step1_currently_present)  &&  (('No'.equals(step1_administeredSpaq)) || ( ( '1'.equals(step1_very_sick) || '1'.equals(step1_allergic_severe)) && 'No-Other'.equals(step1_administeredSpaq))) ) ? 'Not Dispensed' :  ( ('1'.equals(step1_currently_present) && !('Yes'.equals(step1_administeredSpaq)) &&  '1'.equals(step1_present) ) ||  ('0'.equals(step1_currently_present) && '0'.equals(step1_child_present_days)) ) ? 'Ineligible' : 'Not Dispensed'"
 

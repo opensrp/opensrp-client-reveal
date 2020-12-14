@@ -51,6 +51,10 @@ public interface Constants {
 
     String COMMA = ",";
 
+    String TILDE = "~";
+
+    String UNDERSCRORE = "_";
+
     int STORAGE_PERMISSIONS = 1;
 
     String NULL_KEY = "NULL";
@@ -68,6 +72,11 @@ public interface Constants {
     int NOT_ADMINISTERED_SPAQ = 0;
 
     String READ_ONLY = "READ_ONLY";
+
+    String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
+    String MDA_TASK_COUNT = "mda_task_count";
+    String MDA_ADHERENCE_COMPLETE_COUNT = "mda_adherence_complete_count";
+    String MDA_DRUG_RECON_COMPLETE_COUNT = "mda_drug_recon_complete_count";
 
     interface CONFIGURATION {
         String LOGIN = "login";
@@ -266,16 +275,18 @@ public interface Constants {
         String IN_PROGRESS = "In Progress";
 
         //MDA status
+        String FULLY_RECEIVED = "Fully Received";
+        String NONE_RECEIVED = "None Received";
+        String ADHERENCE_VISIT_DONE = "Adherence Visit Done";
+
+        // Nigeria SMC workflow
         String SMC_COMPLETE = "SMC Complete";
         String SPAQ_COMPLETE = "SPAQ Complete";
-        String SPAQ_NO_ADDITIONAL_DOSE = "SPAQ No Additional Dose";
         String INELIGIBLE = "Ineligible";
         String TASKS_INCOMPLETE = "Tasks Incomplete";
         String NOT_DISPENSED = "Not Dispensed";
         String FAMILY_NO_TASK_REGISTERED = "Family No Task Registered";
-        String NO_SPAQ_SICK = "No SPAQ - SICK";
-        String NO_SPAQ_ALLERGY_SAE = "No SPAQ - ALLERGY/SAE";
-        String NO_SPAQ_REFUSED = "No SPAQ - REFUSED";
+        String PARTIALLY_RECEIVED= "Partially Received";
 
         // Following are for grouped structure tasks. Not synced to server
         String FAMILY_REGISTERED = "Family Registered";

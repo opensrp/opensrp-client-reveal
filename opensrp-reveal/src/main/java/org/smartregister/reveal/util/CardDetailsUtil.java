@@ -30,6 +30,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBL
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_RECEIVED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.TASKS_INCOMPLETE;
@@ -55,9 +56,6 @@ public class CardDetailsUtil {
                 break;
             case BusinessStatus.NOT_SPRAYED:
             case BusinessStatus.NOT_DISPENSED:
-            case BusinessStatus.NO_SPAQ_SICK:
-            case BusinessStatus.NO_SPAQ_ALLERGY_SAE:
-            case BusinessStatus.NO_SPAQ_REFUSED:
             case BusinessStatus.IN_PROGRESS:
                 cardDetails.setStatusColor(R.color.unsprayed);
                 cardDetails.setStatusMessage(R.string.details_not_sprayed);
@@ -77,6 +75,7 @@ public class CardDetailsUtil {
                 break;
             case BusinessStatus.INCOMPLETE:
             case BusinessStatus.TASKS_INCOMPLETE:
+            case PARTIALLY_RECEIVED:
                 cardDetails.setStatusColor(R.color.partially_sprayed);
                 break;
             case PARTIALLY_SPRAYED:

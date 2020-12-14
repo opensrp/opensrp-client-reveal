@@ -10,10 +10,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
@@ -96,7 +98,8 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         // registered family with multiple tasks
         else if (cardDetails != null && task.getTaskCount() != null) { // task grouping only for FI
             if (task.getTaskCount() > 1) {
-                if (task.getTaskCount() != task.getCompleteTaskCount()) {
+                if (task.getTaskCount() != task.getCompleteTaskCount()
+                        || (BuildConfig.BUILD_COUNTRY == Country.NIGERIA && task.isNoneReceived())) {
 
 
                     Pair<Drawable, String> actionViewPair = getActionDrawable(task);
@@ -180,7 +183,7 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
                 actionBg = context.getResources().getDrawable(R.drawable.no_task_complete_bg);
             }
         } else if (Utils.isMDA()) {
-            if (familyRegTaskMissingOrFamilyRegComplete && task.isMdaAdhered()) {
+            if (familyRegTaskMissingOrFamilyRegComplete && task.isMdaAdhered() && BuildConfig.BUILD_COUNTRY != Country.NIGERIA) {
                 actionBg = context.getResources().getDrawable(R.drawable.mda_adhered_bg);
                 actionText = context.getText(R.string.tasks_complete).toString();
             } else if (familyRegTaskMissingOrFamilyRegComplete && task.isFullyReceived()) {

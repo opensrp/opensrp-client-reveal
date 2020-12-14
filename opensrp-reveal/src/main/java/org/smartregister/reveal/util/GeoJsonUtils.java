@@ -18,10 +18,13 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.BLOOD_SCREE
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_NO_TASK_REGISTERED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.FULLY_RECEIVED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INELIGIBLE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NONE_RECEIVED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_DISPENSED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_RECEIVED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SMC_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPAQ_COMPLETE;
@@ -34,6 +37,9 @@ import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_DRUG_RECON;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.MDA_ADHERENCE_COMPLETE_COUNT;
+import static org.smartregister.reveal.util.Constants.MDA_DRUG_RECON_COMPLETE_COUNT;
+import static org.smartregister.reveal.util.Constants.MDA_TASK_COUNT;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
@@ -61,11 +67,19 @@ public class GeoJsonUtils {
             StringBuilder interventionList = new StringBuilder();
 
             Map<String, Integer> mdaStatusMap = new HashMap<>();
+            mdaStatusMap.put(FULLY_RECEIVED, 0);
+            mdaStatusMap.put(NONE_RECEIVED, 0);
+            mdaStatusMap.put(NOT_ELIGIBLE, 0);
             mdaStatusMap.put(SMC_COMPLETE, 0);
             mdaStatusMap.put(NOT_DISPENSED, 0);
             mdaStatusMap.put(INELIGIBLE, 0);
             mdaStatusMap.put(NOT_VISITED, 0);
             mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, 0);
+            mdaStatusMap.put(MDA_TASK_COUNT, 0);
+            mdaStatusMap.put(MDA_ADHERENCE, 0);
+            mdaStatusMap.put(MDA_DRUG_RECON, 0);
+            mdaStatusMap.put(MDA_ADHERENCE_COMPLETE_COUNT, 0);
+            mdaStatusMap.put(MDA_DRUG_RECON_COMPLETE_COUNT, 0);
             StateWrapper state = new StateWrapper();
             if (taskSet == null)
                 continue;
@@ -73,10 +87,6 @@ public class GeoJsonUtils {
                 calculateState(task, state, mdaStatusMap);
 
                 taskProperties = new HashMap<>();
-                //temporary fix to errorneous business status in Nigeria
-//                if (task.getBusinessStatus().equals("0")) {
-//                    task.setBusinessStatus(FAMILY_NO_TASK_REGISTERED);
-//                }
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
                 if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA && PARTIALLY_SPRAYED.equals(task.getBusinessStatus())) { // Set here for non residential structures
                     taskProperties.put(TASK_BUSINESS_STATUS, SPRAYED);
@@ -135,8 +145,22 @@ public class GeoJsonUtils {
                     state.caseConfirmed = COMPLETE.equals(task.getBusinessStatus());
                     break;
                 case MDA_ADHERENCE:
+                    state.mdaAdhered = COMPLETE.equals(task.getBusinessStatus()) || NOT_ELIGIBLE.equals(task.getBusinessStatus());
+                    mdaStatusMap.put(MDA_TASK_COUNT, mdaStatusMap.get(MDA_TASK_COUNT) + 1);
+                    mdaStatusMap.put(MDA_ADHERENCE, mdaStatusMap.get(MDA_ADHERENCE) + 1);
+                    if (SPAQ_COMPLETE.equals(task.getBusinessStatus())) {
+                        mdaStatusMap.put(MDA_ADHERENCE_COMPLETE_COUNT, mdaStatusMap.get(MDA_ADHERENCE_COMPLETE_COUNT) + 1);
+                    }
+                    break;
                 case MDA_DRUG_RECON:
+                    mdaStatusMap.put(MDA_TASK_COUNT, mdaStatusMap.get(MDA_TASK_COUNT) + 1);
+                    mdaStatusMap.put(MDA_DRUG_RECON, mdaStatusMap.get(MDA_DRUG_RECON) + 1);
+                    if (COMPLETE.equals(task.getBusinessStatus())) {
+                        mdaStatusMap.put(MDA_DRUG_RECON_COMPLETE_COUNT, mdaStatusMap.get(MDA_DRUG_RECON_COMPLETE_COUNT) + 1);
+                    }
+                    break;
                 case MDA_DISPENSE:
+                    mdaStatusMap.put(MDA_TASK_COUNT, mdaStatusMap.get(MDA_TASK_COUNT) + 1);
                     populateMDAStatus(task, mdaStatusMap);
                     break;
                 default:
@@ -148,20 +172,19 @@ public class GeoJsonUtils {
 
     private static void populateMDAStatus(Task task, Map<String, Integer> mdaStatusMap) {
         mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) + 1);
+        if (Utils.isCountryBuild(Country.NIGERIA)) {
+            populateSMCDispenceStatus(task, mdaStatusMap);
+            return;
+        }
         switch (task.getBusinessStatus()) {
-            case SMC_COMPLETE:
-            case COMPLETE:
-            case SPAQ_COMPLETE:
-                mdaStatusMap.put(SMC_COMPLETE, mdaStatusMap.get(SMC_COMPLETE) + 1);
+            case FULLY_RECEIVED:
+                mdaStatusMap.put(FULLY_RECEIVED, mdaStatusMap.get(FULLY_RECEIVED) + 1);
                 break;
-            case NOT_DISPENSED:
-                mdaStatusMap.put(NOT_DISPENSED, mdaStatusMap.get(NOT_DISPENSED) + 1);
+            case NONE_RECEIVED:
+                mdaStatusMap.put(NONE_RECEIVED, mdaStatusMap.get(NONE_RECEIVED) + 1);
                 break;
-            case INELIGIBLE:
-                mdaStatusMap.put(INELIGIBLE, mdaStatusMap.get(INELIGIBLE) + 1);
-                break;
-            case NOT_VISITED:
-                mdaStatusMap.put(NOT_VISITED, mdaStatusMap.get(NOT_VISITED) + 1);
+            case NOT_ELIGIBLE:
+                mdaStatusMap.put(NOT_ELIGIBLE, mdaStatusMap.get(NOT_ELIGIBLE) + 1);
                 break;
         }
     }
@@ -174,6 +197,7 @@ public class GeoJsonUtils {
             boolean familyRegTaskMissingOrFamilyRegComplete = state.familyRegistered || !state.familyRegTaskExists;
 
             if (Utils.isFocusInvestigation()) {
+
                 if (familyRegTaskMissingOrFamilyRegComplete &&
                         state.bednetDistributed && state.bloodScreeningDone) {
                     taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
@@ -192,21 +216,23 @@ public class GeoJsonUtils {
 
             } else if (Utils.isMDA()) {
 
-                int taskCount = mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT);
-                state.fullyReceived = mdaStatusMap.get(SMC_COMPLETE) == taskCount;
-                state.allMdaTasksVisited = mdaStatusMap.get(NOT_VISITED) == 0;
-                state.nonReceived = mdaStatusMap.get(NOT_DISPENSED) == taskCount;
-                state.nonEligible = mdaStatusMap.get(INELIGIBLE) == taskCount;
-                state.partiallyReceived = (!state.fullyReceived && (mdaStatusMap.get(SMC_COMPLETE) > 0));
-                state.fullyReceived = mdaStatusMap.get(SMC_COMPLETE) == taskCount;
+
+                if (!Utils.isCountryBuild(Country.NIGERIA)) {
+                    state.fullyReceived = (mdaStatusMap.get(FULLY_RECEIVED).equals(mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)));
+                    state.nonReceived = (mdaStatusMap.get(NONE_RECEIVED).equals(mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)));
+                    state.nonEligible = (mdaStatusMap.get(NOT_ELIGIBLE).equals(mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)));
+                    state.partiallyReceived = (!state.fullyReceived && (mdaStatusMap.get(FULLY_RECEIVED) > 0));
+                } else {
+                    setCompositeBusinessStatus(mdaStatusMap, state);
+                }
 
                 if (familyRegTaskMissingOrFamilyRegComplete) {
                     if (mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) == 0) {
                         taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_NO_TASK_REGISTERED);
-                    } else if (state.fullyReceived || (taskCount > 0 && state.allMdaTasksVisited)) {
+                    } else if (state.fullyReceived) {
                         taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
                     } else if (state.partiallyReceived) {
-                        taskProperties.put(TASK_BUSINESS_STATUS, SPAQ_COMPLETE);
+                        taskProperties.put(TASK_BUSINESS_STATUS, PARTIALLY_RECEIVED);
                     } else if (state.nonReceived) {
                         taskProperties.put(TASK_BUSINESS_STATUS, NOT_DISPENSED);
                     } else if (state.nonEligible) {
@@ -231,12 +257,84 @@ public class GeoJsonUtils {
         private boolean bloodScreeningDone = false;
         private boolean familyRegTaskExists = false;
         private boolean caseConfirmed = false;
-        private boolean allMdaTasksVisited = false;
+        private boolean mdaAdhered = false;
         private boolean fullyReceived;
         private boolean nonReceived;
         private boolean nonEligible;
         private boolean partiallyReceived;
         private boolean bloodScreeningExists = false;
         private boolean ineligibleForFamReg = false;
+        private boolean eligibleNonCompleted;
+    }
+
+    private static void populateSMCDispenceStatus(Task task, Map<String, Integer> mdaStatusMap) {
+        switch (task.getBusinessStatus()) {
+            case SMC_COMPLETE:
+                mdaStatusMap.put(SMC_COMPLETE, mdaStatusMap.get(SMC_COMPLETE) + 1);
+                break;
+            case NOT_DISPENSED:
+                mdaStatusMap.put(NOT_DISPENSED, mdaStatusMap.get(NOT_DISPENSED) + 1);
+                break;
+            case INELIGIBLE:
+                mdaStatusMap.put(INELIGIBLE, mdaStatusMap.get(INELIGIBLE) + 1);
+                break;
+            case NOT_VISITED:
+                mdaStatusMap.put(NOT_VISITED, mdaStatusMap.get(NOT_VISITED) + 1);
+                break;
+        }
+    }
+
+    private static void setCompositeBusinessStatus(Map<String, Integer> mdaStatusMap, StateWrapper state) {
+        boolean singleStatusCompleteMdaTasks = (mdaStatusMap.get(SMC_COMPLETE)
+                + mdaStatusMap.get(MDA_ADHERENCE_COMPLETE_COUNT)
+                + mdaStatusMap.get(MDA_DRUG_RECON_COMPLETE_COUNT))
+                == mdaStatusMap.get(MDA_TASK_COUNT);
+        boolean multiStatusCompleteMdaTasks = (mdaStatusMap.get(SMC_COMPLETE)
+                + mdaStatusMap.get(INELIGIBLE)
+                + mdaStatusMap.get(MDA_ADHERENCE_COMPLETE_COUNT)
+                + mdaStatusMap.get(MDA_DRUG_RECON_COMPLETE_COUNT))
+                == mdaStatusMap.get(MDA_TASK_COUNT) ;
+        // in complete tasks
+        boolean hasCompletedDispence = mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)
+                == (mdaStatusMap.get(SMC_COMPLETE) + mdaStatusMap.get(NOT_DISPENSED) + mdaStatusMap.get(INELIGIBLE));
+
+        boolean hasCompletedAdherence = (mdaStatusMap.get(MDA_ADHERENCE) > 0) && mdaStatusMap.get(MDA_ADHERENCE_COMPLETE_COUNT) == mdaStatusMap.get(MDA_ADHERENCE);
+
+        boolean hasCompletedDrugRecon =  (mdaStatusMap.get(MDA_DRUG_RECON) > 0) &&  (mdaStatusMap.get(MDA_DRUG_RECON_COMPLETE_COUNT) == mdaStatusMap.get(MDA_DRUG_RECON));
+
+        boolean hasNonCompletedTasks = !(hasCompletedDispence && hasCompletedAdherence && hasCompletedDrugRecon);
+
+        // no complete task
+        boolean hasNoCompletedMDATask = (mdaStatusMap.get(MDA_TASK_COUNT) > 0)
+                && (mdaStatusMap.get(MDA_ADHERENCE_COMPLETE_COUNT) == 0)
+                && (mdaStatusMap.get(MDA_DRUG_RECON_COMPLETE_COUNT) == 0)
+                && ((mdaStatusMap.get(SMC_COMPLETE) + mdaStatusMap.get(NOT_DISPENSED) + mdaStatusMap.get(INELIGIBLE)) ==0);
+
+        // multi status households
+        boolean hasSMCComplete = mdaStatusMap.get(SMC_COMPLETE) > 0;
+        boolean hasNotDispensed = mdaStatusMap.get(NOT_DISPENSED) > 0;
+        boolean hasInEligible = mdaStatusMap.get(INELIGIBLE) > 0;
+        boolean hasNotDispensedAndInEligibleOnly = hasNotDispensed && hasInEligible && (mdaStatusMap.get(INELIGIBLE) + mdaStatusMap.get(NOT_DISPENSED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+        boolean hasNotDispensedAndSMCCompleteOnly = hasNotDispensed && hasSMCComplete && (mdaStatusMap.get(SMC_COMPLETE) + mdaStatusMap.get(NOT_DISPENSED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+        boolean hasNotDispensedAndSMCCompleteAndInEligible = hasNotDispensed && hasSMCComplete && hasInEligible && (mdaStatusMap.get(SMC_COMPLETE) + mdaStatusMap.get(NOT_DISPENSED) + mdaStatusMap.get(INELIGIBLE)  == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+
+        if (hasNotDispensedAndInEligibleOnly
+                || hasNotDispensedAndSMCCompleteOnly
+                || hasNotDispensedAndSMCCompleteAndInEligible) {
+            state.nonReceived = true;
+        } else if (singleStatusCompleteMdaTasks || multiStatusCompleteMdaTasks){
+            state.fullyReceived = true;
+        } else if (mdaStatusMap.get(INELIGIBLE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)) {
+            state.nonEligible = true;
+        } else if (hasNonCompletedTasks
+                && ((mdaStatusMap.get(NOT_DISPENSED) > 0) || (mdaStatusMap.get(INELIGIBLE) > 0) || (mdaStatusMap.get(SMC_COMPLETE) > 0))
+                && ((mdaStatusMap.get(NOT_DISPENSED) != mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)) )) { // not the only dispense task
+            state.partiallyReceived = true;
+        } else if (hasNoCompletedMDATask) {
+            state.eligibleNonCompleted = true;
+        } else {
+            state.nonReceived = true;
+        }
+
     }
 }
