@@ -72,7 +72,6 @@ import timber.log.Timber;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.interactor.BaseInteractor.gson;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
-import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.VALID_OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
@@ -223,7 +222,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         com.mapbox.geojson.Feature selectedFeature = null;
 
         try {
-            operationalArea = new JSONObject(formFragment.getCurrentJsonState()).optString(OPERATIONAL_AREA_TAG);
+            operationalArea = RevealApplication.getInstance().getOperationalArea().toJson();
             featureCollection = RevealApplication.getInstance().getFeatureCollection().toJson();
             locationComponentActive = new JSONObject(formFragment.getCurrentJsonState()).optBoolean(LOCATION_COMPONENT_ACTIVE);
             if (StringUtils.isNotBlank(value)) {

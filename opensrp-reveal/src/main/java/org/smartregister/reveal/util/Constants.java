@@ -419,11 +419,6 @@ public interface Constants {
 
         String JSON_FORM_FOLDER = "json.form/";
 
-
-        String OPERATIONAL_AREA_TAG = "operational_area";
-
-        String STRUCTURES_TAG = "structures";
-
         String LOCATION_COMPONENT_ACTIVE = "my_location_active";
 
         String VALID_OPERATIONAL_AREA = "valid_operational_area";
