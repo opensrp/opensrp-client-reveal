@@ -52,7 +52,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 
 /**
  * Created by samuelgithengi on 3/13/19.
@@ -279,7 +278,7 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
         geoFencingValidator = new GeoFencingValidator("", mapView, operationalArea);
         JSONObject json = new JSONObject(AssetHandler.readFileFromAssetsFolder(JsonForm.ADD_STRUCTURE_FORM, context));
         Feature feature = Feature.fromJson(TestingUtils.operationalArea2Feature);
-        json.put(OPERATIONAL_AREA_TAG, feature.toJson());
+        RevealApplication.getInstance().setOperationalArea(feature);
         when(locationRepository.getLocationById(feature.id())).thenReturn(location);
         when(locationRepository.getAllLocations()).thenReturn(Collections.singletonList(location));
 
