@@ -119,6 +119,9 @@ public class RevealRepository extends Repository {
                 case 8:
                     upgradeToVersion8(db);
                     break;
+                case 9:
+                    upgradeToVersion9(db);
+                    break;
                 default:
                     break;
             }
@@ -225,6 +228,22 @@ public class RevealRepository extends Repository {
 
         if (!ManifestRepository.isVersionColumnExist(db)) {
             ManifestRepository.addVersionColumn(db);
+        }
+    }
+
+    private void upgradeToVersion9(SQLiteDatabase db) {
+        if (!isColumnExists(db, FAMILY_MEMBER, DatabaseKeys.CHILD_STAY_PERMANENTLY)) {
+            db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR", FAMILY_MEMBER, DatabaseKeys.CHILD_STAY_PERMANENTLY));
+            //client process family events after 5 seconds so that get calls to getDatabase return
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    EventClientRepository ecRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+                    List<EventClient> eventClientList = ecRepository.fetchEventClientsByEventTypes(
+                            Arrays.asList(EventType.FAMILY_MEMBER_REGISTRATION, EventType.UPDATE_FAMILY_MEMBER_REGISTRATION));
+                    RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext()).processClient(eventClientList);
+                }
+            }, 5000);
         }
     }
 

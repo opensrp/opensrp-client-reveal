@@ -323,10 +323,10 @@
           }
         },
         {
-          "column_name": "sleeps_outdoors",
+          "column_name": "child_stay_permanently",
           "type": "Event",
           "json_mapping": {
-            "field": "obs.fieldCode",
+            "field": "obs.child_stay_perm",
             "concept": "sleeps_outdoors"
           }
         },
