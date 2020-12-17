@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "ccd_supervisor_checklist",
+  "encounter_type": "hfw_supervisor_checklist",
   "form_version": "1.0.0",
   "entity_id": "",
   "metadata": {
@@ -48,7 +48,7 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "CDD Supervisor checklist",
+    "title": "HFW Supervisor checklist",
     "display_back_button": "true",
     "fields": [
       {
@@ -84,6 +84,21 @@
             "text": "4"
           }
         ]
+      },
+
+      {
+        "key": "label_1",
+        "type": "label",
+        "text": "HFW Knowledge and Skills:",
+        "has_bg": true,
+        "top_padding": "10dp",
+        "left_padding": "20dp",
+        "right_padding": "20dp",
+        "text_size": "10sp",
+        "text_color": "#000000",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
       },
       {
         "key": "preparedRequiredMaterials",
