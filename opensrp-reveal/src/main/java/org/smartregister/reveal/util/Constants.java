@@ -676,8 +676,6 @@ public interface Constants {
 
         String LOCATION_SYNC_STATUS = "sync_status";
 
-        String CHILD_STAY_PERMANENTLY = "child_stay_permanently";
-
     }
 
     interface UseContextCode {
