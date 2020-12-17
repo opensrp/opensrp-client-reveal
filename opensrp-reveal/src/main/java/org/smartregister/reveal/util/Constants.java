@@ -426,6 +426,10 @@ public interface Constants {
 
         String HFW_LEVEL_REFERRAL = "json.form/nigeria_hfw_level_referral.json";
 
+        String CDD_SUPERVISOR_CHECKLIST = "json.form/nigeria_cdd_supervisor_checklist.json";
+
+        String HFW_SUPERVISOR_CHECKLIST = "json.form/nigeria_hfw_supervisor_checklist.json";
+
         String JSON_FORM_FOLDER = "json.form/";
 
 

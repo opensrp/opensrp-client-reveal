@@ -51,12 +51,12 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "settlemen",
+        "key": "settlement",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "label": "Settlement"
+        "hint": "Settlement"
       },
       {
         "key": "dayOfCycle",
