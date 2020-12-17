@@ -44,7 +44,6 @@ import static org.smartregister.family.util.DBConstants.KEY.STREET;
 import static org.smartregister.family.util.DBConstants.KEY.UNIQUE_ID;
 import static org.smartregister.family.util.DBConstants.KEY.VILLAGE_TOWN;
 import static org.smartregister.reveal.util.FamilyConstants.FormKeys.AGE_UNKNOWN;
-import static org.smartregister.reveal.util.FamilyConstants.FormKeys.CHILD_STAY_PERM;
 import static org.smartregister.reveal.util.FamilyConstants.FormKeys.DOb_UNKOWN_NOTE;
 
 /**
@@ -167,7 +166,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 //inject opensrp id into the form
                 String[] stepNames = new String[]{STEP1};
 
-                for(String stepName : stepNames) {
+                for (String stepName : stepNames) {
                     JSONObject stepTwo = form.getJSONObject(stepName);
 
                     JSONArray jsonArray = stepTwo.getJSONArray(FIELDS);
@@ -190,7 +189,6 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
         return null;
     }
-
 
 
     public JSONObject getAutoPopulatedJsonEditMemberFormString(@StringRes int formTitle, String formName,
@@ -276,7 +274,6 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 computeAgeUnknown(jsonObject, client, isFamilyHead);
                 break;
 
-            case CHILD_STAY_PERM:
             case DOb_UNKOWN_NOTE:
                 if (isFamilyHead) {
                     jsonObject.put(TYPE, HIDDEN);
@@ -317,7 +314,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
     }
 
     private void computeAgeUnknown(JSONObject jsonObject, CommonPersonObjectClient client, boolean isFamilyHead) throws JSONException {
-        if (isFamilyHead){
+        if (isFamilyHead) {
             jsonObject.put(TYPE, HIDDEN);
             return;
         }
@@ -384,7 +381,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 JSONObject field = fields.getJSONObject(i);
 
                 // HEADS UP
-                if(readOnly) {
+                if (readOnly) {
                     field.put(READ_ONLY, true);
                 }
 
