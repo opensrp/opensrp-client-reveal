@@ -57,7 +57,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Settlement"
+        "hint": "Settlement",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "dayOfCycle",
@@ -83,7 +87,11 @@
             "key": "4",
             "text": "4"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "preparedRequiredMaterials",
@@ -101,7 +109,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "wearingUniform",
@@ -119,7 +131,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "giveCaregiverInfo",
@@ -137,7 +153,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "detAge",
@@ -155,7 +175,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "exclIneligibl",
@@ -173,7 +197,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "askCaregiverQuestionsForEligibility",
@@ -191,7 +219,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "excludeWithFeverOrSick",
@@ -209,7 +241,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "refersSickOrWithSideEffects",
@@ -227,7 +263,11 @@
           "Yes",
           "No",
           "N/A"
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "hygiene",
@@ -245,7 +285,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "dotObs",
@@ -263,7 +307,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "dotDose",
@@ -281,7 +329,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "observeIfVomits",
@@ -299,7 +351,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "redosesIfVomit",
@@ -317,7 +373,11 @@
           "Yes",
           "No",
           "N/A"
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "completesTallySheet",
@@ -335,7 +395,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "completesChildRecordCard",
@@ -353,7 +417,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "adherence",
@@ -371,7 +439,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "explainChildRecordAndSafeKeeping",
@@ -389,7 +461,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "explainWhenToTakeToFacility",
@@ -407,7 +483,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "usesJobAid",
@@ -425,7 +505,11 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "feedback",
@@ -433,7 +517,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Feedback communicated to the CDD Team"
+        "hint": "Feedback communicated to the CDD Team",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
       },
       {
         "key": "mentoringProvided",
