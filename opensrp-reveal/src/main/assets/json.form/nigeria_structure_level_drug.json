@@ -149,13 +149,52 @@
           }
         }
       },
+      {  "key": "additionalDosesAdministeredToaster",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": " Number of children that were REDOSED with SPAQ is {additionalDosesAdministered}",
+        "text_color": "#CF0800",
+        "toaster_type": "info",
+        "text_size": "8sp",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-structure-level-drug-calculation.yml"
+            }
+          }
+        }
+      },
       {
-        "key": "additionalDosesAdministered",
+        "key": "confirmAdditionalDosesAdministered",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Confirm  number of children that were REDOSED with SPAQ:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "additionalDosesAdministeredEdit",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Confirm number of children that were REDOSED with SPAQ:",
+        "hint": "Enter number of children that were REDOSED with SPAQ:",
         "text_size": "8sp",
         "v_numeric": {
           "value": "true",
@@ -164,6 +203,30 @@
         "v_min": {
           "value": "0",
           "err": "Number must be equal or greater than 0"
+        },
+        "relevance": {
+        "step1:confirmAdditionalDosesAdministered": {
+          "type": "string",
+          "ex": "equalTo(., \"No\")"
+        }
+      },
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "additionalDosesAdministered",
+        "type": "hidden",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-structure-level-drug-calculation.yml"
+            }
+          }
         }
       },
       {

@@ -12,3 +12,17 @@ priority: 1
 condition: "true"
 actions:
   - "calculation = step1_childrenTreatedEdit !='' ?  step1_childrenTreatedEdit : step1_totalAdministeredSpaq"
+---
+name: step1_additionalDosesAdministeredToaster
+description: step1_additionalDosesAdministeredToaster
+priority: 1
+condition: "true"
+actions:
+  - "calculation = ['additionalDosesAdministered' : step1_additionalDosesAdministered]"
+---
+name: step1_additionalDosesAdministered
+description: step1_additionalDosesAdministered
+priority: 1
+condition: "true"
+actions:
+  - "calculation = step1_additionalDosesAdministeredEdit !='' ?  step1_additionalDosesAdministeredEdit : step1_totalNumberOfAdditionalDoses"
