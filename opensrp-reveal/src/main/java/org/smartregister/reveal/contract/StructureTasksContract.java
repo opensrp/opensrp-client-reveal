@@ -58,7 +58,7 @@ public interface StructureTasksContract {
 
 //        void findCompletedAdherenceTasks(StructureTaskDetails taskDetails);
 
-        StructureTaskDetails findTotalSMCDosageCounts(StructureTaskDetails taskDetails, JSONObject formJSON);
+        void findTotalSMCDosageCounts(StructureTaskDetails taskDetails, JSONObject formJSON);
 
     }
 

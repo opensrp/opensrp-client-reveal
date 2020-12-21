@@ -166,7 +166,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     }
 
     @Override
-    public StructureTaskDetails findTotalSMCDosageCounts(StructureTaskDetails taskDetails, JSONObject formJSON) {
+    public void findTotalSMCDosageCounts(StructureTaskDetails taskDetails, JSONObject formJSON) {
 
         String totalAdministeredSpaqQuery = String.format("SELECT count(%s) FROM %s WHERE %s = ? AND %s = ?",
                 ADMINISTERED_SPAQ, FAMILY_MEMBER, STRUCTURE_ID, ADMINISTERED_SPAQ);
@@ -174,32 +174,35 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
         String totalNumberOfAdditionalDosesQuery = String.format("SELECT count(%s) FROM %s WHERE %s = ? AND %s = ?",
                 NUMBER_OF_ADDITIONAL_DOSES, FAMILY_MEMBER, STRUCTURE_ID, NUMBER_OF_ADDITIONAL_DOSES, 1);
 
-        Cursor cursor = null;
-        try {
-            cursor = database.rawQuery(totalAdministeredSpaqQuery, new String[]{taskDetails.getStructureId(), "Yes"});
-            if (cursor.moveToFirst()) {
-                int totalAdministeredSpaqCount = cursor.getInt(0);
-                taskDetails.setTotalAdministeredSpaq(totalAdministeredSpaqCount);
-            }
-            cursor.close();
-
-            cursor = database.rawQuery(totalNumberOfAdditionalDosesQuery, new String[]{taskDetails.getStructureId(), "1"});
-            if (cursor.moveToFirst()) {
-                int totalNumberOfAdditionalDoses = cursor.getInt(0);
-                taskDetails.setTotalAdministeredSpaq(totalNumberOfAdditionalDoses);
-            }
-            cursor.close();
-
-            presenter.onTotalSMCDosageCountsFound(taskDetails, formJSON);
-
-        } catch (SQLException e) {
-            Timber.e(e);
-        } finally {
-            if (cursor != null) {
+        appExecutors.diskIO().execute(() -> {
+            Cursor cursor = null;
+            try {
+                cursor = database.rawQuery(totalAdministeredSpaqQuery, new String[]{taskDetails.getStructureId(), "Yes"});
+                if (cursor.moveToFirst()) {
+                    int totalAdministeredSpaqCount = cursor.getInt(0);
+                    taskDetails.setTotalAdministeredSpaq(totalAdministeredSpaqCount);
+                }
                 cursor.close();
+
+                cursor = database.rawQuery(totalNumberOfAdditionalDosesQuery, new String[]{taskDetails.getStructureId(), "1"});
+                if (cursor.moveToFirst()) {
+                    int totalNumberOfAdditionalDoses = cursor.getInt(0);
+                    taskDetails.setTotalNumberOfAdditionalDoses(totalNumberOfAdditionalDoses);
+                }
+                cursor.close();
+
+                appExecutors.mainThread().execute(() -> {
+                    presenter.onTotalSMCDosageCountsFound(taskDetails, formJSON);
+                });
+
+            } catch (SQLException e) {
+                Timber.e(e);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
             }
-        }
-        return taskDetails;
+        });
     }
 
     private Event getLastEvent(StructureTaskDetails taskDetails) {
