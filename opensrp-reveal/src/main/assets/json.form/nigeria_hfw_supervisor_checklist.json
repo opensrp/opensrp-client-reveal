@@ -1,0 +1,642 @@
+{
+  "count": "1",
+  "encounter_type": "hfw_supervisor_checklist",
+  "form_version": "1.0.0",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "HFW Supervisor checklist",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "settlement",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Settlement",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "dayOfCycle",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Day of Cycle",
+        "options": [
+          {
+            "key": "1",
+            "text": "1"
+          },
+          {
+            "key": "2",
+            "text": "2"
+          },
+          {
+            "key": "3",
+            "text": "3"
+          },
+          {
+            "key": "4",
+            "text": "4"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "KnowledgeLabel",
+        "type": "label",
+        "text": "HFW Knowledge and Skills:",
+        "has_bg": true,
+        "top_padding": "10dp",
+        "left_padding": "20dp",
+        "right_padding": "20dp",
+        "text_size": "10sp",
+        "text_color": "#000000",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
+      },
+      {
+        "key": "completedSMCTraining",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "HFW has successfully completed SMC training",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "examinesChildReferred",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "HFW fully examines a child referred during SMC:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "knowledgeableOfADRs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "HFW is knowledgeable about management of ADRs to SPAQ:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "completesBottomReferralForm",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "HFW completes the bottom section of the SMC Referral Form correctly:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "pVFormAvailableAndKnowsHowToComplete",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "National PV Forms are available and HFWs knows how to complete:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "Deliverylabel",
+        "type": "label",
+        "text": "SPAQ Delivery at the Health Facility",
+        "has_bg": true,
+        "top_padding": "10dp",
+        "left_padding": "20dp",
+        "right_padding": "20dp",
+        "text_size": "10sp",
+        "text_color": "#000000",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
+      },
+      {
+        "key": "giveSPAQIfEligible",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "HFW gives the child SPAQ in the HF if the child is eligible for SMC:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "hygiene",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "HFW uses good hygiene to administer the correct age dose of SPAQ by directly observed therapy (DOT):",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "dotDose",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Disperses SPAQ tablets in a small amount of water and gives the full amount of medicine to the child to swallow fully:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "redosesIfVomit",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "HFW re-doses the child with one more dose of SPAQ if the child vomits within 30 minutes:",
+        "values": [
+          "Yes",
+          "No",
+          "N/A"
+        ],
+        "keys": [
+          "Yes",
+          "No",
+          "N/A"
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "completesChildRecordCard",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "HFW completes the information on the SMC Tally Sheet correctly:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "completesChildRecordCard",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "HFW completes all information on SMC Child Record Card correctly:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "adherence",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "HFW gives caregiver 2 tablets of AQ shows her how to give it at home, and explains the importance of adherence:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "explainChildRecordAndSafeKeeping",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "HFW explains to the caregiver how to complete the SMC Child Record Card and why to keep it in a safe place for all 4 cycles:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "stockLabel",
+        "type": "label",
+        "text": "SPAQ Stock Management and Drug Accountability:",
+        "has_bg": true,
+        "top_padding": "10dp",
+        "left_padding": "20dp",
+        "right_padding": "20dp",
+        "text_size": "10sp",
+        "text_color": "#000000",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
+      },
+      {
+        "key": "sufficientStockForSMCAndMalaria",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "combine_checkbox_option_values": "true",
+        "label": "HF has sufficient stock of SMC and malaria commodities:",
+        "options": [
+          {
+            "key": "3-11monthsSPAQ",
+            "text": "3-11 months SPAQ:"
+          },
+          {
+            "key": "12-59monthsSPAQ",
+            "text": "12-59 months SPAQ"
+          },
+          {
+            "key": "artemether/lumefantrine",
+            "text": "artemether/lumefantrine for all child ages"
+          },
+          {
+            "key": "RDTs",
+            "text": "RDTs"
+          },
+          {
+            "key": "None",
+            "text": "None"
+          }
+        ],
+        "exclusive": [
+          "None"
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "sufficientStockForDataCollection",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "combine_checkbox_option_values": "true",
+        "label": "HF has sufficient stock of SMC data collection tools:",
+        "options": [
+          {
+            "key": "InventoryControlCards",
+            "text": "Inventory Control Cards"
+          },
+          {
+            "key": "SMCTallySheets",
+            "text": "SMC Tally Sheets"
+          },
+          {
+            "key": "SMCChildRecordCards",
+            "text": "SMC Child Record Cards"
+          },
+          {
+            "key": "HFDailySummaryForms",
+            "text": "HF Daily Summary Forms"
+          },
+          {
+            "key": "SMCReferralForms",
+            "text": "SMC Referral Forms"
+          },
+          {
+            "key": "SMCEnd-of-CycleReports",
+            "text": "SMC End-of-Cycle Reports"
+          },
+          {
+            "key": "None",
+            "text": "None"
+          }
+        ],
+        "exclusive": [
+          "None"
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "drugAccountabilityAndFormReconciliation",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "combine_checkbox_option_values": "true",
+        "label": "HF completes SPAQ drug accountability and reconciliation forms accurately:",
+        "options": [
+          {
+            "key": "SMCTallySheets",
+            "text": "SMC Tally Sheets"
+          },
+          {
+            "key": "HFDailySummaryForm",
+            "text": "HF Daily Summary Forms"
+          },
+          {
+            "key": "SMCEnd-of-CycleReports",
+            "text": "SMC End-of-Cycle Reports"
+          },
+          {
+            "key": "None",
+            "text": "None"
+          }
+        ],
+        "exclusive": [
+          "None"
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "completesTallySheetAndRefarralForms",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "HFW reviews all the Tally Sheets and Referral Forms and completes the SMC End-of-Cycle Report at the end of each cycle:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ]
+      },
+      {
+        "key": "recordsForDrugStockAndForms",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "combine_checkbox_option_values": "true",
+        "label": "HF keeps accurate records of drug stock and Medical Store forms:",
+        "options": [
+          {
+            "key": "RIRVrRceiptVouchers",
+            "text": "RIRV receipt vouchers"
+          },
+          {
+            "key": "InventoryControlCards",
+            "text": "Inventory control cards"
+          },
+          {
+            "key": "None",
+            "text": "None"
+          }
+        ],
+        "exclusive": [
+          "None"
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "storedInCleanSafePlace",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "SPAQ and other malaria commodities are stored in a clean, secure and safe place and FEFO method is used:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "feedback",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Feedback communicated to the HFWs:",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "mentoringProvided",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Skills mentoring provided"
+      },
+      {
+        "key": "noted",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Notes for next supervision visit"
+      }
+    ]
+  }
+}

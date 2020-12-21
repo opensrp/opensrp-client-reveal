@@ -53,6 +53,10 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
 
     private Button btnHfwLevelReferral;
 
+    private Button btnCDDSupervisorChecklist;
+
+    private Button btnHFWSupervisorChecklist;
+
     public static SummaryFormsFragment newInstance(Bundle bundle) {
 
         SummaryFormsFragment fragment = new SummaryFormsFragment();
@@ -91,6 +95,8 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
         btnIrsFieldOfficer = view.findViewById(R.id.summary_irs_field_officer);
         btnVerificationForm = view.findViewById(R.id.summary_verification_form);
         btnHfwLevelReferral =  view.findViewById(R.id.hfw_level_referral);
+        btnCDDSupervisorChecklist=view.findViewById(R.id.cdd_supervisor_checklist);
+        btnHFWSupervisorChecklist=view.findViewById(R.id.hfw_supervisor_checklist);
         setClickListeners();
     }
 
@@ -104,6 +110,8 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
         btnVerificationForm.setOnClickListener(this);
         btnDailySummaryEvening.setOnClickListener(this);
         btnHfwLevelReferral.setOnClickListener(this);
+        btnCDDSupervisorChecklist.setOnClickListener(this);
+        btnHFWSupervisorChecklist.setOnClickListener(this);
     }
 
     @Override
@@ -185,6 +193,12 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
                 break;
             case R.id.hfw_level_referral:
                 presenter.showBasicForm(Constants.JsonForm.HFW_LEVEL_REFERRAL);
+                break;
+            case R.id.cdd_supervisor_checklist:
+                presenter.showBasicForm(Constants.JsonForm.CDD_SUPERVISOR_CHECKLIST);
+                break;
+            case R.id.hfw_supervisor_checklist:
+                presenter.showBasicForm(Constants.JsonForm.HFW_SUPERVISOR_CHECKLIST);
                 break;
             default:
                 break;
