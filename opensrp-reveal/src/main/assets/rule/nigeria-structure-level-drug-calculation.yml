@@ -1,0 +1,14 @@
+---
+name: step1_childrenTreatedToaster
+description: step1_childrenTreatedToaster
+priority: 1
+condition: "true"
+actions:
+  - "calculation = ['childrenTreated' : step1_childrenTreated]"
+---
+name: step1_childrenTreated
+description: step1_childrenTreated
+priority: 1
+condition: "true"
+actions:
+  - "calculation = step1_childrenTreatedEdit !='' ?  step1_childrenTreatedEdit : step1_totalAdministeredSpaq"

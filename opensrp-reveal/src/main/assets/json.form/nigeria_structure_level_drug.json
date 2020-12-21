@@ -69,12 +69,52 @@
         "openmrs_entity_id": ""
       },
       {
-        "key": "childrenTreated",
+        "key": "childrenTreatedToaster",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": " Number of children that received ORIGINAL SPAQ dose is {childrenTreated}",
+        "text_color": "#CF0800",
+        "toaster_type": "info",
+        "text_size": "8sp",
+        "calculation": {
+        "rules-engine": {
+          "ex-rules": {
+            "rules-file": "nigeria-structure-level-drug-calculation.yml"
+          }
+        }
+      }
+      },
+      {
+        "key": "confirmChildrenTreated",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Confirm number of children that received ORIGINAL SPAQ dose",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "childrenTreatedEdit",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Confirm number of children that received ORIGINAL SPAQ dose:",
+        "hint": "Enter number of children that received ORIGINAL SPAQ dose:",
         "text_size": "8sp",
         "v_numeric": {
           "value": "true",
@@ -83,6 +123,30 @@
         "v_min": {
           "value": "0",
           "err": "Number of children must be greater than or equal to 0!"
+        },
+        "relevance": {
+          "step1:confirmChildrenTreated": {
+            "type": "string",
+            "ex": "equalTo(., \"No\")"
+          }
+        },
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "childrenTreated",
+        "type": "hidden",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-structure-level-drug-calculation.yml"
+            }
+          }
         }
       },
       {
