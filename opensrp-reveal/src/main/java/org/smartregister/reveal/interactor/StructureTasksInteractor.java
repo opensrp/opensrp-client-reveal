@@ -1,10 +1,9 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import androidx.annotation.VisibleForTesting;
-
-import android.text.TextUtils;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.SQLException;
@@ -12,6 +11,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteStatement;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.DateUtil;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Event;
@@ -39,7 +39,6 @@ import java.util.List;
 
 import timber.log.Timber;
 
-import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.domain.Task.INACTIVE_TASK_STATUS;
 import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.family.util.DBConstants.KEY.DOB;
@@ -48,12 +47,14 @@ import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.MIDDLE_NAME;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SMC_COMPLETE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ADMINISTERED_SPAQ;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.NUMBER_OF_ADDITIONAL_DOSES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
@@ -162,6 +163,43 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
             }
         });
 
+    }
+
+    @Override
+    public StructureTaskDetails findTotalSMCDosageCounts(StructureTaskDetails taskDetails, JSONObject formJSON) {
+
+        String totalAdministeredSpaqQuery = String.format("SELECT count(%s) FROM %s WHERE %s = ? AND %s = ?",
+                ADMINISTERED_SPAQ, FAMILY_MEMBER, STRUCTURE_ID, ADMINISTERED_SPAQ);
+
+        String totalNumberOfAdditionalDosesQuery = String.format("SELECT count(%s) FROM %s WHERE %s = ? AND %s = ?",
+                NUMBER_OF_ADDITIONAL_DOSES, FAMILY_MEMBER, STRUCTURE_ID, NUMBER_OF_ADDITIONAL_DOSES, 1);
+
+        Cursor cursor = null;
+        try {
+            cursor = database.rawQuery(totalAdministeredSpaqQuery, new String[]{taskDetails.getStructureId(), "Yes"});
+            if (cursor.moveToFirst()) {
+                int totalAdministeredSpaqCount = cursor.getInt(0);
+                taskDetails.setTotalAdministeredSpaq(totalAdministeredSpaqCount);
+            }
+            cursor.close();
+
+            cursor = database.rawQuery(totalNumberOfAdditionalDosesQuery, new String[]{taskDetails.getStructureId(), "1"});
+            if (cursor.moveToFirst()) {
+                int totalNumberOfAdditionalDoses = cursor.getInt(0);
+                taskDetails.setTotalAdministeredSpaq(totalNumberOfAdditionalDoses);
+            }
+            cursor.close();
+
+            presenter.onTotalSMCDosageCountsFound(taskDetails, formJSON);
+
+        } catch (SQLException e) {
+            Timber.e(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return taskDetails;
     }
 
     private Event getLastEvent(StructureTaskDetails taskDetails) {

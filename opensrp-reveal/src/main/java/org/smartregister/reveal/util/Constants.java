@@ -519,6 +519,10 @@ public interface Constants {
         String CALCULATED_CHILDREN_TREATED = "calculatedChildrenTreated";
 
         String NUMBER_OF_ADDITIONAL_DOSES = "number_of_additional_doses";
+
+        String TOTAL_ADMINISTERED_SPAQ = "totalAdministeredSpaq";
+
+        String TOTAL_NUMBER_OF_ADDITIONAL_DOSES = "totalNumberOfAdditionalDoses";
     }
 
     interface DateFormat {
@@ -679,6 +683,10 @@ public interface Constants {
         String LOCATION_TABLE = "location";
 
         String LOCATION_SYNC_STATUS = "sync_status";
+
+        String ADMINISTERED_SPAQ = "administered_spaq";
+
+        String NUMBER_OF_ADDITIONAL_DOSES = "number_of_additional_doses";
 
     }
 

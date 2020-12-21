@@ -9,11 +9,13 @@ import com.mapbox.geojson.Feature;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
-import org.smartregister.domain.Event;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.contract.StructureTasksContract;
@@ -21,12 +23,16 @@ import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.interactor.StructureTasksInteractor;
 import org.smartregister.reveal.model.FamilySummaryModel;
 import org.smartregister.reveal.model.StructureTaskDetails;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Set;
+
+import timber.log.Timber;
 
 import static org.smartregister.reveal.contract.StructureTasksContract.Interactor;
 import static org.smartregister.reveal.contract.StructureTasksContract.Presenter;
@@ -35,6 +41,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENI
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_DRUG_RECON;
+import static org.smartregister.util.JsonFormUtils.VALUE;
 
 /**
  * Created by samuelgithengi on 4/12/19.
@@ -190,6 +197,8 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
             if (summary == null && BEDNET_DISTRIBUTION.equals(getTaskDetails().getTaskCode())) {
                 formInteractor.findNumberOfMembers(getTaskDetails().getTaskEntity(), formJSON);
+            } else if (BuildConfig.BUILD_COUNTRY == Country.NIGERIA && MDA_DRUG_RECON.equals(getTaskDetails().getTaskCode())) {
+                interactor.findTotalSMCDosageCounts(taskDetails, formJSON);
             } else {
                 getView().startForm(formJSON, readOnly);
             }
@@ -230,4 +239,19 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     @Override
     public void onFamilyFound(CommonPersonObjectClient finalFamily) {//not used
     }
+
+    @Override
+    public void onTotalSMCDosageCountsFound(StructureTaskDetails taskDetails, JSONObject formJSON) {
+
+        try {
+            getView().getJsonFormUtils().populateField(formJSON, Constants.JsonForm.TOTAL_ADMINISTERED_SPAQ, taskDetails.getTotalAdministeredSpaq() + "", VALUE);
+            getView().getJsonFormUtils().populateField(formJSON, Constants.JsonForm.TOTAL_NUMBER_OF_ADDITIONAL_DOSES, taskDetails.getTotalNumberOfAdditionalDoses() + "", VALUE);
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
+
+        boolean readOnly = !taskDetails.isEdit() && taskDetails.getTaskStatus().equals(TaskStatus.COMPLETED.name());
+        getView().startForm(formJSON, readOnly);
+    }
+
 }

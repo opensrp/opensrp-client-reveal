@@ -2,6 +2,7 @@ package org.smartregister.reveal.contract;
 
 import android.content.Context;
 
+import org.json.JSONObject;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.model.FamilySummaryModel;
@@ -39,6 +40,8 @@ public interface StructureTasksContract {
 
         void onFetchedMembersCount(FamilySummaryModel summary);
 //        void onFetchedMembersCount(Pair<Integer, Integer> finalNumberOfMembers);
+
+        void onTotalSMCDosageCountsFound(StructureTaskDetails taskDetails, JSONObject formJSON);
     }
 
     interface Interactor extends BaseContract.BaseInteractor {
@@ -54,6 +57,8 @@ public interface StructureTasksContract {
         void findCompletedDispenseTasks(StructureTaskDetails taskDetails, List<StructureTaskDetails> taskDetailsList);
 
 //        void findCompletedAdherenceTasks(StructureTaskDetails taskDetails);
+
+        StructureTaskDetails findTotalSMCDosageCounts(StructureTaskDetails taskDetails, JSONObject formJSON);
 
     }
 
