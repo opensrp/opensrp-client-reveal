@@ -114,6 +114,20 @@
             "creates_case": [
               "ec_family"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "mda_adherence",
+            "creates_case": [
+              "ec_family_member"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "mda_dispense",
+            "creates_case": [
+              "ec_family_member"
+            ]
           }
         ]
       }

@@ -160,6 +160,20 @@
         "openmrs_entity_id": "",
         "type": "hidden",
         "value": "Complete"
+      },
+      {
+        "key": "totalAdministeredSpaq",
+        "type": "hidden",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
+      },
+      {
+        "key": "totalNumberOfAdditionalDoses",
+        "type": "hidden",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
       }
     ]
   }

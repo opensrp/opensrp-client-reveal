@@ -374,6 +374,22 @@
             "field": "obs.fieldCode",
             "concept": "age_unknown"
           }
+        },
+        {
+          "column_name": "administered_spaq",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "administeredSpaq"
+          }
+        },
+        {
+          "column_name": "number_of_additional_doses",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "number_of_additional_doses"
+          }
         }
       ]
     },
