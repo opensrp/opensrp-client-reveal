@@ -216,27 +216,10 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many blisters were dropped or damaged?",
+        "hint": "How many blisters that were dropped, damaged, or wasted?",
         "text_size": "8sp",
         "v_numeric": {
-          "value": "true",
-          "err": "This field is required"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Number must be equal or greater than 0"
-        }
-      },
-      {
-        "key": "confirmSPAQNumberWasted",
-        "hint": "How many blisters were wasted?",
-        "type": "edit_text",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "text_size": "8sp",
-        "v_numeric": {
-          "value": "true",
+          "value": "true",q
           "err": "This field is required"
         },
         "v_min": {
