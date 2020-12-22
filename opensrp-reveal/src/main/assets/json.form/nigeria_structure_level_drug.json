@@ -69,24 +69,6 @@
         "openmrs_entity_id": ""
       },
       {
-        "key": "childrenTreatedToaster",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "toaster_notes",
-        "text": " Number of children that received ORIGINAL SPAQ dose is {childrenTreated}",
-        "text_color": "#CF0800",
-        "toaster_type": "info",
-        "text_size": "8sp",
-        "calculation": {
-        "rules-engine": {
-          "ex-rules": {
-            "rules-file": "nigeria-structure-level-drug-calculation.yml"
-          }
-        }
-      }
-      },
-      {
         "key": "confirmChildrenTreated",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -96,7 +78,8 @@
         "options": [
           {
             "key": "Yes",
-            "text": "Yes"
+            "text": "Yes",
+            "extra_info": "Number of children that received dose: {childrenTreated} "
           },
           {
             "key": "No",
@@ -106,6 +89,13 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
+        },
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-structure-level-drug-calculation.yml"
+            }
+          }
         }
       },
       {
@@ -149,23 +139,6 @@
           }
         }
       },
-      {  "key": "additionalDosesAdministeredToaster",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "toaster_notes",
-        "text": " Number of children that were REDOSED with SPAQ is {additionalDosesAdministered}",
-        "text_color": "#CF0800",
-        "toaster_type": "info",
-        "text_size": "8sp",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "nigeria-structure-level-drug-calculation.yml"
-            }
-          }
-        }
-      },
       {
         "key": "confirmAdditionalDosesAdministered",
         "openmrs_entity_parent": "",
@@ -176,7 +149,8 @@
         "options": [
           {
             "key": "Yes",
-            "text": "Yes"
+            "text": "Yes",
+            "extra_info": "Number of children REDOSED: {additionalDosesAdministered} "
           },
           {
             "key": "No",
@@ -186,6 +160,13 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
+        },
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-structure-level-drug-calculation.yml"
+            }
+          }
         }
       },
       {
@@ -205,11 +186,11 @@
           "err": "Number must be equal or greater than 0"
         },
         "relevance": {
-        "step1:confirmAdditionalDosesAdministered": {
-          "type": "string",
-          "ex": "equalTo(., \"No\")"
-        }
-      },
+          "step1:confirmAdditionalDosesAdministered": {
+            "type": "string",
+            "ex": "equalTo(., \"No\")"
+          }
+        },
         "v_required": {
           "value": true,
           "err": "This field is required"

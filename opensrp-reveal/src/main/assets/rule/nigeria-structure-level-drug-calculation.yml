@@ -1,6 +1,6 @@
 ---
-name: step1_childrenTreatedToaster
-description: step1_childrenTreatedToaster
+name: step1_confirmChildrenTreated
+description: step1_confirmChildrenTreated
 priority: 1
 condition: "true"
 actions:
@@ -13,8 +13,8 @@ condition: "true"
 actions:
   - "calculation = step1_childrenTreatedEdit !='' ?  step1_childrenTreatedEdit : step1_totalAdministeredSpaq"
 ---
-name: step1_additionalDosesAdministeredToaster
-description: step1_additionalDosesAdministeredToaster
+name: step1_confirmAdditionalDosesAdministered
+description: step1_confirmAdditionalDosesAdministered
 priority: 1
 condition: "true"
 actions:
