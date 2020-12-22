@@ -79,7 +79,7 @@
           {
             "key": "Yes",
             "text": "Yes",
-            "extra_info": "Number of children that received dose: {childrenTreated} "
+            "extra_info": "Children that received dose: {childrenTreated} "
           },
           {
             "key": "No",
@@ -150,7 +150,7 @@
           {
             "key": "Yes",
             "text": "Yes",
-            "extra_info": "Number of children REDOSED: {additionalDosesAdministered} "
+            "extra_info": "Children REDOSED: {additionalDosesAdministered} "
           },
           {
             "key": "No",
@@ -219,7 +219,7 @@
         "hint": "How many blisters that were dropped, damaged, or wasted?",
         "text_size": "8sp",
         "v_numeric": {
-          "value": "true",q
+          "value": "true",
           "err": "This field is required"
         },
         "v_min": {
@@ -229,7 +229,37 @@
       },
       {
         "key": "confirmNumberSPAQBlistersUsed",
-        "hint": "Confirm TOTAL number of SPAQ blisters used:",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Confirm TOTAL number of SPAQ blisters used:",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes",
+            "extra_info": "SPAQ blisters used: {SPAQBlistersUsed} "
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-structure-level-drug-calculation.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "numberSPAQBlistersUsed",
+        "hint": "TOTAL number of SPAQ blisters used:",
         "type": "edit_text",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -242,6 +272,12 @@
         "v_min": {
           "value": "0",
           "err": "Number must be equal or greater than 0"
+        },
+        "relevance": {
+          "step1:confirmNumberSPAQBlistersUsed": {
+            "type": "string",
+            "ex": "equalTo(., \"No\")"
+          }
         }
       },
       {

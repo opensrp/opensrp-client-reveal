@@ -26,3 +26,10 @@ priority: 1
 condition: "true"
 actions:
   - "calculation = step1_additionalDosesAdministeredEdit !='' ?  step1_additionalDosesAdministeredEdit : step1_totalNumberOfAdditionalDoses"
+---
+name: step1_confirmNumberSPAQBlistersUsed
+description: Display Calculated number of SPAQ Blisters used
+priority: 1
+condition: "true"
+actions:
+  - "calculation =  ['SPAQBlistersUsed' : Integer.valueOf(helper.ifNull(step1_childrenTreated,0)) + Integer.valueOf(helper.ifNull(step1_additionalDosesAdministered,0))  + Integer.valueOf(helper.ifNull(step1_blisterPacketsNumber,0))]"
