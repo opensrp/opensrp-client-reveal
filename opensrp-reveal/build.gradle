@@ -44,7 +44,11 @@ android {
         applicationId "org.smartregister.reveal"
         minSdkVersion 18
         targetSdkVersion 28
+<<<<<<< HEAD
         versionCode 22
+=======
+        versionCode 23
+>>>>>>> bump up version
         versionName "5.2.3"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
