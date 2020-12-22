@@ -233,23 +233,28 @@ public class RevealRepository extends Repository {
     }
 
     private void upgradeToVersion9(SQLiteDatabase db) {
+        boolean columnAdded = false;
         if (!isColumnExists(db, FAMILY_MEMBER, DatabaseKeys.ADMINISTERED_SPAQ)) {
             db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR", FAMILY_MEMBER, DatabaseKeys.ADMINISTERED_SPAQ));
+            columnAdded = true;
         }
         if (!isColumnExists(db, FAMILY_MEMBER, DatabaseKeys.NUMBER_OF_ADDITIONAL_DOSES)) {
             db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR", FAMILY_MEMBER, DatabaseKeys.NUMBER_OF_ADDITIONAL_DOSES));
+            columnAdded = true;
         }
 
-        //client prqocess family events after 5 seconds so that get calls to getDatabase return
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                EventClientRepository ecRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
-                List<EventClient> eventClientList = ecRepository.fetchEventClientsByEventTypes(
-                        Arrays.asList(Constants.EventType.MDA_ADHERENCE,Constants.EventType.MDA_DISPENSE));
-                RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext()).processClient(eventClientList);
-            }
-        }, 5000);
+        if (columnAdded) {
+            //client prqocess family events after 5 seconds so that get calls to getDatabase return
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    EventClientRepository ecRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+                    List<EventClient> eventClientList = ecRepository.fetchEventClientsByEventTypes(
+                            Arrays.asList(Constants.EventType.MDA_ADHERENCE, Constants.EventType.MDA_DISPENSE));
+                    RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext()).processClient(eventClientList);
+                }
+            }, 5000);
+        }
     }
 
     @Override
