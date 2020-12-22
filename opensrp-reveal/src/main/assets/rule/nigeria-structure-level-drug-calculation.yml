@@ -1,0 +1,35 @@
+---
+name: step1_confirmChildrenTreated
+description: step1_confirmChildrenTreated
+priority: 1
+condition: "true"
+actions:
+  - "calculation = ['childrenTreated' : step1_totalAdministeredSpaq]"
+---
+name: step1_childrenTreated
+description: step1_childrenTreated
+priority: 1
+condition: "true"
+actions:
+  - "calculation = step1_childrenTreatedEdit !='' ?  step1_childrenTreatedEdit : step1_totalAdministeredSpaq"
+---
+name: step1_confirmAdditionalDosesAdministered
+description: step1_confirmAdditionalDosesAdministered
+priority: 1
+condition: "true"
+actions:
+  - "calculation = ['additionalDosesAdministered' : step1_totalNumberOfAdditionalDoses]"
+---
+name: step1_additionalDosesAdministered
+description: step1_additionalDosesAdministered
+priority: 1
+condition: "true"
+actions:
+  - "calculation = step1_additionalDosesAdministeredEdit !='' ?  step1_additionalDosesAdministeredEdit : step1_totalNumberOfAdditionalDoses"
+---
+name: step1_confirmNumberSPAQBlistersUsed
+description: Display Calculated number of SPAQ Blisters used
+priority: 1
+condition: "true"
+actions:
+  - "calculation =  ['SPAQBlistersUsed' : Integer.valueOf(helper.ifNull(step1_childrenTreated,0)) + Integer.valueOf(helper.ifNull(step1_additionalDosesAdministered,0))  + Integer.valueOf(helper.ifNull(step1_blisterPacketsNumber,0))]"

@@ -25,6 +25,7 @@ import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.sync.RevealClientProcessor;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
@@ -118,6 +119,9 @@ public class RevealRepository extends Repository {
                     break;
                 case 8:
                     upgradeToVersion8(db);
+                    break;
+                case 9:
+                    upgradeToVersion9(db);
                     break;
                 default:
                     break;
@@ -225,6 +229,31 @@ public class RevealRepository extends Repository {
 
         if (!ManifestRepository.isVersionColumnExist(db)) {
             ManifestRepository.addVersionColumn(db);
+        }
+    }
+
+    private void upgradeToVersion9(SQLiteDatabase db) {
+        boolean columnAdded = false;
+        if (!isColumnExists(db, FAMILY_MEMBER, DatabaseKeys.ADMINISTERED_SPAQ)) {
+            db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR", FAMILY_MEMBER, DatabaseKeys.ADMINISTERED_SPAQ));
+            columnAdded = true;
+        }
+        if (!isColumnExists(db, FAMILY_MEMBER, DatabaseKeys.NUMBER_OF_ADDITIONAL_DOSES)) {
+            db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR", FAMILY_MEMBER, DatabaseKeys.NUMBER_OF_ADDITIONAL_DOSES));
+            columnAdded = true;
+        }
+
+        if (columnAdded) {
+            //client prqocess family events after 5 seconds so that get calls to getDatabase return
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    EventClientRepository ecRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+                    List<EventClient> eventClientList = ecRepository.fetchEventClientsByEventTypes(
+                            Arrays.asList(Constants.EventType.MDA_ADHERENCE, Constants.EventType.MDA_DISPENSE));
+                    RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext()).processClient(eventClientList);
+                }
+            }, 5000);
         }
     }
 
