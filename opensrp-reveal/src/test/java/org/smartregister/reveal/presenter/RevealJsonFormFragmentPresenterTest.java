@@ -31,6 +31,7 @@ import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
 import org.smartregister.reveal.util.Constants.JsonForm;
+import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.validators.GeoFencingValidator;
 import org.smartregister.reveal.validators.MinZoomValidator;
@@ -42,12 +43,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.ona.kujaku.listeners.BaseLocationListener;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
@@ -318,5 +323,31 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public  void testGetLocationUtils() {
+        setUpFormActivity(JsonForm.ADD_STRUCTURE_FORM);
+        LocationUtils mockLocationUtils = mock(LocationUtils.class);
+        presenter = spy(presenter);
+        Whitebox.setInternalState(presenter, "locationUtils" , mockLocationUtils);
+        assertEquals(mockLocationUtils, presenter.getLocationUtils());
+    }
+
+    @Test
+    public void testGetLastLocation() {
+        setUpFormActivity(JsonForm.ADD_STRUCTURE_FORM);
+        android.location.Location mockLocation = mock(android.location.Location.class);
+        presenter = spy(presenter);
+        Whitebox.setInternalState(presenter, "lastLocation" , mockLocation);
+        assertEquals(mockLocation, presenter.getLastLocation());
+    }
+
+    @Test
+    public void testGetLocationListener() {
+        setUpFormActivity(JsonForm.ADD_STRUCTURE_FORM);
+        BaseLocationListener mockLocationListener = mock(BaseLocationListener.class);
+        presenter = spy(presenter);
+        Whitebox.setInternalState(presenter, "locationListener" , mockLocationListener);
+        assertEquals(mockLocationListener, presenter.getLocationListener());
+    }
 
 }
