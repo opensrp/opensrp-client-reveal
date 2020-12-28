@@ -24,16 +24,18 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
-import org.smartregister.domain.Event;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.util.Constants;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
-import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -49,13 +51,17 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JsonForm.PAOT_STATUS;
@@ -92,6 +98,9 @@ public class BaseInteractorTest extends BaseUnitTest {
     private RevealClientProcessor clientProcessor;
 
     @Mock
+    protected TaskRepository taskRepository;
+
+    @Mock
     private EventClientRepository eventClientRepository;
 
     @Mock
@@ -101,7 +110,7 @@ public class BaseInteractorTest extends BaseUnitTest {
     private ArgumentCaptor<CommonPersonObjectClient> clientArgumentCaptor;
 
     @Captor
-    private ArgumentCaptor<JSONObject> eventCaptor;
+    private ArgumentCaptor<JSONObject> eventJSONObjectCaptor;
 
     @Captor
     private ArgumentCaptor<List<EventClient>> eventClientCaptor;
@@ -115,6 +124,12 @@ public class BaseInteractorTest extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<Double> doubleArgumentCaptor;
 
+    @Captor
+    private ArgumentCaptor<Task> taskArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Event> eventCaptor;
+
     private BaseInteractor interactor;
 
     private Context context = RuntimeEnvironment.application;
@@ -127,6 +142,7 @@ public class BaseInteractorTest extends BaseUnitTest {
         Whitebox.setInternalState(interactor, "clientProcessor", clientProcessor);
         Whitebox.setInternalState(interactor, "eventClientRepository", eventClientRepository);
         Whitebox.setInternalState(interactor, "taskUtils", taskUtils);
+        Whitebox.setInternalState(interactor, "taskRepository", taskRepository);
     }
 
 
@@ -166,16 +182,16 @@ public class BaseInteractorTest extends BaseUnitTest {
         JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), PAOT_STATUS).put(VALUE, "Active");
         JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), "lastUpdatedDate").put(VALUE, "19-07-2019");
         interactor.saveJsonForm(formObject.toString());
-        verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(eq(structureId), eventCaptor.capture());
+        verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(eq(structureId), eventJSONObjectCaptor.capture());
         verify(clientProcessor, timeout(ASYNC_TIMEOUT)).processClient(eventClientCaptor.capture(), eq(true));
         verify(presenter, timeout(ASYNC_TIMEOUT)).onFormSaved(structureId, taskId, Task.TaskStatus.COMPLETED, null, PAOT);
-        assertEquals(org.smartregister.reveal.util.Constants.EventType.PAOT_EVENT, eventCaptor.getValue().getString("eventType"));
-        JSONArray obs = eventCaptor.getValue().getJSONArray("obs");
+        assertEquals(org.smartregister.reveal.util.Constants.EventType.PAOT_EVENT, eventJSONObjectCaptor.getValue().getString("eventType"));
+        JSONArray obs = eventJSONObjectCaptor.getValue().getJSONArray("obs");
         assertEquals(3, obs.length());
         assertEquals("Active", obs.getJSONObject(0).getJSONArray(VALUES).get(0));
         assertEquals("19-07-2019", obs.getJSONObject(1).getJSONArray(VALUES).get(0));
         assertEquals("Complete", obs.getJSONObject(2).getJSONArray(VALUES).get(0));
-        assertEquals(details.toString(), eventCaptor.getValue().getJSONObject(DETAILS).toString());
+        assertEquals(details.toString(), eventJSONObjectCaptor.getValue().getJSONObject(DETAILS).toString());
 
         assertEquals(1, eventClientCaptor.getValue().size());
 
@@ -206,19 +222,19 @@ public class BaseInteractorTest extends BaseUnitTest {
         double zoomLevel = 18.2d;
         JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), GeoWidgetFactory.ZOOM_LEVEL).put(VALUE, zoomLevel);
         interactor.saveJsonForm(formObject.toString());
-        verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(anyString(), eventCaptor.capture());
+        verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(anyString(), eventJSONObjectCaptor.capture());
         verify(clientProcessor, timeout(ASYNC_TIMEOUT)).processClient(eventClientCaptor.capture(), eq(true));
         verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureAdded(featureArgumentCaptor.capture(), featureCoordinatesCaptor.capture(), doubleArgumentCaptor.capture());
-        assertEquals(REGISTER_STRUCTURE_EVENT, eventCaptor.getValue().getString("eventType"));
-        JSONArray obs = eventCaptor.getValue().getJSONArray("obs");
+        assertEquals(REGISTER_STRUCTURE_EVENT, eventJSONObjectCaptor.getValue().getString("eventType"));
+        JSONArray obs = eventJSONObjectCaptor.getValue().getJSONArray("obs");
         assertEquals(4, obs.length());
         assertEquals(structureOb, obs.getJSONObject(0).getJSONArray(VALUES).get(0));
         assertEquals("Residential Structure", obs.getJSONObject(1).getJSONArray(VALUES).get(0));
         assertEquals("Home", obs.getJSONObject(2).getJSONArray(VALUES).get(0));
         assertEquals("18.2", obs.getJSONObject(3).getJSONArray(VALUES).get(0));
-        assertEquals(BuildConfig.VERSION_NAME, eventCaptor.getValue().getJSONObject(DETAILS).get(APP_VERSION_NAME));
-        assertEquals(planIdentifier, eventCaptor.getValue().getJSONObject(DETAILS).get(PLAN_IDENTIFIER));
-        assertEquals(locationId, eventCaptor.getValue().getJSONObject(DETAILS).get(LOCATION_PARENT));
+        assertEquals(BuildConfig.VERSION_NAME, eventJSONObjectCaptor.getValue().getJSONObject(DETAILS).get(APP_VERSION_NAME));
+        assertEquals(planIdentifier, eventJSONObjectCaptor.getValue().getJSONObject(DETAILS).get(PLAN_IDENTIFIER));
+        assertEquals(locationId, eventJSONObjectCaptor.getValue().getJSONObject(DETAILS).get(LOCATION_PARENT));
 
         assertEquals(1, eventClientCaptor.getValue().size());
 
@@ -233,6 +249,71 @@ public class BaseInteractorTest extends BaseUnitTest {
         assertEquals(locationId, event.getDetails().get(LOCATION_PARENT));
     }
 
+    @Test
+    public void testSaveMemberForm() throws JSONException {
+        String form = AssetHandler.readFileFromAssetsFolder(org.smartregister.reveal.util.Constants.JsonForm.BLOOD_SCREENING_FORM, context);
+        JSONObject formObject = new JSONObject(form);
+        String entityId = UUID.randomUUID().toString();
+        String taskId = UUID.randomUUID().toString();
+        formObject.put("entity_id", entityId);
+        JSONObject details = new JSONObject();
+        details.put(TASK_IDENTIFIER, taskId);
+        formObject.put(DETAILS, details);
+        JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), "business_status").put(VALUE, org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE);
+
+        interactor.saveJsonForm(formObject.toString());
+
+        verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(anyString(), eventJSONObjectCaptor.capture());
+        verify(clientProcessor, timeout(ASYNC_TIMEOUT)).processClient(eventClientCaptor.capture(), eq(true));
+        assertEquals(BLOOD_SCREENING_EVENT, eventJSONObjectCaptor.getValue().getString("eventType"));
+        JSONArray obs = eventJSONObjectCaptor.getValue().getJSONArray("obs");
+        assertEquals(3, obs.length());
+        assertEquals("1", obs.getJSONObject(0).getJSONArray(VALUES).get(0));
+        assertEquals("Microscopy", obs.getJSONObject(1).getJSONArray(VALUES).get(0));
+        assertEquals(org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE, obs.getJSONObject(2).getJSONArray(VALUES).get(0));
+    }
+
+    @Test
+    public void testSaveCaseConfirmation() throws JSONException {
+        String form = AssetHandler.readFileFromAssetsFolder(org.smartregister.reveal.util.Constants.JsonForm.CASE_CONFIRMATION_FORM, context);
+        String planIdentifier = UUID.randomUUID().toString();
+        PreferencesUtil.getInstance().setCurrentPlanId(planIdentifier);
+        JSONObject formObject = new JSONObject(form);
+        String entityId = UUID.randomUUID().toString();
+        String taskId = UUID.randomUUID().toString();
+        formObject.put("entity_id", entityId);
+        JSONObject details = new JSONObject();
+        details.put(TASK_IDENTIFIER, taskId);
+        formObject.put(DETAILS, details);
+        JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), "business_status").put(VALUE, org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE);
+        when(taskRepository.getTaskByIdentifier(taskId)).thenReturn(TestingUtils.getTask(taskId));
+
+        interactor.saveJsonForm(formObject.toString());
+        verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(anyString(), eventJSONObjectCaptor.capture());
+        verify(clientProcessor, timeout(ASYNC_TIMEOUT)).calculateBusinessStatus(any());
+        verify(taskRepository,timeout(ASYNC_TIMEOUT)).addOrUpdate(taskArgumentCaptor.capture());
+        assertEquals(org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT, eventJSONObjectCaptor.getValue().getString("eventType"));
+        assertEquals(Task.TaskStatus.COMPLETED, taskArgumentCaptor.getValue().getStatus());
+        assertEquals(BaseRepository.TYPE_Created, taskArgumentCaptor.getValue().getSyncStatus());
+        assertFalse(RevealApplication.getInstance().getSynced());
+    }
+
+    @Test
+    public void testFindLastEvent() {
+        Event bloodScreeningEvent = RevealApplication.getInstance().getContext().getEventClientRepository().convert(TestingUtils.bloodScreeningEventJSON, Event.class);
+        String query = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
+                EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.baseEntityId, EventClientRepository.event_column.eventType, EventClientRepository.event_column.updatedAt);
+        String eventBaseEntityId = "event-base-entity-id1";
+        when(database.rawQuery(query, new String[]{eventBaseEntityId, BLOOD_SCREENING_EVENT})).thenReturn(createEventCursor());
+        when(eventClientRepository.convert(anyString(), any())).thenReturn(bloodScreeningEvent);
+
+        interactor = spy(interactor);
+        interactor.findLastEvent(eventBaseEntityId, BLOOD_SCREENING_EVENT);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(query, new String[]{eventBaseEntityId, BLOOD_SCREENING_EVENT});
+        verify(interactor, timeout(ASYNC_TIMEOUT)).handleLasteventFound(eventCaptor.capture());
+        assertNotNull(eventCaptor.getValue());
+        assertEquals(bloodScreeningEvent, eventCaptor.getValue());
+    }
 
     private Cursor createFamilyCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{
@@ -240,6 +321,16 @@ public class BaseInteractorTest extends BaseUnitTest {
         });
         cursor.addRow(new Object[]{
                 "69df212c-33a7-4443-a8d5-289e48d90468"
+        });
+        return cursor;
+    }
+
+    private Cursor createEventCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{
+                "json"
+        });
+        cursor.addRow(new Object[]{
+                TestingUtils.bloodScreeningEventJSON
         });
         return cursor;
     }

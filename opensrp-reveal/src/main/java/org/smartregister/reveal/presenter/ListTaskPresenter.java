@@ -93,7 +93,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMI
 import static org.smartregister.reveal.util.Constants.JsonForm.DISTRICT_NAME;
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
-import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.PROVINCE_NAME;
 import static org.smartregister.reveal.util.Constants.JsonForm.VALID_OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
@@ -622,8 +621,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         String formName = jsonFormUtils.getFormName(REGISTER_STRUCTURE_EVENT);
         try {
             JSONObject formJson = new JSONObject(jsonFormUtils.getFormString(listTaskView.getContext(), formName, null));
-            formJson.put(OPERATIONAL_AREA_TAG, operationalArea.toJson());
             revealApplication.setFeatureCollection(featureCollection);
+            revealApplication.setOperationalArea(operationalArea);
             jsonFormUtils.populateField(formJson, JsonForm.SELECTED_OPERATIONAL_AREA_NAME, prefsUtil.getCurrentOperationalArea(), TEXT);
             if (StringUtils.isNotBlank(point)) {
                 jsonFormUtils.populateField(formJson, JsonForm.STRUCTURE, point, VALUE);
