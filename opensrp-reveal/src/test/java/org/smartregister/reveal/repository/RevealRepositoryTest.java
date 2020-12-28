@@ -109,10 +109,10 @@ public class RevealRepositoryTest extends BaseUnitTest {
         }
         ReflectionHelpers.setStaticField(BuildConfig.class, "DATABASE_VERSION", version);
         verify(jobManager).schedule(any());
-        verify(eventClientRepository, timeout(6000)).fetchEventClientsByEventTypes(
+        verify(eventClientRepository, timeout(10000)).fetchEventClientsByEventTypes(
                 Arrays.asList(FamilyConstants.EventType.FAMILY_REGISTRATION, FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION,
                         FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION));
-        verify(revealClientProcessor, timeout(5000).atLeastOnce()).processClient(any());
+        verify(revealClientProcessor, timeout(10000).atLeastOnce()).processClient(any());
     }
 
 
@@ -122,10 +122,10 @@ public class RevealRepositoryTest extends BaseUnitTest {
         revealRepository.onCreate(sqLiteDatabase);
         verify(sqLiteDatabase, Mockito.atLeast(45)).execSQL(stringArgumentCaptor.capture());
         verify(jobManager).schedule(any());
-        verify(eventClientRepository, timeout(6000)).fetchEventClientsByEventTypes(
+        verify(eventClientRepository, timeout(10000)).fetchEventClientsByEventTypes(
                 Arrays.asList(FamilyConstants.EventType.FAMILY_REGISTRATION, FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION,
                         FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION));
-        verify(revealClientProcessor, timeout(5000)).processClient(any());
+        verify(revealClientProcessor, timeout(10000)).processClient(any());
         verify(revealRepository).onUpgrade(sqLiteDatabase, 1, BuildConfig.DATABASE_VERSION);
     }
 }

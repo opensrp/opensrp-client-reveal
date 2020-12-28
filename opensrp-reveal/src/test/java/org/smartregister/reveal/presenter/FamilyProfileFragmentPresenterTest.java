@@ -2,8 +2,9 @@ package org.smartregister.reveal.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import androidx.appcompat.app.AlertDialog;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
@@ -43,6 +44,7 @@ import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
+import org.smartregister.reveal.view.FamilyProfileActivity;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -71,7 +73,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
     public MockitoRule rule = MockitoJUnit.rule();
 
     @Mock
-    private FamilyProfileContract.View view;
+    private FamilyProfileActivity view;
 
     @Mock
     private FamilyProfileModel model;

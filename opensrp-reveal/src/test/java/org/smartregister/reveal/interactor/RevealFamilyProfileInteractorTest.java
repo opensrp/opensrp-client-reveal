@@ -95,6 +95,8 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
 
     private Context context = RuntimeEnvironment.application;
 
+    protected final int ASYNC_TIMEOUT = 4000;
+
 
     @Before
     public void setUp() {
