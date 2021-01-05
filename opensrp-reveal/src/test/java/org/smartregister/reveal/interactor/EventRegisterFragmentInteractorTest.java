@@ -59,7 +59,7 @@ public class EventRegisterFragmentInteractorTest extends BaseUnitTest {
 
         interactor.findEvent(formSubmissionId);
 
-        verify(eventClientRepository).getEventsByFormSubmissionId(formSubmissionId);
+        verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).getEventsByFormSubmissionId(formSubmissionId);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onEventFound(bloodScreeningEvent);
     }
 }
