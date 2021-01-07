@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -13,12 +14,14 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.smartregister.domain.Action;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.PlanDefinition.PlanStatus;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.domain.jsonmapping.Location;
 import org.smartregister.domain.jsonmapping.util.TreeNode;
 import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -28,6 +31,7 @@ import org.smartregister.reveal.interactor.BaseDrawerInteractor;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.LocationHierarchyUtil;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.view.EventRegisterActivity;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
@@ -50,6 +54,7 @@ import static org.smartregister.reveal.util.Constants.Tags.REGION;
 import static org.smartregister.reveal.util.Constants.Tags.SCHOOL;
 import static org.smartregister.reveal.util.Constants.Tags.SUB_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.VILLAGE;
+import static org.smartregister.reveal.util.Constants.Tags.ZONE;
 import static org.smartregister.reveal.util.Constants.UseContextCode.INTERVENTION_TYPE;
 
 /**
@@ -75,6 +80,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     private boolean viewInitialized = false;
 
     private RevealApplication revealApplication;
+    private AllSharedPreferences sharedPreferences;
 
     public BaseDrawerPresenter(BaseDrawerContract.View view, BaseDrawerContract.DrawerActivity drawerActivity) {
         this.view = view;
@@ -83,6 +89,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         this.locationHelper = LocationHelper.getInstance();
         interactor = new BaseDrawerInteractor(this);
         revealApplication = RevealApplication.getInstance();
+        sharedPreferences = revealApplication.getContext().allSharedPreferences();
     }
 
 
@@ -101,6 +108,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
             if (defaultLocation != null) {
                 view.setDistrict(defaultLocation.get(0));
+                prefsUtil.setCurrentDistrict(defaultLocation.get(0));
                 ArrayList<String> levels = new ArrayList<>();
                 levels.add(CANTON);
                 String level;
@@ -143,6 +151,13 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
                     break;
                 }
             }
+
+            //get actions for plan
+            List<String> actionCodes = new ArrayList<>();
+            for (Action action : planDefinition.getActions()) {
+                actionCodes.add(action.getCode());
+            }
+            prefsUtil.setActionCodesForPlan(planDefinition.getIdentifier(), actionCodes);
 
         }
 
@@ -195,6 +210,9 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(DISTRICT);
         operationalAreaLevels.add(SUB_DISTRICT);
         operationalAreaLevels.add(OPERATIONAL_AREA);
+        operationalAreaLevels.add(HEALTH_CENTER);
+        operationalAreaLevels.add(VILLAGE);
+        operationalAreaLevels.add(ZONE);
         operationalAreaLevels.add(SCHOOL);
 
         List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
@@ -210,7 +228,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
             List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels, map);
 
-            if (BuildConfig.BUILD_COUNTRY != Country.NTD_SCHOOL) {
+            if (!prefsUtil.isKeycloakConfigured() && BuildConfig.BUILD_COUNTRY != Country.NTD_SCHOOL) {
                 List<String> authorizedOperationalAreas = Arrays.asList(StringUtils.split(prefsUtil.getPreferenceValue(OPERATIONAL_AREAS), ','));
                 removeUnauthorizedOperationalAreas(authorizedOperationalAreas, entireTree);
             }
@@ -237,12 +255,17 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(CANTON);
         operationalAreaLevels.add(OPERATIONAL_AREA);
         List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-        int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name()) || name.get(0).equalsIgnoreCase(Country.NAMIBIA.name()) ? 3 : 2;
+        int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name())
+                || name.get(0).equalsIgnoreCase(Country.NAMIBIA.name()) ? 3 : 2;
+        if (name.get(0).toUpperCase().startsWith(Country.ZAMBIA.name()) && name.size() > 4) {
+            districtOffset = name.size() - 2;
+        }
         try {
             prefsUtil.setCurrentProvince(name.get(1));
             prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
             String operationalArea = name.get(name.size() - 1);
             prefsUtil.setCurrentOperationalArea(operationalArea);
+            sharedPreferences.saveDefaultLocalityId(sharedPreferences.fetchRegisteredANM(), prefsUtil.getCurrentOperationalAreaId());
             Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - districtOffset), name.get(name.size() - 1), entireTree);
             if (facility != null) {
                 prefsUtil.setCurrentFacility(facility.second);
@@ -285,12 +308,16 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
                 for (FormLocation districtLocation : provinceLocation.nodes) {
                     if (districtLocation.nodes == null)
                         return;
-                    List<FormLocation> toRemove = new ArrayList<>();
-                    for (FormLocation operationalAreaLocation : districtLocation.nodes) {
-                        if (!operationalAreas.contains(operationalAreaLocation.name))
-                            toRemove.add(operationalAreaLocation);
+                    for (FormLocation healthFacilityLocation : districtLocation.nodes) {
+                        if (healthFacilityLocation.nodes == null)
+                            return;
+                        List<FormLocation> toRemove = new ArrayList<>();
+                        for (FormLocation operationalAreaLocation : healthFacilityLocation.nodes) {
+                            if (!operationalAreas.contains(operationalAreaLocation.name))
+                                toRemove.add(operationalAreaLocation);
+                        }
+                        healthFacilityLocation.nodes.removeAll(toRemove);
                     }
-                    districtLocation.nodes.removeAll(toRemove);
                 }
             }
         }
@@ -366,7 +393,12 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     @Override
     public void onViewResumed() {
         if (viewInitialized) {
-            if (!prefsUtil.getCurrentPlan().equals(view.getPlan())
+            if ((StringUtils.isBlank(prefsUtil.getCurrentPlan()) || StringUtils.isBlank(prefsUtil.getCurrentOperationalArea())) &&
+                    (StringUtils.isNotBlank(view.getPlan()) || StringUtils.isNotBlank(view.getOperationalArea()))) {
+                view.setOperationalArea(prefsUtil.getCurrentOperationalArea());
+                view.setPlan(prefsUtil.getCurrentPlan());
+                view.lockNavigationDrawerForSelection(R.string.select_campaign_operational_area_title, R.string.revoked_plan_operational_area);
+            } else if (!prefsUtil.getCurrentPlan().equals(view.getPlan())
                     || !prefsUtil.getCurrentOperationalArea().equals(view.getOperationalArea())) {
                 changedCurrentSelection = true;
                 onDrawerClosed();
@@ -375,7 +407,12 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             initializeDrawerLayout();
             viewInitialized = true;
         }
-        updateSyncStatusDisplay(revealApplication.getSynced());
+        if (revealApplication.getSynced() && revealApplication.isRefreshMapOnEventSaved()) {
+            view.checkSynced();
+        } else {
+            updateSyncStatusDisplay(revealApplication.getSynced());
+        }
+
     }
 
 
@@ -425,16 +462,23 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         if (syncBadge != null && syncLabel != null) {
             if (synced) {
                 syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_green_oval));
-                syncLabel.setText("Device data synced");
+                syncLabel.setText(getView().getContext().getString(R.string.device_data_synced));
                 syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_complete_green));
                 syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_green));
             } else {
                 syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_oval));
-                syncLabel.setText("Device data not synced");
+                syncLabel.setText(getView().getContext().getString(R.string.device_data_not_synced));
                 syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_urgent_red));
                 syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_red));
             }
         }
     }
 
+    @Override
+    public void onShowFilledForms() {
+        if (drawerActivity.getActivity() != null)
+            drawerActivity.getActivity().startActivity(new Intent(drawerActivity.getActivity(), EventRegisterActivity.class));
+    }
+
 }
+

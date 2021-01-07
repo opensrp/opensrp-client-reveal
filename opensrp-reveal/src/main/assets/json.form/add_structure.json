@@ -1,6 +1,7 @@
 {
   "count": "1",
   "encounter_type": "Register_Structure",
+  "form_version": "0.0.1",
   "entity_id": "",
   "metadata": {
     "start": {
@@ -148,6 +149,13 @@
       },
       {
         "key": "zoom_level",
+        "type": "hidden",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
+      },
+      {
+        "key": "valid_operational_area",
         "type": "hidden",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

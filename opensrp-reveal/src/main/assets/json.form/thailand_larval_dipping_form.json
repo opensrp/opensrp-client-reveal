@@ -1,6 +1,7 @@
 {
   "count": "1",
   "encounter_type": "larval_dipping",
+  "form_version": "0.0.1",
   "entity_id": "",
   "metadata": {
     "start": {
@@ -55,7 +56,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "native_radio",
+        "type": "hidden",
         "label": "Is this collection point eligible?",
         "options": [
           {

@@ -9,6 +9,7 @@ import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.family.FamilyLibrary;
+import org.smartregister.receiver.ValidateAssignmentReceiver;
 import org.smartregister.repository.Repository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.AppExecutors;
@@ -38,6 +39,7 @@ public class TestRevealApplication extends RevealApplication {
         setTheme(R.style.Theme_AppCompat); //or just R.style.Theme_AppCompat
 
         NativeFormLibrary.getInstance().setClientFormDao(CoreLibrary.getInstance().context().getClientFormRepository());
+        ValidateAssignmentReceiver.init(getApplicationContext());
     }
 
     @Override

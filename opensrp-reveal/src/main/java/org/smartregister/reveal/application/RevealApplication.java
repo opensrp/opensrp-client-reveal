@@ -1,6 +1,7 @@
 package org.smartregister.reveal.application;
 
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
@@ -23,12 +24,14 @@ import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.JsonSpecHelper;
 import org.smartregister.domain.Setting;
+import org.smartregister.dto.UserAssignmentDTO;
 import org.smartregister.family.FamilyLibrary;
 import org.smartregister.family.activity.FamilyWizardFormActivity;
 import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.receiver.ValidateAssignmentReceiver;
 import org.smartregister.repository.AllSettings;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.LocationRepository;
@@ -45,7 +48,10 @@ import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.DatabaseKeys;
+import org.smartregister.reveal.util.Constants.EventsRegister;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
@@ -75,7 +81,7 @@ import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 
-public class RevealApplication extends DrishtiApplication implements TimeChangedBroadcastReceiver.OnTimeChangedListener {
+public class RevealApplication extends DrishtiApplication implements TimeChangedBroadcastReceiver.OnTimeChangedListener, ValidateAssignmentReceiver.UserAssignmentListener {
 
     private JsonSpecHelper jsonSpecHelper;
     private char[] password;
@@ -156,6 +162,9 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         }
         NativeFormLibrary.getInstance().setClientFormDao(CoreLibrary.getInstance().context().getClientFormRepository());
 
+        ValidateAssignmentReceiver.init(this);
+        ValidateAssignmentReceiver.getInstance().addListener(this);
+
     }
 
     /**
@@ -181,14 +190,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
         }
         return repository;
-    }
-
-    public char[] getPassword() {
-        if (password == null) {
-            String username = getContext().allSharedPreferences().fetchRegisteredANM();
-            password = getContext().userService().getGroupId(username);
-        }
-        return password;
     }
 
     @Override
@@ -221,6 +222,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         cleanUpSyncState();
         TimeChangedBroadcastReceiver.destroy(this);
         SyncStatusBroadcastReceiver.destroy(this);
+        ValidateAssignmentReceiver.destroy(this);
         super.onTerminate();
     }
 
@@ -326,7 +328,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     }
 
     private static String[] getFtsTables() {
-        return new String[]{TABLE_NAME.FAMILY, TABLE_NAME.FAMILY_MEMBER};
+        return new String[]{TABLE_NAME.FAMILY, TABLE_NAME.FAMILY_MEMBER, EventsRegister.TABLE_NAME};
     }
 
     private static String[] getFtsSearchFields(String tableName) {
@@ -336,6 +338,9 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         } else if (tableName.equals(TABLE_NAME.FAMILY_MEMBER)) {
             return new String[]{DBConstants.KEY.BASE_ENTITY_ID, DBConstants.KEY.FIRST_NAME, DBConstants.KEY.MIDDLE_NAME,
                     DBConstants.KEY.LAST_NAME, DBConstants.KEY.UNIQUE_ID};
+        } else if (tableName.equals(EventsRegister.TABLE_NAME)) {
+            return new String[]{DatabaseKeys.EVENT_DATE, DatabaseKeys.EVENT_TYPE, DatabaseKeys.SOP,
+                    DatabaseKeys.ENTITY, DatabaseKeys.STATUS};
         }
         return null;
     }
@@ -346,6 +351,9 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         } else if (tableName.equals(TABLE_NAME.FAMILY_MEMBER)) {
             return new String[]{DBConstants.KEY.DOB, DBConstants.KEY.DOD, DBConstants.KEY
                     .LAST_INTERACTED_WITH, DBConstants.KEY.DATE_REMOVED};
+        } else if (tableName.equals(EventsRegister.TABLE_NAME)) {
+            return new String[]{DatabaseKeys.PROVIDER_ID, DatabaseKeys.EVENT_DATE,
+                    DatabaseKeys.EVENT_TYPE, DatabaseKeys.STATUS, DatabaseKeys.SOP};
         }
         return null;
     }
@@ -420,5 +428,18 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     public void setSynced(boolean synced) {
         this.synced = synced;
+    }
+
+    @Override
+    public void onUserAssignmentRevoked(UserAssignmentDTO userAssignmentDTO) {
+        PreferencesUtil preferencesUtil = PreferencesUtil.getInstance();
+        if (userAssignmentDTO.getJurisdictions().contains(preferencesUtil.getCurrentOperationalAreaId())) {
+            preferencesUtil.setCurrentOperationalArea(null);
+        }
+        if (userAssignmentDTO.getPlans().contains(preferencesUtil.getCurrentPlanId())) {
+            preferencesUtil.setCurrentPlan(null);
+            preferencesUtil.setCurrentPlanId(null);
+        }
+        getContext().anmLocationController().evict();
     }
 }

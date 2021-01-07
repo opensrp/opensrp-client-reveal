@@ -11,6 +11,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
@@ -27,7 +28,7 @@ public interface ListTaskContract {
 
     interface ListTaskView extends UserLocationView, BaseDrawerContract.DrawerActivity {
 
-        void showProgressDialog(@StringRes int title, @StringRes int message);
+        void showProgressDialog(@StringRes int title, @StringRes int message, Object... formatArgs);
 
         void hideProgressDialog();
 
@@ -76,11 +77,15 @@ public interface ListTaskContract {
         void setSearchPhrase(String searchPhrase);
 
         void toggleProgressBarView(boolean syncing);
+
+        void setOperationalArea(String operationalArea);
     }
 
     interface Presenter extends BaseContract.BasePresenter {
 
         void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea, List<TaskDetails> taskDetailsList);
+
+        void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea, List<TaskDetails> taskDetailsList, String point, Boolean locationComponentActive);
 
         void onDrawerClosed();
 
@@ -117,6 +122,10 @@ public interface ListTaskContract {
 
         void setTaskFilterParams(TaskFilterParams filterParams);
 
+        void onEventFound(Event event);
+      
+        void findLastEvent(String featureId, String eventType);
+      
         void onFociBoundaryLongClicked();
     }
 }

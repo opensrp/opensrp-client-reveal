@@ -9,6 +9,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.joda.time.DateTime;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Action;
+import org.smartregister.domain.Period;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.AllSharedPreferences;
@@ -66,14 +67,18 @@ public class TaskUtils {
     }
 
     public void generateBloodScreeningTask(Context context, String entityId, String structureId) {
-        generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.BLOOD_SCREENING,
-                R.string.blood_screening_description);
+        if (planActionCodesContainIntervention(prefsUtil.getCurrentPlanId(), Intervention.BLOOD_SCREENING)) {
+            generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.BLOOD_SCREENING,
+                    R.string.blood_screening_description);
+        }
 
     }
 
     public void generateBedNetDistributionTask(Context context, String entityId) {
-        generateTask(context, entityId, entityId, BusinessStatus.NOT_VISITED, Intervention.BEDNET_DISTRIBUTION,
-                R.string.bednet_distribution_description);
+        if (planActionCodesContainIntervention(prefsUtil.getCurrentPlanId(), Intervention.BEDNET_DISTRIBUTION)) {
+            generateTask(context, entityId, entityId, BusinessStatus.NOT_VISITED, Intervention.BEDNET_DISTRIBUTION,
+                    R.string.bednet_distribution_description);
+        }
     }
 
     public void generateDrugAdministrationTask(Context context, String entityId) {
@@ -89,7 +94,7 @@ public class TaskUtils {
         task.setGroupIdentifier(Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
         task.setStatus(READY);
         task.setBusinessStatus(businessStatus);
-        task.setPriority(3);
+        task.setPriority(Task.TaskPriority.ROUTINE);
         task.setCode(intervention);
         task.setDescription(context.getString(description));
         PlanDefinition currentPlan = planRepository.findPlanDefinitionById(prefsUtil.getCurrentPlanId());
@@ -103,7 +108,9 @@ public class TaskUtils {
         }
         task.setForEntity(entityId);
         task.setStructureId(structureId);
-        task.setExecutionStartDate(now);
+        Period period= new Period();
+        period.setStart(now);
+        task.setExecutionPeriod(period);
         task.setAuthoredOn(now);
         task.setLastModified(now);
         task.setOwner(sharedPreferences.fetchRegisteredANM());
@@ -184,5 +191,9 @@ public class TaskUtils {
 
     }
 
+    public boolean planActionCodesContainIntervention(String planId, String intervention) {
+        List<String> actionCodes = prefsUtil.getActionCodesForPlan(planId);
+        return actionCodes.contains(intervention);
+    }
 
 }

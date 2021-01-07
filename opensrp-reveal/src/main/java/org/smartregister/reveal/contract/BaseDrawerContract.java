@@ -1,6 +1,8 @@
 package org.smartregister.reveal.contract;
 
 import android.app.Activity;
+
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.util.Pair;
 
@@ -45,6 +47,8 @@ public interface BaseDrawerContract {
 
         void lockNavigationDrawerForSelection();
 
+        void lockNavigationDrawerForSelection(int title, int message);
+
         void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy);
 
         void showStructureSelector(Pair<String, ArrayList<String>> locationHierarchy);
@@ -64,6 +68,9 @@ public interface BaseDrawerContract {
         void checkSynced();
 
         void toggleProgressBarView(boolean syncing);
+
+        @Nullable
+        String getManifestVersion();
     }
 
     interface Presenter {
@@ -99,6 +106,8 @@ public interface BaseDrawerContract {
         void onPlanValidated(boolean isValid);
 
         void updateSyncStatusDisplay(boolean synced);
+
+        void onShowFilledForms();
     }
 
     interface Interactor {

@@ -48,6 +48,7 @@ import java.util.Set;
 import timber.log.Timber;
 
 import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
+import static org.smartregister.family.util.Constants.KEY.FAMILY_HEAD_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.family.util.DBConstants.KEY.RELATIONAL_ID;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
@@ -61,10 +62,11 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ELIGIBLE_STRUCTURE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FIRST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID_;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_UPDATED_DATE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.OWNER;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_COMMENTS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
@@ -146,6 +148,7 @@ public class ListTaskInteractor extends BaseInteractor {
                 try {
                     if (cursor.moveToFirst()) {
                         cardDetails = createCardDetails(cursor, interventionType);
+                        cardDetails.setInterventionType(interventionType);
                     }
                 } catch (Exception e) {
                     Timber.e(e);
@@ -257,6 +260,10 @@ public class ListTaskInteractor extends BaseInteractor {
     }
 
     public void fetchLocations(String plan, String operationalArea) {
+        fetchLocations(plan, operationalArea, null, null);
+    }
+
+    public void fetchLocations(String plan, String operationalArea, String point, Boolean locationComponentActive) {
         Runnable runnable = new Runnable() {
 
             @Override
@@ -291,7 +298,11 @@ public class ListTaskInteractor extends BaseInteractor {
                         if (operationalAreaLocation != null) {
                             operationalAreaId = operationalAreaLocation.getId();
                             Feature operationalAreaFeature = Feature.fromJson(gson.toJson(operationalAreaLocation));
-                            getPresenter().onStructuresFetched(finalFeatureCollection, operationalAreaFeature, finalTaskDetailsList);
+                            if (locationComponentActive != null) {
+                                getPresenter().onStructuresFetched(finalFeatureCollection, operationalAreaFeature, finalTaskDetailsList, point, locationComponentActive);
+                            } else {
+                                getPresenter().onStructuresFetched(finalFeatureCollection, operationalAreaFeature, finalTaskDetailsList);
+                            }
                         } else {
                             getPresenter().onStructuresFetched(finalFeatureCollection, null, null);
                         }
@@ -310,14 +321,14 @@ public class ListTaskInteractor extends BaseInteractor {
     protected String getStructureNamesSelect(String mainCondition) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
         queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, new String[]{
-                String.format("COALESCE(%s.%s,%s,%s)", FAMILY, FIRST_NAME, STRUCTURE_NAME, NAME),
-                String.format("group_concat(%s.%s||' '||%s.%s)", FAMILY_MEMBER, FIRST_NAME, FAMILY_MEMBER, LAST_NAME)}, ID);
+                String.format("COALESCE(%s.%s,%s,%s,%s)", FAMILY, FIRST_NAME, STRUCTURE_NAME, NAME, FAMILY_HEAD_NAME),
+                String.format("group_concat(%s.%s||' '||%s.%s)", FAMILY_MEMBER, FIRST_NAME, FAMILY_MEMBER, LAST_NAME)}, ID_);
         queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s AND %s.%s IS NULL collate nocase ",
-                FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID, FAMILY, DATE_REMOVED));
+                FAMILY, STRUCTURES_TABLE, ID_, FAMILY, STRUCTURE_ID, FAMILY, DATE_REMOVED));
         queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s AND %s.%s IS NULL collate nocase ",
                 FAMILY_MEMBER, FAMILY, BASE_ENTITY_ID, FAMILY_MEMBER, RELATIONAL_ID, FAMILY_MEMBER, DATE_REMOVED));
         queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s collate nocase ",
-                SPRAYED_STRUCTURES, STRUCTURES_TABLE, ID, SPRAYED_STRUCTURES, BASE_ENTITY_ID));
+                SPRAYED_STRUCTURES, STRUCTURES_TABLE, ID_, SPRAYED_STRUCTURES, ID));
         return queryBuilder.mainCondition(mainCondition);
     }
 
@@ -326,7 +337,7 @@ public class ListTaskInteractor extends BaseInteractor {
         Map<String, StructureDetails> structureNames = new HashMap<>();
         try {
             String query = getStructureNamesSelect(String.format("%s=?",
-                    Constants.DatabaseKeys.PARENT_ID)).concat(String.format(" GROUP BY %s.%s", STRUCTURES_TABLE, ID));
+                    Constants.DatabaseKeys.PARENT_ID)).concat(String.format(" GROUP BY %s.%s", STRUCTURES_TABLE, ID_));
             Timber.d(query);
             cursor = getDatabase().rawQuery(query, new String[]{parentId});
             while (cursor.moveToNext()) {
@@ -380,8 +391,8 @@ public class ListTaskInteractor extends BaseInteractor {
             structure.getProperties().setStatus(INACTIVE);
             structureRepository.addOrUpdate(structure);
 
-
-            taskRepository.cancelTasksForEntity(feature.id());
+            String taskIdentifier = feature.getStringProperty(TASK_IDENTIFIER);
+            taskRepository.cancelTaskByIdentifier(taskIdentifier);
 
             revealApplication.setSynced(false);
         } catch (Exception e) {
@@ -437,7 +448,7 @@ public class ListTaskInteractor extends BaseInteractor {
 
     private String[] getStructureColumns() {
         return new String[]{
-                TASK_TABLE + "." + ID,
+                TASK_TABLE + "." + ID_,
                 TASK_TABLE + "." + CODE,
                 TASK_TABLE + "." + FOR,
                 TASK_TABLE + "." + BUSINESS_STATUS,
@@ -448,7 +459,7 @@ public class ListTaskInteractor extends BaseInteractor {
 
     public String getTaskSelect(String mainCondition) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
-        queryBuilder.selectInitiateMainTable(TASK_TABLE, getStructureColumns(), ID);
+        queryBuilder.selectInitiateMainTable(TASK_TABLE, getStructureColumns(), ID_);
         return queryBuilder.mainCondition(mainCondition);
     }
 
@@ -490,13 +501,18 @@ public class ListTaskInteractor extends BaseInteractor {
     }
 
     public StructureTaskDetails readTaskDetails(Cursor cursor) {
-        StructureTaskDetails task = new StructureTaskDetails(cursor.getString(cursor.getColumnIndex(ID)));
+        StructureTaskDetails task = new StructureTaskDetails(cursor.getString(cursor.getColumnIndex(ID_)));
         task.setTaskCode(cursor.getString(cursor.getColumnIndex(CODE)));
         task.setTaskEntity(cursor.getString(cursor.getColumnIndex(FOR)));
         task.setBusinessStatus(cursor.getString(cursor.getColumnIndex(BUSINESS_STATUS)));
         task.setTaskStatus(cursor.getString(cursor.getColumnIndex(STATUS)));
         task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
         return task;
+    }
+
+    @Override
+    public void handleLasteventFound(org.smartregister.domain.Event event) {
+        getPresenter().onEventFound(event);
     }
 
 }

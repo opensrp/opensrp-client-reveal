@@ -13,7 +13,10 @@ public class IndicatorDetails {
     private int progress;
     private int notVisited;
     private int ineligible;
+    private int foundStructures;
+    private int roomCoverage;
     private List<String> sprayIndicatorList;
+    private int target;
 
     public int getSprayed() {
         return sprayed;
@@ -70,4 +73,29 @@ public class IndicatorDetails {
     public void setIneligible(int ineligible) {
         this.ineligible = ineligible;
     }
+
+    public int getFoundStructures() {
+        return foundStructures;
+    }
+
+    public void setFoundStructures(int foundStructures) {
+        this.foundStructures = foundStructures;
+    }
+
+    public int getRoomCoverage() {
+        return roomCoverage;
+    }
+
+    public int getTarget() {
+        return target;
+    }
+
+    public void setTarget(int target) {
+        this.target = target;
+    }
+
+    public void setRoomCoverage(int roomCoverage) {
+        this.roomCoverage = roomCoverage;
+    }
+
 }

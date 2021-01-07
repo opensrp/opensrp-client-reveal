@@ -4,12 +4,6 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import com.google.android.material.navigation.NavigationView;
-import androidx.core.util.Pair;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
@@ -17,12 +11,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.util.Pair;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.smartregister.p2p.activity.P2pModeSelectActivity;
+import org.smartregister.CoreLibrary;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -32,6 +34,7 @@ import org.smartregister.reveal.presenter.BaseDrawerPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.util.NetworkUtils;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -120,8 +123,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         });
 
         try {
+            String manifestVersion = getManifestVersion();
+            String appVersion = getContext().getString(R.string.app_version, Utils.getVersion(getContext()));
+            String appVersionText = appVersion + (manifestVersion == null ? "" : getContext().getString(R.string.manifest_version_parenthesis_placeholder, manifestVersion));
             ((TextView) headerView.findViewById(R.id.application_version))
-                    .setText(getContext().getString(R.string.app_version, Utils.getVersion(getContext())));
+                    .setText(appVersionText);
         } catch (PackageManager.NameNotFoundException e) {
             Timber.e(e);
         }
@@ -139,6 +145,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         facilityTextView = headerView.findViewById(R.id.facility_label);
         operatorTextView = headerView.findViewById(R.id.operator_label);
         p2pSyncTextView = headerView.findViewById(R.id.btn_navMenu_p2pSyncBtn);
+
         TextView offlineMapTextView = headerView.findViewById(R.id.btn_navMenu_offline_maps);
 
         TextView summaryFormsTextView = headerView.findViewById(R.id.btn_navMenu_summaryForms);
@@ -155,6 +162,10 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
             summaryFormsTextView.setVisibility(View.VISIBLE);
             summaryFormsTextView.setOnClickListener(this);
+
+            TextView filledForms = headerView.findViewById(R.id.btn_navMenu_filled_forms);
+            filledForms.setVisibility(View.VISIBLE);
+            filledForms.setOnClickListener(this);
         }
 
         if (BuildConfig.BUILD_COUNTRY != Country.NTD_SCHOOL) {
@@ -231,6 +242,15 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
 
     }
+
+    @Override
+    public void lockNavigationDrawerForSelection(int title, int message) {
+        AlertDialogUtils.displayNotification(getContext(), title, message);
+        mDrawerLayout.openDrawer(GravityCompat.START);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+
+    }
+
 
     @Override
     public void unlockNavigationDrawer() {
@@ -348,6 +368,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             startOtherFormsActivity();
         else if (v.getId() == R.id.btn_navMenu_offline_maps)
             presenter.onShowOfflineMaps();
+        else if (v.getId() == R.id.btn_navMenu_filled_forms)
+            presenter.onShowFilledForms();
         else if (v.getId() == R.id.sync_button) {
             toggleProgressBarView(true);
             org.smartregister.reveal.util.Utils.startImmediateSync();
@@ -366,7 +388,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
     private void startP2PActivity() {
-        getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
+        getContext().startActivity(new Intent(getContext(), LocationPickerActivity.class));
     }
 
     @Override
@@ -386,14 +408,14 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         TextView progressLabel = this.activity.getActivity().findViewById(R.id.sync_progress_bar_label);
         TextView syncButton = this.activity.getActivity().findViewById(R.id.sync_button);
         TextView syncBadge = this.activity.getActivity().findViewById(R.id.sync_label);
-
-        if (syncing) {
+        if (progressBar == null || syncBadge == null)
+            return;
+        if (syncing && NetworkUtils.isNetworkAvailable()) { //only hide the sync button when there is internet connection
             progressBar.setVisibility(View.VISIBLE);
             progressLabel.setVisibility(View.VISIBLE);
             syncButton.setVisibility(View.INVISIBLE);
             syncBadge.setVisibility(View.INVISIBLE);
-        }
-        else {
+        } else {
             progressBar.setVisibility(View.INVISIBLE);
             progressLabel.setVisibility(View.INVISIBLE);
             syncButton.setVisibility(View.VISIBLE);
@@ -408,5 +430,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     private void startStatsActivity() {
         getContext().startActivity(new Intent(getContext(), StatsActivity.class));
+    }
+
+    @Nullable
+    @Override
+    public String getManifestVersion() {
+        return CoreLibrary.getInstance().context().allSharedPreferences().fetchManifestVersion();
     }
 }

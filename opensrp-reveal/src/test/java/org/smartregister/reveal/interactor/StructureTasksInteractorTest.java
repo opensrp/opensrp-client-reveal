@@ -46,7 +46,7 @@ import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID_;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
@@ -200,7 +200,7 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
 
     private Cursor createCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{
-                ID,
+                ID_,
                 CODE,
                 FOR,
                 BUSINESS_STATUS,
@@ -220,7 +220,7 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
 
     private Cursor createIndexCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{
-                ID,
+                ID_,
                 CODE,
                 FOR,
                 BUSINESS_STATUS,
@@ -241,7 +241,7 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
 
     private Cursor createMemberCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{
-                ID,
+                ID_,
                 CODE,
                 FOR,
                 BUSINESS_STATUS,

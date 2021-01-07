@@ -1,4 +1,5 @@
 package org.smartregister.reveal.presenter;
+
 import androidx.core.util.Pair;
 
 import org.junit.Before;
@@ -10,13 +11,16 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.domain.Action;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
 
@@ -110,6 +114,11 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         List<PlanDefinition.UseContext> useContextList = new ArrayList();
         useContextList.add(useContext);
         planDefinition.setUseContext(useContextList);
+        List<Action> actions = new ArrayList<>();
+        Action action = mock(Action.class);
+        when(action.getCode()).thenReturn(Constants.Intervention.BLOOD_SCREENING);
+        actions.add(action);
+        planDefinition.setActions(actions);
 
         Set<PlanDefinition> planDefinitionsList = Collections.singleton(planDefinition);
 
@@ -365,9 +374,79 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         assertTrue(arrayListArgumentCaptor.getValue().contains(OPERATIONAL_AREA));
 
         verify(view).showOperationalAreaSelector(pairArgumentCaptor.capture());
-        assertEquals("[{\"name\":\"Zambia\",\"nodes\":[{\"name\":\"Chadiza 1\"}]}]", pairArgumentCaptor.getValue().first );
+        assertEquals("[{\"name\":\"Zambia\",\"nodes\":[{\"name\":\"Chadiza 1\"}]}]", pairArgumentCaptor.getValue().first);
         assertTrue(pairArgumentCaptor.getValue().second.contains("Lusaka"));
         assertTrue(pairArgumentCaptor.getValue().second.contains("Mtendere"));
+    }
+
+    @Test
+    public void testOnViewResumedCallsCheckSyncedIfAlreadySyncedAndRefreshMapOnEventSaved() {
+
+        Whitebox.setInternalState(RevealApplication.getInstance(), "refreshMapOnEventSaved", true);
+        Whitebox.setInternalState(RevealApplication.getInstance(), "synced", true);
+        Whitebox.setInternalState(presenter, "viewInitialized", true);
+        when(preferencesUtil.getCurrentPlan()).thenReturn("IRS Lusaka");
+
+        presenter = spy(presenter);
+        doNothing().doNothing().when(presenter).updateSyncStatusDisplay(synced.capture());
+        presenter.onViewResumed();
+
+        verify(view).checkSynced();
+
+    }
+
+    @Test
+    public void testOnViewResumedUpdateSyncStatusDisplayIfNotRefreshMapOnEventSavedAndSynced() {
+
+        Whitebox.setInternalState(RevealApplication.getInstance(), "refreshMapOnEventSaved", false);
+        Whitebox.setInternalState(RevealApplication.getInstance(), "synced", true);
+        Whitebox.setInternalState(presenter, "viewInitialized", true);
+        when(preferencesUtil.getCurrentPlan()).thenReturn("IRS Lusaka");
+
+        presenter = spy(presenter);
+        doNothing().doNothing().when(presenter).updateSyncStatusDisplay(synced.capture());
+        presenter.onViewResumed();
+
+        verify(presenter).updateSyncStatusDisplay(true);
+
+    }
+
+    @Test
+    public void testOnViewResumedUpdateSyncStatusDisplayIfNotRefreshMapOnEventSavedAndNotSynced() {
+
+        Whitebox.setInternalState(RevealApplication.getInstance(), "refreshMapOnEventSaved", false);
+        Whitebox.setInternalState(RevealApplication.getInstance(), "synced", false);
+        Whitebox.setInternalState(presenter, "viewInitialized", true);
+        when(preferencesUtil.getCurrentPlan()).thenReturn("IRS Lusaka");
+
+        presenter = spy(presenter);
+        doNothing().doNothing().when(presenter).updateSyncStatusDisplay(synced.capture());
+        presenter.onViewResumed();
+
+        verify(presenter).updateSyncStatusDisplay(false);
+
+    }
+
+    @Test
+    public void testOnViewResumedShouldSetPlanAndOperationalAreaAndLockDrawer() {
+
+        Whitebox.setInternalState(RevealApplication.getInstance(), "refreshMapOnEventSaved", false);
+        Whitebox.setInternalState(RevealApplication.getInstance(), "synced", false);
+        Whitebox.setInternalState(presenter, "viewInitialized", true);
+        when(preferencesUtil.getCurrentPlan()).thenReturn("plan_1");
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn(null);
+        when(view.getOperationalArea()).thenReturn("oa_1");
+        when(view.getPlan()).thenReturn("plan_1");
+
+
+        presenter = spy(presenter);
+        doNothing().doNothing().when(presenter).updateSyncStatusDisplay(anyBoolean());
+
+        presenter.onViewResumed();
+        verify(view).setOperationalArea(null);
+        verify(view).setPlan("plan_1");
+        verify(view).lockNavigationDrawerForSelection(R.string.select_campaign_operational_area_title, R.string.revoked_plan_operational_area);
+
     }
 
 }

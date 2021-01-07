@@ -10,12 +10,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
+
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 
 
 /**
@@ -90,7 +93,8 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         actionView.setText(actionLabel);
 
         // registered family with multiple tasks
-        if (cardDetails != null && task.getTaskCount() != null) { // task grouping only for FI
+        if (cardDetails != null && task.getTaskCount() != null // task grouping only for FI
+                && !(REGISTER_FAMILY.equals(task.getTaskCode()) && Task.TaskStatus.READY.name().equals(task.getTaskStatus()))) { //skip if we have a READY family reg task
             if (task.getTaskCount() > 1) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
 

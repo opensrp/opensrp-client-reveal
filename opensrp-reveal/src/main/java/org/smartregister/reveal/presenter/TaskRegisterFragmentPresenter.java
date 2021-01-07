@@ -1,8 +1,9 @@
 package org.smartregister.reveal.presenter;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
-import android.text.TextUtils;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.mapbox.geojson.Feature;
@@ -17,10 +18,14 @@ import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
+import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
@@ -42,7 +47,10 @@ import static org.smartregister.domain.Task.INACTIVE_TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Country.NAMIBIA;
 
 /**
  * Created by samuelgithengi on 3/11/19.
@@ -78,9 +86,12 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
 
     private boolean applyFilterOnTasksFound;
 
+    private BaseFormFragmentContract.Interactor formInteractor;
+
     public TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier) {
         this(view, viewConfigurationIdentifier, null);
         this.interactor = new TaskRegisterFragmentInteractor(this);
+        formInteractor = new BaseFormFragmentInteractor(this);
     }
 
     @VisibleForTesting
@@ -229,7 +240,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                     (BLOOD_SCREENING.equals(details.getTaskCode()) ||
                             BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
                             REGISTER_FAMILY.equals(details.getTaskCode())) ||
-                    (details.getTaskCount() != null && details.getTaskCount() > 1)) { // structures with grouped tasks should display the family profile
+                    (details.getTaskCount() != null && details.getTaskCount() > 1 // structures with grouped tasks should display the family profile
+                            && !(REGISTER_FAMILY.equals(details.getTaskCode()) && Task.TaskStatus.READY.name().equals(details.getTaskStatus())))) { // skip if we have a READY family reg task
                 setTaskDetails(details);
                 interactor.fetchFamilyDetails(details.getStructureId());
             } else {
@@ -318,10 +330,10 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             sortTasks(filteredTasks, filterParams.getSortBy());
         }
         setTasks(filteredTasks, withinBuffer);
+        isTasksFiltered = true;
         getView().setSearchPhrase("");
         getView().hideProgressDialog();
         getView().hideProgressView();
-        isTasksFiltered = true;
     }
 
     private void applyEmptyFilter() {
@@ -340,7 +352,11 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             matches = StringUtils.isBlank(taskDetails.getAggregateBusinessStatus()) ? filterStatus.contains(taskDetails.getBusinessStatus()) : filterStatus.contains(taskDetails.getAggregateBusinessStatus());
         }
         if (matches && filterTaskCode != null) {
-            matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterTaskCode, pattern);
+            if (taskDetails.getTaskCount() == null || taskDetails.getTaskCount() < 2) {
+                matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterTaskCode, pattern);
+            } else {
+                matches = matchesTaskCodeFilterList(taskDetails.getGroupedTaskCodes(), filterTaskCode, pattern);
+            }
         }
         if (matches && filterInterventionUnitTasks != null) {
             matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterInterventionUnitTasks, pattern);
@@ -391,6 +407,22 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
     }
 
+    @Override
+    public void onEventFound(Event event) {
+        if (!Constants.Intervention.REGISTER_FAMILY.equals(getTaskDetails().getTaskCode())) {
+            String formName = getView().getJsonFormUtils().getFormName(null, getTaskDetails().getTaskCode());
+            if (StringUtils.isBlank(formName)) {
+                getView().displayError(R.string.opening_form_title, R.string.form_not_found);
+            } else {
+                JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, getTaskDetails(), getStructure());
+                getView().getJsonFormUtils().populateForm(event, formJSON);
+                getView().getJsonFormUtils().populateFormWithServerOptions(formName,formJSON);
+                getView().startForm(formJSON);
+            }
+        }
+        getView().hideProgressDialog();
+    }
+
     private boolean matchesTaskCodeFilterList(String value, Set<String> filterList, Pattern pattern) {
         String[] array = pattern.split(value);
         return CollectionUtils.containsAny(Arrays.asList(array), filterList);
@@ -401,7 +433,13 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         if (Constants.Intervention.REGISTER_FAMILY.equals(getTaskDetails().getTaskCode())) {
             getView().registerFamily(getTaskDetails());
         }
-        super.onLocationValidated();
+
+        if ((Constants.Intervention.IRS.equals(getTaskDetails().getTaskCode()))
+                && !Task.TaskStatus.READY.name().equals(getTaskDetails().getTaskStatus())) { // no event for READY tasks
+            interactor.findLastEvent(getTaskDetails().getTaskEntity(), SPRAY_EVENT);
+        } else {
+            super.onLocationValidated();
+        }
     }
 
     @Override

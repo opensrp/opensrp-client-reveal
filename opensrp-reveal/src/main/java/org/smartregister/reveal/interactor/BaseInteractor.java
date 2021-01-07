@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+
 import androidx.annotation.VisibleForTesting;
 
 import com.google.gson.Gson;
@@ -9,6 +10,7 @@ import com.google.gson.JsonArray;
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.joda.time.DateTime;
@@ -20,12 +22,12 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
+import org.smartregister.domain.Client;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
-import org.smartregister.domain.Task;
-import org.smartregister.domain.Client;
-import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.Obs;
+import org.smartregister.domain.Task;
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
@@ -74,7 +76,7 @@ import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICA
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID_;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
@@ -161,9 +163,10 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     @Override
     public void saveJsonForm(String json) {
+        String encounterType = null;
         try {
             JSONObject jsonForm = new JSONObject(json);
-            String encounterType = jsonForm.getString(ENCOUNTER_TYPE);
+            encounterType = jsonForm.optString(ENCOUNTER_TYPE);
             boolean refreshMapOnEventSaved = true;
             switch (encounterType) {
                 case REGISTER_STRUCTURE_EVENT:
@@ -171,7 +174,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     break;
                 case EventType.MDA_DISPENSE:
                     taskUtils.generateMDAAdherenceTask(RevealApplication.getInstance().getApplicationContext(),
-                            getString(jsonForm, ENTITY_ID), getJSONObject(jsonForm, DETAILS).getString(Properties.LOCATION_ID));
+                            getString(jsonForm, ENTITY_ID), getJSONObject(jsonForm, DETAILS).optString(Properties.LOCATION_ID));
 
                 case BLOOD_SCREENING_EVENT:
                 case EventType.MDA_ADHERENCE:
@@ -190,8 +193,14 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             }
             revealApplication.setRefreshMapOnEventSaved(refreshMapOnEventSaved);
         } catch (Exception e) {
-            Timber.e(e, "Error saving Json Form data");
+            Timber.e(e);
+            presenterCallBack.onFormSaveFailure(encounterType);
         }
+    }
+
+    @Override
+    public void handleLasteventFound(org.smartregister.domain.Event event) {
+        // handle in child class
     }
 
     private org.smartregister.domain.Event saveEvent(JSONObject jsonForm, String encounterType, String bindType) throws JSONException {
@@ -228,6 +237,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 interventionType = Intervention.MDA_ADHERENCE;
             } else if (encounterType.equals(EventType.IRS_VERIFICATION)) {
                 interventionType = Intervention.IRS_VERIFICATION;
+            } else if (encounterType.equals(EventType.DAILY_SUMMARY_EVENT)) {
+                jsonForm.put(ENTITY_ID, UUID.randomUUID().toString());
             }
         } catch (JSONException e) {
             Timber.e(e);
@@ -245,7 +256,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                         @Override
                         public void run() {
                             String businessStatus = clientProcessor.calculateBusinessStatus(event);
-                            String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
+                            String taskID = event.getDetails() == null ? null : event.getDetails().get(Properties.TASK_IDENTIFIER);
                             presenterCallBack.onFormSaved(event.getBaseEntityId(), taskID, Task.TaskStatus.COMPLETED, businessStatus, finalInterventionType);
                         }
                     });
@@ -426,9 +437,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     protected String getMemberTasksSelect(String mainCondition, String[] memberColumns) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
-        queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, memberColumns, ID);
+        queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, memberColumns, ID_);
         queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
-                FAMILY_MEMBER, FAMILY_MEMBER, STRUCTURE_ID, STRUCTURES_TABLE, ID));
+                FAMILY_MEMBER, FAMILY_MEMBER, STRUCTURE_ID, STRUCTURES_TABLE, ID_));
         queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
                 TASK_TABLE, TASK_TABLE, FOR, FAMILY_MEMBER, BASE_ENTITY_ID));
         return queryBuilder.mainCondition(mainCondition);
@@ -472,5 +483,28 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             commonRepository = revealApplication.getContext().commonrepository(metadata().familyRegister.tableName);
 
         }
+    }
+
+    @Override
+    public void findLastEvent(String eventBaseEntityId, String eventType) {
+
+        appExecutors.diskIO().execute(() -> {
+            String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
+                    EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.baseEntityId, EventClientRepository.event_column.eventType, EventClientRepository.event_column.updatedAt);
+
+            try (Cursor cursor = getDatabase().rawQuery(events, new String[]{eventBaseEntityId, eventType});) {
+
+                if (cursor.moveToFirst()) {
+                    String eventJSON = cursor.getString(0);
+                    handleLasteventFound(eventClientRepository.convert(eventJSON, org.smartregister.domain.Event.class));
+
+                } else {
+                    handleLasteventFound(null);
+                }
+            } catch (SQLException e) {
+                Timber.e(e);
+            }
+        });
+
     }
 }

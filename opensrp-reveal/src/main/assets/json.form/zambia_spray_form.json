@@ -1,6 +1,7 @@
 {
   "count": "1",
   "encounter_type": "Spray",
+  "form_version": "0.0.1",
   "entity_id": "",
   "metadata": {
     "start": {
@@ -187,6 +188,10 @@
             "text": "No person lives here now"
           },
           {
+            "key": "structureDoesNotExist",
+            "text": "Structure does not exist"
+          },
+          {
             "key": "other",
             "text": "Other"
           }
@@ -265,43 +270,6 @@
         }
       },
       {
-        "key": "location",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "What is the name of the location (zone) this structure is in?",
-        "text_size": "8sp",
-        "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
-          }
-        },
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
-      },
-      {
-        "key": "datacollector",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Select your name as the data collector",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the data collector."
-        },
-        "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
-          }
-        }
-      },
-      {
         "key": "sprayop_code",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -313,10 +281,9 @@
           "err": "Please enter the spray operator code"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
-            }
+          "step1:eligibility": {
+            "type": "string",
+            "ex": "equalTo(., \"eligible\")"
           }
         }
       },
@@ -326,7 +293,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Head of household name?",
+        "hint": "Name of structure household head",
         "text_size": "8sp",
         "v_required": {
           "value": "true",
@@ -407,7 +374,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Were any rooms in this structure sprayed",
+        "label": "Was this structure sprayed?",
         "text_size": "8sp",
         "options": [
           {
@@ -520,52 +487,6 @@
         }
       },
       {
-        "key": "partiallysprayed_reason",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Main reason why some ELIGIBLE rooms in this structure were not sprayed?",
-        "text_size": "8sp",
-        "options": [
-          {
-            "key": "refused",
-            "text": "Refused"
-          },
-          {
-            "key": "locked",
-            "text": "Locked"
-          },
-          {
-            "key": "sick",
-            "text": "Sick"
-          },
-          {
-            "key": "foodStorage",
-            "text": "Food Storage"
-          },
-          {
-            "key": "didntWantToClear",
-            "text": "Didn't want to clear"
-          },
-          {
-            "key": "other",
-            "text": "Other"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "sprayed_males",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -594,6 +515,10 @@
         "v_max": {
           "value": "20",
           "err": "Male population must be less than 20"
+        },
+        "v_relative_min": {
+          "value": "sprayed_totalmale",
+          "err": "Male population must be greater than 0"
         },
         "relevance": {
           "step1:structure_sprayed": {
@@ -631,6 +556,10 @@
         "v_max": {
           "value": "20",
           "err": "Female population must be less than 20"
+        },
+        "v_relative_min": {
+          "value": "sprayed_totalfemale",
+          "err": "Female population must be greater than 0"
         },
         "relevance": {
           "step1:structure_sprayed": {
@@ -671,6 +600,36 @@
             }
           }
         },
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-calculation.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sprayed_totalmale",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "text_size": "8sp",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-calculation.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sprayed_totalfemale",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "text_size": "8sp",
         "calculation": {
           "rules-engine": {
             "ex-rules": {
@@ -824,40 +783,6 @@
         }
       },
       {
-        "key": "sprayed_nets_available",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Total Number of Nets Available",
-        "is_mandatory": true,
-        "text_size": "8sp",
-        "v_required": {
-          "value": true,
-          "err": "Total Number of Nets Available is mandatory"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Total Number of Nets Available must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Total Number of Nets Available must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Total Number of Nets Available must be greater than or equal to 0"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "sprayed_nets_use",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -903,40 +828,6 @@
         "toaster_type": "problem",
         "v_required": {
           "value": "true"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "sprayed_total_uNet",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Total Number of Residents Sleeping Under Nets",
-        "text_size": "8sp",
-        "is_mandatory": true,
-        "v_required": {
-          "value": true,
-          "err": "Total Number of Residents Sleeping Under Nets is mandatory"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Total Number of Residents Sleeping Under Nets must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Total Number of Residents Sleeping Under Nets must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Total Number of Residents Sleeping Under Nets must be greater than or equal to 0"
         },
         "relevance": {
           "rules-engine": {
@@ -1103,30 +994,44 @@
         }
       },
       {
-        "key": "serial_number",
+        "key": "serial_numbers",
+        "type": "repeating_group",
+        "reference_edit_text_hint": "Number of insecticide sachets mixed",
+        "repeating_group_label": "serial number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Sachet Serial Number",
-        "text_size": "8sp",
-        "is_mandatory": true,
-        "v_numeric": {
-          "value": "true",
-          "err": "Sachet Serial Number must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Sachet Serial Number must be a whole number"
-        },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+          "step1:new_sachet": {
+            "type": "string",
+            "ex": "equalTo(., \"yes\")"
+          }
+        },
+        "value": [
+          {
+            "key": "serial_number",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "",
+            "type": "edit_text",
+            "edit_type": "number",
+            "hint": "Sachet Serial Number",
+            "text_size": "8sp",
+            "is_mandatory": true,
+            "v_numeric": {
+              "value": "true",
+              "err": "Sachet Serial Number must be a number"
+            },
+            "v_numeric_integer": {
+              "value": "true",
+              "err": "Sachet Serial Number must be a whole number"
+            },
+            "v_required": {
+              "value": "true",
+              "err": "Required field"
             }
           }
-        }
+        ]
       },
       {
         "key": "notsprayed_reason",
@@ -1138,24 +1043,24 @@
         "text_size": "8sp",
         "options": [
           {
-            "key": "refused",
-            "text": "Refused"
+            "key": "sick",
+            "text": "Sick"
           },
           {
             "key": "locked",
             "text": "Locked"
           },
           {
-            "key": "noOneHome",
-            "text": "No One Home"
-          },
-          {
-            "key": "sick",
-            "text": "Sick"
-          },
-          {
             "key": "funeral",
             "text": "Funeral"
+          },
+          {
+            "key": "refused",
+            "text": "Refused"
+          },
+          {
+            "key": "adultNotPresent",
+            "text": "Adult not present"
           },
           {
             "key": "other",
@@ -1163,7 +1068,7 @@
           }
         ],
         "v_required": {
-          "value": "true",
+          "value": "false",
           "err": "Required field"
         },
         "relevance": {
@@ -1183,12 +1088,12 @@
         "text_size": "8sp",
         "options": [
           {
-            "key": "notSafeFearOfChemical",
-            "text": "Not safe / fear of chemical"
+            "key": "notSafe",
+            "text": "Not safe"
           },
           {
-            "key": "locked",
-            "text": "Locked"
+            "key": "fearOfChemical",
+            "text": "Fear of chemical"
           },
           {
             "key": "notWorthInconvinience",
@@ -1291,6 +1196,10 @@
           "value": "20",
           "err": "Male population must be less than 20"
         },
+        "v_relative_min": {
+          "value": "sprayed_totalmale",
+          "err": "Male population must be greater than 0"
+        },
         "relevance": {
           "step1:structure_sprayed": {
             "type": "string",
@@ -1322,6 +1231,10 @@
         "v_max": {
           "value": "20",
           "err": "Female population must be less than 20"
+        },
+        "v_relative_min": {
+          "value": "sprayed_totalfemale",
+          "err": "Female population must be greater than 0"
         },
         "relevance": {
           "step1:structure_sprayed": {
@@ -1447,35 +1360,6 @@
         }
       },
       {
-        "key": "notsprayed_nets_available",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Total Number of Nets Available",
-        "text_size": "8sp",
-        "v_numeric": {
-          "value": "true",
-          "err": "Total Number of Nets Available must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Total Number of Nets Available must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Total Number of Nets Available must be greater than or equal to 0"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "notsprayed_nets_use",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1491,10 +1375,6 @@
         "v_numeric_integer": {
           "value": "true",
           "err": "Total Number of Nets Hanging and in Use must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Total Number of Nets Hanging and in Use must be greater than or equal to 0"
         },
         "relevance": {
           "rules-engine": {
@@ -1516,35 +1396,6 @@
         "toaster_type": "problem",
         "v_required": {
           "value": "true"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "notsprayed_total_uNet",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Total Number of Residents Sleeping Under Nets",
-        "text_size": "8sp",
-        "v_numeric": {
-          "value": "true",
-          "err": "Total Number of Residents Sleeping Under Nets must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Total Number of Residents Sleeping Under Nets must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Total Number of Residents Sleeping Under Nets must be greater than or equal to 0"
         },
         "relevance": {
           "rules-engine": {
@@ -1704,7 +1555,7 @@
           }
         }
       },
-      {
+	  {
         "key": "sbc",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1734,7 +1585,7 @@
           }
         }
       },
-      {
+	   {
         "key": "about_malaria",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1771,7 +1622,6 @@
         "type": "check_box",
         "label": "What type of message / information did you see or hear?",
         "text_size": "8sp",
-        "combine_checkbox_option_values" : "true",
         "options": [
           {
             "key": "malariaIsDangerous",
@@ -1857,7 +1707,6 @@
         "type": "check_box",
         "label": "What is your preferred source(s) of malaria messages / information?",
         "text_size": "8sp",
-        "combine_checkbox_option_values" : "true",
         "options": [
           {
             "key": "healthFacility",
@@ -1981,26 +1830,17 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "toaster_notes",
-        "text": "You are in  {districtName}",
-        "text_color": "#CF0800",
-        "toaster_type": "info",
+        "type": "spinner",
+        "hint": "What district are you in?",
         "text_size": "8sp",
         "v_required": {
-          "value": "false",
+          "value": "true",
           "err": "Required field"
         },
         "relevance": {
           "step1:health_service": {
             "type": "string",
             "ex": "equalTo(., \"Yes\")"
-          }
-        },
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-calculation.yml"
-            }
           }
         }
       },

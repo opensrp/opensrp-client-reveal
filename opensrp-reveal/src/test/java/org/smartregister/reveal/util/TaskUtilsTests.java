@@ -27,6 +27,7 @@ import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.util.Cache;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -151,8 +152,9 @@ public class TaskUtilsTests extends BaseUnitTest {
         assertEquals(expectedBusinessStatus, actualTask.getBusinessStatus());
         assertEquals(context.getString(expectedDescription), actualTask.getDescription());
         assertNotNull(actualTask.getIdentifier());
-        assertEquals(3, actualTask.getPriority());
-        assertNotNull(actualTask.getExecutionStartDate());
+        assertEquals(Task.TaskPriority.ROUTINE, actualTask.getPriority());
+        assertNotNull(actualTask.getExecutionPeriod());
+        assertNotNull(actualTask.getExecutionPeriod().getStart());
         assertNotNull(actualTask.getAuthoredOn());
         assertNotNull(actualTask.getLastModified());
         assertEquals(BaseRepository.TYPE_Created, actualTask.getSyncStatus());
@@ -180,6 +182,9 @@ public class TaskUtilsTests extends BaseUnitTest {
     @Test
     public void testGenerateBloodScreeningTask() {
 
+        String plan = UUID.randomUUID().toString();
+        PreferencesUtil.getInstance().setCurrentPlanId(plan);
+        PreferencesUtil.getInstance().setActionCodesForPlan(plan, Collections.singletonList(BLOOD_SCREENING));
         taskUtils = spy(taskUtils);
 
         taskUtils.generateBloodScreeningTask(context, expectedEntityId, expectedStructureId);
@@ -200,6 +205,9 @@ public class TaskUtilsTests extends BaseUnitTest {
 
         taskUtils = spy(taskUtils);
 
+        String plan = UUID.randomUUID().toString();
+        PreferencesUtil.getInstance().setCurrentPlanId(plan);
+        PreferencesUtil.getInstance().setActionCodesForPlan(plan, Collections.singletonList(BEDNET_DISTRIBUTION));
         taskUtils.generateBedNetDistributionTask(context, expectedEntityId);
 
         verify(taskUtils).generateTask(eq(context), stringArgumentCaptor.capture(), stringArgumentCaptor.capture(),

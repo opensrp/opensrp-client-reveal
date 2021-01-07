@@ -123,6 +123,16 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".view.EventRegisterActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.LocationPickerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
         <service android:name=".sync.LocationTaskIntentService" />
         <service android:name=".sync.RevealSettingsSyncIntentService" />
         <service android:name=".sync.RevealSyncIntentService" />
