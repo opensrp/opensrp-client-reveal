@@ -49,7 +49,7 @@ public class RevealToasterNotesFactory extends ToasterNotesFactory {
         textView.setTag(com.vijay.jsonwizard.R.id.address, stepName + ":" + jsonObject.getString(KEY));
         textView.setTag(com.vijay.jsonwizard.R.id.key, jsonObject.getString(KEY));
         addRequiredValidator(jsonObject, textView);
-        ((JsonApi) context).addFormDataView(textView);
+        formFragment.getJsonApi().addFormDataView(textView);
         return views;
     }
 
