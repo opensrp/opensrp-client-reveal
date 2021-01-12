@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.JsonApi;
+import com.vijay.jsonwizard.utils.ValidationStatus;
 import com.vijay.jsonwizard.validators.edittext.RequiredValidator;
 
 import org.hamcrest.MatcherAssert;
@@ -24,6 +25,9 @@ import org.smartregister.reveal.BaseUnitTest;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -66,5 +70,27 @@ public class RevealToasterNotesFactoryTest extends BaseUnitTest {
         assertEquals("step1:displayRecommendedNumNetsToDistribute", textView.getTag(com.vijay.jsonwizard.R.id.address));
         assertEquals("displayRecommendedNumNetsToDistribute", textView.getTag(com.vijay.jsonwizard.R.id.key));
         MatcherAssert.assertThat(textView.getTag(com.vijay.jsonwizard.R.id.v_required), Matchers.instanceOf(RequiredValidator.class));
+    }
+
+    @Test
+    public void testValidateShouldReturnShouldFail() throws Exception {
+        factory.getViewsFromJson("step1", context, formFragment, jsonObject, listener);
+        verify(jsonApi).addFormDataView(textViewArgumentCaptor.capture());
+        TextView textView = textViewArgumentCaptor.getValue();
+        ValidationStatus validateStatus = RevealToasterNotesFactory.validate(formFragment, textView);
+        assertFalse(validateStatus.isValid());
+        assertEquals("Toast notes Field required", validateStatus.getErrorMessage());
+    }
+
+    @Test
+    public void testValidateShouldReturnShouldPassWhenViewIsNotShown() throws Exception {
+        factory.getViewsFromJson("step1", context, formFragment, jsonObject, listener);
+        verify(jsonApi).addFormDataView(textViewArgumentCaptor.capture());
+        TextView textView = textViewArgumentCaptor.getValue();
+        View view = (View) textView.getParent().getParent();
+        view.setVisibility(View.GONE);
+        ValidationStatus validateStatus = RevealToasterNotesFactory.validate(formFragment, textView);
+        assertTrue(validateStatus.isValid());
+        assertNull(validateStatus.getErrorMessage());
     }
 }
