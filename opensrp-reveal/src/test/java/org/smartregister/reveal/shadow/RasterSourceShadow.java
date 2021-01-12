@@ -14,6 +14,7 @@ public class RasterSourceShadow extends SourceShadow {
 
 
     private String id;
+    private String uri;
 
     @Implementation
     public void __constructor__(String id, TileSet tileSet, int tileSize) {
@@ -21,8 +22,19 @@ public class RasterSourceShadow extends SourceShadow {
     }
 
     @Implementation
+    public void __constructor__(String id, String uri, int tileSize) {
+        this.id = id;
+        this.uri = uri;
+    }
+
+    @Implementation
     protected String nativeGetId() {
         return id;
+    }
+
+    @Implementation
+    protected String nativeGetUrl() {
+        return uri;
     }
 
 
