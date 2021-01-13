@@ -117,6 +117,7 @@ public class GeoJsonUtils {
                     break;
                 case BEDNET_DISTRIBUTION:
                     state.bednetDistributed = COMPLETE.equals(task.getBusinessStatus()) || NOT_ELIGIBLE.equals(task.getBusinessStatus());
+                    state.bednetDistributionExists = true;
                     break;
                 case BLOOD_SCREENING:
                     if (!state.bloodScreeningDone) {
@@ -161,11 +162,13 @@ public class GeoJsonUtils {
         if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE))) {
 
             boolean familyRegTaskMissingOrFamilyRegComplete = state.familyRegistered || !state.familyRegTaskExists;
+            boolean multiTaskComplete = familyRegTaskMissingOrFamilyRegComplete && state.bednetDistributed && state.bloodScreeningDone;
+            boolean singleTaskComplete = familyRegTaskMissingOrFamilyRegComplete && ((state.bednetDistributed && !state.bloodScreeningExists)
+                    || (state.bloodScreeningExists && !state.bednetDistributed));
 
             if (Utils.isFocusInvestigation()) {
 
-                if (familyRegTaskMissingOrFamilyRegComplete &&
-                        state.bednetDistributed && state.bloodScreeningDone) {
+                if (multiTaskComplete || singleTaskComplete) {
                     taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
                 } else if (familyRegTaskMissingOrFamilyRegComplete &&
                         !state.bednetDistributed && (!state.bloodScreeningDone || (!state.bloodScreeningExists && !state.caseConfirmed))) {
@@ -224,5 +227,6 @@ public class GeoJsonUtils {
         private boolean partiallyReceived;
         private boolean bloodScreeningExists = false;
         private boolean ineligibleForFamReg = false;
+        private boolean bednetDistributionExists = false;
     }
 }
