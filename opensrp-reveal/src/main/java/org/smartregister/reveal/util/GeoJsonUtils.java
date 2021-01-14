@@ -167,7 +167,7 @@ public class GeoJsonUtils {
             boolean familyRegTaskMissingOrFamilyRegComplete = state.familyRegistered || !state.familyRegTaskExists;
             boolean multiTaskComplete = familyRegTaskMissingOrFamilyRegComplete && state.bednetDistributed && state.bloodScreeningDone;
             boolean singleTaskComplete = familyRegTaskMissingOrFamilyRegComplete && ((state.bednetDistributed && !state.bloodScreeningExists)
-                    || (state.bloodScreeningExists && !state.bednetDistributed));
+                    || (state.bloodScreeningDone && !state.bednetDistributionExists));
 
             if (Utils.isFocusInvestigation()) {
 
