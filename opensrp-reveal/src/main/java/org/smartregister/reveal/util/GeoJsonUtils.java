@@ -2,6 +2,7 @@ package org.smartregister.reveal.util;
 
 import androidx.annotation.NonNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BuildConfig;
@@ -64,8 +65,10 @@ public class GeoJsonUtils {
             mdaStatusMap.put(NOT_ELIGIBLE, 0);
             mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, 0);
             StateWrapper state = new StateWrapper();
-            if (taskSet == null)
+            if (taskSet == null) {
+                handleFamilyRegDoneInOtherPlan(structureNames,taskProperties,structure);
                 continue;
+            }
             for (Task task : taskSet) {
                 calculateState(task, state, mdaStatusMap);
 
@@ -211,6 +214,15 @@ public class GeoJsonUtils {
 
             }
 
+        }
+    }
+
+    private static void handleFamilyRegDoneInOtherPlan(Map<String, StructureDetails> structureNames, HashMap<String, String> taskProperties, Location structure) {
+        if (structureNames.get(structure.getId()) != null && StringUtils.isNotBlank(structureNames.get(structure.getId()).getStructureName())) {
+            taskProperties.put(STRUCTURE_NAME, structureNames.get(structure.getId()).getStructureName());
+            taskProperties.put(FAMILY_MEMBER_NAMES, structureNames.get(structure.getId()).getFamilyMembersNames());
+            taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
+            structure.getProperties().setCustomProperties(taskProperties);
         }
     }
 
