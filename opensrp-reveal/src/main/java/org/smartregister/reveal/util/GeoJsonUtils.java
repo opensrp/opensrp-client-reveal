@@ -166,12 +166,10 @@ public class GeoJsonUtils {
 
             boolean familyRegTaskMissingOrFamilyRegComplete = state.familyRegistered || !state.familyRegTaskExists;
             boolean multiTaskComplete = familyRegTaskMissingOrFamilyRegComplete && state.bednetDistributed && state.bloodScreeningDone;
-            boolean singleTaskComplete = familyRegTaskMissingOrFamilyRegComplete && ((state.bednetDistributed && !state.bloodScreeningExists)
-                    || (state.bloodScreeningDone && !state.bednetDistributionExists));
 
             if (Utils.isFocusInvestigation()) {
 
-                if (multiTaskComplete || singleTaskComplete) {
+                if (multiTaskComplete) {
                     taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
                 } else if (familyRegTaskMissingOrFamilyRegComplete &&
                         !state.bednetDistributed && (!state.bloodScreeningDone || (!state.bloodScreeningExists && !state.caseConfirmed))) {

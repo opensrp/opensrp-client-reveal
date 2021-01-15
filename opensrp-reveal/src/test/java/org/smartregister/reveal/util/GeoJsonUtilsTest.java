@@ -718,6 +718,67 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
     }
 
+    // Single task use-case tests
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForSingleTaskBednetDistributionCompleteColorCoding() throws Exception {
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task bednetDistributionTask = initTestTask(BEDNET_DISTRIBUTION, COMPLETE);
+        taskSet.add(bednetDistributionTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(BEDNET_DISTRIBUTED, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForSingleTaskBloodScreeningCompleteColorCoding() throws Exception {
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task bloodScreeningTask = initTestTask(BLOOD_SCREENING, COMPLETE);
+        taskSet.add(bloodScreeningTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(BLOOD_SCREENING_COMPLETE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+
     private Task initTestTask(String taskCode, String businessStatus) {
         Task task = new Task();
         task.setIdentifier("ARCHIVE_2019-04");
