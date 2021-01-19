@@ -172,7 +172,7 @@ public class RevealClientProcessorTest extends BaseUnitTest {
         Whitebox.setInternalState(clientProcessor, "eventClientRepository", eventClientRepository);
         clientProcessor.processClient(Arrays.asList(new EventClient(event, null), new EventClient(sprayedEvent, null)), false);
 
-        verify(eventClientRepository, times(2)).markEventAsTaskUnprocessed(anyString());
+        verify(eventClientRepository, never()).markEventAsTaskUnprocessed(anyString());
     }
 
     @Test
@@ -182,7 +182,7 @@ public class RevealClientProcessorTest extends BaseUnitTest {
         clientProcessor.processClient(Collections.singletonList(new EventClient(sprayedEvent, null)));
 
         verify(eventClientRepository, never()).markEventAsTaskUnprocessed(sprayedEvent.getFormSubmissionId());
-        verify(eventClientRepository).markEventAsSynced(sprayedEvent.getFormSubmissionId());
+        verify(eventClientRepository,never()).markEventAsSynced(sprayedEvent.getFormSubmissionId());
 
         verify(taskRepository).addOrUpdate(taskCaptor.capture());
 

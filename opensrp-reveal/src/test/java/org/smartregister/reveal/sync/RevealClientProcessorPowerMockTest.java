@@ -152,7 +152,7 @@ public class RevealClientProcessorPowerMockTest {
 
         Whitebox.invokeMethod(clientProcessor, "updateTask", event, false);
 
-        verify(eventClientRepository).markEventAsTaskUnprocessed(eq(FORM_SUBMISSION_ID));
+        verify(eventClientRepository,never()).markEventAsTaskUnprocessed(eq(FORM_SUBMISSION_ID));
     }
 
     @Test
@@ -175,7 +175,7 @@ public class RevealClientProcessorPowerMockTest {
 
         Whitebox.invokeMethod(clientProcessor, "updateTask", event, false);
 
-        verify(eventClientRepository).markEventAsSynced(eq(FORM_SUBMISSION_ID));
+        verify(eventClientRepository,never()).markEventAsSynced(eq(FORM_SUBMISSION_ID));
     }
 
     @Test
