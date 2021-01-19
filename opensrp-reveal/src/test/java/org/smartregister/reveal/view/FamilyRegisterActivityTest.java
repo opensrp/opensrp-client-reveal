@@ -1,8 +1,11 @@
 package org.smartregister.reveal.view;
 
 import android.content.Intent;
+import android.view.MenuItem;
 
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -14,10 +17,12 @@ import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.Context;
 import org.smartregister.family.contract.FamilyRegisterContract;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.R;
 import org.smartregister.service.ZiggyService;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.never;
@@ -76,8 +81,15 @@ public class FamilyRegisterActivityTest extends BaseUnitTest {
         MatcherAssert.assertThat(activity.getRegisterFragment(), Matchers.instanceOf(BaseRegisterFragment.class));
     }
 
+
     @Test
-    public void testGetOtherFragmentsReturnsEmptyArray() {
-        assertArrayEquals(new Fragment[0], activity.getOtherFragments());
+    public void testRegisterBottomNavigationShouldSetClientLabelAndRemoveOthers() {
+        activity = Robolectric.buildActivity(FamilyRegisterActivity.class).create().start().get();
+        BottomNavigationView bottomNavigationView = ReflectionHelpers.getField(activity, "bottomNavigationView");
+        assertNull(bottomNavigationView.getMenu().findItem(R.id.action_clients));
+        assertNull(bottomNavigationView.getMenu().findItem(R.id.action_search));
+        assertNull(bottomNavigationView.getMenu().findItem(R.id.action_library));
+        assertNull(bottomNavigationView.getMenu().findItem(R.id.action_job_aids));
+        assertNull(bottomNavigationView.getMenu().findItem(R.id.action_register));
     }
 }
