@@ -1,9 +1,6 @@
 package org.smartregister.reveal.view;
 
 import android.content.Intent;
-import android.view.MenuItem;
-
-import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -15,19 +12,23 @@ import org.mockito.Mock;
 import org.robolectric.Robolectric;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.Context;
-import org.smartregister.family.contract.FamilyRegisterContract;
+import org.smartregister.family.util.Constants;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.service.ZiggyService;
 import org.smartregister.view.fragment.BaseRegisterFragment;
+import org.smartregister.view.viewpager.OpenSRPViewPager;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.robolectric.Shadows.shadowOf;
 
 /**
  * Created by samuelgithengi on 1/19/21.
@@ -37,10 +38,10 @@ public class FamilyRegisterActivityTest extends BaseUnitTest {
     private FamilyRegisterActivity activity;
 
     @Mock
-    private FamilyRegisterContract.Presenter presenter;
+    private ZiggyService ziggyService;
 
     @Mock
-    private ZiggyService ziggyService;
+    private OpenSRPViewPager mPager;
 
     @Before
     public void setUp() {
@@ -72,7 +73,6 @@ public class FamilyRegisterActivityTest extends BaseUnitTest {
         assertNull(activity.presenter());
         activity.initializePresenter();
         assertNotNull(activity.presenter());
-        presenter = activity.presenter();
 
     }
 
@@ -80,7 +80,6 @@ public class FamilyRegisterActivityTest extends BaseUnitTest {
     public void testGetRegisterFragmentShouldReturnRegisterFragment() {
         MatcherAssert.assertThat(activity.getRegisterFragment(), Matchers.instanceOf(BaseRegisterFragment.class));
     }
-
 
     @Test
     public void testRegisterBottomNavigationShouldSetClientLabelAndRemoveOthers() {
@@ -92,4 +91,37 @@ public class FamilyRegisterActivityTest extends BaseUnitTest {
         assertNull(bottomNavigationView.getMenu().findItem(R.id.action_job_aids));
         assertNull(bottomNavigationView.getMenu().findItem(R.id.action_register));
     }
+
+
+    @Test
+    public void testSwitchToFragmentShouldNavigateUp() {
+        activity = spy(activity);
+        ReflectionHelpers.setField(activity, "mPager", mPager);
+        activity.switchToFragment(0);
+        verify(activity).navigateUpTo(any());
+        verifyZeroInteractions(mPager);
+    }
+
+    @Test
+    public void testSwitchToFragmentShouldInvokeSuper() {
+        activity = spy(activity);
+        ReflectionHelpers.setField(activity, "mPager", mPager);
+        activity.switchToFragment(2);
+        verify(activity, never()).navigateUpTo(any());
+        verify(mPager).setCurrentItem(2, false);
+    }
+
+    @Test
+    public void testStartProfileActivityShouldStartProfileActivity() {
+        activity.startProfileActivity("id1", "head1", "pg1", "doe");
+        Intent startedIntent = shadowOf(activity).getNextStartedActivity();
+        assertEquals(FamilyProfileActivity.class, shadowOf(startedIntent).getIntentClass());
+        assertEquals("id1", startedIntent.getStringExtra(Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID));
+        assertEquals("head1", startedIntent.getStringExtra(Constants.INTENT_KEY.FAMILY_HEAD));
+        assertEquals("pg1", startedIntent.getStringExtra(Constants.INTENT_KEY.PRIMARY_CAREGIVER));
+        assertEquals("doe", startedIntent.getStringExtra(Constants.INTENT_KEY.FAMILY_NAME));
+        assertFalse(startedIntent.getBooleanExtra(Constants.INTENT_KEY.GO_TO_DUE_PAGE, true));
+
+    }
+
 }
