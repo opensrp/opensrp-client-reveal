@@ -180,8 +180,7 @@ android {
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
-    maxHeapSize = "2g"
-    //testLogging.showStandardStreams = true
+    maxHeapSize = "4g"
 
     testLogging {
         events TestLogEvent.FAILED
