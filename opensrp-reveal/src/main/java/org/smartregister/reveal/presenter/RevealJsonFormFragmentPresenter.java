@@ -204,6 +204,8 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         super.onItemSelected(parent, view, position, id);
         String key = (String) parent.getTag(R.id.key);
         Map<String, JSONObject> fields = jsonFormUtils.getFields(jsonFormView.getmJSONObject());
+        cascadeSelect(key, JsonForm.DISTRICT, Constants.CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_BELONG));
+        cascadeSelect(key, JsonForm.DISTRICT, Constants.CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_SEEK));
         cascadeSelect(key, JsonForm.DATA_COLLECTOR, Constants.CONFIGURATION.SPRAY_OPERATORS, fields.get(JsonForm.SPRAY_OPERATOR_CODE));
         cascadeSelect(key, JsonForm.HFC_BELONG, Constants.CONFIGURATION.COMMUNITY_HEALTH_WORKERS, fields.get(JsonForm.CHW_NAME));
         cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_CORDINATORS, fields.get(JsonForm.COORDINATOR_NAME));

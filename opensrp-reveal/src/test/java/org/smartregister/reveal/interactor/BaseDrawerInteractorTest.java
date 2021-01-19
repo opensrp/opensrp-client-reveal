@@ -76,6 +76,9 @@ public class BaseDrawerInteractorTest extends BaseUnitTest {
             "UNION ALL\n" +
             String.format("SELECT %s FROM %s WHERE %s <> ?\n", STRUCTURE_SYNC_STATUS, STRUCTURE_TABLE, STRUCTURE_SYNC_STATUS);
 
+
+    protected final int ASYNC_TIMEOUT = 4000;
+
     @Before
     public void setUp() {
         interactor = new BaseDrawerInteractor(presenter);
@@ -110,9 +113,8 @@ public class BaseDrawerInteractorTest extends BaseUnitTest {
         Set<PlanDefinition> expected = Collections.singleton(planDefinition);
         when(planDefinitionSearchRepository.findActivePlansByJurisdiction(operationalArea)).thenReturn(expected);
         interactor.fetchPlans(operationalArea);
-        //verify(presenter, timeout(ASYNC_TIMEOUT)).onPlansFetched(expected);
         verify(planDefinitionSearchRepository, timeout(ASYNC_TIMEOUT)).findActivePlansByJurisdiction(operationalArea);
-
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onPlansFetched(expected);
     }
 
     @Test

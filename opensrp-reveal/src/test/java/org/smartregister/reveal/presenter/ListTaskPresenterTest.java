@@ -42,6 +42,7 @@ import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Filter;
@@ -57,6 +58,7 @@ import org.smartregister.util.JsonFormUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
@@ -945,6 +947,20 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         assertEquals("true", jsonArgumentCaptor.getValue().getString(LOCATION_COMPONENT_ACTIVE));
         verify(jsonFormUtils).populateField(formJson, JsonForm.SELECTED_OPERATIONAL_AREA_NAME, prefsUtil.getCurrentOperationalArea(), TEXT);
         verify(jsonFormUtils).populateField(formJson, STRUCTURE, point.toJson(), VALUE);
+    }
+
+    @Test
+    public void testOnStructuresFetchedWithLocationComponentActive() throws JSONException {
+        String point = "point";
+        boolean locatinComponentActive = true;
+        FeatureCollection featureCollection = FeatureCollection.fromFeature(TestingUtils.getStructure());
+        listTaskPresenter = spy(listTaskPresenter);
+        JSONObject structuresGeoJson = new JSONObject(featureCollection.toJson());
+        List<TaskDetails> taskDetailsList = Collections.singletonList(TestingUtils.getTaskDetails());
+        listTaskPresenter.onStructuresFetched(structuresGeoJson, feature, taskDetailsList, point, locatinComponentActive);
+        verify(listTaskView).setOperationalArea(anyString());
+        verify(listTaskPresenter).onStructuresFetched(structuresGeoJson, feature, taskDetailsList);
+        verify(listTaskPresenter).onAddStructureClicked(locatinComponentActive, point);
     }
 
 

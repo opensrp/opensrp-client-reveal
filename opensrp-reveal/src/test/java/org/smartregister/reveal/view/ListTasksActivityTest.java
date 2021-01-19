@@ -39,7 +39,6 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowProgressDialog;
@@ -125,12 +124,9 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     private ListTasksActivity listTasksActivity;
 
+    private ImageButton myLocationButton;
 
-    private android.content.Context context = RuntimeEnvironment.application;
-
-    private ImageButton myLocationButton = new ImageButton(context);
-
-    private ImageButton layerSwitcherFab = new ImageButton(context);
+    private ImageButton layerSwitcherFab;
 
     @Mock
     private ListTaskPresenter listTaskPresenter;
@@ -179,6 +175,8 @@ public class ListTasksActivityTest extends BaseUnitTest {
     public void setUp() {
         Context.bindtypes = new ArrayList<>();
         listTasksActivity = Robolectric.buildActivity(ListTasksActivity.class).create().get();
+        myLocationButton = new ImageButton(listTasksActivity);
+        layerSwitcherFab = new ImageButton(listTasksActivity);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.topMargin = 30;
         myLocationButton.setLayoutParams(params);
@@ -280,7 +278,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
         listTasksActivity.positionMyLocationAndLayerSwitcher();
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
         assertEquals(0, layoutParams.topMargin);
-        int progressHeight = context.getResources().getDimensionPixelSize(R.dimen.progress_height);
+        int progressHeight = listTasksActivity.getResources().getDimensionPixelSize(R.dimen.progress_height);
         assertEquals(progressHeight + 40, layoutParams.bottomMargin);
         assertEquals(Gravity.BOTTOM | Gravity.END, layoutParams.gravity);
     }
@@ -297,7 +295,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
         listTasksActivity.positionMyLocationAndLayerSwitcher();
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) layerSwitcherFab.getLayoutParams();
         assertEquals(0, layoutParams.topMargin);
-        int progressHeight = context.getResources().getDimensionPixelSize(R.dimen.progress_height);
+        int progressHeight = listTasksActivity.getResources().getDimensionPixelSize(R.dimen.progress_height);
         assertEquals(progressHeight + 80, layoutParams.bottomMargin);
         assertEquals(myLocationButton.getMeasuredHeight(), layoutParams.height);
         assertEquals(myLocationButton.getMeasuredWidth(), layoutParams.width);
@@ -504,7 +502,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
         AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
         assertTrue(alertDialog.isShowing());
         TextView tv = alertDialog.findViewById(android.R.id.message);
-        assertEquals("Confirm Household Archival", tv.getText());
+        assertEquals(listTasksActivity.getString(R.string.confirm_archive_family), tv.getText());
 
     }
 
@@ -641,7 +639,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
         ProgressDialog progressDialog = (ProgressDialog) ShadowProgressDialog.getLatestDialog();
         assertNotNull(progressDialog);
         assertTrue(progressDialog.isShowing());
-        assertEquals(context.getString(R.string.saving_title), ShadowApplication.getInstance().getLatestDialog().getTitle());
+        assertEquals(listTasksActivity.getString(R.string.saving_title), ShadowApplication.getInstance().getLatestDialog().getTitle());
     }
 
     @Test
@@ -671,7 +669,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     public void testRequestUserLocation() {
         Whitebox.setInternalState(listTasksActivity, "kujakuMapView", kujakuMapView);
         listTasksActivity.requestUserLocation();
-        verify(kujakuMapView).setWarmGps(true, getString(R.string.location_service_disabled), getString(R.string.location_services_disabled_spray));
+        verify(kujakuMapView).setWarmGps(true, listTasksActivity.getString(R.string.location_service_disabled), listTasksActivity.getString(R.string.location_services_disabled_spray));
         assertTrue(Whitebox.getInternalState(listTasksActivity, "hasRequestedLocation"));
     }
 
@@ -685,12 +683,12 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testDisplayToast() {
         listTasksActivity.displayToast(R.string.sync_complete);
-        assertEquals(getString(R.string.sync_complete), ShadowToast.getTextOfLatestToast());
+        assertEquals(listTasksActivity.getString(R.string.sync_complete), ShadowToast.getTextOfLatestToast());
     }
 
     @Test
     public void testOnSyncStart() {
-        init(context);
+        init(listTasksActivity);
         Whitebox.setInternalState(getInstance(), "isSyncing", true);
         listTasksActivity = spy(listTasksActivity);
         doNothing().when(listTasksActivity).toggleProgressBarView(true);
@@ -702,7 +700,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testOnSyncInProgressFetchedDataSnackBarIsStillShown() {
-        init(context);
+        init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.fetched);
         Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
         assertTrue(snackbar.isShown());
@@ -711,7 +709,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testOnSyncInProgressFetchFailedSnackBarIsDismissed() {
-        init(context);
+        init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.fetchedFailed);
         Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
         assertFalse(snackbar.isShown());
@@ -721,7 +719,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testOnSyncInProgressNothingFetchedSnackBarIsDismissed() {
-        init(context);
+        init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.nothingFetched);
         Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
         assertFalse(snackbar.isShown());
@@ -729,7 +727,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testOnSyncInProgressNoConnectionSnackBarIsDismissed() {
-        init(context);
+        init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.noConnection);
         Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
         assertFalse(snackbar.isShown());
@@ -737,7 +735,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testOnSyncCompleteSnackBarIsDismissed() {
-        init(context);
+        init(listTasksActivity);
         listTasksActivity = spy(listTasksActivity);
         doNothing().when(listTasksActivity).toggleProgressBarView(false);
         listTasksActivity.onSyncComplete(FetchStatus.nothingFetched);
@@ -747,7 +745,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testOnResume() {
-        init(context);
+        init(listTasksActivity);
         Whitebox.setInternalState(listTasksActivity, "drawerView", drawerView);
         Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
         listTasksActivity.onResume();
@@ -758,7 +756,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testOnPause() {
-        init(context);
+        init(listTasksActivity);
         Whitebox.setInternalState(listTasksActivity, "revealMapHelper", revealMapHelper);
         getInstance().addSyncStatusListener(listTasksActivity);
         listTasksActivity.onPause();
@@ -795,7 +793,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
         AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
         assertTrue(alertDialog.isShowing());
         TextView tv = alertDialog.findViewById(android.R.id.message);
-        assertEquals(getString(R.string.confirm_mark_location_inactive), tv.getText());
+        assertEquals(listTasksActivity.getString(R.string.confirm_mark_location_inactive), tv.getText());
 
         alertDialog.getButton(BUTTON_POSITIVE).performClick();
         verify(listTaskPresenter).onMarkStructureInactiveConfirmed();
@@ -837,7 +835,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
         assertTrue(alertDialog.isShowing());
 
         TextView tv = alertDialog.findViewById(android.R.id.message);
-        assertEquals(getString(R.string.undo_task_msg), tv.getText());
+        assertEquals(listTasksActivity.getString(R.string.undo_task_msg), tv.getText());
 
         alertDialog.getButton(BUTTON_POSITIVE).performClick();
         verify(listTaskPresenter).onUndoInterventionStatus(eq(BEDNET_DISTRIBUTION));
@@ -862,17 +860,17 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testDisplayNotificationWithSingleParam() {
-        listTasksActivity.displayNotification(context.getString(R.string.confirm_archive_family));
+        listTasksActivity.displayNotification(listTasksActivity.getString(R.string.confirm_archive_family));
         AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
         assertTrue(alertDialog.isShowing());
         TextView tv = alertDialog.findViewById(android.R.id.message);
-        assertEquals("Confirm Household Archival", tv.getText());
+        assertEquals(listTasksActivity.getString(R.string.confirm_archive_family), tv.getText());
     }
 
     @Test
     public void testOnSyncProgress() {
-        ProgressBar progress = new ProgressBar(context);
-        TextView progressLabel = new TextView(context);
+        ProgressBar progress = new ProgressBar(listTasksActivity);
+        TextView progressLabel = new TextView(listTasksActivity);
         SyncProgress mockSyncProgress = mock(SyncProgress.class);
         SyncEntity mockSyncEntity = mock(SyncEntity.class);
         ListTasksActivity spyListTasksActivity = spy(listTasksActivity);
@@ -884,12 +882,12 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
         spyListTasksActivity.onSyncProgress(mockSyncProgress);
 
-        assertEquals(progressLabel.getText(), String.format(context.getString(R.string.progressBarLabel), "Tasks", 50));
+        assertEquals(progressLabel.getText(), String.format(listTasksActivity.getString(R.string.progressBarLabel), listTasksActivity.getString(R.string.tasks_text), 50));
     }
 
     @Test
     public void testOnUserAssignmentRevokedShouldResumeDrawer() {
-        Whitebox.setInternalState(listTasksActivity,"drawerView",drawerView);
+        Whitebox.setInternalState(listTasksActivity, "drawerView", drawerView);
         doNothing().when(drawerView).onResume();
         listTasksActivity.onUserAssignmentRevoked(mock(UserAssignmentDTO.class));
         verify(drawerView).onResume();
