@@ -73,7 +73,7 @@ public class RevealToasterNotesFactoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void testValidateShouldReturnShouldFail() throws Exception {
+    public void testValidateShouldReturnFailedValidation() throws Exception {
         factory.getViewsFromJson("step1", context, formFragment, jsonObject, listener);
         verify(jsonApi).addFormDataView(textViewArgumentCaptor.capture());
         TextView textView = textViewArgumentCaptor.getValue();
@@ -83,7 +83,7 @@ public class RevealToasterNotesFactoryTest extends BaseUnitTest {
     }
 
     @Test
-    public void testValidateShouldReturnShouldPassWhenViewIsNotShown() throws Exception {
+    public void testValidateShouldReturnValidValidationWhenViewIsNotShown() throws Exception {
         factory.getViewsFromJson("step1", context, formFragment, jsonObject, listener);
         verify(jsonApi).addFormDataView(textViewArgumentCaptor.capture());
         TextView textView = textViewArgumentCaptor.getValue();
