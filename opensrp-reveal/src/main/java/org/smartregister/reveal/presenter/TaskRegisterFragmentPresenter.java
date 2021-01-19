@@ -47,6 +47,8 @@ import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRI
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
+import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 
 /**
@@ -436,6 +438,10 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         if ((Constants.Intervention.IRS.equals(getTaskDetails().getTaskCode()))
                 && !Task.TaskStatus.READY.name().equals(getTaskDetails().getTaskStatus())) { // no event for READY tasks
             interactor.findLastEvent(getTaskDetails().getTaskEntity(), SPRAY_EVENT);
+        } else if (Constants.Intervention.MOSQUITO_COLLECTION.equals(getTaskDetails().getTaskCode())) {
+            interactor.findLastEvent(getTaskDetails().getTaskEntity(), MOSQUITO_COLLECTION_EVENT);
+        } else if (Constants.Intervention.LARVAL_DIPPING.equals(getTaskDetails().getTaskCode())) {
+            interactor.findLastEvent(getTaskDetails().getTaskEntity(), LARVAL_DIPPING_EVENT);
         } else {
             super.onLocationValidated();
         }

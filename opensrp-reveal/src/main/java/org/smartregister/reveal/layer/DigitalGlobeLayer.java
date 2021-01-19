@@ -20,8 +20,8 @@ import io.ona.kujaku.plugin.switcher.layer.BaseLayer;
  * Created by samuelgithengi on 10/1/19.
  */
 public class DigitalGlobeLayer extends BaseLayer {
-    private String satelliteLayerId = "DG-EarthWatch-Satellite";
-    private String satelliteSourceId = "dg-earthWatch-imagery";
+    protected static final String satelliteLayerId = "DG-EarthWatch-Satellite";
+    protected static final String satelliteSourceId = "dg-earthWatch-imagery";
 
     private LinkedHashSet<Layer> layers = new LinkedHashSet<>();
     private List<Source> sources = new ArrayList<>();
