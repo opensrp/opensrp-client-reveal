@@ -135,6 +135,9 @@ public class RevealRepository extends Repository {
                 case 12:
                     upgradeToVersion12(db);
                     break;
+                case 13:
+                    upgradeToVersion13(db);
+                    break;
                 default:
                     break;
             }
@@ -283,6 +286,10 @@ public class RevealRepository extends Repository {
 
     private void upgradeToVersion12(SQLiteDatabase db) {
         TaskRepository.updatePriorityToEnumAndAddRestrictions(db);
+    }
+
+    private void upgradeToVersion13(SQLiteDatabase db) {
+        db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s=? ", EVENT_TABLE, DatabaseKeys.SYNC_STATUS, DatabaseKeys.SYNC_STATUS), new String[]{BaseRepository.TYPE_Unsynced, BaseRepository.TYPE_Task_Unprocessed});
     }
 
     private void clientProcessEvents(List<String> eventTypes) {
