@@ -677,8 +677,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 } else {
                     findLastEvent(selectedFeature.id(), SPRAY_EVENT);
                 }
-
-                findLastEvent(selectedFeature.id(), SPRAY_EVENT);
             } else if (MOSQUITO_COLLECTION.equals(cardDetails.getInterventionType())) {
                 findLastEvent(selectedFeature.id(), MOSQUITO_COLLECTION_EVENT);
             } else if (LARVAL_DIPPING.equals(cardDetails.getInterventionType())) {
