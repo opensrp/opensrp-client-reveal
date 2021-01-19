@@ -49,8 +49,8 @@ android {
         applicationId "org.smartregister.reveal"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 29
-        versionName "5.3.16"
+        versionCode 30
+        versionName "5.3.17"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -125,7 +125,7 @@ android {
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", 'opensrp_base_url', '"https://reveal-zm.smartregister.org/opensrp/"'
-            buildConfigField "Integer", "DATABASE_VERSION", '12'
+            buildConfigField "Integer", "DATABASE_VERSION", '13'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
@@ -143,7 +143,7 @@ android {
 
         debug {
             resValue "string", 'opensrp_base_url', '"https://reveal-stage.smartregister.org/opensrp/"'
-            buildConfigField "Integer", "DATABASE_VERSION", '12'
+            buildConfigField "Integer", "DATABASE_VERSION", '13'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
@@ -180,8 +180,7 @@ android {
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
-    maxHeapSize = "2g"
-    //testLogging.showStandardStreams = true
+    maxHeapSize = "4g"
 
     testLogging {
         events TestLogEvent.FAILED
