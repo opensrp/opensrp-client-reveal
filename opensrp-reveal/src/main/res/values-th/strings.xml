@@ -216,7 +216,7 @@
     <string name="edit_boundary">แก้ไขขอบเขตกลุ่มบ้าน</string>
     <string name="discard">ยกเลิก</string>
     <string name="delete_point_title">ลบจุดนี้??</string>
-    <string name="delete_point_msg">นี่จะเป็นการลบจุดออกจากขอบเขตกลุ่มบ้าน</string>
+    <string name="delete_point_msg">คุณต้องการยกเลิกสิ่งที่ได้แก้ไขไปใช่หรือไม่?</string>
     <string name="discard_changes_title">ยกเลิกการเปลี่ยนแปลงหรือไม่?</string>
     <string name="discard_changes_msg">การดำเนินการนี้จะยกเลิกการแก้ไขที่ไม่ได้บันทึกที่คุณทำไว้ในขอบเขตกลุ่มบ้าน</string>
     <string name="tap_point_msg">แตะจุดดำเพื่อย้ายหรือลบ</string>
@@ -282,5 +282,6 @@
     <string name="select_task_action">แปลภาษาไทย</string>
     <string name="view_details">แก้ไข</string>
     <string name="choose_action">โปรดเลือก</string>
+    <string name="search_hint">ใส่ชื่อบุคคลหรือบ้านเลขที่เพื่อค้นหา</string>
 
 </resources>
