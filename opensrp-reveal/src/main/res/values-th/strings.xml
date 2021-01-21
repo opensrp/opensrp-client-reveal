@@ -283,5 +283,6 @@
     <string name="view_details">แก้ไข</string>
     <string name="choose_action">โปรดเลือก</string>
     <string name="search_hint">ใส่ชื่อบุคคลหรือบ้านเลขที่เพื่อค้นหา</string>
+    <string name="x_years">%1$dปี</string>
 
 </resources>
