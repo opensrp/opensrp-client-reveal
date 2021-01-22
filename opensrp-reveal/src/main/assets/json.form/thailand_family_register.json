@@ -295,11 +295,11 @@
         "options": [
           {
             "key": "Yes",
-            "text": "ใช่"
+            "text": "ค้าง"
           },
           {
             "key": "No",
-            "text": "ไม่ใช่"
+            "text": "ไม่ค้าง"
           }
         ],
         "v_required": {
