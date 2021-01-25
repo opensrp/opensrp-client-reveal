@@ -25,6 +25,8 @@ import org.smartregister.reveal.util.PreferencesUtil;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.FI;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA;
 
@@ -421,6 +423,46 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.house_number);
         assertEquals(View.VISIBLE, taskDetails.getVisibility());
     }
+
+    @Test
+    public void testSetTaskActionForFISingleTaskGroupingWithSingleBednetDistributed() {
+        setFIAsCurrentPlan();
+        when(taskDetails.getTaskCount()).thenReturn(1);
+        when(taskDetails.isFamilyRegistered()).thenReturn(false);
+        when(taskDetails.isBednetDistributed()).thenReturn(true);
+        when(taskDetails.isBloodScreeningDone()).thenReturn(false);
+        when(taskDetails.getTaskCode()).thenReturn(BEDNET_DISTRIBUTION);
+        viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
+        TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
+        assertEquals(View.VISIBLE, taskDetails.getVisibility());
+        assertEquals(context.getString(R.string.view_tasks), taskDetails.getText());
+        assertEquals(context.getColor(R.color.text_black), taskDetails.getCurrentTextColor());
+        assertEquals(context.getResources().getDrawable(R.drawable.bednet_distributed_bg).getConstantState(), taskDetails.getBackground().getConstantState());
+        taskDetails.performClick();
+        verify(onClickListener).onClick(taskDetails);
+
+    }
+
+    @Test
+    public void testSetTaskActionForFISingleTaskGroupingWithSingleBloodScreening() {
+        setFIAsCurrentPlan();
+        when(taskDetails.getTaskCount()).thenReturn(1);
+        when(taskDetails.isFamilyRegistered()).thenReturn(false);
+        when(taskDetails.isBednetDistributed()).thenReturn(false);
+        when(taskDetails.isBloodScreeningDone()).thenReturn(true);
+        when(taskDetails.getTaskCode()).thenReturn(BLOOD_SCREENING);
+        viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
+        TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
+        assertEquals(View.VISIBLE, taskDetails.getVisibility());
+        assertEquals(context.getString(R.string.view_tasks), taskDetails.getText());
+        assertEquals(context.getColor(R.color.text_black), taskDetails.getCurrentTextColor());
+        assertEquals(context.getResources().getDrawable(R.drawable.blood_screening_complete_bg).getConstantState(), taskDetails.getBackground().getConstantState());
+        taskDetails.performClick();
+        verify(onClickListener).onClick(taskDetails);
+
+    }
+
+
 
     private void setFIAsCurrentPlan() {
         PreferencesUtil.getInstance().setCurrentPlan("Focus 1");

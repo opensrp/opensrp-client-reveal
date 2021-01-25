@@ -93,9 +93,10 @@ import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMI
 import static org.smartregister.reveal.util.Constants.JsonForm.DISTRICT_NAME;
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
-import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.PROVINCE_NAME;
 import static org.smartregister.reveal.util.Constants.JsonForm.VALID_OPERATIONAL_AREA;
+import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
+import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
@@ -492,6 +493,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 , formName, feature, sprayStatus, familyHead);
         if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(((MosquitoHarvestCardDetails) cardDetails).getInterventionType())) {
             jsonFormUtils.populatePAOTForm((MosquitoHarvestCardDetails) cardDetails, formJson);
+        } else if ( cardDetails instanceof MosquitoHarvestCardDetails) {
+            jsonFormUtils.populateForm(event, formJson);
         } else if (cardDetails instanceof SprayCardDetails && Country.NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
             jsonFormUtils.populateForm(event, formJson);
         } else if (JsonForm.SPRAY_FORM_ZAMBIA.equals(formName)) {
@@ -622,8 +625,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         String formName = jsonFormUtils.getFormName(REGISTER_STRUCTURE_EVENT);
         try {
             JSONObject formJson = new JSONObject(jsonFormUtils.getFormString(listTaskView.getContext(), formName, null));
-            formJson.put(OPERATIONAL_AREA_TAG, operationalArea.toJson());
             revealApplication.setFeatureCollection(featureCollection);
+            revealApplication.setOperationalArea(operationalArea);
             jsonFormUtils.populateField(formJson, JsonForm.SELECTED_OPERATIONAL_AREA_NAME, prefsUtil.getCurrentOperationalArea(), TEXT);
             if (StringUtils.isNotBlank(point)) {
                 jsonFormUtils.populateField(formJson, JsonForm.STRUCTURE, point, VALUE);
@@ -648,6 +651,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else {
             if (IRS.equals(cardDetails.getInterventionType())) {
                 findLastEvent(selectedFeature.id(), SPRAY_EVENT);
+            } else if (MOSQUITO_COLLECTION.equals(cardDetails.getInterventionType())) {
+                findLastEvent(selectedFeature.id(), MOSQUITO_COLLECTION_EVENT);
+            } else if (LARVAL_DIPPING.equals(cardDetails.getInterventionType())) {
+                findLastEvent(selectedFeature.id(), LARVAL_DIPPING_EVENT);
             } else {
                 startForm(selectedFeature, cardDetails, selectedFeatureInterventionType);
             }
