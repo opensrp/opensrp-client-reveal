@@ -294,6 +294,8 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         // remove the last element
         ArrayList<String> result = new ArrayList<>(name.subList(0, name.size() - 1));
 
+        interactor.autoSelectPlan(name.get(name.size() - 2));
+
         prefsUtil.setCurrentStructure(name.get(name.size() - 1));
         onOperationalAreaSelectorClicked(result);
     }
@@ -478,6 +480,14 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     public void onShowFilledForms() {
         if (drawerActivity.getActivity() != null)
             drawerActivity.getActivity().startActivity(new Intent(drawerActivity.getActivity(), EventRegisterActivity.class));
+    }
+
+    @Override
+    public void onPlanAutoSelected(String planName, String planId) {
+        prefsUtil.setCurrentPlan(planName);
+        prefsUtil.setCurrentPlanId(planId);
+        changedCurrentSelection = true;
+        unlockDrawerLayout();
     }
 
 }

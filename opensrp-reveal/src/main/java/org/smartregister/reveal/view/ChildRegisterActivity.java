@@ -8,11 +8,11 @@ import android.view.Menu;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
 import org.json.JSONObject;
-import org.smartregister.family.activity.FamilyWizardFormActivity;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FormProcessor;
@@ -93,7 +93,7 @@ public class ChildRegisterActivity extends SecuredActivity implements FormProces
     public void startForm(JSONObject jsonObject, Form form, FormProcessor.Requester requester) {
         this.requester = requester;
 
-        Intent intent = new Intent(this, FamilyWizardFormActivity.class);
+        Intent intent = new Intent(this, JsonWizardFormActivity.class);
         intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonObject.toString());
         intent.putExtra(JsonFormConstants.JSON_FORM_KEY.FORM, form);
         startActivityForResult(intent, JsonFormUtils.REQUEST_CODE_GET_JSON);

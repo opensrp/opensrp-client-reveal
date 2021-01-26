@@ -3,6 +3,7 @@ package org.smartregister.reveal.activity;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
 import com.vijay.jsonwizard.domain.Form;
 
 import org.hamcrest.CoreMatchers;
@@ -28,7 +29,6 @@ import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowIntent;
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
-import org.smartregister.family.activity.FamilyWizardFormActivity;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.reveal.TestRevealApplication;
 import org.smartregister.reveal.contract.FormProcessor;
@@ -68,7 +68,7 @@ public class ChildRegisterActivityTest {
         //Auto login by default
         String password = "pwd";
         context.session().start(context.session().lengthInMilliseconds());
-        context.configuration().getDrishtiApplication().setPassword(password.toCharArray());
+        //context.configuration().getDrishtiApplication().setPassword(password.toCharArray());
         context.session().setPassword(password.getBytes());
 
         MockitoAnnotations.initMocks(this);
@@ -104,7 +104,7 @@ public class ChildRegisterActivityTest {
         ShadowIntent shadowIntent = shadowOf(startedIntent);
 
         Assert.assertThat(shadowIntent.getIntentClass().getName(),
-                CoreMatchers.equalTo(FamilyWizardFormActivity.class.getName()));
+                CoreMatchers.equalTo(JsonWizardFormActivity.class.getName()));
     }
 
     @Test

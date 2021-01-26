@@ -108,6 +108,8 @@ public interface BaseDrawerContract {
         void updateSyncStatusDisplay(boolean synced);
 
         void onShowFilledForms();
+
+        void onPlanAutoSelected(String planName, String planId);
     }
 
     interface Interactor {
@@ -117,5 +119,7 @@ public interface BaseDrawerContract {
         void validateCurrentPlan(String selectedOperationalArea, String currentPlanId);
 
         void checkSynced();
+
+        void autoSelectPlan(String jurisdictionName);
     }
 }

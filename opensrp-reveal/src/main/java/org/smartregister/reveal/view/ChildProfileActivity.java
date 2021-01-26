@@ -17,13 +17,13 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.family.activity.FamilyWizardFormActivity;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ChildProfileContract;
@@ -195,7 +195,7 @@ public class ChildProfileActivity extends BaseProfileActivity implements ChildPr
         form.setPreviousLabel(getResources().getString(org.smartregister.family.R.string.back));
         form.setWizard(false);
 
-        Intent intent = new Intent(this, FamilyWizardFormActivity.class);
+        Intent intent = new Intent(this, JsonWizardFormActivity.class);
         intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonObject.toString());
         intent.putExtra(JsonFormConstants.JSON_FORM_KEY.FORM, form);
         startActivityForResult(intent, JsonFormUtils.REQUEST_CODE_GET_JSON);
