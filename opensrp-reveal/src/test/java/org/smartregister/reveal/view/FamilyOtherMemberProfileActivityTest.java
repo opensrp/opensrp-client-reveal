@@ -1,11 +1,18 @@
 package org.smartregister.reveal.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
+import com.vijay.jsonwizard.domain.Form;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -17,10 +24,15 @@ import org.robolectric.fakes.RoboMenu;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.Context;
+import org.smartregister.family.adapter.ViewPagerAdapter;
+import org.smartregister.family.contract.FamilyOtherMemberProfileFragmentContract;
+import org.smartregister.family.util.Constants;
 import org.smartregister.family.util.Constants.INTENT_KEY;
+import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
+import org.smartregister.reveal.fragment.FamilyOtherMemberProfileFragment;
 import org.smartregister.reveal.presenter.FamilyOtherMemberPresenter;
 import org.smartregister.view.activity.FormActivity;
 import org.smartregister.view.viewpager.OpenSRPViewPager;
@@ -32,8 +44,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 
@@ -57,6 +72,12 @@ public class FamilyOtherMemberProfileActivityTest extends BaseUnitTest {
     private FamilyOtherMemberProfileContract.Presenter presenter;
 
     private Intent intent;
+
+    @Mock
+    private FamilyOtherMemberProfileFragmentContract.Presenter fragmentPresenter;
+
+    @Mock
+    private FamilyOtherMemberProfileFragment fragment;
 
     @Before
     public void setUp() {
@@ -160,5 +181,59 @@ public class FamilyOtherMemberProfileActivityTest extends BaseUnitTest {
         assertNotNull(intentResult);
         assertEquals(FormActivity.class, shadowOf(intentResult).getIntentClass());
 
+    }
+
+    @Test
+    public void testStartFormActivityShouldStartForm() throws JSONException {
+        String json = "{\"encounter_type\":\"Family_Member_Registration\"}";
+        activity.startFormActivity(new JSONObject(json));
+        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
+        Intent intentResult = shadowActivity.getNextStartedActivityForResult().intent;
+        assertNotNull(intentResult);
+        assertEquals(JsonWizardFormActivity.class, shadowOf(intentResult).getIntentClass());
+        assertEquals(json, intentResult.getStringExtra(Constants.JSON_FORM_EXTRA.JSON));
+        Form form = (Form) intentResult.getSerializableExtra(JsonFormConstants.JSON_FORM_KEY.FORM);
+        assertEquals(R.color.family_actionbar, form.getActionBarBackground());
+        assertFalse(form.isWizard());
+
+    }
+
+    @Test
+    public void testGetContextReturnsActivity() {
+        assertEquals(activity, activity.getContext());
+    }
+
+    @Test
+    public void testRefreshListShouldInvokeRefreshListView() {
+        activity.setupViewPager(mPager);
+        ViewPagerAdapter adapter = ReflectionHelpers.getField(activity, "adapter");
+
+        adapter.addFragment(fragment, "familyOtherMemberProfileFragment");
+
+        when(fragment.presenter()).thenReturn(fragmentPresenter);
+        activity.refreshList();
+
+        verify(fragment, timeout(ASYNC_TIMEOUT)).refreshListView();
+
+    }
+
+    @Test
+    public void testOnActivityResultShouldSaveForm() {
+        ReflectionHelpers.setField(activity, "presenter", presenter);
+        Intent data = new Intent();
+        String json = "{\"encounter_type\":\"Update_Family_Member_Registration\"}";
+        data.putExtra(Constants.JSON_FORM_EXTRA.JSON, json);
+        activity.onActivityResult(JsonFormUtils.REQUEST_CODE_GET_JSON, Activity.RESULT_OK, data);
+        verify(presenter).updateFamilyMember(json);
+    }
+
+    @Test
+    public void testOnActivityResultShouldNotSaveFormWhenExceptionOccurs() {
+        ReflectionHelpers.setField(activity, "presenter", presenter);
+        Intent data = new Intent();
+        String json = "{\"encounter_type\":\"Update_Family_Member_Registration\"";
+        data.putExtra(Constants.JSON_FORM_EXTRA.JSON, json);
+        activity.onActivityResult(JsonFormUtils.REQUEST_CODE_GET_JSON, Activity.RESULT_OK, data);
+        verify(presenter,never()).updateFamilyMember(json);
     }
 }
