@@ -19,7 +19,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.robolectric.Robolectric;
-import org.robolectric.Shadows;
 import org.robolectric.fakes.RoboMenu;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.util.ReflectionHelpers;
@@ -140,7 +139,7 @@ public class FamilyOtherMemberProfileActivityTest extends BaseUnitTest {
     @Test
     public void testOnClickUpShouldReturnHome() {
         activity = Robolectric.buildActivity(FamilyOtherMemberProfileActivity.class, intent).create().resume().get();
-        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
+        ShadowActivity shadowActivity = shadowOf(activity);
         shadowActivity.clickMenuItem(android.R.id.home);
 
         assertTrue(activity.isFinishing());
@@ -153,7 +152,7 @@ public class FamilyOtherMemberProfileActivityTest extends BaseUnitTest {
         ReflectionHelpers.setField(activity, "presenter", presenter);
         menu = new RoboMenu();
         activity.getMenuInflater().inflate(R.menu.menu_profile_activity, menu);
-        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
+        ShadowActivity shadowActivity = shadowOf(activity);
         shadowActivity.clickMenuItem(R.id.action_registration);
         verify(presenter).onEditMemberDetails();
 
@@ -164,7 +163,7 @@ public class FamilyOtherMemberProfileActivityTest extends BaseUnitTest {
         ReflectionHelpers.setField(activity, "presenter", presenter);
         menu = new RoboMenu();
         activity.getMenuInflater().inflate(R.menu.menu_profile_activity, menu);
-        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
+        ShadowActivity shadowActivity = shadowOf(activity);
         shadowActivity.clickMenuItem(R.id.action_archive);
         verify(presenter).onArchiveFamilyMember();
 
@@ -174,7 +173,7 @@ public class FamilyOtherMemberProfileActivityTest extends BaseUnitTest {
     public void testOnClicKOthersShouldInvokeParent() {
         menu = new RoboMenu();
         activity.getMenuInflater().inflate(R.menu.menu_profile_activity, menu);
-        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
+        ShadowActivity shadowActivity = shadowOf(activity);
         shadowActivity.clickMenuItem(R.id.add_member);
         verifyNoMoreInteractions(presenter);
         Intent intentResult = shadowActivity.getNextStartedActivityForResult().intent;
@@ -187,7 +186,7 @@ public class FamilyOtherMemberProfileActivityTest extends BaseUnitTest {
     public void testStartFormActivityShouldStartForm() throws JSONException {
         String json = "{\"encounter_type\":\"Family_Member_Registration\"}";
         activity.startFormActivity(new JSONObject(json));
-        ShadowActivity shadowActivity = Shadows.shadowOf(activity);
+        ShadowActivity shadowActivity = shadowOf(activity);
         Intent intentResult = shadowActivity.getNextStartedActivityForResult().intent;
         assertNotNull(intentResult);
         assertEquals(JsonWizardFormActivity.class, shadowOf(intentResult).getIntentClass());
@@ -234,6 +233,6 @@ public class FamilyOtherMemberProfileActivityTest extends BaseUnitTest {
         String json = "{\"encounter_type\":\"Update_Family_Member_Registration\"";
         data.putExtra(Constants.JSON_FORM_EXTRA.JSON, json);
         activity.onActivityResult(JsonFormUtils.REQUEST_CODE_GET_JSON, Activity.RESULT_OK, data);
-        verify(presenter,never()).updateFamilyMember(json);
+        verify(presenter, never()).updateFamilyMember(json);
     }
 }
