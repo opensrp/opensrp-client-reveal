@@ -20,7 +20,6 @@ import org.smartregister.domain.Task;
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.family.util.Constants;
 import org.smartregister.reveal.BaseUnitTest;
-import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.fragment.FamilyProfileMemberFragment;
 import org.smartregister.reveal.fragment.StructureTasksFragment;
 import org.smartregister.reveal.util.TestingUtils;
@@ -61,9 +60,6 @@ public class FamilyProfileActivityTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<Integer> integerArgumentCaptor;
-
-    @Mock
-    private FamilyProfileContract.Presenter presenter;
 
     @Mock
     private ViewPager viewPager;
