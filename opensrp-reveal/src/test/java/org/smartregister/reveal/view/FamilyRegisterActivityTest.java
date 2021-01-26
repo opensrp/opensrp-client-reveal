@@ -1,5 +1,6 @@
 package org.smartregister.reveal.view;
 
+import android.app.Activity;
 import android.content.Intent;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -12,7 +13,9 @@ import org.mockito.Mock;
 import org.robolectric.Robolectric;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.Context;
+import org.smartregister.family.contract.FamilyRegisterContract;
 import org.smartregister.family.util.Constants;
+import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.service.ZiggyService;
@@ -23,6 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -42,6 +46,9 @@ public class FamilyRegisterActivityTest extends BaseUnitTest {
 
     @Mock
     private OpenSRPViewPager mPager;
+
+    @Mock
+    private FamilyRegisterContract.Presenter presenter;
 
     @Before
     public void setUp() {
@@ -123,5 +130,35 @@ public class FamilyRegisterActivityTest extends BaseUnitTest {
         assertFalse(startedIntent.getBooleanExtra(Constants.INTENT_KEY.GO_TO_DUE_PAGE, true));
 
     }
+
+    @Test
+    public void testOnActivityResultShouldFinishActivity() {
+        assertFalse(activity.isFinishing());
+        activity.onActivityResult(JsonFormUtils.REQUEST_CODE_GET_JSON, Activity.RESULT_CANCELED, null);
+        assertTrue(activity.isFinishing());
+    }
+
+
+    @Test
+    public void testOnActivityResultShouldSaveForm() {
+        ReflectionHelpers.setField(activity, "presenter", presenter);
+        Intent data = new Intent();
+        String json = "{\"encounter_type\":\"Family_Registration\"}";
+        data.putExtra(Constants.JSON_FORM_EXTRA.JSON, json);
+        activity.onActivityResult(JsonFormUtils.REQUEST_CODE_GET_JSON, Activity.RESULT_OK, data);
+        verify(presenter).saveForm(json, false);
+    }
+
+    @Test
+    public void testOnActivityResultShouldNotSaveFormWhenExceptionOccurs() {
+        ReflectionHelpers.setField(activity, "presenter", presenter);
+        Intent data = new Intent();
+        String json = "{\"encounter_type\":\"Family_Registration\"";
+        data.putExtra(Constants.JSON_FORM_EXTRA.JSON, json);
+        activity.onActivityResult(JsonFormUtils.REQUEST_CODE_GET_JSON, Activity.RESULT_OK, data);
+        verify(presenter,never()).saveForm(json, false);
+        assertFalse(activity.isFinishing());
+    }
+
 
 }
