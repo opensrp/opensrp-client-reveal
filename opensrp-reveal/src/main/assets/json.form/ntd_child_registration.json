@@ -193,7 +193,7 @@
           "label": "Age"
         },
         "min_date": "today-120y",
-        "max_date": "today-5y",
+        "max_date": "today-6y",
         "v_required": {
           "value": "true",
           "err": "Required field"

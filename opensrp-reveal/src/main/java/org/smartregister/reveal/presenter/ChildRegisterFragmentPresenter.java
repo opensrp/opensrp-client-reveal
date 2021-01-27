@@ -153,6 +153,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
             Location operationalArea = processor.getCurrentOperationalArea();
             Location selectedSchool = processor.getCurrentSelectedStructure();
             String entityId = UUID.randomUUID().toString();
+            String ageString = processor.getFieldValue("sactaAge").split("y")[0];
 
             processor
 
@@ -184,7 +185,12 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
                     prefsUtil.setCurrentPlanId(planDefinition.getIdentifier());
             }
 
-            taskUtils.generateDrugAdministrationTask(context, entityId);
+            // limit task generation from 6 to 18
+            if (StringUtils.isNotBlank(ageString)) {
+                int age = Integer.parseInt(ageString);
+                if (age <= 18)
+                    taskUtils.generateDrugAdministrationTask(context, entityId);
+            }
             return null;
         };
 
