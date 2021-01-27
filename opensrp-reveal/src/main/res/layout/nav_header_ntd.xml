@@ -52,6 +52,43 @@
         app:layout_constraintTop_toBottomOf="@id/application_updated" />
 
     <TextView
+        android:id="@+id/sync_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_second_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/application_updated" />
+
+    <TextView
+        android:id="@+id/sync_progress_bar_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:textColor="@color/text_gray"
+        android:visibility="invisible"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/sync_progress_bar" />
+
+    <ProgressBar
+        android:id="@+id/sync_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_margin="20dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="false"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:visibility="invisible"
+        android:max="100"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/application_updated"
+        />
+
+    <TextView
         android:id="@+id/btn_navMenu_p2pSyncBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,6 +114,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_navMenu_p2pSyncBtn" />
 
+
+    <TextView
+        android:id="@+id/btn_navMenu_filled_forms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:text="@string/filled_forms"
+        android:textColor="@color/button_blue"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_summaryForms" />
+
     <TextView
         android:id="@+id/btn_navMenu_offline_maps"
         android:layout_width="wrap_content"
@@ -88,7 +139,7 @@
         android:textSize="18sp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_summaryForms" />
+        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_filled_forms" />
 
 
     <View
@@ -101,7 +152,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_navMenu_offline_maps" />
-
 
     <TextView
         android:id="@+id/campaign_label"
@@ -127,16 +177,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/campaign_label" />
 
+
     <TextView
         android:id="@+id/operational_area_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="@dimen/drawer_separator_margin"
         android:text="School"
         android:textColor="@color/text_gray"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/switch_campaign_label" />
+        app:layout_constraintTop_toBottomOf="@id/switch_campaign_label"
+        />
 
 
     <TextView
@@ -155,7 +207,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/operational_area_label" />
-
 
     <TextView
         android:id="@+id/district_label"
@@ -179,9 +230,9 @@
         android:text="@string/facility"
         android:textColor="@color/text_gray"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/district_label" />
+
 
     <TextView
         android:id="@+id/operator_label"
@@ -220,21 +271,21 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginStart="@dimen/divider_margin"
-        android:layout_marginEnd="@dimen/divider_margin"
-        android:layout_marginBottom="10dp"
         android:background="#DFDFDF"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/divider_margin"
         app:layout_constraintBottom_toTopOf="@id/attribution"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginEnd="@dimen/divider_margin"
+        android:layout_marginBottom="10dp" />
 
     <TextView
         android:id="@+id/attribution"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/drawer_margin"
-        android:text="@string/attribution_text"
         android:textColor="@color/text_gray"
+        android:layout_marginStart="@dimen/drawer_margin"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="@string/attribution_text"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

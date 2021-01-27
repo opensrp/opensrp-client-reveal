@@ -1,31 +1,39 @@
 package org.smartregister.reveal.fragment;
 
+import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.vijay.jsonwizard.domain.Form;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.AllConstants;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.ResponseErrorStatus;
+import org.smartregister.domain.SyncProgress;
+import org.smartregister.receiver.SyncProgressBroadcastReceiver;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.ChildRegisterAdapter;
 import org.smartregister.reveal.adapter.GroupedListableAdapter;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.contract.FormProcessor;
@@ -51,9 +59,10 @@ import java.util.concurrent.Callable;
 import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
+import static org.smartregister.reveal.util.Utils.getSyncEntityString;
 
 public class ChildRegisterFragment extends BaseListFragment<Child> implements ChildRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity, SyncStatusBroadcastReceiver.SyncStatusListener,
-        FormProcessor.Requester {
+        FormProcessor.Requester, SyncProgressBroadcastReceiver.SyncProgressListener {
     public static final String TAG = "ChildRegisterFragment";
 
     private BaseDrawerContract.View drawerView;
@@ -63,6 +72,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     private TextView searchTextView;
     private View progressIndicatorsGroupView;
     private View detailedReportCardView;
+    private SyncProgressBroadcastReceiver syncProgressBroadcastReceiver = new SyncProgressBroadcastReceiver(this);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,6 +82,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
             if (serializable != null)
                 filterAndSearch = (HashMap<String, List<String>>) serializable;
         }
+
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -293,8 +304,20 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     }
 
     @Override
+    public void onSyncProgress(SyncProgress syncProgress) {
+        int progress = syncProgress.getPercentageSynced();
+        String entity = getSyncEntityString(syncProgress.getSyncEntity());
+        ProgressBar syncProgressBar = getActivity().findViewById(R.id.sync_progress_bar);
+        TextView syncProgressBarLabel = getActivity().findViewById(R.id.sync_progress_bar_label);
+        String labelText = String.format(getResources().getString(R.string.progressBarLabel), entity, progress);
+        syncProgressBar.setProgress(progress);
+        syncProgressBarLabel.setText(labelText);
+    }
+
+    @Override
     public void onSyncStart() {
         refreshSyncStatusViews(null);
+        drawerView.toggleProgressBarView(true);
     }
 
     @Override
@@ -305,6 +328,9 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     @Override
     public void onSyncComplete(FetchStatus fetchStatus) {
         refreshSyncStatusViews(fetchStatus);
+        //Check sync status and Update UI to show sync status
+        drawerView.checkSynced();
+        drawerView.toggleProgressBarView(false);
     }
 
     @VisibleForTesting
@@ -370,5 +396,18 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     @Override
     public FormProcessor.Host getHostFormProcessor() {
         return (FormProcessor.Host) getActivity();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        IntentFilter syncProgressFilter = new IntentFilter(AllConstants.SyncProgressConstants.ACTION_SYNC_PROGRESS);
+        LocalBroadcastManager.getInstance(RevealApplication.getInstance().getApplicationContext()).registerReceiver(syncProgressBroadcastReceiver, syncProgressFilter);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        LocalBroadcastManager.getInstance(RevealApplication.getInstance().getApplicationContext()).unregisterReceiver(syncProgressBroadcastReceiver);
     }
 }
