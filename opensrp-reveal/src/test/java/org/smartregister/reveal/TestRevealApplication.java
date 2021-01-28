@@ -61,4 +61,9 @@ public class TestRevealApplication extends RevealApplication {
 
         return mock(RealmDatabase.class);
     }
+
+    @Override
+    public void onTerminate() {
+       //do nothing
+    }
 }
