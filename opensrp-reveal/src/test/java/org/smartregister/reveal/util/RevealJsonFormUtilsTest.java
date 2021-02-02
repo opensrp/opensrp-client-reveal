@@ -18,6 +18,7 @@ import org.smartregister.domain.LocationProperty;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -79,6 +80,8 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     @Mock
     private LocationHelper locationHelper;
 
+    @Mock
+    Map<String, Object> serverConfigs;
 
     private Context context = RuntimeEnvironment.application;
 
@@ -86,6 +89,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     public void setUp() {
         revealJsonFormUtils = new RevealJsonFormUtils();
         Whitebox.setInternalState(revealJsonFormUtils, "locationHelper", locationHelper);
+        Whitebox.setInternalState(RevealApplication.getInstance(), "serverConfigs", serverConfigs);
     }
 
     @Test
@@ -485,7 +489,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         PreferencesUtil.getInstance().setCurrentDistrict("Lusaka");
         revealJsonFormUtils.populateFormWithServerOptions(JsonForm.IRS_SA_DECISION_ZAMBIA,formJSON);
 
-        verify(revealJsonFormUtils).populateServerOptions(null, Constants.CONFIGURATION.SUPERVISORS, fieldsMap.get(JsonForm.SUPERVISOR), "Lusaka");
+        verify(revealJsonFormUtils).populateServerOptions(serverConfigs, Constants.CONFIGURATION.SUPERVISORS, fieldsMap.get(JsonForm.SUPERVISOR), "Lusaka");
     }
 
     @Test
@@ -497,7 +501,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         PreferencesUtil.getInstance().setCurrentDistrict("Lusaka");
         revealJsonFormUtils.populateFormWithServerOptions(JsonForm.VERIFICATION_FORM_ZAMBIA,formJSON);
 
-        verify(revealJsonFormUtils).populateServerOptions(null, Constants.CONFIGURATION.FIELD_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER), "Lusaka");
+        verify(revealJsonFormUtils).populateServerOptions(serverConfigs, Constants.CONFIGURATION.FIELD_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER), "Lusaka");
     }
 }
 
