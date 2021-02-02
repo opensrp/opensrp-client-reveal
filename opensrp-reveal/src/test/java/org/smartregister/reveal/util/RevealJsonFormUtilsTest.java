@@ -81,7 +81,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     private LocationHelper locationHelper;
 
     @Mock
-    Map<String, Object> serverConfigs;
+    private Map<String, Object> serverConfigs;
 
     private Context context = RuntimeEnvironment.application;
 
