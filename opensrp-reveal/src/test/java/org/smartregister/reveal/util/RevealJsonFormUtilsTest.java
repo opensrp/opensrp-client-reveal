@@ -8,12 +8,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Geometry;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
+import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
@@ -22,13 +24,20 @@ import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
@@ -57,6 +66,7 @@ import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.TASK_RESET_EVENT;
+import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 /**
@@ -66,11 +76,16 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
 
     private RevealJsonFormUtils revealJsonFormUtils;
 
+    @Mock
+    private LocationHelper locationHelper;
+
+
     private Context context = RuntimeEnvironment.application;
 
     @Before
     public void setUp() {
         revealJsonFormUtils = new RevealJsonFormUtils();
+        Whitebox.setInternalState(revealJsonFormUtils, "locationHelper", locationHelper);
     }
 
     @Test
@@ -446,6 +461,43 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         String actualFormName = revealJsonFormUtils.getFormName(VERIFICATION_EVENT, null);
         assertEquals(JsonForm.VERIFICATION_FORM_ZAMBIA, actualFormName);
+    }
+
+    @Test
+    public void testPopulateUserAssignedLocations() throws Exception {
+
+        JSONObject formJSON = new JSONObject(AssetHandler.readFileFromAssetsFolder(JsonForm.TEAM_LEADER_DOS_ZAMBIA, context));
+        List<String> defaultLocations = new ArrayList<>();
+        defaultLocations.add("Lusaka");
+        when(locationHelper.generateDefaultLocationHierarchy(any())).thenReturn(defaultLocations);
+
+        Whitebox.invokeMethod(revealJsonFormUtils, "populateUserAssignedLocations", formJSON, JsonForm.ZONE, Arrays.asList(HEALTH_CENTER));
+        assertEquals("Lusaka", JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJSON), JsonForm.ZONE).getJSONArray("keys").get(0));
+        assertEquals("Lusaka", JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJSON), JsonForm.ZONE).getJSONArray("values").get(0));
+    }
+
+    @Test
+    public void testPopulateIRSSADecisionFormWithServerOptions() throws JSONException {
+
+        JSONObject formJSON = new JSONObject(AssetHandler.readFileFromAssetsFolder(JsonForm.IRS_SA_DECISION_ZAMBIA, context));
+        revealJsonFormUtils = spy(revealJsonFormUtils);
+        Map<String, JSONObject> fieldsMap = revealJsonFormUtils.getFields(formJSON);
+        PreferencesUtil.getInstance().setCurrentDistrict("Lusaka");
+        revealJsonFormUtils.populateFormWithServerOptions(JsonForm.IRS_SA_DECISION_ZAMBIA,formJSON);
+
+        verify(revealJsonFormUtils).populateServerOptions(null, Constants.CONFIGURATION.SUPERVISORS, fieldsMap.get(JsonForm.SUPERVISOR), "Lusaka");
+    }
+
+    @Test
+    public void testPopulateVerificationFormWithServerOptions() throws JSONException {
+
+        JSONObject formJSON = new JSONObject(AssetHandler.readFileFromAssetsFolder(JsonForm.VERIFICATION_FORM_ZAMBIA, context));
+        revealJsonFormUtils = spy(revealJsonFormUtils);
+        Map<String, JSONObject> fieldsMap = revealJsonFormUtils.getFields(formJSON);
+        PreferencesUtil.getInstance().setCurrentDistrict("Lusaka");
+        revealJsonFormUtils.populateFormWithServerOptions(JsonForm.VERIFICATION_FORM_ZAMBIA,formJSON);
+
+        verify(revealJsonFormUtils).populateServerOptions(null, Constants.CONFIGURATION.FIELD_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER), "Lusaka");
     }
 }
 
