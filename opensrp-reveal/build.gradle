@@ -11,6 +11,8 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.1.0'
         classpath 'com.google.gms:google-services:4.3.4'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
+        // Add the dependency for the Performance Monitoring plugin
+        classpath 'com.google.firebase:perf-plugin:1.3.4'  // Performance Monitoring plugin
     }
 }
 
@@ -29,6 +31,8 @@ apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+// Apply the Performance Monitoring plugin
+apply plugin: 'com.google.firebase.firebase-perf'
 
 jacoco {
     toolVersion = "0.8.6"
@@ -200,7 +204,7 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
     }
 
-    implementation('org.smartregister:opensrp-client-core:4.1.4-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:4.2.2-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'
@@ -264,6 +268,11 @@ dependencies {
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: '2.2'
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
     testImplementation('com.squareup:fest-android:1.0.8') { exclude module: 'support-v4' }
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    // Declare the dependency for the Performance Monitoring library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-perf'
     implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:5.1.0'
 
     testImplementation 'org.mockito:mockito-inline:2.25.0'
