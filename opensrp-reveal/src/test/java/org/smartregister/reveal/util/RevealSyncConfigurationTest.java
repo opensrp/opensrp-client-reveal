@@ -12,6 +12,7 @@ import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.activity.LoginActivity;
 
 import java.util.Collections;
 
@@ -125,6 +126,31 @@ public class RevealSyncConfigurationTest extends BaseUnitTest {
     @Test
     public void testGetSettingsSyncFilterParam() {
         assertEquals(SyncFilter.TEAM_ID, syncConfiguration.getSettingsSyncFilterParam());
+    }
+
+    @Test
+    public void testFirebasePerformanceMonitoringEnabled() {
+        assertEquals(true, syncConfiguration.firebasePerformanceMonitoringEnabled());
+    }
+
+    @Test
+    public void testClearDataOnNewTeamLogin() {
+        assertEquals(true, syncConfiguration.clearDataOnNewTeamLogin());
+    }
+
+    @Test
+    public void testGetOauthClientId() {
+        assertEquals(BuildConfig.OAUTH_CLIENT_ID, syncConfiguration.getOauthClientId());
+    }
+
+    @Test
+    public void testGetOauthClientSecret() {
+        assertEquals(BuildConfig.OAUTH_CLIENT_SECRET, syncConfiguration.getOauthClientSecret());
+    }
+
+    @Test
+    public void testGetAuthenticationActivity() {
+        assertEquals(LoginActivity.class, syncConfiguration.getAuthenticationActivity());
     }
 
 }
