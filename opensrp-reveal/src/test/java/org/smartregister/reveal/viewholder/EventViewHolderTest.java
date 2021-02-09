@@ -5,15 +5,21 @@ import android.view.View;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.R;
+import org.smartregister.reveal.model.EventRegisterDetails;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.TestingUtils;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by samuelgithengi on 2/9/21.
@@ -27,6 +33,9 @@ public class EventViewHolderTest extends BaseUnitTest {
 
     @Mock
     private View.OnClickListener paginationClickListener;
+
+    @Captor
+    private ArgumentCaptor<View> viewArgumentCaptor;
 
     private EventViewHolder viewHolder;
 
@@ -77,5 +86,17 @@ public class EventViewHolderTest extends BaseUnitTest {
         assertEquals("John Doe", registerViewHolder.sopTextView.getText());
         assertEquals("Hs 1233", registerViewHolder.householdTextView.getText());
         assertEquals("Task Completed", registerViewHolder.statusTextView.getText());
+    }
+
+    @Test
+    public void testAttachOnclickListener() {
+        registerViewHolder = viewHolder.createViewHolder(null);
+        viewHolder.getView(null, smartRegisterClient, registerViewHolder);
+        registerViewHolder.itemView.performClick();
+        verify(registerClickListener).onClick(viewArgumentCaptor.capture());
+        EventRegisterDetails eventRegisterDetails = (EventRegisterDetails) viewArgumentCaptor.getValue().getTag(R.id.patient_column);
+        assertNotNull(eventRegisterDetails);
+        assertEquals(smartRegisterClient.getColumnmaps().get(DatabaseKeys.FORM_SUBMISSION_ID), eventRegisterDetails.getFormSubmissionId());
+        assertEquals(smartRegisterClient.getColumnmaps().get(DatabaseKeys.EVENT_TYPE), eventRegisterDetails.getEventType());
     }
 }

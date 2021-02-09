@@ -49,12 +49,14 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYAB
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ENTITY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_DATE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TYPE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.FORM_SUBMISSION_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SOP;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
@@ -136,6 +138,8 @@ public class TestingUtils {
         smartRegisterClient.getColumnmaps().put(SOP, "0011-John Doe");
         smartRegisterClient.getColumnmaps().put(ENTITY, "Hs 1233");
         smartRegisterClient.getColumnmaps().put(STATUS, "Sprayed");
+        smartRegisterClient.getColumnmaps().put(BASE_ENTITY_ID, "base_id_12232");
+        smartRegisterClient.getColumnmaps().put(FORM_SUBMISSION_ID, "submission_67756");
         return smartRegisterClient;
     }
 
