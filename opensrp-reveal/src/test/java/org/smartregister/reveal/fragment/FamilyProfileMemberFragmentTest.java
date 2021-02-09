@@ -2,6 +2,7 @@ package org.smartregister.reveal.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
@@ -16,8 +17,10 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
+import org.robolectric.RuntimeEnvironment;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.cursoradapter.RecyclerViewPaginatedAdapter;
+import org.smartregister.family.fragment.BaseFamilyProfileMemberFragment;
 import org.smartregister.family.presenter.BaseFamilyProfileMemberPresenter;
 import org.smartregister.family.util.Constants;
 import org.smartregister.reveal.BaseUnitTest;
@@ -106,6 +109,19 @@ public class FamilyProfileMemberFragmentTest extends BaseUnitTest {
         verify(fragment).startActivity(intentArgumentCaptor.capture());
         assertEquals(caseId, intentArgumentCaptor.getValue().getStringExtra(Constants.INTENT_KEY.BASE_ENTITY_ID));
         assertEquals(structureId, intentArgumentCaptor.getValue().getStringExtra(STRUCTURE_ID));
+    }
+
+    @Test
+    public void testOnViewClicked() {
+        fragment = spy(fragment);
+        when(fragment.getArguments()).thenReturn(new Bundle());
+        View view = new View(RuntimeEnvironment.application);
+        view.setId(R.id.patient_column);
+        CommonPersonObjectClient patient = new CommonPersonObjectClient("caseId", new HashMap<>(), "John");
+        view.setTag(patient);
+        view.setTag(R.id.VIEW_ID, BaseFamilyProfileMemberFragment.CLICK_VIEW_NORMAL);
+        fragment.onViewClicked(view);
+        verify(fragment).goToOtherMemberProfileActivity(patient);
     }
 
     @Test
