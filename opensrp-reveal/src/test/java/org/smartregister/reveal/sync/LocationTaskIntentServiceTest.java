@@ -14,14 +14,29 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.domain.FetchStatus;
+import org.smartregister.domain.Location;
+import org.smartregister.domain.Task;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.shadow.ShadowNetworkUtils;
+import org.smartregister.reveal.util.TestingUtils;
+import org.smartregister.reveal.util.Utils;
+import org.smartregister.util.Cache;
 import org.smartregister.util.SyncUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -104,5 +119,64 @@ public class LocationTaskIntentServiceTest extends BaseUnitTest {
         Intent intent = new Intent();
         intentService.onStartCommand(intent, 12, 2);
         assertNotNull(ReflectionHelpers.getField(intentService, "syncUtils"));
+    }
+
+
+    @Test
+    public void testHasChangesInCurrentOperationalAreaWithStructuresInOA() {
+        Location location = TestingUtils.gson.fromJson(TestingUtils.structureJSON, Location.class);
+        List<Task> tasks = new ArrayList<>(TestingUtils.createTasks());
+        List<Location> locations = Collections.singletonList(location);
+        ReflectionHelpers.ClassParameter<?>[] parameters = ReflectionHelpers.ClassParameter.fromComponentLists(new Class[]{List.class, List.class}, new Object[]{locations, tasks});
+        assertFalse(ReflectionHelpers.callInstanceMethod(intentService, "hasChangesInCurrentOperationalArea", parameters));
+
+
+        Location operationalArea = TestingUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, Location.class);
+        Cache<Location> cache = mock(Cache.class);
+        when(cache.get(anyString(), any())).thenReturn(operationalArea);
+        ReflectionHelpers.setStaticField(Utils.class, "cache", cache);
+
+        assertTrue(ReflectionHelpers.callInstanceMethod(intentService, "hasChangesInCurrentOperationalArea", parameters));
+
+
+    }
+
+    @Test
+    public void testHasChangesInCurrentOperationalAreaWithTasksInCurrentOA() {
+        List<Task> tasks = new ArrayList<>(TestingUtils.createTasks());
+        List<Location> locations = Collections.emptyList();
+        ReflectionHelpers.ClassParameter<?>[] parameters = ReflectionHelpers.ClassParameter.fromComponentLists(new Class[]{List.class, List.class}, new Object[]{locations, tasks});
+        assertFalse(ReflectionHelpers.callInstanceMethod(intentService, "hasChangesInCurrentOperationalArea", parameters));
+
+
+        Location operationalArea = TestingUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, Location.class);
+        Cache<Location> cache = mock(Cache.class);
+        when(cache.get(anyString(), any())).thenReturn(operationalArea);
+        ReflectionHelpers.setStaticField(Utils.class, "cache", cache);
+
+        tasks.get(4).setGroupIdentifier(operationalArea.getId());
+
+        assertTrue(ReflectionHelpers.callInstanceMethod(intentService, "hasChangesInCurrentOperationalArea", parameters));
+
+
+    }
+
+
+    @Test
+    public void testHasChangesInCurrentOperationalAreaWithStructuresAndTasksDifferentOA() {
+        Location location = TestingUtils.gson.fromJson(TestingUtils.structureJSON, Location.class);
+        location.getProperties().setParentId(UUID.randomUUID().toString());
+        List<Task> tasks = new ArrayList<>(TestingUtils.createTasks());
+        List<Location> locations = Collections.singletonList(location);
+        ReflectionHelpers.ClassParameter<?>[] parameters = ReflectionHelpers.ClassParameter.fromComponentLists(new Class[]{List.class, List.class}, new Object[]{locations, tasks});
+
+        Location operationalArea = TestingUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, Location.class);
+        Cache<Location> cache = mock(Cache.class);
+        when(cache.get(anyString(), any())).thenReturn(operationalArea);
+        ReflectionHelpers.setStaticField(Utils.class, "cache", cache);
+
+        assertFalse(ReflectionHelpers.callInstanceMethod(intentService, "hasChangesInCurrentOperationalArea", parameters));
+
+
     }
 }
