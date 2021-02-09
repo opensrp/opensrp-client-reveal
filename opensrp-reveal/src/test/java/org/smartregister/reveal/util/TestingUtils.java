@@ -23,6 +23,7 @@ import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
+import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -120,6 +121,17 @@ public class TestingUtils {
         map.put(KEY.UNIQUE_ID, "12987632");
         CommonPersonObjectClient smartRegisterClient = new CommonPersonObjectClient(UUID.randomUUID().toString(), null, null);
         smartRegisterClient.setColumnmaps(map);
+        return smartRegisterClient;
+    }
+
+
+    public static CommonPersonObjectClient getCommonPersonObjectClientForEventRegister() {
+        CommonPersonObjectClient smartRegisterClient = getCommonPersonObjectClient();
+        smartRegisterClient.getColumnmaps().put(DatabaseKeys.EVENT_DATE,"2021-02-04T03:00:00.000+03:00");
+        smartRegisterClient.getColumnmaps().put(DatabaseKeys.EVENT_TYPE,Constants.SPRAY_EVENT);
+        smartRegisterClient.getColumnmaps().put(DatabaseKeys.SOP,"0011-John Doe");
+        smartRegisterClient.getColumnmaps().put(DatabaseKeys.ENTITY,"Hs 1233");
+        smartRegisterClient.getColumnmaps().put(DatabaseKeys.STATUS,"Sprayed");
         return smartRegisterClient;
     }
 
