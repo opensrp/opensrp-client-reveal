@@ -18,8 +18,14 @@ import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.TestingUtils;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 /**
  * Created by samuelgithengi on 2/9/21.
@@ -89,7 +95,7 @@ public class EventViewHolderTest extends BaseUnitTest {
     }
 
     @Test
-    public void testAttachOnclickListener() {
+    public void testAttachOnclickListenerShouldPassEventTypeAndFormSubmissionId() {
         registerViewHolder = viewHolder.createViewHolder(null);
         viewHolder.getView(null, smartRegisterClient, registerViewHolder);
         registerViewHolder.itemView.performClick();
@@ -99,4 +105,80 @@ public class EventViewHolderTest extends BaseUnitTest {
         assertEquals(smartRegisterClient.getColumnmaps().get(DatabaseKeys.FORM_SUBMISSION_ID), eventRegisterDetails.getFormSubmissionId());
         assertEquals(smartRegisterClient.getColumnmaps().get(DatabaseKeys.EVENT_TYPE), eventRegisterDetails.getEventType());
     }
+
+    @Test
+    public void testGetCreateViewHolderShouldInitializeViews() {
+        registerViewHolder = viewHolder.createViewHolder(null);
+        assertNotNull(registerViewHolder);
+        assertNotNull(registerViewHolder.eventDateTextView);
+        assertNotNull(registerViewHolder.eventTypeTextView);
+        assertNotNull(registerViewHolder.sopTextView);
+        assertNotNull(registerViewHolder.householdTextView);
+        assertNotNull(registerViewHolder.statusTextView);
+    }
+
+    @Test
+    public void testCreateFooterHolderShouldInitializeFooterView() {
+        FooterViewHolder footer = (FooterViewHolder) viewHolder.createFooterHolder(null);
+        assertNotNull(footer);
+        assertNotNull(footer.nextPageView);
+        assertNotNull(footer.previousPageView);
+        assertNotNull(footer.pageInfoView);
+
+    }
+
+    @Test
+    public void testUpdateClients() {
+        assertNull(viewHolder.updateClients(null, null, null, null));
+    }
+
+    @Test
+    public void testGetFooterView() {
+        FooterViewHolder footerViewHolder = (FooterViewHolder) viewHolder.createFooterHolder(null);
+        viewHolder.getFooterView(footerViewHolder, 1, 1, false, false);
+        assertEquals("Page 1 of 1", footerViewHolder.pageInfoView.getText());
+        assertEquals(View.INVISIBLE, footerViewHolder.nextPageView.getVisibility());
+        assertEquals(View.INVISIBLE, footerViewHolder.previousPageView.getVisibility());
+
+    }
+
+    @Test
+    public void testGetFooterViewWithNextAndPreviousPages() {
+        FooterViewHolder footerViewHolder = (FooterViewHolder) viewHolder.createFooterHolder(null);
+        viewHolder.getFooterView(footerViewHolder, 2, 3, true, true);
+        assertEquals("Page 2 of 3", footerViewHolder.pageInfoView.getText());
+        assertEquals(View.VISIBLE, footerViewHolder.nextPageView.getVisibility());
+        assertEquals(View.VISIBLE, footerViewHolder.previousPageView.getVisibility());
+
+        footerViewHolder.nextPageView.performClick();
+        footerViewHolder.previousPageView.performClick();
+
+        verify(paginationClickListener, times(2)).onClick(viewArgumentCaptor.capture());
+
+    }
+
+    @Test
+    public void onServiceModeSelectedDoesNothing() {
+        viewHolder = spy(viewHolder);
+        viewHolder.onServiceModeSelected(null);
+        verify(viewHolder).onServiceModeSelected(null);
+        verifyNoMoreInteractions(viewHolder);
+    }
+
+    @Test
+    public void testNewFormLauncher() {
+        assertNull(viewHolder.newFormLauncher(null, null, null));
+    }
+
+    @Test
+    public void testInflater() {
+        assertNotNull(viewHolder.inflater());
+    }
+
+    @Test
+    public void testIsFooterViewHolder() {
+        assertTrue(viewHolder.isFooterViewHolder(viewHolder.createFooterHolder(null)));
+        assertFalse(viewHolder.isFooterViewHolder(viewHolder.createViewHolder(null)));
+    }
+
 }
