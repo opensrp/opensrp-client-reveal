@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.evernote.android.job.JobManager;
 import com.google.firebase.FirebaseApp;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -61,6 +62,12 @@ public class LocationTaskIntentServiceTest extends BaseUnitTest {
     public void setUp() {
         JobManager.create(RuntimeEnvironment.application);
         intentService = Robolectric.buildIntentService(LocationTaskIntentService.class).create().get();
+    }
+
+
+    @After
+    public void tearDown() {
+        ReflectionHelpers.setField(JobManager.instance(), "instance", null);
     }
 
     @Config(shadows = {ShadowNetworkUtils.class})
