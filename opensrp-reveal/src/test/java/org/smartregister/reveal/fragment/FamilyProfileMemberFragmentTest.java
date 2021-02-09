@@ -16,7 +16,6 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
-import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.cursoradapter.RecyclerViewPaginatedAdapter;
 import org.smartregister.family.presenter.BaseFamilyProfileMemberPresenter;
@@ -49,18 +48,16 @@ public class FamilyProfileMemberFragmentTest extends BaseUnitTest {
     private BaseFamilyProfileMemberPresenter presenter;
 
     @Captor
-    ArgumentCaptor<Intent> intentArgumentCaptor;
+    private ArgumentCaptor<Intent> intentArgumentCaptor;
 
     private FamilyProfileMemberFragment fragment;
-
-    private FragmentActivity activity;
 
     @Before
     public void setUp(){
         org.smartregister.Context.bindtypes = new ArrayList<>();
         fragment = new FamilyProfileMemberFragment();
         Whitebox.setInternalState(fragment, "presenter", presenter);
-        activity = Robolectric.buildActivity(AppCompatActivity.class).create().start().get();
+        FragmentActivity activity = Robolectric.buildActivity(AppCompatActivity.class).create().start().get();
         activity.setContentView(R.layout.fragment_base_register);
         activity.getSupportFragmentManager().beginTransaction().add(fragment, "RESIDENTS").commit();
     }
