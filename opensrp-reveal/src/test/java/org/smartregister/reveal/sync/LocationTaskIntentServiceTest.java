@@ -3,6 +3,7 @@ package org.smartregister.reveal.sync;
 import android.content.Intent;
 
 import com.evernote.android.job.JobManager;
+import com.google.firebase.FirebaseApp;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -97,10 +98,11 @@ public class LocationTaskIntentServiceTest extends BaseUnitTest {
 
     @Config(shadows = {ShadowNetworkUtils.class})
     @Test
-    public void testOnHandleIntentShouldStartSync() throws Exception {
+    public void testOnHandleIntentShouldStartSync() {
         ShadowNetworkUtils.setIsNetworkAvailable(true);
         ReflectionHelpers.setField(intentService, "syncUtils", syncUtils);
         when(syncUtils.verifyAuthorization()).thenReturn(true);
+        FirebaseApp.initializeApp(RuntimeEnvironment.application);
         Intent intent = new Intent();
         intentService = spy(intentService);
         intentService.onHandleIntent(intent);
@@ -130,14 +132,12 @@ public class LocationTaskIntentServiceTest extends BaseUnitTest {
         ReflectionHelpers.ClassParameter<?>[] parameters = ReflectionHelpers.ClassParameter.fromComponentLists(new Class[]{List.class, List.class}, new Object[]{locations, tasks});
         assertFalse(ReflectionHelpers.callInstanceMethod(intentService, "hasChangesInCurrentOperationalArea", parameters));
 
-
         Location operationalArea = TestingUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, Location.class);
         Cache<Location> cache = mock(Cache.class);
         when(cache.get(anyString(), any())).thenReturn(operationalArea);
         ReflectionHelpers.setStaticField(Utils.class, "cache", cache);
 
         assertTrue(ReflectionHelpers.callInstanceMethod(intentService, "hasChangesInCurrentOperationalArea", parameters));
-
 
     }
 
@@ -148,7 +148,6 @@ public class LocationTaskIntentServiceTest extends BaseUnitTest {
         ReflectionHelpers.ClassParameter<?>[] parameters = ReflectionHelpers.ClassParameter.fromComponentLists(new Class[]{List.class, List.class}, new Object[]{locations, tasks});
         assertFalse(ReflectionHelpers.callInstanceMethod(intentService, "hasChangesInCurrentOperationalArea", parameters));
 
-
         Location operationalArea = TestingUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, Location.class);
         Cache<Location> cache = mock(Cache.class);
         when(cache.get(anyString(), any())).thenReturn(operationalArea);
@@ -157,7 +156,6 @@ public class LocationTaskIntentServiceTest extends BaseUnitTest {
         tasks.get(4).setGroupIdentifier(operationalArea.getId());
 
         assertTrue(ReflectionHelpers.callInstanceMethod(intentService, "hasChangesInCurrentOperationalArea", parameters));
-
 
     }
 
@@ -176,7 +174,6 @@ public class LocationTaskIntentServiceTest extends BaseUnitTest {
         ReflectionHelpers.setStaticField(Utils.class, "cache", cache);
 
         assertFalse(ReflectionHelpers.callInstanceMethod(intentService, "hasChangesInCurrentOperationalArea", parameters));
-
 
     }
 }
