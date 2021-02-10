@@ -45,6 +45,8 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
 
     private Button btnVerificationForm;
 
+    private Button btnTabletAccountabilityForm;
+
     public static SummaryFormsFragment newInstance(Bundle bundle) {
 
         SummaryFormsFragment fragment = new SummaryFormsFragment();
@@ -81,6 +83,7 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
         btnMobilization = view.findViewById(R.id.summary_mobilization_form);
         btnIrsFieldOfficer = view.findViewById(R.id.summary_irs_field_officer);
         btnVerificationForm = view.findViewById(R.id.summary_verification_form);
+        btnTabletAccountabilityForm = view.findViewById(R.id.summary_tablet_accountability_form);
 
         setClickListeners();
     }
@@ -93,6 +96,7 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
         btnMobilization.setOnClickListener(this);
         btnIrsFieldOfficer.setOnClickListener(this);
         btnVerificationForm.setOnClickListener(this);
+        btnTabletAccountabilityForm.setOnClickListener(this);
 
     }
 
@@ -170,6 +174,8 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
             case R.id.summary_verification_form:
                 presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.VERIFICATION_FORM_ZAMBIA);
                 break;
+            case R.id.summary_tablet_accountability_form:
+                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.TABLET_ACCOUNTABILITY_FORM);
             default:
                 break;
         }

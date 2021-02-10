@@ -417,6 +417,8 @@ public interface Constants {
 
         String REFAPP_CASE_CONFIRMATION_FORM = "json.form/refapp_case_confirmation.json";
 
+        String TABLET_ACCOUNTABILITY_FORM = "json.form/tablet_accountability_form.json";
+
         String JSON_FORM_FOLDER = "json.form/";
 
         String LOCATION_COMPONENT_ACTIVE = "my_location_active";
