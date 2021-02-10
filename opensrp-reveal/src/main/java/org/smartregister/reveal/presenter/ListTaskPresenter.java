@@ -437,9 +437,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public void onCardDetailsFetched(CardDetails cardDetails) {
         if (cardDetails instanceof SprayCardDetails) {
-            if (cardDetails == null) {
-                return;
-            }
             formatSprayCardDetails((SprayCardDetails) cardDetails);
             listTaskView.openCardView(cardDetails);
         } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
@@ -497,7 +494,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private void startForm(String formName, Feature feature, String sprayStatus, String familyHead, Event event) {
         JSONObject formJson = jsonFormUtils.getFormJSON(listTaskView.getContext()
                 , formName, feature, sprayStatus, familyHead);
-        if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(((MosquitoHarvestCardDetails) cardDetails).getInterventionType())) {
+        if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(cardDetails.getInterventionType())) {
             jsonFormUtils.populatePAOTForm((MosquitoHarvestCardDetails) cardDetails, formJson);
         } else if ( cardDetails instanceof MosquitoHarvestCardDetails) {
             jsonFormUtils.populateForm(event, formJson);

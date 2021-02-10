@@ -28,6 +28,7 @@ import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -61,6 +62,9 @@ public class FilterTasksPresenterTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<Intent> intentArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Date> dateArgumentCaptor;
 
     private FilterTasksPresenter filterTasksPresenter;
 
@@ -197,5 +201,15 @@ public class FilterTasksPresenterTest extends BaseUnitTest {
         filterTasksPresenter.restoreCheckedFilters(filterParams);
         verify(toggleButton, times(3 + 2)).setChecked(true);
         verify(view).setSortBySelection(2);
+    }
+
+    @Test
+    public void testOnDateSet() {
+        filterTasksPresenter.onDateSet(null, 2024, 10, 1);
+        verify(view).setFilterFromDate(dateArgumentCaptor.capture());
+        Date date = dateArgumentCaptor.getValue();
+        assertEquals(1, date.getDate());
+        assertEquals(10, date.getMonth());
+        assertEquals(124, date.getYear());
     }
 }

@@ -749,6 +749,19 @@ public class ListTaskPresenterTest extends BaseUnitTest {
     }
 
     @Test
+    public void testOnSprayCardDetailsFetchedWithWrongFormat() {
+        SprayCardDetails expectedCardDetails = new SprayCardDetails(NOT_SPRAYED, "Residential", "2014-07-04T12:08:56.235", "gideon", "Mark", "Available");
+        listTaskPresenter.onCardDetailsFetched(expectedCardDetails);
+        verify(listTaskView).openCardView(cardDetailsArgumentCaptor.capture());
+        SprayCardDetails actualCardDetails = (SprayCardDetails) cardDetailsArgumentCaptor.getValue();
+        assertEquals(NOT_SPRAYED, actualCardDetails.getStatus());
+        assertEquals("Residential", actualCardDetails.getPropertyType());
+        assertEquals("gideon", actualCardDetails.getSprayOperator());
+        assertEquals("Mark", actualCardDetails.getFamilyHead());
+        assertEquals("Available", actualCardDetails.getReason());
+    }
+
+    @Test
     public void testOnMosquitoHarvestCardDetailsFetched() {
 
         MosquitoHarvestCardDetails expectedCardDetails = new MosquitoHarvestCardDetails(NOT_VISITED, "2019-07-04", "2019-08-05", MOSQUITO_COLLECTION);
