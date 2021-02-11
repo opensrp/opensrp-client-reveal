@@ -159,9 +159,11 @@ public class FormFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testShowBasicForm() {
         Whitebox.setInternalState(presenter, "jsonFormUtils", jsonFormUtils);
-        when(jsonFormUtils.getFormJSON(any(), anyString(), any(), any())).thenReturn(new JSONObject());
+        JSONObject expectedJson = new JSONObject();
+        when(jsonFormUtils.getFormJSON(any(), anyString(), any(), any())).thenReturn(expectedJson);
         presenter.showBasicForm("form");
         verify(view).startForm(jsonArgumentCaptor.capture());
+        assertEquals(expectedJson, jsonArgumentCaptor.getValue());
     }
 
     @Test
