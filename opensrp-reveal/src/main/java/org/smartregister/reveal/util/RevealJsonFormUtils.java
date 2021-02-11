@@ -570,6 +570,16 @@ public class RevealJsonFormUtils {
                 }
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DISTRICTS, fieldsMap.get(JsonForm.DISTRICT), PreferencesUtil.getInstance().getCurrentProvince());
                 break;
+
+            case JsonForm.TABLET_ACCOUNTABILITY_FORM:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        Constants.CONFIGURATION.SUPERVISORS, fieldsMap.get(JsonForm.SUPERVISOR),
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        CONFIGURATION.MDA_ADHERENCE_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER),
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DISTRICTS, fieldsMap.get(JsonForm.DISTRICT), PreferencesUtil.getInstance().getCurrentProvince());
+                break;
             default:
                 break;
         }

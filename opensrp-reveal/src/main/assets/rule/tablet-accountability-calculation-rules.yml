@@ -1,0 +1,21 @@
+---
+name: step1_calcSumPZQ_received_and_top_up
+description: step1_calcSumPZQ_received_and_top_up
+priority: 1
+condition: "true"
+actions:
+- "calculation = helper.ifNull(step1_PZQ_received + step1_PZQ_top_up,0)"
+---
+name: step1_calcSumALB_received_and_top_up
+description: step1_calcSumALB_received_and_top_up
+priority: 1
+condition: "true"
+actions:
+  - "calculation = helper.ifNull(step1_Albendazole_received + step1_Albendazole_top_up,0)"
+---
+name: step1_calcSumMBZ_received_and_top_up
+description: step1_calcSumMBZ_received_and_top_up
+priority: 1
+condition: "true"
+actions:
+  - "calculation = helper.ifNull(step1_Mebendezole_received + step1_Mebendazole_top_up,0)"

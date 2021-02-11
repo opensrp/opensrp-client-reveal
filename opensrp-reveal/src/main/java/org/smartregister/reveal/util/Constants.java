@@ -417,8 +417,6 @@ public interface Constants {
 
         String REFAPP_CASE_CONFIRMATION_FORM = "json.form/refapp_case_confirmation.json";
 
-        String TABLET_ACCOUNTABILITY_FORM = "json.form/tablet_accountability_form.json";
-
         String JSON_FORM_FOLDER = "json.form/";
 
         String LOCATION_COMPONENT_ACTIVE = "my_location_active";
@@ -472,6 +470,8 @@ public interface Constants {
         String IRS_FIELD_OFFICER_ZAMBIA = "json.form/zambia_irs_field_officer.json";
 
         String VERIFICATION_FORM_ZAMBIA = "json.form/zambia_verification_form.json";
+
+        String TABLET_ACCOUNTABILITY_FORM = "json.form/tablet_accountability_form.json";
 
         String SPRAY_OPERATOR_CODE = "sprayop_code";
 

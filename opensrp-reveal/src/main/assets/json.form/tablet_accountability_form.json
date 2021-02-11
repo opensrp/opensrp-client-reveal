@@ -52,6 +52,43 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "district",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Select the Location ( ward )",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "fieldOfficer",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of CDD",
+        "v_required": {
+          "value": "true",
+          "err": "This field is required."
+        }
+      },
+      {
+        "key": "supervisor",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of CDD Supervisor",
+        "v_required": {
+          "value": "true",
+          "err": "This field is required."
+        }
+      },
+      {
         "key": "drug_distributed",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -145,6 +182,20 @@
         }
       },
       {
+        "key": "calcSumPZQ_received_and_top_up",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "PZQ_returned",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -175,7 +226,14 @@
               "rules-file": "tablet-accountability-relevance-rules.yml"
             }
           }
-        }
+        },
+        "constraints": [
+          {
+            "type": "numeric",
+            "ex": "lessThanEqualTo(.,step1:calcSumPZQ_received_and_top_up)",
+            "err": "Value should be less than or equal to sum of PZQ received and PZQ top-ups"
+          }
+        ]
       },
       {
         "key": "Albendazole_received",
@@ -244,6 +302,20 @@
         }
       },
       {
+        "key": "calcSumALB_received_and_top_up",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "Albendazole_returned",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -274,7 +346,14 @@
               "rules-file": "tablet-accountability-relevance-rules.yml"
             }
           }
-        }
+        },
+        "constraints": [
+          {
+            "type": "numeric",
+            "ex": "lessThanEqualTo(.,step1:calcSumALB_received_and_top_up)",
+            "err": "Value should be less than or equal to sum of Albendazole received and Albendazole top-ups"
+          }
+        ]
       },
       {
         "key": "Mebendezole_received",
@@ -343,6 +422,20 @@
         }
       },
       {
+        "key": "calcSumMBZ_received_and_top_up",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "Mebendazole_returned",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -373,7 +466,14 @@
               "rules-file": "tablet-accountability-relevance-rules.yml"
             }
           }
-        }
+        },
+        "constraints": [
+          {
+            "type": "numeric",
+            "ex": "lessThanEqualTo(.,step1:calcSumMBZ_received_and_top_up)",
+            "err": "Value should be less than or equal to sum of Mebendezole received and Mebendezole top-ups"
+          }
+        ]
       }
     ]
   }
