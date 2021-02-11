@@ -690,8 +690,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
         listTasksActivity = spy(listTasksActivity);
         doNothing().when(listTasksActivity).toggleProgressBarView(true);
         listTasksActivity.onSyncStart();
-        Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
-        assertTrue(snackbar.isShown());
+        assertEquals(listTasksActivity.getString(R.string.syncing), ShadowToast.getTextOfLatestToast());
     }
 
 
@@ -699,8 +698,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     public void testOnSyncInProgressFetchedDataSnackBarIsStillShown() {
         init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.fetched);
-        Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
-        assertTrue(snackbar.isShown());
+        assertEquals(listTasksActivity.getString(R.string.syncing), ShadowToast.getTextOfLatestToast());
     }
 
 
@@ -708,26 +706,21 @@ public class ListTasksActivityTest extends BaseUnitTest {
     public void testOnSyncInProgressFetchFailedSnackBarIsDismissed() {
         init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.fetchedFailed);
-        Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
-        assertFalse(snackbar.isShown());
-
-
+        assertEquals(listTasksActivity.getString(R.string.sync_failed), ShadowToast.getTextOfLatestToast());
     }
 
     @Test
     public void testOnSyncInProgressNothingFetchedSnackBarIsDismissed() {
         init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.nothingFetched);
-        Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
-        assertFalse(snackbar.isShown());
+        assertEquals(listTasksActivity.getString(R.string.sync_complete), ShadowToast.getTextOfLatestToast());
     }
 
     @Test
     public void testOnSyncInProgressNoConnectionSnackBarIsDismissed() {
         init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.noConnection);
-        Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
-        assertFalse(snackbar.isShown());
+        assertEquals(listTasksActivity.getString(R.string.sync_failed_no_internet), ShadowToast.getTextOfLatestToast());
     }
 
     @Test
@@ -736,8 +729,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
         listTasksActivity = spy(listTasksActivity);
         doNothing().when(listTasksActivity).toggleProgressBarView(false);
         listTasksActivity.onSyncComplete(FetchStatus.nothingFetched);
-        Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
-        assertFalse(snackbar.isShown());
+        assertEquals(listTasksActivity.getString(R.string.sync_complete), ShadowToast.getTextOfLatestToast());
     }
 
     @Test

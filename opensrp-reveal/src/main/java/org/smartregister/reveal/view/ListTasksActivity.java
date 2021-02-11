@@ -30,7 +30,6 @@ import androidx.cardview.widget.CardView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -156,8 +155,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private boolean hasRequestedLocation;
 
-    private Snackbar syncProgressSnackbar;
-
     private BaseDrawerContract.View drawerView;
 
     private RevealJsonFormUtils jsonFormUtils;
@@ -214,8 +211,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeCardViews();
 
         initializeToolbar();
-
-        syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
     }
 
     private void initializeCardViews() {
@@ -813,7 +808,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onSyncStart() {
         if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
-            syncProgressSnackbar.show();
+            displayToast(org.smartregister.R.string.syncing);
         }
         toggleProgressBarView(true);
     }
@@ -821,16 +816,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onSyncInProgress(FetchStatus fetchStatus) {
         if (FetchStatus.fetched.equals(fetchStatus)) {
-            syncProgressSnackbar.show();
+            displayToast(org.smartregister.R.string.syncing);
             return;
         }
-        syncProgressSnackbar.dismiss();
         if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_failed, Snackbar.LENGTH_LONG).show();
+            displayToast(org.smartregister.R.string.sync_failed);
         } else if (fetchStatus.equals(FetchStatus.nothingFetched)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_LONG).show();
+            displayToast(org.smartregister.R.string.sync_complete);
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_LONG).show();
+            displayToast(org.smartregister.R.string.sync_failed_no_internet);
         }
     }
 
@@ -857,7 +851,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         listTaskPresenter.onResume();
 
         if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
-            syncProgressSnackbar.show();
+            displayToast(org.smartregister.R.string.sync_complete);
             toggleProgressBarView(true);
         }
     }
