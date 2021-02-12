@@ -212,6 +212,9 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_ENUMERATORS, fields.get(JsonForm.DATA_COLLECTOR));
         cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_COMMUNITY_HEALTH_WORKERS, fields.get(JsonForm.CHW_NAME));
         cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_ADHERENCE_OFFICERS, fields.get(JsonForm.ADHERENCE_NAME));
+        //TODO: update cascade after confirming the server configurations
+        cascadeSelect(key,JsonForm.DISTRICT,Constants.CONFIGURATION.SUPERVISORS,fields.get(JsonForm.SUPERVISOR));
+        cascadeSelect(key,JsonForm.DISTRICT,Constants.CONFIGURATION.MDA_ADHERENCE_OFFICERS,fields.get(JsonForm.FIELD_OFFICER));
     }
 
     private void cascadeSelect(String key, String parentWidget, String configurationKey, JSONObject childWidget) {
