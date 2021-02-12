@@ -661,6 +661,15 @@ public class ListTasksActivityTest extends BaseUnitTest {
     }
 
     @Test
+    public void testShowProgressDialogWithFormatArgs() {
+        listTasksActivity.showProgressDialog(R.string.saving_title, R.string.family_name_format, "Name");
+        ProgressDialog progressDialog = (ProgressDialog) ShadowProgressDialog.getLatestDialog();
+        assertNotNull(progressDialog);
+        assertTrue(progressDialog.isShowing());
+        assertEquals(listTasksActivity.getString(R.string.saving_title), ShadowApplication.getInstance().getLatestDialog().getTitle());
+    }
+
+    @Test
     public void testHideProgressDialog() {
         listTasksActivity.showProgressDialog(R.string.saving_title, R.string.saving_message);
         ProgressDialog progressDialog = (ProgressDialog) ShadowProgressDialog.getLatestDialog();
@@ -788,6 +797,20 @@ public class ListTasksActivityTest extends BaseUnitTest {
         Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
         listTasksActivity.onDrawerClosed();
         verify(listTaskPresenter).onDrawerClosed();
+    }
+
+    @Test
+    public void testToggleProgressBarView() {
+        Whitebox.setInternalState(listTasksActivity, "drawerView", drawerView);
+        listTasksActivity.toggleProgressBarView(true);
+        verify(drawerView).toggleProgressBarView(true);
+    }
+
+    @Test
+    public void testSetOperationalArea() {
+        Whitebox.setInternalState(listTasksActivity, "drawerView", drawerView);
+        listTasksActivity.setOperationalArea("");
+        verify(drawerView).setOperationalArea("");
     }
 
     @Test
