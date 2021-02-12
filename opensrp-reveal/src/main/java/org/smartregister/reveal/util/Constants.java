@@ -115,6 +115,9 @@ public interface Constants {
         String MDA_CATCHMENT_AREAS = "mda_catchment_areas";
         String DISPLAY_DISTANCE_SCALE = "display_distance_scale";
         String DISTRICTS = "districts";
+        String WARDS = "wards";
+        String COMMUNITY_DRUG_DISTRIBUTORS = "community_drug_distributors";
+        String HEALTH_WORKER_SUPERVISORS = "health_worker_supervisors";
 
     }
 
@@ -417,6 +420,8 @@ public interface Constants {
 
         String REFAPP_CASE_CONFIRMATION_FORM = "json.form/refapp_case_confirmation.json";
 
+        String CDD_SUPERVISOR_DAILY_SUMMARY_FORM = "community_drug_distributor_supervisor_daily_summary_form.json";
+
         String JSON_FORM_FOLDER = "json.form/";
 
         String LOCATION_COMPONENT_ACTIVE = "my_location_active";
@@ -505,6 +510,13 @@ public interface Constants {
         String MOP_UP = "mopup";
 
         String YES =  "Yes";
+
+        String LOCATION = "location";
+
+        String COMMUNITY_DRUG_DISTRIBUTOR_NAME = "cdd_name";
+
+        String HEALTH_WORKER_SUPERVISOR = "health_worker_supervisor";
+
     }
 
     interface DateFormat {
