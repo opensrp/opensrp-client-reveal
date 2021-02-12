@@ -353,6 +353,8 @@ public class RevealJsonFormUtils {
             formName = JsonForm.TEAM_LEADER_DOS_ZAMBIA;
         } else if (Constants.EventType.VERIFICATION_EVENT.equals(encounterType)) {
             formName = JsonForm.VERIFICATION_FORM_ZAMBIA;
+        } else if (Constants.EventType.TABLET_ACCOUNTABILITY_EVENT.equals(encounterType)){
+            formName = JsonForm.TABLET_ACCOUNTABILITY_FORM;
         }
         return formName;
     }
