@@ -1,62 +1,62 @@
 ---
-name: step1_PZQ_received
-description: step1_PZQ_received
+name: step1_pzq_received
+description: step1_pzq_received
 priority: 1
 condition: "step1_drug_distributed.contains('PZQ')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_PZQ_top_up
-description: step1_PZQ_top_up
+name: step1_pzq_top_up
+description: step1_pzq_top_up
 priority: 1
 condition: "step1_drug_distributed.contains('PZQ')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_PZQ_returned
-description: step1_PZQ_returned
+name: step1_pzq_returned
+description: step1_pzq_returned
 priority: 1
 condition: "step1_drug_distributed.contains('PZQ')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_Albendazole_received
-description: step1_Albendazole_received
+name: step1_albendazole_received
+description: step1_albendazole_received
 priority: 1
 condition: "step1_drug_distributed.contains('ALB')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_Albendazole_top_up
-description: step1_Albendazole_top_up
+name: step1_albendazole_top_up
+description: step1_albendazole_top_up
 priority: 1
 condition: "step1_drug_distributed.contains('ALB')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_Albendazole_returned
-description: step1_Albendazole_returned
+name: step1_albendazole_returned
+description: step1_albendazole_returned
 priority: 1
 condition: "step1_drug_distributed.contains('ALB')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_Mebendezole_received
-description: step1_Mebendezole_received
+name: step1_mebendezole_received
+description: step1_mebendezole_received
 priority: 1
 condition: "step1_drug_distributed.contains('MBZ')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_Mebendazole_top_up
-description: step1_Mebendazole_top_up
+name: step1_mebendazole_top_up
+description: step1_mebendazole_top_up
 priority: 1
 condition: "step1_drug_distributed.contains('MBZ')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_Mebendazole_returned
-description: step1_Albendazole_returned
+name: step1_mebendazole_returned
+description: step1_albendazole_returned
 priority: 1
 condition: "step1_drug_distributed.contains('MBZ')"
 actions:

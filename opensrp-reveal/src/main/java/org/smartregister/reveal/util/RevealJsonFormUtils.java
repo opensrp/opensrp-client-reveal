@@ -575,12 +575,12 @@ public class RevealJsonFormUtils {
 
             case JsonForm.TABLET_ACCOUNTABILITY_FORM:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        Constants.CONFIGURATION.SUPERVISORS, fieldsMap.get(JsonForm.SUPERVISOR),
+                        CONFIGURATION.HEALTH_WORKER_SUPERVISORS, fieldsMap.get(JsonForm.HEALTH_WORKER_SUPERVISOR),
                         PreferencesUtil.getInstance().getCurrentDistrict());
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        CONFIGURATION.MDA_ADHERENCE_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER),
+                        CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS, fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),
                         PreferencesUtil.getInstance().getCurrentDistrict());
-                populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DISTRICTS, fieldsMap.get(JsonForm.DISTRICT), PreferencesUtil.getInstance().getCurrentProvince());
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.WARDS, fieldsMap.get(JsonForm.LOCATION), PreferencesUtil.getInstance().getCurrentProvince());
                 break;
             default:
                 break;

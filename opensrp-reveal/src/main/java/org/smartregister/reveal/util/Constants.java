@@ -115,6 +115,9 @@ public interface Constants {
         String MDA_CATCHMENT_AREAS = "mda_catchment_areas";
         String DISPLAY_DISTANCE_SCALE = "display_distance_scale";
         String DISTRICTS = "districts";
+        String WARDS = "wards";
+        String COMMUNITY_DRUG_DISTRIBUTORS = "community_drug_distributors";
+        String HEALTH_WORKER_SUPERVISORS = "health_worker_supervisors";
 
     }
 
@@ -509,6 +512,13 @@ public interface Constants {
         String MOP_UP = "mopup";
 
         String YES =  "Yes";
+
+        String LOCATION = "location";
+
+        String COMMUNITY_DRUG_DISTRIBUTOR_NAME = "cdd_name";
+
+        String HEALTH_WORKER_SUPERVISOR = "health_worker_supervisor";
+
     }
 
     interface DateFormat {
@@ -529,6 +539,7 @@ public interface Constants {
         String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
         String ZAMBIA_EC_CLIENT_FIELDS = "ec_client_fields_zambia.json";
         String REFAPP_EC_CLIENT_FIELDS = "ec_client_fields_refapp.json";
+        String KENYA_CLIENT_FIELDS  = "ec_client_fields_kenya.json";
     }
 
 
