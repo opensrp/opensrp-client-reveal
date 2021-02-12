@@ -9,13 +9,4 @@ public interface StatsContract {
         void hideProgressDialog();
 
     }
-
-    interface Presenter  {
-
-
-    }
-
-    interface Interactor {
-
-    }
 }

@@ -225,6 +225,13 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
     }
 
     @Test
+    public void testOnResume() {
+        Whitebox.setInternalState(fragment, "presenter", presenter);
+        fragment.onResume();
+        verify(presenter).refreshTasks();
+    }
+
+    @Test
     public void testOnActivityResultForTurnOnLocationAccepted() {
         Whitebox.setInternalState(fragment, "locationUtils", locationUtils);
         Whitebox.setInternalState(fragment, "presenter", presenter);
