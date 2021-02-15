@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "daily_summary",
+  "encounter_type": "cdd_supervisor_daily_summary",
   "form_version": "0.0.1",
   "entity_id": "",
   "metadata": {
@@ -196,20 +196,6 @@
         }
       },
       {
-        "key": "total_males",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "hidden",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-calculation.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "treated_female_1-4",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -292,6 +278,20 @@
         "v_min": {
           "value": "0",
           "err": "This field must be greater than or equal to 0"
+        }
+      },
+      {
+        "key": "total_males",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "cdd-supervisor-daily-summary-calculation.yml"
+            }
+          }
         }
       },
       {
@@ -469,28 +469,6 @@
         "v_min": {
           "value": "0",
           "err": "This field must be greater than or equal to 0"
-        }
-      },
-      {
-        "key": "data_verification",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Has this data been verified with hard copy forms",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": true,
-          "err": "This field is mandatory"
         }
       },
       {

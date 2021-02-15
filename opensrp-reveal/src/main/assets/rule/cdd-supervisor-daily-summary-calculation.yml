@@ -1,12 +1,12 @@
 ---
-name: step2_total_males
+name: step1_total_males
 description: Total Males Treated
 priority: 1
 condition: "true"
 actions:
  - "calculation = helper.ifNull(step1_treated_male_1-4 + step1_treated_male_5-14 + step1_treated_male_above_15-14,0)"
 ---
-name: step2_total_female
+name: step1_total_female
 description: Total Females Treated
 priority: 1
 condition: "true"
