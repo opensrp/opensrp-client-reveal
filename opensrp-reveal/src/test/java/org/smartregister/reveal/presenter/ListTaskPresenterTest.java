@@ -2,6 +2,7 @@ package org.smartregister.reveal.presenter;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.location.Location;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -140,6 +141,9 @@ public class ListTaskPresenterTest extends BaseUnitTest {
     @Mock
     private RevealJsonFormUtils jsonFormUtils;
 
+    @Mock
+    private ValidateUserLocationPresenter locationPresenter;
+
     @Captor
     private ArgumentCaptor<FeatureCollection> featureCollectionArgumentCaptor;
 
@@ -180,6 +184,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         prefsUtil.setCurrentOperationalArea(operationalArea);
         when(listTaskView.getContext()).thenReturn(RuntimeEnvironment.application);
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        Whitebox.setInternalState(listTaskPresenter, "locationPresenter",locationPresenter);
     }
 
     @Test
@@ -744,6 +749,19 @@ public class ListTaskPresenterTest extends BaseUnitTest {
     }
 
     @Test
+    public void testOnSprayCardDetailsFetchedWithWrongFormat() {
+        SprayCardDetails expectedCardDetails = new SprayCardDetails(NOT_SPRAYED, "Residential", "2014-07-04T12:08:56.235", "gideon", "Mark", "Available");
+        listTaskPresenter.onCardDetailsFetched(expectedCardDetails);
+        verify(listTaskView).openCardView(cardDetailsArgumentCaptor.capture());
+        SprayCardDetails actualCardDetails = (SprayCardDetails) cardDetailsArgumentCaptor.getValue();
+        assertEquals(NOT_SPRAYED, actualCardDetails.getStatus());
+        assertEquals("Residential", actualCardDetails.getPropertyType());
+        assertEquals("gideon", actualCardDetails.getSprayOperator());
+        assertEquals("Mark", actualCardDetails.getFamilyHead());
+        assertEquals("Available", actualCardDetails.getReason());
+    }
+
+    @Test
     public void testOnMosquitoHarvestCardDetailsFetched() {
 
         MosquitoHarvestCardDetails expectedCardDetails = new MosquitoHarvestCardDetails(NOT_VISITED, "2019-07-04", "2019-08-05", MOSQUITO_COLLECTION);
@@ -963,6 +981,35 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         verify(listTaskPresenter).onAddStructureClicked(locatinComponentActive, point);
     }
 
+    @Test
+    public void testRefreshStructuresSetToFalse() {
+        listTaskPresenter = spy(listTaskPresenter);
+        listTaskPresenter.refreshStructures(false);
+
+        verify(listTaskPresenter).setChangeMapPosition(true);
+        verify(listTaskView).showProgressDialog(R.string.fetching_structures_title,R.string.fetching_structures_message );
+    }
+
+    @Test
+    public void testValidateUserLocation() {
+
+        Location location = new Location("test-location");
+        location.setLatitude(12.1212);
+        location.setLongitude(67.2232);
+        when(listTaskView.getUserCurrentLocation()).thenReturn(location);
+        listTaskPresenter.validateUserLocation();
+        verify(locationPresenter).onGetUserLocation(location);
+
+    }
+
+    @Test
+    public void testValidateUserLocationWhenCurrentLocationIsNull() {
+
+        when(listTaskView.getUserCurrentLocation()).thenReturn(null);
+        listTaskPresenter.validateUserLocation();
+        verify(locationPresenter).requestUserLocation();
+
+    }
 
     private Feature initTestFeature(String identifier) throws JSONException {
         String structureId = identifier;

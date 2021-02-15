@@ -6,6 +6,7 @@ import com.mapbox.geojson.Feature;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.smartregister.domain.Location;
@@ -50,6 +51,8 @@ import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
+import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 
@@ -717,6 +720,87 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
         assertEquals(NOT_ELIGIBLE, feature.getStringProperty(TASK_BUSINESS_STATUS));
 
     }
+
+    // Single task use-case tests
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForSingleTaskBednetDistributionCompleteColorCoding() throws Exception {
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task bednetDistributionTask = initTestTask(BEDNET_DISTRIBUTION, COMPLETE);
+        taskSet.add(bednetDistributionTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(BEDNET_DISTRIBUTED, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForSingleTaskBloodScreeningCompleteColorCoding() throws Exception {
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task bloodScreeningTask = initTestTask(BLOOD_SCREENING, COMPLETE);
+        taskSet.add(bloodScreeningTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(BLOOD_SCREENING_COMPLETE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testHandleFamilyRegDoneInOtherPlan() throws JSONException {
+        Location structure = initTestStructure();
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+        StructureDetails structureDetails = new StructureDetails("John House", "John");
+        structureNames.put(structure.getId(), structureDetails);
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, null, structureNames);
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(FAMILY_REGISTERED, feature.getStringProperty(TASK_BUSINESS_STATUS));
+        assertEquals("John", feature.getStringProperty(FAMILY_MEMBER_NAMES));
+        assertEquals("John House", feature.getStringProperty(STRUCTURE_NAME));
+    }
+
 
     private Task initTestTask(String taskCode, String businessStatus) {
         Task task = new Task();

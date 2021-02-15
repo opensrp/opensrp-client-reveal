@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.smartregister.domain.FetchStatus;
@@ -80,8 +81,8 @@ public class LocationTaskIntentService extends IntentService {
         return super.onStartCommand(intent, flags, startId);
     }
 
-
-    private void doSync() {
+    @VisibleForTesting
+    protected void doSync() {
         sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
         LocationServiceHelper locationServiceHelper = new LocationServiceHelper(
                 RevealApplication.getInstance().getLocationRepository(),

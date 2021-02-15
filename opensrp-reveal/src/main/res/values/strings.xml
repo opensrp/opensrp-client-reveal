@@ -429,5 +429,7 @@
     <string name="plans">Plans</string>
     <string name="structures">Structures</string>
     <string name="tasks_text">Tasks</string>
+    <string name="registration_info">Registration info</string>
+    <string name="view_paot_details">View Details</string>
 
 </resources>

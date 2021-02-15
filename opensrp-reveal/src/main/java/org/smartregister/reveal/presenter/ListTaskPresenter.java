@@ -113,6 +113,8 @@ import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Utils.formatDate;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
+import static org.smartregister.reveal.util.Utils.isFocusInvestigation;
+import static org.smartregister.reveal.util.Utils.isFocusInvestigationOrMDA;
 import static org.smartregister.reveal.util.Utils.validateFarStructures;
 
 
@@ -313,7 +315,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private void onFeatureSelectedByNormalClick(Feature feature) {
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
-            listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
+            if (isFocusInvestigation()) {
+                listTaskInteractor.fetchFamilyDetails(selectedFeature.id()); // check if family registered in other plan
+            } else {
+                listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
+            }
             return;
         }
 
@@ -340,7 +346,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
         } else if (PAOT.equals(code)) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
-        } else if (org.smartregister.reveal.util.Utils.isFocusInvestigationOrMDA()) {
+        } else if (isFocusInvestigationOrMDA()) {
             listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
         } else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
@@ -448,9 +454,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public void onCardDetailsFetched(CardDetails cardDetails) {
         if (cardDetails instanceof SprayCardDetails) {
-            if (cardDetails == null) {
-                return;
-            }
             formatSprayCardDetails((SprayCardDetails) cardDetails);
             listTaskView.openCardView(cardDetails);
         } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
@@ -508,7 +511,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private void startForm(String formName, Feature feature, String sprayStatus, String familyHead, Event event) {
         JSONObject formJson = jsonFormUtils.getFormJSON(listTaskView.getContext()
                 , formName, feature, sprayStatus, familyHead);
-        if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(((MosquitoHarvestCardDetails) cardDetails).getInterventionType())) {
+        if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(cardDetails.getInterventionType())) {
             jsonFormUtils.populatePAOTForm((MosquitoHarvestCardDetails) cardDetails, formJson);
         } else if ( cardDetails instanceof MosquitoHarvestCardDetails) {
             jsonFormUtils.populateForm(event, formJson);
