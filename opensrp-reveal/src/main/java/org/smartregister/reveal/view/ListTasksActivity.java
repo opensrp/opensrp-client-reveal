@@ -75,7 +75,7 @@ import org.smartregister.tasking.contract.BaseDrawerContract;
 import org.smartregister.tasking.contract.UserLocationContract;
 import org.smartregister.tasking.model.CardDetails;
 import org.smartregister.tasking.model.TaskFilterParams;
-import org.smartregister.tasking.repository.RevealMappingHelper;
+import org.smartregister.tasking.repository.TaskingMappingHelper;
 import org.smartregister.tasking.util.AlertDialogUtils;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
@@ -572,7 +572,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 if (listTaskPresenter.getInterventionLabel() == R.string.focus_investigation) {
                     Feature indexCase = revealMapHelper.getIndexCase(featureCollection);
                     if (indexCase != null) {
-                        Location center = new RevealMappingHelper().getCenter(indexCase.geometry().toJson());
+                        Location center = new TaskingMappingHelper().getCenter(indexCase.geometry().toJson());
                         double currentZoom = mMapboxMap.getCameraPosition().zoom;
                         cameraPosition = new CameraPosition.Builder()
                                 .target(new LatLng(center.getLatitude(), center.getLongitude())).zoom(currentZoom).build();

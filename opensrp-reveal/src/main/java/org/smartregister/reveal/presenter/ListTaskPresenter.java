@@ -45,7 +45,7 @@ import org.smartregister.tasking.model.CardDetails;
 import org.smartregister.tasking.model.TaskDetails;
 import org.smartregister.tasking.model.TaskFilterParams;
 import org.smartregister.tasking.presenter.ValidateUserLocationPresenter;
-import org.smartregister.tasking.repository.RevealMappingHelper;
+import org.smartregister.tasking.repository.TaskingMappingHelper;
 import org.smartregister.tasking.util.AlertDialogUtils;
 import org.smartregister.tasking.util.CardDetailsUtil;
 import org.smartregister.tasking.util.PasswordDialogUtils;
@@ -147,7 +147,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private RevealApplication revealApplication;
 
-    private RevealMappingHelper mappingHelper;
+    private TaskingMappingHelper mappingHelper;
 
     private boolean markStructureIneligibleConfirmed;
 
@@ -169,7 +169,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         jsonFormUtils = listTaskView.getJsonFormUtils();
         setChangeMapPosition(true);
         revealApplication = RevealApplication.getInstance();
-        mappingHelper = new RevealMappingHelper();
+        mappingHelper = new TaskingMappingHelper();
     }
 
     @Override

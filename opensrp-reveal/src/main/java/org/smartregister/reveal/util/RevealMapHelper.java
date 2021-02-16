@@ -29,7 +29,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.layer.DigitalGlobeLayer;
 import org.smartregister.reveal.layer.MapBoxLayer;
 import org.smartregister.reveal.util.Constants.StructureType;
-import org.smartregister.tasking.repository.RevealMappingHelper;
+import org.smartregister.tasking.repository.TaskingMappingHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -166,7 +166,7 @@ public class RevealMapHelper {
         mMapboxMapStyle.addLayer(symbolLayer);
 
         // index case circle layer
-        indexCaseLocation = (new RevealMappingHelper()).getCenter(indexCase.geometry().toJson());
+        indexCaseLocation = (new TaskingMappingHelper()).getCenter(indexCase.geometry().toJson());
 
         try {
             circleFeature = createCircleFeature(new LatLng(indexCaseLocation.getLatitude(), indexCaseLocation.getLongitude()), radius, DEFAULT_GEO_JSON_CIRCLE_SIDES);
@@ -194,7 +194,7 @@ public class RevealMapHelper {
                 Feature indexCase = getIndexCase(featureCollection);
                 if (indexCase != null) {
                     // create index case point
-                    indexCaseLocation = (new RevealMappingHelper()).getCenter(indexCase.geometry().toJson());
+                    indexCaseLocation = (new TaskingMappingHelper()).getCenter(indexCase.geometry().toJson());
                     JSONObject feature = new JSONObject(indexCase.toJson());
                     JSONObject geometry = new JSONObject();
                     geometry.put("type", "Point");
