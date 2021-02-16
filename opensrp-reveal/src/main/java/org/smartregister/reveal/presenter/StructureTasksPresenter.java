@@ -20,6 +20,7 @@ import org.smartregister.tasking.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.interactor.StructureTasksInteractor;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.tasking.model.TaskFilterParams;
 import org.smartregister.tasking.util.Utils;
 import org.smartregister.tasking.contract.BaseFormFragmentContract;
 import org.smartregister.tasking.presenter.BaseFormFragmentPresenter;
@@ -193,5 +194,10 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     @Override
     public void onFamilyFound(CommonPersonObjectClient finalFamily) {//not used
+    }
+
+    @Override
+    public void filterTasks(TaskFilterParams taskFilterParams) {
+
     }
 }

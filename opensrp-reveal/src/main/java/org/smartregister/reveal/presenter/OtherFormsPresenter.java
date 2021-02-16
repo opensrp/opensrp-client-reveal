@@ -10,6 +10,8 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.OtherFormsContract;
 import org.smartregister.reveal.interactor.OtherFormsInteractor;
+import org.smartregister.tasking.contract.UserLocationContract;
+import org.smartregister.tasking.model.TaskFilterParams;
 
 public class OtherFormsPresenter implements OtherFormsContract.Presenter {
 
@@ -46,5 +48,15 @@ public class OtherFormsPresenter implements OtherFormsContract.Presenter {
     @Override
     public void onFamilyFound(CommonPersonObjectClient finalFamily) {
         // Do nothing
+    }
+
+    @Override
+    public void filterTasks(TaskFilterParams taskFilterParams) {
+
+    }
+
+    @Override
+    public UserLocationContract.UserLocationPresenter getLocationPresenter() {
+        return null;
     }
 }
