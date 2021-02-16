@@ -47,7 +47,7 @@ public class ValidateUserLocationPresenter implements UserLocationContract.UserL
     public void onGetUserLocation(Location location) {
         locationView.hideProgressDialog();
 
-        if(BuildConfig.SELECT_JURISDICTION) {
+        if(Utils.isZambiaIRSLite()) {
             callback.onGetUserLocation(location);
         } else {
             double offset = callback.getTargetCoordinates().distanceTo(

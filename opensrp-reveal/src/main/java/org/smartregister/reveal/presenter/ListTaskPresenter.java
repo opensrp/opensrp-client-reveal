@@ -115,6 +115,7 @@ import static org.smartregister.reveal.util.Utils.formatDate;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 import static org.smartregister.reveal.util.Utils.isFocusInvestigation;
 import static org.smartregister.reveal.util.Utils.isFocusInvestigationOrMDA;
+import static org.smartregister.reveal.util.Utils.isZambiaIRSLite;
 import static org.smartregister.reveal.util.Utils.validateFarStructures;
 
 
@@ -350,7 +351,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
         } else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
-        } else if (IRS_VERIFICATION.equals(code) && BuildConfig.SELECT_JURISDICTION) {
+        } else if (IRS_VERIFICATION.equals(code) && isZambiaIRSLite()) {
             listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
         }
     }
@@ -538,10 +539,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         } else if (JsonForm.SPRAY_FORM_REFAPP.equals(formName)) {
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DATA_COLLECTORS, jsonFormUtils.getFields(formJson).get(JsonForm.DATA_COLLECTOR), prefsUtil.getCurrentDistrict());
-        } else if (cardDetails instanceof SprayCardDetails && BuildConfig.SELECT_JURISDICTION) {
+        } else if (cardDetails instanceof SprayCardDetails && isZambiaIRSLite()) {
             jsonFormUtils.populateForm(event, formJson);
             jsonFormUtils.populateFormWithServerOptions(formName, formJson);
-        } else if(BuildConfig.SELECT_JURISDICTION) {
+        } else if(isZambiaIRSLite()) {
             jsonFormUtils.populateFormWithServerOptions(formName, formJson);
         }
         listTaskView.startJsonForm(formJson);
@@ -675,7 +676,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             startForm(selectedFeature, null, selectedFeatureInterventionType);
         } else {
             if (IRS.equals(cardDetails.getInterventionType())) {
-                if(BuildConfig.SELECT_JURISDICTION) {
+                if(isZambiaIRSLite()) {
                     findLastEvent(selectedFeature.id(), Constants.EventType.IRS_LITE_VERIFICATION);
                 } else {
                     findLastEvent(selectedFeature.id(), SPRAY_EVENT);

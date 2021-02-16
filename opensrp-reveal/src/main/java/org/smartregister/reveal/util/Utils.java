@@ -466,4 +466,8 @@ public class Utils {
         }
     }
 
+    public static boolean isZambiaIRSLite() {
+        return (BuildConfig.SELECT_JURISDICTION && Country.ZAMBIA.equals(BuildConfig.BUILD_COUNTRY));
+    }
+
 }

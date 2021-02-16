@@ -122,6 +122,7 @@ import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundary
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
 import static org.smartregister.reveal.util.Utils.getSyncEntityString;
+import static org.smartregister.reveal.util.Utils.isZambiaIRSLite;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -216,7 +217,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         initializeToolbar();
 
-        syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
+        syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_SHORT);
+        syncProgressSnackbar.setAction("Action Message", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call your action method here
+                syncProgressSnackbar.dismiss();
+            }
+        });
     }
 
     private void initializeCardViews() {
@@ -278,7 +286,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.register_family).setOnClickListener(this);
 
-        if(BuildConfig.SELECT_JURISDICTION) {
+        if(isZambiaIRSLite()) {
             findViewById(R.id.btn_add_structure).setVisibility(View.GONE);
         }
     }
@@ -490,7 +498,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
         } else if (v.getId() == R.id.btn_undo_spray) {
-            if(BuildConfig.SELECT_JURISDICTION) {
+            if(isZambiaIRSLite()) {
                 displayResetInterventionTaskDialog(IRS_VERIFICATION);
             } else {
                 displayResetInterventionTaskDialog(IRS);
@@ -650,7 +658,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
-                if (BuildConfig.SELECT_JURISDICTION) {
+                if (isZambiaIRSLite()) {
                     RevealApplication.getInstance().getAppExecutors().mainThread().execute(() -> {
                         for (Feature feature : featureCollection.features()) {
                             createIRSLiteOABoundaryLayer(feature);
@@ -730,7 +738,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void displaySelectedFeature(Feature feature, LatLng clickedPoint, double zoomlevel) {
         adjustFocusPoint(clickedPoint);
         kujakuMapView.centerMap(clickedPoint, ANIMATE_TO_LOCATION_DURATION, zoomlevel);
-        if (selectedGeoJsonSource != null && !BuildConfig.SELECT_JURISDICTION) {
+        if (selectedGeoJsonSource != null && !isZambiaIRSLite()) {
             selectedGeoJsonSource.setGeoJson(FeatureCollection.fromFeature(feature));
         }
     }
@@ -855,11 +863,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         }
         syncProgressSnackbar.dismiss();
         if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_failed, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(rootView, org.smartregister.R.string.sync_failed, Snackbar.LENGTH_SHORT).show();
         } else if (fetchStatus.equals(FetchStatus.nothingFetched)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_SHORT).show();
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_SHORT).show();
         }
     }
 
