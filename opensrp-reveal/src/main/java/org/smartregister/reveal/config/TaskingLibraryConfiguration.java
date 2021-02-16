@@ -5,10 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -41,6 +46,12 @@ import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.job.LocationTaskServiceJob;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
+import org.smartregister.tasking.activity.TaskingMapActivity;
+import org.smartregister.tasking.contract.BaseDrawerContract;
+import org.smartregister.tasking.contract.TaskingMapActivityContract;
+import org.smartregister.tasking.layer.DigitalGlobeLayer;
+import org.smartregister.tasking.repository.TaskingMappingHelper;
+import org.smartregister.tasking.util.ActivityConfiguration;
 import org.smartregister.tasking.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Country;
@@ -48,6 +59,9 @@ import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.TaskUtils;
+import org.smartregister.tasking.util.GeoJsonUtils;
+import org.smartregister.tasking.util.TaskingJsonFormUtils;
+import org.smartregister.tasking.util.TaskingMapHelper;
 import org.smartregister.tasking.util.Utils;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.sync.ClientProcessorForJava;
@@ -944,6 +958,12 @@ public class TaskingLibraryConfiguration extends org.smartregister.tasking.util.
     }
 
     @Override
+    public void onTaskRegisterBindViewHolder(@NonNull Context context, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull View.OnClickListener onClickListener, @NonNull TaskDetails taskDetails, int i) {
+
+    }
+
+    //TODO figure this out
+    //@Override
     public void onTaskRegisterBindViewHolder(@NonNull Context context, @NonNull TaskRegisterViewHolder viewHolder, @NonNull View.OnClickListener registerActionHandler, @NonNull TaskDetails task, int position) {
         Float distance = task.getDistanceFromUser();
         String name = task.getStructureName();
@@ -1014,5 +1034,165 @@ public class TaskingLibraryConfiguration extends org.smartregister.tasking.util.
     @Override
     public org.smartregister.util.AppExecutors getAppExecutors() {
         return RevealApplication.getInstance().getAppExecutors();
+    }
+
+    @Override
+    public BaseDrawerContract.View getDrawerMenuView(BaseDrawerContract.DrawerActivity drawerActivity) {
+        return null;
+    }
+
+    @Override
+    public void showTasksCompleteActionView(TextView textView) {
+
+    }
+
+    @Override
+    public Map<String, Object> getServerConfigs() {
+        return null;
+    }
+
+    @Override
+    public TaskingJsonFormUtils getJsonFormUtils() {
+        return null;
+    }
+
+    @Override
+    public TaskingMappingHelper getMappingHelper() {
+        return null;
+    }
+
+    @Override
+    public TaskingMapHelper getMapHelper() {
+        return null;
+    }
+
+    @Override
+    public boolean isRefreshMapOnEventSaved() {
+        return false;
+    }
+
+    @Override
+    public void setRefreshMapOnEventSaved(boolean b) {
+
+    }
+
+    @Override
+    public void setFeatureCollection(FeatureCollection featureCollection) {
+
+    }
+
+    @Override
+    public DigitalGlobeLayer getDigitalGlobeLayer() {
+        return null;
+    }
+
+    @Override
+    public List<String> getFacilityLevels() {
+        return null;
+    }
+
+    @Override
+    public List<String> getLocationLevels() {
+        return null;
+    }
+
+    @Override
+    public ActivityConfiguration getActivityConfiguration() {
+        return null;
+    }
+
+    @Override
+    public void registerFamily(Feature feature) {
+
+    }
+
+    @Override
+    public void openTaskRegister(TaskFilterParams taskFilterParams, TaskingMapActivity taskingMapActivity) {
+
+    }
+
+    @Override
+    public boolean isCompassEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean showCurrentLocationButton() {
+        return false;
+    }
+
+    @Override
+    public boolean disableMyLocationOnMapMove() {
+        return false;
+    }
+
+    @Override
+    public Boolean getDrawOperationalAreaBoundaryAndLabel() {
+        return null;
+    }
+
+    @Override
+    public GeoJsonUtils getGeoJsonUtils() {
+        return null;
+    }
+
+    @Override
+    public String getProvinceFromTreeDialogValue(List<String> list) {
+        return null;
+    }
+
+    @Override
+    public String getDistrictFromTreeDialogValue(List<String> list) {
+        return null;
+    }
+
+    @Override
+    public void onShowFilledForms() {
+
+    }
+
+    @Override
+    public void onFeatureSelectedByLongClick(Feature feature, TaskingMapActivityContract.Presenter presenter) {
+
+    }
+
+    @Override
+    public void onFeatureSelectedByClick(Feature feature, TaskingMapActivityContract.Presenter presenter) {
+
+    }
+
+    @Override
+    public double getOnClickMaxZoomLevel() {
+        return 0;
+    }
+
+    @Override
+    public void fetchPlans(String s, BaseDrawerContract.Presenter presenter) {
+
+    }
+
+    @Override
+    public void validateCurrentPlan(String s, String s1, BaseDrawerContract.Presenter presenter) {
+
+    }
+
+    @Override
+    public void setFacility(List<String> list, BaseDrawerContract.View view) {
+
+    }
+
+    @Override
+    public void openFilterTaskActivity(TaskFilterParams taskFilterParams, TaskingMapActivity taskingMapActivity) {
+
+    }
+
+    @Override
+    public List<Location> getLocationsIdsForDownload(List<String> list) {
+        return null;
+    }
+
+    @Override
+    public Pair<Double, Double> getMinMaxZoomMapDownloadPair() {
+        return null;
     }
 }
