@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import org.smartregister.reveal.R;
 
-public class OfflineMapsActivity extends org.smartregister.tasking.view.OfflineMapsActivity {
+public class OfflineMapsActivity extends org.smartregister.tasking.activity.OfflineMapsActivity {
 
 
     @NonNull

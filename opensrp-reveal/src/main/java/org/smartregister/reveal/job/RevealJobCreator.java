@@ -13,7 +13,7 @@ import org.smartregister.job.SyncServiceJob;
 import org.smartregister.job.ValidateSyncDataServiceJob;
 import org.smartregister.reveal.sync.RevealSyncIntentService;
 import org.smartregister.sync.intent.DocumentConfigurationIntentService;
-import org.smartregister.tasking.job.RevealSyncSettingsServiceJob;
+import org.smartregister.tasking.job.TaskingSyncSettingsServiceJob;
 
 import timber.log.Timber;
 
@@ -29,8 +29,8 @@ public class RevealJobCreator implements JobCreator {
                 return new SyncServiceJob(RevealSyncIntentService.class);
             case LocationTaskServiceJob.TAG:
                 return new LocationTaskServiceJob();
-            case RevealSyncSettingsServiceJob.TAG:
-                return new RevealSyncSettingsServiceJob();
+            case TaskingSyncSettingsServiceJob.TAG:
+                return new TaskingSyncSettingsServiceJob();
             case ExtendedSyncServiceJob.TAG:
                 return new ExtendedSyncServiceJob();
             case PullUniqueIdsServiceJob.TAG:
