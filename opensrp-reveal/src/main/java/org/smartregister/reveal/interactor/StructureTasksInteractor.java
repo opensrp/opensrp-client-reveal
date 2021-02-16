@@ -99,9 +99,8 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                 }
 
                 cursor.close();
-                cursor = database.rawQuery(getMemberTasksSelect(String.format("%s.%s=? AND %s=? AND %s IS NULL AND %s NOT IN (%s)",
-                        STRUCTURES_TABLE, ID, PLAN_ID, DBConstants.KEY.DATE_REMOVED, STATUS,
-                        TextUtils.join(",", Collections.nCopies(INACTIVE_TASK_STATUS.length, "?"))), getMemberColumns()),
+                //TOD FIX this
+                cursor = database.rawQuery("",
                         ArrayUtils.addAll(new String[]{structureId, planId}, INACTIVE_TASK_STATUS));
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readMemberTaskDetails(cursor));

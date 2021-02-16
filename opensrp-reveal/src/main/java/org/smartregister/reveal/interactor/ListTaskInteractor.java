@@ -347,8 +347,9 @@ public class ListTaskInteractor extends BaseInteractor {
         Cursor cursor = null;
         String structureId = null;
         try {
-            String query = getMemberTasksSelect(String.format("%s=? AND %s=? ",
-                    PLAN_ID, CODE), new String[]{});
+            //TODO FIX this
+            String query = ""; //getMemberTasksSelect(String.format("%s=? AND %s=? ",
+                    //PLAN_ID, CODE), new String[]{});
             Timber.d(query);
             cursor = getDatabase().rawQuery(query, new String[]{planId, CASE_CONFIRMATION});
             if (cursor.moveToNext()) {
