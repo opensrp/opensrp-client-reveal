@@ -8,6 +8,7 @@ import java.util.Date;
 
 public class OfflineMapModel {
 
+    public boolean isCompleted = true;
     private Location location;
 
     private OfflineRegion offlineRegion;

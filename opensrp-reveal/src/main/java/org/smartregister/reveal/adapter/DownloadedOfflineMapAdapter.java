@@ -1,8 +1,10 @@
 package org.smartregister.reveal.adapter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,11 +59,11 @@ public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<Downloaded
 
         }
 
-        displayOfflineMapSize(offlineMapModel, viewHolder);
+        displayOfflineMapSizeAndStatus(offlineMapModel, viewHolder);
 
     }
 
-    private void displayOfflineMapSize(OfflineMapModel offlineMapModel, DownloadedOfflineMapViewHolder viewHolder ) {
+    private void displayOfflineMapSizeAndStatus(OfflineMapModel offlineMapModel, DownloadedOfflineMapViewHolder viewHolder) {
         if (offlineMapModel == null || offlineMapModel.getOfflineRegion() == null) {
             return;
         }
@@ -75,9 +77,13 @@ public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<Downloaded
                 String mapDownloadSize = Formatter.formatFileSize(context, status.getCompletedResourceSize());
                 Date dateCreated = offlineMapModel.getDateCreated() != null ? offlineMapModel.getDateCreated() : new Date();
                 String downloadDate = Utils.formatDate(dateCreated);
-
+                offlineMapModel.isCompleted = status.isComplete();
                 viewHolder.setDownloadedMapSize(context.getString(R.string.offline_map_size, mapDownloadSize, downloadDate));
-
+                if (offlineMapModel.isCompleted) {
+                    viewHolder.displaySuccess();
+                } else {
+                    viewHolder.displayIncomplete();
+                }
             }
 
             @Override

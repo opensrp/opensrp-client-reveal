@@ -297,7 +297,6 @@
     <string name="not_eligible_other">Not Eligible: Other</string>
     <string name="available">available</string>
     <string name="downloaded">Downloaded</string>
-    <string name="downloaded_caps">DOWNLOADED</string>
     <string name="download">Download</string>
     <string name="downloading">Downloading</string>
     <string name="delete">Delete</string>
