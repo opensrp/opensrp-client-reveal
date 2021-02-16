@@ -68,7 +68,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     protected IndicatorDetails doInBackground(Void... params) {
         IndicatorDetails indicatorDetails = null;
 
-        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA && !BuildConfig.IRS_LITE_VERIFICATION) {
+        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA && !BuildConfig.SELECT_JURISDICTION) {
             indicatorDetails = IndicatorUtils.processIndicators(this.tasks);
             indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateSprayIndicators(this.activity, indicatorDetails));
         } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
@@ -110,7 +110,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             return;
         }
 
-        if(BuildConfig.IRS_LITE_VERIFICATION) {
+        if(BuildConfig.SELECT_JURISDICTION) {
             indicatorParentView.setVisibility(View.GONE);
         }
 

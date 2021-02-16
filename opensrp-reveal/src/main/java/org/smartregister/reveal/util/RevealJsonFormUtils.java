@@ -339,7 +339,7 @@ public class RevealJsonFormUtils {
                 formName = JsonForm.REFAPP_MDA_DISPENSE_FORM;
             }
         } else if (IRS_VERIFICATION.equals(encounterType) || Intervention.IRS_VERIFICATION.equals(taskCode) || IRS_LITE_VERIFICATION.equals(encounterType)) {
-            if(BuildConfig.IRS_LITE_VERIFICATION) {
+            if(BuildConfig.SELECT_JURISDICTION) {
                 return JsonForm.IRS_LITE_VERIFICATION;
             }
             formName = JsonForm.ZAMBIA_IRS_VERIFICATION_FORM;
@@ -527,7 +527,7 @@ public class RevealJsonFormUtils {
                             dataCollector);
                 }
 
-                if (BuildConfig.IRS_LITE_VERIFICATION) {
+                if (BuildConfig.SELECT_JURISDICTION) {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA));
                 } else {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
@@ -547,7 +547,7 @@ public class RevealJsonFormUtils {
                             dataCollector.split(":")[0]);
                 }
 
-                if (BuildConfig.IRS_LITE_VERIFICATION) {
+                if (BuildConfig.SELECT_JURISDICTION) {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA));
                 } else {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));

@@ -119,9 +119,9 @@ import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 import static org.smartregister.reveal.util.Utils.displayDistanceScale;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
-import static org.smartregister.reveal.util.Utils.getSyncEntityString;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
+import static org.smartregister.reveal.util.Utils.getSyncEntityString;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -278,7 +278,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.register_family).setOnClickListener(this);
 
-        if(BuildConfig.IRS_LITE_VERIFICATION) {
+        if(BuildConfig.SELECT_JURISDICTION) {
             findViewById(R.id.btn_add_structure).setVisibility(View.GONE);
         }
     }
@@ -490,7 +490,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
         } else if (v.getId() == R.id.btn_undo_spray) {
-            if(BuildConfig.IRS_LITE_VERIFICATION) {
+            if(BuildConfig.SELECT_JURISDICTION) {
                 displayResetInterventionTaskDialog(IRS_VERIFICATION);
             } else {
                 displayResetInterventionTaskDialog(IRS);
@@ -650,7 +650,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
-                if (BuildConfig.IRS_LITE_VERIFICATION) {
+                if (BuildConfig.SELECT_JURISDICTION) {
                     RevealApplication.getInstance().getAppExecutors().mainThread().execute(() -> {
                         for (Feature feature : featureCollection.features()) {
                             createIRSLiteOABoundaryLayer(feature);
@@ -730,7 +730,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void displaySelectedFeature(Feature feature, LatLng clickedPoint, double zoomlevel) {
         adjustFocusPoint(clickedPoint);
         kujakuMapView.centerMap(clickedPoint, ANIMATE_TO_LOCATION_DURATION, zoomlevel);
-        if (selectedGeoJsonSource != null && !BuildConfig.IRS_LITE_VERIFICATION) {
+        if (selectedGeoJsonSource != null && !BuildConfig.SELECT_JURISDICTION) {
             selectedGeoJsonSource.setGeoJson(FeatureCollection.fromFeature(feature));
         }
     }
