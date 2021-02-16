@@ -228,8 +228,10 @@
     <string name="device_data_not_synced">ยังไม่ได้ซิงค ์ข้อมูล</string>
     <string name="available">ทั้งหมด</string>
     <string name="downloaded">ดาวน์โหลดแล้ว</string>
+    <string name="downloaded_caps">ดาวน์โหลดแล้ว</string>
     <string name="download">ดาวน์โหลด</string>
     <string name="delete">ใช่</string>
+    <string name="delete_caps">ใช่</string>
     <string name="clear">ลางตวกรอง</string>
     <string name="sort_by">จดเรียงตาม</string>
     <string name="status">สถานะ</string>

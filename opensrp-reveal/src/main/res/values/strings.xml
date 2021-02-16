@@ -297,9 +297,11 @@
     <string name="not_eligible_other">Not Eligible: Other</string>
     <string name="available">available</string>
     <string name="downloaded">Downloaded</string>
+    <string name="downloaded_caps">DOWNLOADED</string>
     <string name="download">Download</string>
     <string name="downloading">Downloading</string>
     <string name="delete">Delete</string>
+    <string name="delete_caps">DELETE</string>
     <string name="select_offline_map_to_delete">Please select an offline map to delete</string>
     <string name="select_offline_map_to_download">Please select an offline map to download</string>
     <string name="offline_map_size">Size %1$s Downloaded %2$s </string>
