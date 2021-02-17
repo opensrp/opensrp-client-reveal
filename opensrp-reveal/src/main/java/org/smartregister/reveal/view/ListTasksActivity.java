@@ -217,14 +217,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         initializeToolbar();
 
-        syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_SHORT);
-        syncProgressSnackbar.setAction("Action Message", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Call your action method here
-                syncProgressSnackbar.dismiss();
-            }
-        });
+        syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
     }
 
     private void initializeCardViews() {
