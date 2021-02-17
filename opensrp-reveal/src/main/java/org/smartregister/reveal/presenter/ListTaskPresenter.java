@@ -99,7 +99,6 @@ import static org.smartregister.reveal.util.Constants.JsonForm.VALID_OPERATIONAL
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
-import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_STATUS;
@@ -112,6 +111,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Utils.formatDate;
+import static org.smartregister.reveal.util.Utils.getMaxZoomLevel;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 import static org.smartregister.reveal.util.Utils.isFocusInvestigation;
 import static org.smartregister.reveal.util.Utils.isFocusInvestigationOrMDA;
@@ -268,7 +268,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     public void onMapClicked(MapboxMap mapboxMap, LatLng point, boolean isLongclick) {
         double currentZoom = mapboxMap.getCameraPosition().zoom;
-        if (currentZoom < MAX_SELECT_ZOOM_LEVEL) {
+        if (currentZoom < getMaxZoomLevel()) {
             Timber.w("onMapClicked Current Zoom level" + currentZoom);
             listTaskView.displayToast(R.string.zoom_in_to_select);
             return;

@@ -314,7 +314,8 @@ public interface Constants {
     }
 
     interface Map {
-        int MAX_SELECT_ZOOM_LEVEL = 12;
+        int MAX_SELECT_ZOOM_LEVEL = 16;
+        int SELECT_JURISDICTION_MAX_SELECT_ZOOM_LEVEL = 12;
         int CLICK_SELECT_RADIUS = 24;
         String NAME_PROPERTY = "name";
         double DOWNLOAD_MAX_ZOOM = 21.0;
