@@ -20,7 +20,7 @@ import java.util.List;
 import io.ona.kujaku.views.KujakuMapView;
 
 import static org.smartregister.reveal.util.Constants.MY_LOCATION_ZOOM_LEVEL;
-import static org.smartregister.reveal.util.Constants.Map.SELECT_JURISDICTION_MAX_SELECT_ZOOM_LEVEL;
+import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 
 /**
  * Created by samuelgithengi on 12/13/18.
@@ -50,7 +50,7 @@ public class RevealMapView extends KujakuMapView {
     @Override
     public void centerMap(@NonNull LatLng point, int animateToNewTargetDuration, double newZoom) {
         if (BuildConfig.SELECT_JURISDICTION) {
-            super.centerMap(point, animateToNewTargetDuration, SELECT_JURISDICTION_MAX_SELECT_ZOOM_LEVEL);
+            super.centerMap(point, animateToNewTargetDuration, MAX_SELECT_ZOOM_LEVEL);
         } else {
             super.centerMap(point, animateToNewTargetDuration, newZoom > MY_LOCATION_ZOOM_LEVEL ? newZoom : MY_LOCATION_ZOOM_LEVEL);
         }
