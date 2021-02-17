@@ -553,7 +553,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
         Whitebox.setInternalState(listTasksActivity, "kujakuMapView", kujakuMapView);
         Whitebox.setInternalState(listTasksActivity, "selectedGeoJsonSource", geoJsonSource);
         Whitebox.setInternalState(listTasksActivity, "mMapboxMap", mMapboxMap);
-        Whitebox.setInternalState(BuildConfig.class, "IRS_LITE_VERIFICATION", Boolean.FALSE);
+        Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", Boolean.FALSE);
         LatLng latLng = new LatLng();
         when(mMapboxMap.getCameraPosition()).thenReturn(new CameraPosition.Builder().zoom(18).build());
         listTasksActivity.displaySelectedFeature(feature, latLng);

@@ -94,7 +94,7 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
     public void testDoInBackgroundForZambia() {
         Country country = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
-        Whitebox.setInternalState(BuildConfig.class, "IRS_LITE_VERIFICATION", Boolean.FALSE);
+        Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", Boolean.FALSE);
         IndicatorDetails indicatorDetails = indicatorsCalculatorTask.doInBackground();
         assertEquals(6, indicatorDetails.getTotalStructures());
         assertEquals(2, indicatorDetails.getNotVisited());
@@ -123,7 +123,7 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
     public void testOnPostExecuteZambia() {
         Country country = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
-        Whitebox.setInternalState(BuildConfig.class, "IRS_LITE_VERIFICATION", Boolean.FALSE);
+        Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", Boolean.FALSE);
         indicatorsCalculatorTask.onPreExecute();
         indicatorsCalculatorTask.onPostExecute(indicatorsCalculatorTask.doInBackground());
         ProgressIndicatorView progressIndicator = activity.findViewById(R.id.progressIndicatorView);
@@ -146,7 +146,7 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
     public void testOnPostExecuteNamibiaWithoutTargets() {
         Country country = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
-        Whitebox.setInternalState(BuildConfig.class, "IRS_LITE_VERIFICATION", Boolean.FALSE);
+        Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", Boolean.FALSE);
         Whitebox.setInternalState(indicatorsCalculatorTask, "sqLiteDatabase", sqLiteDatabase);
         when(sqLiteDatabase.rawQuery(anyString(), any())).thenReturn(getCursor());
 
@@ -170,7 +170,7 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
     public void testOnPostExecuteNamibiaWithTargets() {
         Country country = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
-        Whitebox.setInternalState(BuildConfig.class, "IRS_LITE_VERIFICATION", Boolean.FALSE);
+        Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", Boolean.FALSE);
 
         when(settingsRepository.getSetting(CONFIGURATION.JURISDICTION_METADATA)).thenReturn(setting);
         AllSettings contextSettingsRepository = RevealApplication.getInstance().getSettingsRepository();
