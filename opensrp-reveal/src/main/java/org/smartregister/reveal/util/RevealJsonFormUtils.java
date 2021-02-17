@@ -63,13 +63,16 @@ import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.JsonForm.JSON_FORM_FOLDER;
 import static org.smartregister.reveal.util.Constants.JsonForm.YES;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
+import static org.smartregister.reveal.util.Constants.MACEPA_PROVINCES;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.ZONE;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
+import static org.smartregister.reveal.util.Utils.isZambiaIRSLite;
 
 
 /**
@@ -339,7 +342,7 @@ public class RevealJsonFormUtils {
                 formName = JsonForm.REFAPP_MDA_DISPENSE_FORM;
             }
         } else if (IRS_VERIFICATION.equals(encounterType) || Intervention.IRS_VERIFICATION.equals(taskCode) || IRS_LITE_VERIFICATION.equals(encounterType)) {
-            if(BuildConfig.IRS_LITE_VERIFICATION) {
+            if(isZambiaIRSLite()) {
                 return JsonForm.IRS_LITE_VERIFICATION;
             }
             formName = JsonForm.ZAMBIA_IRS_VERIFICATION_FORM;
@@ -527,8 +530,10 @@ public class RevealJsonFormUtils {
                             dataCollector);
                 }
 
-                if (BuildConfig.IRS_LITE_VERIFICATION) {
+                if (isZambiaIRSLite()) {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA));
+                } else if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(HEALTH_CENTER));
                 } else {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
                 }
@@ -547,8 +552,10 @@ public class RevealJsonFormUtils {
                             dataCollector.split(":")[0]);
                 }
 
-                if (BuildConfig.IRS_LITE_VERIFICATION) {
+                if (isZambiaIRSLite()) {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA));
+                } else if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(HEALTH_CENTER));
                 } else {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
                 }

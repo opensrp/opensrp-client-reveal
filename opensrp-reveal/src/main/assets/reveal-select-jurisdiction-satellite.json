@@ -45,7 +45,7 @@
     },
     {
       "id": "reveal-data-polygons",
-      "type": "fill",
+      "type": "line",
       "layout": {},
       "source": "reveal-data-set",
       "filter": [
@@ -54,7 +54,7 @@
         "Polygon"
       ],
       "paint": {
-        "fill-color": [
+        "line-color": [
           "match",
           [
             "get",
@@ -102,109 +102,21 @@
           "hsl(26, 84%, 56%)",
           "hsl(0, 0%, 78%)"
         ],
-        "fill-opacity": [
-          "match",
-          [
-            "get",
-            "taskBusinessStatus"
-          ],
-          [
-            "Not Visited"
-          ],
-          0.7,
-          [
-            "Not Sprayed"
-          ],
-          0.7,
-          [
-            "Sprayed"
-          ],
-          0.7,
-          [
-            "Not Sprayable"
-          ],
-          1,
-          0.75
-        ],
-        "fill-outline-color": "rgb(0, 0, 0)"
+        "line-width": 4
       }
     },
     {
       "id": "reveal-data-points",
-      "type": "circle",
+      "type": "fill",
       "source": "reveal-data-set",
       "filter": [
         "==",
         "$type",
-        "Point"
+        "Polygon"
       ],
       "layout": {},
       "paint": {
-        "circle-radius": [
-          "interpolate",
-          [
-            "linear"
-          ],
-          [
-            "zoom"
-          ],
-          13.98,
-          0,
-          17.79,
-          10,
-          18.8,
-          15
-        ],
-        "circle-color": [
-          "match",
-          [
-            "get",
-            "taskBusinessStatus"
-          ],
-          [
-            "Not Visited"
-          ],
-          "hsl(46, 88%, 62%)",
-          [
-            "Not Sprayed",
-            "Incomplete",
-            "In Progress",
-            "None Received"
-          ],
-          "hsl(3, 71%, 54%)",
-          [
-            "Sprayed",
-            "Complete",
-            "Fully Received"
-          ],
-          "hsl(89, 52%, 48%)",
-          [
-            "Not Sprayable",
-            "Not Eligible"
-          ],
-          "hsl(0, 0%, 9%)",
-          [
-            "Family Registered"
-          ],
-          "hsl(335, 100%, 79%)",
-          [
-            "Bednet Distributed",
-            "Adherence Visit Done"
-          ],
-          "hsl(199, 68%, 55%)",
-          [
-            "Blood Screening Complete"
-          ],
-          "hsl(262, 100%, 68%)",
-          [
-            "Partially Sprayed",
-            "Partially Received"
-          ],
-          "hsl(26, 84%, 56%)",
-          "hsl(0, 0%, 78%)"
-        ],
-        "circle-stroke-width": 1,
-        "circle-opacity": 0.5
+        "fill-color": "rgba(0, 0, 0, 0)"
       }
     },
     {
@@ -218,7 +130,7 @@
       ],
       "layout": {},
       "paint": {
-        "line-color": "hsl(146, 100%, 50%)",
+        "line-color": "rgba(0, 0, 0, 0)",
         "line-width": 4
       }
     },
@@ -249,7 +161,7 @@
           15
         ],
         "circle-stroke-width": 2,
-        "circle-stroke-color": "hsl(146, 100%, 50%)"
+        "circle-stroke-color": "hsl(226°, 81%, 36%)"
       }
     }
   ],
