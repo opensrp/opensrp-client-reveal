@@ -349,10 +349,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
         } else if (isFocusInvestigationOrMDA()) {
             listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
-        } else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
-            listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
         } else if (IRS_VERIFICATION.equals(code) && isZambiaIRSLite()) {
             listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
+        } else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
+            listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
         }
     }
 
