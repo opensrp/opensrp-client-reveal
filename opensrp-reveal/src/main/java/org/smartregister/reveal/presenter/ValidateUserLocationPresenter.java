@@ -5,7 +5,6 @@ import android.os.SystemClock;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.UserLocationContract;
