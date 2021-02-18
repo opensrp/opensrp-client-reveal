@@ -2,19 +2,22 @@ package org.smartregister.reveal.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
+import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 
+import org.jetbrains.annotations.NotNull;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.DownloadedOfflineMapAdapter;
@@ -29,9 +32,13 @@ import java.util.Map;
 
 import io.ona.kujaku.helpers.OfflineServiceHelper;
 
+import static com.mapbox.mapboxsdk.offline.OfflineRegion.STATE_INACTIVE;
+import static org.smartregister.reveal.util.Utils.showWhenTrue;
+
 public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment implements DownloadedOfflineMapsContract.View, View.OnClickListener {
 
     private RecyclerView downloadedMapsRecyclerView;
+    private Button btnDownloadMap;
 
     private DownloadedOfflineMapAdapter adapter;
 
@@ -63,7 +70,13 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
 
     @Override
     protected void downloadCompleted(String mapUniqueName) {
-        // Do nothing
+        for (OfflineMapModel offlineMapModel : downloadedOfflineMapModelList) {
+            if (offlineMapModel.getDownloadAreaId().equals(mapUniqueName)) {
+                offlineMapModel.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.DOWNLOADED);
+                callback.onMapDownloaded(offlineMapModel);
+                break;
+            }
+        }
     }
 
     @Override
@@ -82,18 +95,32 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
 
     private void setUpViews(View view) {
         downloadedMapsRecyclerView = view.findViewById(R.id.offline_map_recyclerView);
+        btnDownloadMap =  view.findViewById(R.id.download_map);
+        btnDownloadMap.setVisibility(View.GONE);
+        btnDownloadMap.setOnClickListener(v-> downloadMap(offlineMapsTodelete));
+        Button btnDeleteMap = view.findViewById(R.id.delete_map);
+        btnDeleteMap.setOnClickListener(v -> presenter.onDeleteDownloadMap(offlineMapsTodelete));
+        btnDeleteMap.setVisibility(View.VISIBLE);
+    }
 
-        Button btnDeleteMap = view.findViewById(R.id.download_map);
-        btnDeleteMap.setText(getString(R.string.delete).toUpperCase());
-        btnDeleteMap.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.delete_map_bg));
+    private void downloadMap(@NotNull List<OfflineMapModel> offlineMapsToDelete) {
+        for(OfflineMapModel model: offlineMapsToDelete) {
+            model.getOfflineRegion().getStatus(new OfflineRegion.OfflineRegionStatusCallback() {
+                @Override
+                public void onStatus(OfflineRegionStatus status) {
+                    if(status.getDownloadState() == STATE_INACTIVE) {
+                        Toast.makeText(getContext(), R.string.downloading, Toast.LENGTH_SHORT).show();
+                        model.getOfflineRegion().setDownloadState(OfflineRegion.STATE_ACTIVE);
+                        adapter.notifyDataSetChanged();
+                        btnDownloadMap.setVisibility(View.GONE);
+                    }
+                }
+                @Override
+                public void onError(String error) {
 
-        btnDeleteMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.onDeleteDownloadMap(offlineMapsTodelete);
-            }
-        });
-
+                }
+            });
+        }
     }
 
     private void initializeAdapter() {
@@ -109,10 +136,12 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
         OfflineMapModel offlineMapModel = (OfflineMapModel) view.getTag(R.id.offline_map_checkbox);
 
         if (checkBox.isChecked()) {
+            offlineMapsTodelete.clear();
             offlineMapsTodelete.add(offlineMapModel);
         } else {
             offlineMapsTodelete.remove(offlineMapModel);
         }
+        showWhenTrue(btnDownloadMap, offlineMapModel.isPending && checkBox.isChecked());
     }
 
     @Override
@@ -134,6 +163,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
             return;
         }
 
+        btnDownloadMap.setVisibility(View.GONE);
         for (OfflineMapModel offlineMapModel: offlineMapsTodelete) {
             OfflineServiceHelper.deleteOfflineMap(getActivity(),
                     offlineMapModel.getDownloadAreaId(),

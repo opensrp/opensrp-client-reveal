@@ -22,11 +22,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.mapbox.mapboxsdk.offline.OfflineRegion.STATE_ACTIVE;
+import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.DOWNLOAD_STARTED;
+
 public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<DownloadedOfflineMapViewHolder> {
 
     private Context context;
 
     private View.OnClickListener offlineMapClickHandler;
+    private int selectedIndex = -1;
 
     private List<OfflineMapModel> offlineMapModels = new ArrayList<>();
 
@@ -47,16 +51,29 @@ public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<Downloaded
     public void onBindViewHolder(@NonNull DownloadedOfflineMapViewHolder viewHolder, int position) {
         OfflineMapModel offlineMapModel = offlineMapModels.get(position);
         viewHolder.setOfflineMapLabel(offlineMapModel.getDownloadAreaLabel());
-        viewHolder.setItemViewListener(offlineMapModel, offlineMapClickHandler);
+        viewHolder.setItemViewListener(offlineMapModel, (view) -> {
+            int oldValue = selectedIndex;
+            selectedIndex = position;
+            if(selectedIndex == oldValue) {
+                selectedIndex = -1;
+            }
+            offlineMapClickHandler.onClick(view);
+            if (oldValue >= 0) {
+                notifyItemChanged(oldValue);
+            }
+        });
+        if (selectedIndex == position) {
+            viewHolder.checkCheckBox(true);
+        } else {
+            switch (offlineMapModel.getOfflineMapStatus()) {
+                case READY:
+                case DOWNLOADED:
+                    viewHolder.checkCheckBox(false);
+                    break;
+                default:
+                    break;
 
-        switch (offlineMapModel.getOfflineMapStatus()) {
-            case READY:
-            case DOWNLOADED:
-                viewHolder.checkCheckBox(false);
-                break;
-            default:
-                break;
-
+            }
         }
 
         displayOfflineMapSizeAndStatus(offlineMapModel, viewHolder);
@@ -77,12 +94,17 @@ public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<Downloaded
                 String mapDownloadSize = Formatter.formatFileSize(context, status.getCompletedResourceSize());
                 Date dateCreated = offlineMapModel.getDateCreated() != null ? offlineMapModel.getDateCreated() : new Date();
                 String downloadDate = Utils.formatDate(dateCreated);
-                offlineMapModel.isCompleted = status.isComplete();
+                offlineMapModel.isPending = !status.isComplete();
                 viewHolder.setDownloadedMapSize(context.getString(R.string.offline_map_size, mapDownloadSize, downloadDate));
-                if (offlineMapModel.isCompleted) {
-                    viewHolder.displaySuccess();
-                } else {
+                if(status.getDownloadState() == STATE_ACTIVE) {
+                    offlineMapModel.setOfflineMapStatus(DOWNLOAD_STARTED);
+                    viewHolder.displayDownloading();
+                    viewHolder.checkCheckBox(true);
+                    viewHolder.enableCheckBox(false);
+                } else if (offlineMapModel.isPending) {
                     viewHolder.displayIncomplete();
+                } else {
+                    viewHolder.displaySuccess();
                 }
             }
 

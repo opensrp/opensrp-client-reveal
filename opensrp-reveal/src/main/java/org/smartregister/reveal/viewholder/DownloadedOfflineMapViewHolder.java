@@ -25,6 +25,9 @@ public class DownloadedOfflineMapViewHolder extends BaseOfflineMapViewHolder {
         this.tvDownloadingLabel.setText(offlineMapSize);
     }
 
+    public void enableCheckBox(boolean enable) {
+        offlineMapCheckBox.setEnabled(enable);
+    }
 
     public void displayDownloadSizeLabel(boolean displayDownloadSizeLabel) {
         if (displayDownloadSizeLabel) {
@@ -35,6 +38,7 @@ public class DownloadedOfflineMapViewHolder extends BaseOfflineMapViewHolder {
     }
 
     public void displaySuccess() {
+        tvMapStatusLabel.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.alert_complete_green));
         displayStatus(R.string.complete);
     }
 
@@ -43,7 +47,12 @@ public class DownloadedOfflineMapViewHolder extends BaseOfflineMapViewHolder {
         displayStatus(R.string.incomplete);
     }
 
-    private void displayStatus(@StringRes int resId){
+    public void displayDownloading() {
+        tvMapStatusLabel.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.black));
+        displayStatus(R.string.downloading);
+    }
+
+    private void displayStatus(@StringRes int resId) {
         tvMapStatusLabel.setText(resId);
         tvMapStatusLabel.setVisibility(View.VISIBLE);
     }
