@@ -203,7 +203,7 @@
     <!-- form -->
     <string name="add_fam">ทะเบียนครัวเรือน</string>
 
-    <string name="tested">เสร็จ</string>
+    <string name="tested">เจาะเลือด</string>
     <string name="not_tested">ไม่เจาะเลือด</string>
 
     <string name="save_point">บันทึกจุด</string>

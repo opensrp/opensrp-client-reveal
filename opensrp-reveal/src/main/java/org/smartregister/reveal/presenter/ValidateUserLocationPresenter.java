@@ -45,12 +45,17 @@ public class ValidateUserLocationPresenter implements UserLocationContract.UserL
     @Override
     public void onGetUserLocation(Location location) {
         locationView.hideProgressDialog();
-        double offset = callback.getTargetCoordinates().distanceTo(
-                new LatLng(location.getLatitude(), location.getLongitude()));
-        if (offset > Utils.getLocationBuffer()) {
-            callback.requestUserPassword();
+
+        if(Utils.isZambiaIRSLite()) {
+            callback.onGetUserLocation(location);
         } else {
-            callback.onLocationValidated();
+            double offset = callback.getTargetCoordinates().distanceTo(
+                    new LatLng(location.getLatitude(), location.getLongitude()));
+            if (offset > Utils.getLocationBuffer()) {
+                callback.requestUserPassword();
+            } else {
+                callback.onLocationValidated();
+            }
         }
     }
 
@@ -89,6 +94,8 @@ public class ValidateUserLocationPresenter implements UserLocationContract.UserL
 
         }
     }
+
+
 
 
 }

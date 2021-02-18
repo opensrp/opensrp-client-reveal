@@ -57,6 +57,7 @@ import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.JsonForm.JSON_FORM_FOLDER;
@@ -71,6 +72,7 @@ import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.ZONE;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
+import static org.smartregister.reveal.util.Utils.isZambiaIRSLite;
 
 
 /**
@@ -339,7 +341,10 @@ public class RevealJsonFormUtils {
             } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.REFAPP_MDA_DISPENSE_FORM;
             }
-        } else if (IRS_VERIFICATION.equals(encounterType) || Intervention.IRS_VERIFICATION.equals(taskCode)) {
+        } else if (IRS_VERIFICATION.equals(encounterType) || Intervention.IRS_VERIFICATION.equals(taskCode) || IRS_LITE_VERIFICATION.equals(encounterType)) {
+            if(isZambiaIRSLite()) {
+                return JsonForm.IRS_LITE_VERIFICATION;
+            }
             formName = JsonForm.ZAMBIA_IRS_VERIFICATION_FORM;
         } else if (Constants.EventType.DAILY_SUMMARY_EVENT.equals(encounterType)) {
             formName = JsonForm.DAILY_SUMMARY_ZAMBIA;
@@ -493,11 +498,12 @@ public class RevealJsonFormUtils {
 
     public void populateFormWithServerOptions(String formName, JSONObject formJSON) {
 
-        Map<String, JSONObject> fieldsMap = getFields(formJSON);
+            Map<String, JSONObject> fieldsMap = getFields(formJSON);
         switch (formName) {
 
             case JsonForm.IRS_SA_DECISION_ZAMBIA:
             case JsonForm.CB_SPRAY_AREA_ZAMBIA:
+            case JsonForm.IRS_LITE_VERIFICATION:
             case JsonForm.MOBILIZATION_FORM_ZAMBIA:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         Constants.CONFIGURATION.SUPERVISORS, fieldsMap.get(JsonForm.SUPERVISOR),
@@ -524,7 +530,9 @@ public class RevealJsonFormUtils {
                             dataCollector);
                 }
 
-                if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
+                if (isZambiaIRSLite()) {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA));
+                } else if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(HEALTH_CENTER));
                 } else {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
@@ -544,7 +552,9 @@ public class RevealJsonFormUtils {
                             dataCollector.split(":")[0]);
                 }
 
-                if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
+                if (isZambiaIRSLite()) {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA));
+                } else if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(HEALTH_CENTER));
                 } else {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
