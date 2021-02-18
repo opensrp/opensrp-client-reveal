@@ -85,6 +85,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_XXX;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
+import static org.smartregister.reveal.util.Constants.Intervention.CDD_SUPERVISION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -115,6 +116,7 @@ import static org.smartregister.reveal.util.Utils.getMaxZoomLevel;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 import static org.smartregister.reveal.util.Utils.isFocusInvestigation;
 import static org.smartregister.reveal.util.Utils.isFocusInvestigationOrMDA;
+import static org.smartregister.reveal.util.Utils.isKenyaMDALite;
 import static org.smartregister.reveal.util.Utils.isZambiaIRSLite;
 import static org.smartregister.reveal.util.Utils.validateFarStructures;
 
@@ -351,7 +353,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
         } else if (IRS_VERIFICATION.equals(code) && isZambiaIRSLite()) {
             listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
-        } else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
+        }else if (CDD_SUPERVISION.equals(code) && isKenyaMDALite()){
+            listTaskInteractor.fetchInterventionDetails(CDD_SUPERVISION,feature.id(),false);
+        }
+        else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
         }
     }
