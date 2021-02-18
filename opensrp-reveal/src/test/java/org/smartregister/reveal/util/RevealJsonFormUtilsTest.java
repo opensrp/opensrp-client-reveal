@@ -421,6 +421,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     @Test
     public void testGetZambiaIRSVerificationForm() {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", Boolean.FALSE);
         String actualFormName = revealJsonFormUtils.getFormName(IRS_VERIFICATION, null);
         assertEquals(JsonForm.ZAMBIA_IRS_VERIFICATION_FORM, actualFormName);
     }
