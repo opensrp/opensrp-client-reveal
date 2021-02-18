@@ -226,7 +226,6 @@
     <string name="mobilization_form">Enter Mobilization Form</string>
     <string name="irs_field_officer">Enter IRS Field Officer Form</string>
     <string name="verification_form">Enter Verification Form</string>
-    <string name="tablet_accountability_form">Enter Tablet Accountability Form</string>
 
 
     <string name="last_edited">Edited %1s</string>
@@ -431,5 +430,7 @@
     <string name="tasks_text">Tasks</string>
     <string name="registration_info">Registration info</string>
     <string name="view_paot_details">View Details</string>
+    <string name="tablet_accountability_form">Enter Tablet Accountability Form</string>
+
 
 </resources>
