@@ -41,6 +41,7 @@
     <string name="revoked_plan_operational_area">Previously selected Plan and/or Operational area revoked. Select from the hamburger menu</string>
 
     <string name="reveal_satellite_style" translatable="false">asset://reveal-streets-satellite.json</string>
+    <string name="reveal_select_jurisdiction_style" translatable="false">asset://reveal-select-jurisdiction-satellite.json</string>
     <string name="reveal_streets_style" translatable="false">reveal-streets-style.json</string>
     <string name="reveal_offline_map_download_style" translatable="false">map-download-style.json</string>
     <string name="reveal_datasource_name" translatable="false">reveal-data-set</string>
@@ -404,6 +405,7 @@
     <string name="mobilization_form_name">Mobilization Form</string>
     <string name="irs_field_officer_form">IRS Field Officer Form</string>
     <string name="verification_form_name"> Verification Form</string>
+    <string name="irs_lite_verification_form_name">IRS Lite Verification Form</string>
 
     <string name="total_structures_targeted">Total structures targeted</string>
 

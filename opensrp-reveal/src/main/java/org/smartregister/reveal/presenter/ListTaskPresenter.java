@@ -61,6 +61,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -98,7 +99,6 @@ import static org.smartregister.reveal.util.Constants.JsonForm.VALID_OPERATIONAL
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
-import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_STATUS;
@@ -111,9 +111,11 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Utils.formatDate;
+import static org.smartregister.reveal.util.Utils.getMaxZoomLevel;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 import static org.smartregister.reveal.util.Utils.isFocusInvestigation;
 import static org.smartregister.reveal.util.Utils.isFocusInvestigationOrMDA;
+import static org.smartregister.reveal.util.Utils.isZambiaIRSLite;
 import static org.smartregister.reveal.util.Utils.validateFarStructures;
 
 
@@ -170,6 +172,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private String searchPhrase;
 
     private TaskFilterParams filterParams;
+
+    private MapboxMap mapboxMap;
 
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
@@ -264,12 +268,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     public void onMapClicked(MapboxMap mapboxMap, LatLng point, boolean isLongclick) {
         double currentZoom = mapboxMap.getCameraPosition().zoom;
-        if (currentZoom < MAX_SELECT_ZOOM_LEVEL) {
+        if (currentZoom < getMaxZoomLevel()) {
             Timber.w("onMapClicked Current Zoom level" + currentZoom);
             listTaskView.displayToast(R.string.zoom_in_to_select);
             return;
         }
-        clickedPoint = point;
+        this.clickedPoint = point;
+        this.mapboxMap = mapboxMap;
         final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);
         Context context = listTaskView.getContext();
         List<Feature> features = mapboxMap.queryRenderedFeatures(pixel,
@@ -344,6 +349,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
         } else if (isFocusInvestigationOrMDA()) {
             listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
+        } else if (IRS_VERIFICATION.equals(code) && isZambiaIRSLite()) {
+            listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
         } else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
         }
@@ -371,6 +378,17 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             locationPresenter.requestUserLocation();
         } else {
             locationPresenter.onGetUserLocation(location);
+        }
+    }
+
+    @Override
+    public void onGetUserLocation(Location location) {
+        Feature userFeature = getFeatureUserIsIn(location);
+        if (userFeature == null || !Objects.equals(userFeature.id(), selectedFeature.id())) {
+            requestUserPassword();
+        }
+        else {
+            onLocationValidated();
         }
     }
 
@@ -521,6 +539,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         } else if (JsonForm.SPRAY_FORM_REFAPP.equals(formName)) {
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DATA_COLLECTORS, jsonFormUtils.getFields(formJson).get(JsonForm.DATA_COLLECTOR), prefsUtil.getCurrentDistrict());
+        } else if (cardDetails instanceof SprayCardDetails && isZambiaIRSLite()) {
+            jsonFormUtils.populateForm(event, formJson);
+            jsonFormUtils.populateFormWithServerOptions(formName, formJson);
+        } else if(isZambiaIRSLite()) {
+            jsonFormUtils.populateFormWithServerOptions(formName, formJson);
         }
         listTaskView.startJsonForm(formJson);
     }
@@ -653,7 +676,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             startForm(selectedFeature, null, selectedFeatureInterventionType);
         } else {
             if (IRS.equals(cardDetails.getInterventionType())) {
-                findLastEvent(selectedFeature.id(), SPRAY_EVENT);
+                if(isZambiaIRSLite()) {
+                    findLastEvent(selectedFeature.id(), Constants.EventType.IRS_LITE_VERIFICATION);
+                } else {
+                    findLastEvent(selectedFeature.id(), SPRAY_EVENT);
+                }
             } else if (MOSQUITO_COLLECTION.equals(cardDetails.getInterventionType())) {
                 findLastEvent(selectedFeature.id(), MOSQUITO_COLLECTION_EVENT);
             } else if (LARVAL_DIPPING.equals(cardDetails.getInterventionType())) {
@@ -859,5 +886,19 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private FeatureCollection getFeatureCollection() {
         return isTasksFiltered && filterFeatureCollection != null ? FeatureCollection.fromFeatures(filterFeatureCollection) : featureCollection;
+    }
+
+    private Feature getFeatureUserIsIn(Location location) {
+        LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+        final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);
+
+        Context context = listTaskView.getContext();
+        List<Feature> features = mapboxMap.queryRenderedFeatures(pixel,
+                context.getString(R.string.reveal_layer_polygons), context.getString(R.string.reveal_layer_points));
+
+        if(!features.isEmpty()){
+            return features.get(0);
+        }
+        return null;
     }
 }

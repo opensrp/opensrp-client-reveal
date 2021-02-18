@@ -52,10 +52,12 @@ import org.smartregister.domain.Task;
 import org.smartregister.dto.UserAssignmentDTO;
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.model.FamilyCardDetails;
+import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
@@ -76,6 +78,7 @@ import java.util.UUID;
 
 import io.ona.kujaku.interfaces.ILocationClient;
 import io.ona.kujaku.layers.BoundaryLayer;
+import io.ona.kujaku.layers.KujakuLayer;
 
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static android.view.View.GONE;
@@ -103,9 +106,14 @@ import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATI
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FIRST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
+import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
+import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FAMILY_PROFILE;
@@ -169,6 +177,17 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<ScaleBarWidget> scaleBarWidgetArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Intent> intentArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Integer> integerArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<KujakuLayer> kujakuLayerArgumentCaptor;
+
+
 
     @Before
     public void setUp() {
@@ -552,11 +571,13 @@ public class ListTasksActivityTest extends BaseUnitTest {
         Whitebox.setInternalState(listTasksActivity, "kujakuMapView", kujakuMapView);
         Whitebox.setInternalState(listTasksActivity, "selectedGeoJsonSource", geoJsonSource);
         Whitebox.setInternalState(listTasksActivity, "mMapboxMap", mMapboxMap);
+        Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", Boolean.FALSE);
         LatLng latLng = new LatLng();
         when(mMapboxMap.getCameraPosition()).thenReturn(new CameraPosition.Builder().zoom(18).build());
         listTasksActivity.displaySelectedFeature(feature, latLng);
         verify(kujakuMapView).centerMap(latLng, ANIMATE_TO_LOCATION_DURATION, 18);
         verify(geoJsonSource).setGeoJson(FeatureCollection.fromFeature(feature));
+
     }
 
     @Test
@@ -888,6 +909,112 @@ public class ListTasksActivityTest extends BaseUnitTest {
         doNothing().when(drawerView).onResume();
         listTasksActivity.onUserAssignmentRevoked(mock(UserAssignmentDTO.class));
         verify(drawerView).onResume();
+    }
+
+    @Test
+    public void testZambiaIRSLiteUndoSpray() {
+        View view = new View(listTasksActivity);
+        view.setId(R.id.btn_undo_spray);
+        listTasksActivity = spy(listTasksActivity);
+        Country buildcountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", true);
+
+        listTasksActivity.onClick(view);
+        verify(listTasksActivity).displayResetInterventionTaskDialog(IRS_VERIFICATION);
+
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildcountry);
+
+    }
+
+    @Test
+    public void testUndoSpray() {
+        View view = new View(listTasksActivity);
+        view.setId(R.id.btn_undo_spray);
+        listTasksActivity = spy(listTasksActivity);
+        Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", false);
+
+        listTasksActivity.onClick(view);
+        verify(listTasksActivity).displayResetInterventionTaskDialog(IRS);
+
+    }
+
+    @Test
+    public void testUndoMosquitoCollection() {
+        View view = new View(listTasksActivity);
+        view.setId(R.id.btn_undo_mosquito_collection);
+        listTasksActivity = spy(listTasksActivity);
+
+        listTasksActivity.onClick(view);
+        verify(listTasksActivity).displayResetInterventionTaskDialog(MOSQUITO_COLLECTION);
+
+    }
+
+    @Test
+    public void testUndoLarvalDipping() {
+        View view = new View(listTasksActivity);
+        view.setId(R.id.btn_undo_larval_dipping);
+        listTasksActivity = spy(listTasksActivity);
+
+        listTasksActivity.onClick(view);
+        verify(listTasksActivity).displayResetInterventionTaskDialog(LARVAL_DIPPING);
+
+    }
+
+    @Test
+    public void testUndoPAOTDetails() {
+        View view = new View(listTasksActivity);
+        view.setId(R.id.btn_undo_paot_details);
+        listTasksActivity = spy(listTasksActivity);
+
+        listTasksActivity.onClick(view);
+        verify(listTasksActivity).displayResetInterventionTaskDialog(PAOT);
+
+    }
+
+
+    @Test
+    public void testOpenFilterTaskActivityForNamibia() {
+        TaskFilterParams params = TaskFilterParams.builder().build();
+        Country buildcountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
+        listTasksActivity = spy(listTasksActivity);
+
+        listTasksActivity.openFilterTaskActivity(params);
+        verify(listTasksActivity).startActivityForResult(intentArgumentCaptor.capture(), integerArgumentCaptor.capture()); //(FilterConfiguration) getIntent().getSerializableExtra(FILTER_CONFIGURATION)
+        assertEquals(REQUEST_CODE_FILTER_TASKS, integerArgumentCaptor.getValue().intValue());
+        FilterConfiguration filterConfiguration = (FilterConfiguration) intentArgumentCaptor.getValue().getSerializableExtra(FILTER_CONFIGURATION);
+        assertFalse(filterConfiguration.isInterventionTypeLayoutEnabled());
+        assertFalse(filterConfiguration.isTaskCodeLayoutEnabled());
+        assertFalse(filterConfiguration.isTaskCodeLayoutEnabled());
+
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildcountry);
+
+    }
+
+    @Test
+    public void testCreateIRSLiteOABoundary() throws Exception {
+        Feature operationalArea = TestingUtils.getStructure();
+        Whitebox.setInternalState(listTasksActivity, "kujakuMapView", kujakuMapView);
+        Whitebox.invokeMethod(listTasksActivity, "createIRSLiteOABoundaryLayer", operationalArea );
+
+        verify(kujakuMapView).addLayer(kujakuLayerArgumentCaptor.capture());
+        KujakuLayer kujakuLayer = kujakuLayerArgumentCaptor.getValue();
+        assertNotNull(kujakuLayer);
+    }
+
+    @Test
+    public void testToggleProgressView() {
+        Whitebox.setInternalState(listTasksActivity, "drawerView", drawerView);
+        listTasksActivity.toggleProgressBarView(true);
+        verify(drawerView).toggleProgressBarView(true);
+    }
+
+    @Test
+    public void testSetOperationalArea() {
+        Whitebox.setInternalState(listTasksActivity, "drawerView", drawerView);
+        listTasksActivity.setOperationalArea("operational area");
+        verify(drawerView).setOperationalArea("operational area");
     }
 
 

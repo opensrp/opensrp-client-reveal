@@ -5,9 +5,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.core.util.Pair;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -15,6 +12,10 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.core.util.Pair;
 
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
@@ -52,7 +53,6 @@ import org.smartregister.util.RecreateECUtil;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -74,6 +74,8 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MDA;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
+import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
+import static org.smartregister.reveal.util.Constants.Map.SELECT_JURISDICTION_MAX_SELECT_ZOOM_LEVEL;
 
 public class Utils {
 
@@ -476,6 +478,14 @@ public class Utils {
     public static void showWhenTrue(View view, boolean predicate){
         int visibility = predicate? View.VISIBLE: View.GONE;
         view.setVisibility(visibility);
+    }
+
+    public static boolean isZambiaIRSLite() {
+        return (BuildConfig.SELECT_JURISDICTION && Country.ZAMBIA.equals(BuildConfig.BUILD_COUNTRY));
+    }
+
+    public static int getMaxZoomLevel() {
+        return BuildConfig.SELECT_JURISDICTION ? SELECT_JURISDICTION_MAX_SELECT_ZOOM_LEVEL  : MAX_SELECT_ZOOM_LEVEL;
     }
 
 }
