@@ -224,6 +224,7 @@ public interface Constants {
                 LARVAL_DIPPING, BCC, CASE_CONFIRMATION,
                 PAOT, IRS, IRS_VERIFICATION);
 
+        String CDD_SUPERVISION = "CDD Supervision";
     }
 
 

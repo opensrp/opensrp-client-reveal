@@ -17,12 +17,9 @@ import org.json.JSONObject;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.OtherFormsfragmentContract;
 import org.smartregister.reveal.presenter.OtherFormsFragmentPresenter;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.SummaryFormsActivity;
-
-import javax.json.Json;
 
 public class SummaryFormsFragment extends Fragment implements OtherFormsfragmentContract.View, View.OnClickListener {
     
@@ -47,8 +44,6 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
     private Button btnIrsFieldOfficer;
 
     private Button btnVerificationForm;
-
-    private Button btnCddSupervisorSummaryForm;
 
     public static SummaryFormsFragment newInstance(Bundle bundle) {
 
@@ -86,7 +81,6 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
         btnMobilization = view.findViewById(R.id.summary_mobilization_form);
         btnIrsFieldOfficer = view.findViewById(R.id.summary_irs_field_officer);
         btnVerificationForm = view.findViewById(R.id.summary_verification_form);
-        btnCddSupervisorSummaryForm = view.findViewById(R.id.cdd_supervisor_summary_verification_form);
 
         setClickListeners();
     }
@@ -99,7 +93,6 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
         btnMobilization.setOnClickListener(this);
         btnIrsFieldOfficer.setOnClickListener(this);
         btnVerificationForm.setOnClickListener(this);
-        btnCddSupervisorSummaryForm.setOnClickListener(this);
 
     }
 
@@ -177,8 +170,6 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
             case R.id.summary_verification_form:
                 presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.VERIFICATION_FORM_ZAMBIA);
                 break;
-            case R.id.cdd_supervisor_summary_verification_form:
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM);
             default:
                 break;
         }
