@@ -244,5 +244,8 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         }
     }
 
+    public void onGetUserLocation(Location location) {
+        //empty
+    }
 
 }
