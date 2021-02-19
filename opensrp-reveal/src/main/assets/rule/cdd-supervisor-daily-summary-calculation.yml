@@ -13,3 +13,10 @@ condition: "true"
 actions:
  - "calculation = helper.ifNull(step1_treated_female_1-4 + step1_treated_female_5-14 + step1_treated_female_above_15-14,0)"
 
+---
+name: step1_business_status
+description: Business status calculation
+priority: 1
+condition: "true"
+actions:
+ - "calculation = step1_task_complete == 'Yes' ? 'Complete': 'In Progress' "

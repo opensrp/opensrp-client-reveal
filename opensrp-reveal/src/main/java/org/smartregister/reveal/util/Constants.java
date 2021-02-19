@@ -258,6 +258,8 @@ public interface Constants {
 
         String CB_SPRAY_AREA_EVENT = "cb_spray_area";
 
+        String CDD_SUPERVISOR_DAILY_SUMMARY =  "cdd_supervisor_daily_summary";
+
         List<String> SUMMARY_EVENT_TYPES = Arrays.asList(DAILY_SUMMARY_EVENT, IRS_FIELD_OFFICER_EVENT,
                 IRS_SA_DECISION_EVENT, MOBILIZATION_EVENT, TEAM_LEADER_DOS_EVENT, VERIFICATION_EVENT);
     }

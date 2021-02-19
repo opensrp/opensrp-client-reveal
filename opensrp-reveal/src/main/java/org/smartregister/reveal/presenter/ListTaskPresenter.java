@@ -354,7 +354,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (IRS_VERIFICATION.equals(code) && isZambiaIRSLite()) {
             listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
         }else if (CDD_SUPERVISION.equals(code) && isKenyaMDALite()){
-            listTaskInteractor.fetchInterventionDetails(CDD_SUPERVISION,feature.id(),false);
+            startForm(selectedFeature, null, selectedFeatureInterventionType);
         }
         else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
@@ -548,6 +548,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             jsonFormUtils.populateForm(event, formJson);
             jsonFormUtils.populateFormWithServerOptions(formName, formJson);
         } else if(isZambiaIRSLite()) {
+            jsonFormUtils.populateFormWithServerOptions(formName, formJson);
+        }else if(isKenyaMDALite()){
             jsonFormUtils.populateFormWithServerOptions(formName, formJson);
         }
         listTaskView.startJsonForm(formJson);

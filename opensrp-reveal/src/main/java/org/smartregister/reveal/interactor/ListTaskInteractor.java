@@ -81,6 +81,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAM
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TRUE_STRUCTURE;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.Intervention.CDD_SUPERVISION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -133,7 +134,7 @@ public class ListTaskInteractor extends BaseInteractor {
         } else if (IRS_VERIFICATION.equals(interventionType)) {
             sql = String.format("SELECT %s, %s, %s, %s, %s, %s FROM %s WHERE id= ?",
                     TRUE_STRUCTURE, ELIGIBLE_STRUCTURE, REPORT_SPRAY, CHALK_SPRAY, STICKER_SPRAY, CARD_SPRAY, IRS_VERIFICATION_TABLE);
-        } else if (REGISTER_FAMILY.equals(interventionType)) {
+        } else if (REGISTER_FAMILY.equals(interventionType) || CDD_SUPERVISION.equals(interventionType)) {
             sql = String.format("SELECT %s, %s, %s FROM %s WHERE %s = ?",
                     BUSINESS_STATUS, AUTHORED_ON, OWNER, TASK_TABLE, FOR);
         }
