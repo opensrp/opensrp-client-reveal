@@ -165,7 +165,11 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     private void populateLocationsFromPreferences() {
         view.setDistrict(prefsUtil.getCurrentDistrict());
-        view.setFacility(prefsUtil.getCurrentFacility(), prefsUtil.getCurrentFacilityLevel());
+        if(org.smartregister.reveal.util.Utils.isZambiaIRSLite()) {
+            view.setFacility(prefsUtil.getCurrentDistrict(), "");
+        } else {
+            view.setFacility(prefsUtil.getCurrentFacility(), prefsUtil.getCurrentFacilityLevel());
+        }
         view.setOperationalArea(prefsUtil.getCurrentOperationalArea());
     }
 
