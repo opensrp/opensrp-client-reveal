@@ -747,7 +747,7 @@
           }
         },
         {
-          "column_name": "village_town",
+          "column_name": "entity",
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
