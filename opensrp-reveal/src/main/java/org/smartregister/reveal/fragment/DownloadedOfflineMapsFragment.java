@@ -117,7 +117,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
                 }
                 @Override
                 public void onError(String error) {
-
+                    //Do nothing
                 }
             });
         }

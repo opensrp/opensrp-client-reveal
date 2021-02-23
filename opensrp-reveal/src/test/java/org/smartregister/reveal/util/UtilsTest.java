@@ -1,6 +1,5 @@
 package org.smartregister.reveal.util;
 
-import android.content.Intent;
 import android.view.View;
 
 import com.mapbox.geojson.Feature;
@@ -10,8 +9,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import org.json.JSONArray;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
