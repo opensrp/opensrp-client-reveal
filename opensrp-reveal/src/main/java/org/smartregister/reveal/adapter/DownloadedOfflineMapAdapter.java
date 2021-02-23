@@ -15,6 +15,7 @@ import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.OfflineMapModel;
+import org.smartregister.reveal.util.CustomOfflineRegionCallback;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.viewholder.DownloadedOfflineMapViewHolder;
 
@@ -85,34 +86,7 @@ public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<Downloaded
             return;
         }
 
-        offlineMapModel.getOfflineRegion().getStatus(new OfflineRegion.OfflineRegionStatusCallback() {
-            @Override
-            public void onStatus(OfflineRegionStatus status) {
-
-                viewHolder.displayDownloadSizeLabel(true);
-
-                String mapDownloadSize = Formatter.formatFileSize(context, status.getCompletedResourceSize());
-                Date dateCreated = offlineMapModel.getDateCreated() != null ? offlineMapModel.getDateCreated() : new Date();
-                String downloadDate = Utils.formatDate(dateCreated);
-                offlineMapModel.isPending = !status.isComplete();
-                viewHolder.setDownloadedMapSize(context.getString(R.string.offline_map_size, mapDownloadSize, downloadDate));
-                if(status.getDownloadState() == STATE_ACTIVE) {
-                    offlineMapModel.setOfflineMapStatus(DOWNLOAD_STARTED);
-                    viewHolder.displayDownloading();
-                    viewHolder.checkCheckBox(true);
-                    viewHolder.enableCheckBox(false);
-                } else if (offlineMapModel.isPending) {
-                    viewHolder.displayIncomplete();
-                } else {
-                    viewHolder.displaySuccess();
-                }
-            }
-
-            @Override
-            public void onError(String error) {
-                // Do nothing
-            }
-        });
+        offlineMapModel.getOfflineRegion().getStatus(new CustomOfflineRegionCallback(viewHolder, offlineMapModel));
 
     }
 

@@ -103,7 +103,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
         btnDeleteMap.setVisibility(View.VISIBLE);
     }
 
-    private void downloadMap(@NotNull List<OfflineMapModel> offlineMapsToDelete) {
+    public void downloadMap(@NotNull List<OfflineMapModel> offlineMapsToDelete) {
         for(OfflineMapModel model: offlineMapsToDelete) {
             model.getOfflineRegion().getStatus(new OfflineRegion.OfflineRegionStatusCallback() {
                 @Override
