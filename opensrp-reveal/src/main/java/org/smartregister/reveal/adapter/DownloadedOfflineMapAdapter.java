@@ -1,30 +1,20 @@
 package org.smartregister.reveal.adapter;
 
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mapbox.mapboxsdk.offline.OfflineRegion;
-import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.util.CustomOfflineRegionCallback;
-import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.viewholder.DownloadedOfflineMapViewHolder;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import static com.mapbox.mapboxsdk.offline.OfflineRegion.STATE_ACTIVE;
-import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.DOWNLOAD_STARTED;
 
 public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<DownloadedOfflineMapViewHolder> {
 

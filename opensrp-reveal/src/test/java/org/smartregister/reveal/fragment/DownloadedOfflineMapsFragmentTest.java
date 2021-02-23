@@ -1,12 +1,11 @@
 package org.smartregister.reveal.fragment;
 
 import android.content.Context;
-
-import androidx.core.util.Pair;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.View;
 import android.widget.CheckBox;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
 
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
@@ -219,7 +218,7 @@ public class DownloadedOfflineMapsFragmentTest extends BaseUnitTest {
 
         fragment.setDownloadedOfflineMapModelList(expectedOfflineMapModels);
         fragment.downloadCompleted(model.getDownloadAreaId());
-        assertEquals(OfflineMapModel.OfflineMapStatus.DOWNLOADED, model.getOfflineMapStatus());
+        assertEquals(DOWNLOADED, model.getOfflineMapStatus());
         verify(callback).onMapDownloaded(offlineMapModelCaptor.capture());
         assertEquals(model, offlineMapModelCaptor.getValue());
     }
