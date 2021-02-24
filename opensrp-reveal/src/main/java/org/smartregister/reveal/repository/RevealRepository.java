@@ -304,8 +304,8 @@ public class RevealRepository extends Repository {
     private void upgradeToVersion14(SQLiteDatabase db) {
         db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s IS NULL ", EVENT_TABLE, event_column.syncStatus, event_column.eventId), new String[]{BaseRepository.TYPE_Unsynced});
         db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s like ?  OR %s not like ?", CLIENT_TABLE, client_column.syncStatus, client_column.json, client_column.json), new String[]{"%serverVersion\":0%", "%serverVersion%"});
-        db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s IS NULL OR %s = 0 ", TASK_TABLE, DatabaseKeys.SYNC_STATUS, DatabaseKeys.SERVER_VERSION, DatabaseKeys.SERVER_VERSION), new String[]{BaseRepository.TYPE_Created});
-        db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s like ?  OR %s not like ?", STRUCTURE_TABLE, DatabaseKeys.SYNC_STATUS, DatabaseKeys.GEOJSON, DatabaseKeys.GEOJSON), new String[]{"%serverVersion\":0%", "%serverVersion%"});
+        db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s IS NULL OR %s = 0 ", TASK_TABLE, DatabaseKeys.TASK_SYNC_STATUS, DatabaseKeys.SERVER_VERSION, DatabaseKeys.SERVER_VERSION), new String[]{BaseRepository.TYPE_Created});
+        db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s like ?  OR %s not like ?", STRUCTURE_TABLE, DatabaseKeys.TASK_SYNC_STATUS, DatabaseKeys.GEOJSON, DatabaseKeys.GEOJSON), new String[]{"%serverVersion\":0%", "%serverVersion%"});
     }
 
     private void clientProcessEvents(List<String> eventTypes) {
