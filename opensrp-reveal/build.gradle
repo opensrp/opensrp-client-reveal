@@ -129,7 +129,7 @@ android {
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", 'opensrp_base_url', '"https://reveal-zm.smartregister.org/opensrp/"'
-            buildConfigField "Integer", "DATABASE_VERSION", '13'
+            buildConfigField "Integer", "DATABASE_VERSION", '14'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
@@ -148,7 +148,7 @@ android {
 
         debug {
             resValue "string", 'opensrp_base_url', '"https://reveal-stage.smartregister.org/opensrp/"'
-            buildConfigField "Integer", "DATABASE_VERSION", '13'
+            buildConfigField "Integer", "DATABASE_VERSION", '14'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
