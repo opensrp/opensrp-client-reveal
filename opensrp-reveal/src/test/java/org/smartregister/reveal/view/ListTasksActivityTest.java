@@ -1033,13 +1033,6 @@ public class ListTasksActivityTest extends BaseUnitTest {
         verify(drawerView).toggleProgressBarView(true);
     }
 
-    @Test
-    public void testSetOperationalArea() {
-        Whitebox.setInternalState(listTasksActivity, "drawerView", drawerView);
-        listTasksActivity.setOperationalArea("operational area");
-        verify(drawerView).setOperationalArea("operational area");
-    }
-
 
     private void setInterventionTypeForPlan(String interventionType) {
         String plan = UUID.randomUUID().toString();
