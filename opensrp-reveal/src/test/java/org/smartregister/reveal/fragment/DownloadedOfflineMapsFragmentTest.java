@@ -259,4 +259,23 @@ public class DownloadedOfflineMapsFragmentTest extends BaseUnitTest {
         verify(fragment).updateOfflineMapsTodelete(view);
     }
 
+    @Test
+    public void testOnStatusChangedWhenComplete() {
+        OfflineRegionStatus mockStatus = mock(OfflineRegionStatus.class);
+        when(mockStatus.isComplete()).thenReturn(true);
+        Whitebox.setInternalState(fragment, "callback", callback);
+        fragment.onStatusChanged(mockStatus);
+        verify(callback).onMapDownloaded(null);
+    }
+
+    @Test
+    public void testOnStatusChangedWhenInProgress() {
+        OfflineRegionStatus mockStatus = mock(OfflineRegionStatus.class);
+        when(mockStatus.isComplete()).thenReturn(false);
+        when(mockStatus.getCompletedResourceCount()).thenReturn(100L);
+        when(mockStatus.getRequiredResourceCount()).thenReturn(200L);
+        fragment.onStatusChanged(mockStatus);
+        assertEquals("Downloading: 50.00 %",ShadowToast.getTextOfLatestToast());
+    }
+
 }

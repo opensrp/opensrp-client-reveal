@@ -15,6 +15,7 @@ import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
+import com.mapbox.mapboxsdk.offline.OfflineRegionError;
 import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +36,7 @@ import io.ona.kujaku.helpers.OfflineServiceHelper;
 import static com.mapbox.mapboxsdk.offline.OfflineRegion.STATE_INACTIVE;
 import static org.smartregister.reveal.util.Utils.showWhenTrue;
 
-public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment implements DownloadedOfflineMapsContract.View, View.OnClickListener {
+public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment implements DownloadedOfflineMapsContract.View, View.OnClickListener, OfflineRegion.OfflineRegionObserver {
 
     private RecyclerView downloadedMapsRecyclerView;
     private Button btnDownloadMap;
@@ -110,6 +111,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
                 public void onStatus(OfflineRegionStatus status) {
                     if(status.getDownloadState() == STATE_INACTIVE) {
                         Toast.makeText(getContext(), R.string.downloading, Toast.LENGTH_SHORT).show();
+                        model.getOfflineRegion().setObserver(DownloadedOfflineMapsFragment.this);
                         model.getOfflineRegion().setDownloadState(OfflineRegion.STATE_ACTIVE);
                         adapter.notifyDataSetChanged();
                         btnDownloadMap.setVisibility(View.GONE);
@@ -224,5 +226,27 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onStatusChanged(OfflineRegionStatus status) {
+        if (status.isComplete()) {
+            callback.onMapDownloaded(null);
+        } else {
+            double percentage = status.getRequiredResourceCount() >= 0
+                    ? (100.0 * status.getCompletedResourceCount() / status.getRequiredResourceCount()) :
+                    0.0;
+            displayToast(getString(R.string.map_download_progress, percentage));
+        }
+    }
+
+    @Override
+    public void onError(OfflineRegionError error) {
+        //Do nothing
+    }
+
+    @Override
+    public void mapboxTileCountLimitExceeded(long limit) {
+        //Do nothing
     }
 }
