@@ -358,6 +358,8 @@ public class RevealJsonFormUtils {
             formName = JsonForm.TEAM_LEADER_DOS_ZAMBIA;
         } else if (Constants.EventType.VERIFICATION_EVENT.equals(encounterType)) {
             formName = JsonForm.VERIFICATION_FORM_ZAMBIA;
+        } else if (Constants.EventType.TABLET_ACCOUNTABILITY_EVENT.equals(encounterType)){
+            formName = JsonForm.TABLET_ACCOUNTABILITY_FORM;
         }
         return formName;
     }
@@ -579,6 +581,16 @@ public class RevealJsonFormUtils {
                             dataCollector);
                 }
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DISTRICTS, fieldsMap.get(JsonForm.DISTRICT), PreferencesUtil.getInstance().getCurrentProvince());
+                break;
+
+            case JsonForm.TABLET_ACCOUNTABILITY_FORM:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        CONFIGURATION.HEALTH_WORKER_SUPERVISORS, fieldsMap.get(JsonForm.HEALTH_WORKER_SUPERVISOR),
+                        PreferencesUtil.getInstance().getCurrentOperationalArea());
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS, fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),
+                        PreferencesUtil.getInstance().getCurrentOperationalArea());
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.WARDS, fieldsMap.get(JsonForm.LOCATION), PreferencesUtil.getInstance().getCurrentOperationalArea());
                 break;
             default:
                 break;
