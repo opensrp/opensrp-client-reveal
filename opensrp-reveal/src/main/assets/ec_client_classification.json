@@ -168,6 +168,13 @@
           },
           {
             "field": "eventType",
+            "field_value": "tablet_accountability",
+            "creates_case": [
+              "ec_events"
+            ]
+          },
+          {
+            "field": "eventType",
             "field_value": "cdd_supervisor_daily_summary",
             "creates_case": [
               "event_task"
