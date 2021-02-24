@@ -13,7 +13,7 @@
 
         <include layout="@layout/toolbar_task_map_view" />
 
-        <FrameLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -134,7 +134,7 @@
 
             </LinearLayout>
 
-        </FrameLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </LinearLayout>
 

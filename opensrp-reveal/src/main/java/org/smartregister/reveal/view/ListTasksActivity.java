@@ -27,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -217,7 +218,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         initializeToolbar();
 
-        syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
+        syncProgressSnackbar = makeSnackbar(org.smartregister.R.string.syncing, Snackbar.LENGTH_LONG);
+    }
+
+    private Snackbar makeSnackbar(int stringRes, int length) {
+        return Snackbar.make(rootView, getString(stringRes), length)
+                .setActionTextColor(ContextCompat.getColor(this, R.color.snackbar_action_color))
+                .setAction(R.string.dismiss, v->{ /*Do nothing. Dismiss is default*/ });
     }
 
     private void initializeCardViews() {
@@ -857,11 +864,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         }
         syncProgressSnackbar.dismiss();
         if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_failed, Snackbar.LENGTH_SHORT).show();
+            makeSnackbar(org.smartregister.R.string.sync_failed, Snackbar.LENGTH_SHORT).show();
         } else if (fetchStatus.equals(FetchStatus.nothingFetched)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_SHORT).show();
+            makeSnackbar(org.smartregister.R.string.sync_complete, Snackbar.LENGTH_SHORT).show();
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_SHORT).show();
+            makeSnackbar(org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_SHORT).show();
         }
     }
 
