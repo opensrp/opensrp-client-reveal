@@ -172,6 +172,13 @@
             "creates_case": [
               "event_task"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "tablet_accountability",
+            "creates_case": [
+              "ec_events"
+            ]
           }
         ]
       }
