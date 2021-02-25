@@ -14,9 +14,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONObject;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.OtherFormsfragmentContract;
 import org.smartregister.reveal.presenter.OtherFormsFragmentPresenter;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.SummaryFormsActivity;
@@ -44,6 +46,8 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
     private Button btnIrsFieldOfficer;
 
     private Button btnVerificationForm;
+
+    private Button btnTabletAccountabilityForm;
 
     public static SummaryFormsFragment newInstance(Bundle bundle) {
 
@@ -81,18 +85,41 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
         btnMobilization = view.findViewById(R.id.summary_mobilization_form);
         btnIrsFieldOfficer = view.findViewById(R.id.summary_irs_field_officer);
         btnVerificationForm = view.findViewById(R.id.summary_verification_form);
+        btnTabletAccountabilityForm = view.findViewById(R.id.summary_tablet_accountability_form);
+
+        if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
+            btnDailySummary.setVisibility(View.GONE);
+            view.findViewById(R.id.separator1).setVisibility(View.GONE);
+            btnTeamLeaderDos.setVisibility(View.GONE);
+            view.findViewById(R.id.separator2).setVisibility(View.GONE);
+            btnCbSprayArea.setVisibility(View.GONE);
+            view.findViewById(R.id.separator3).setVisibility(View.GONE);
+            btnIrsSaDecision.setVisibility(View.GONE);
+            view.findViewById(R.id.separator4).setVisibility(View.GONE);
+            btnMobilization.setVisibility(View.GONE);
+            view.findViewById(R.id.separator5).setVisibility(View.GONE);
+            btnIrsFieldOfficer.setVisibility(View.GONE);
+            view.findViewById(R.id.separator6).setVisibility(View.GONE);
+            btnVerificationForm.setVisibility(View.GONE);
+            view.findViewById(R.id.separator7).setVisibility(View.GONE);
+            view.findViewById(R.id.separator8).setVisibility(View.GONE);
+        }
 
         setClickListeners();
     }
 
     private void setClickListeners() {
-        btnDailySummary.setOnClickListener(this);
-        btnTeamLeaderDos.setOnClickListener(this);
-        btnCbSprayArea.setOnClickListener(this);
-        btnIrsSaDecision.setOnClickListener(this);
-        btnMobilization.setOnClickListener(this);
-        btnIrsFieldOfficer.setOnClickListener(this);
-        btnVerificationForm.setOnClickListener(this);
+        if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
+            btnTabletAccountabilityForm.setOnClickListener(this);
+        } else {
+            btnDailySummary.setOnClickListener(this);
+            btnTeamLeaderDos.setOnClickListener(this);
+            btnCbSprayArea.setOnClickListener(this);
+            btnIrsSaDecision.setOnClickListener(this);
+            btnMobilization.setOnClickListener(this);
+            btnIrsFieldOfficer.setOnClickListener(this);
+            btnVerificationForm.setOnClickListener(this);
+        }
 
     }
 
@@ -170,6 +197,8 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
             case R.id.summary_verification_form:
                 presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.VERIFICATION_FORM_ZAMBIA);
                 break;
+            case R.id.summary_tablet_accountability_form:
+                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.TABLET_ACCOUNTABILITY_FORM);
             default:
                 break;
         }
