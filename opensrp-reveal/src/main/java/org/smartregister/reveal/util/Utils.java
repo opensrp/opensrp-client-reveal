@@ -473,10 +473,10 @@ public class Utils {
      * Displays the view if predicate is true.
      * Hides the view otherwise
      * @param view The view to set visibility on
-     * @param predicate The boolean indicating whether to show the view or not
+     * @param shouldShow The boolean indicating whether to show the view or not
      */
-    public static void showWhenTrue(View view, boolean predicate){
-        int visibility = predicate? View.VISIBLE: View.GONE;
+    public static void showWhenTrue(View view, boolean shouldShow){
+        int visibility = shouldShow? View.VISIBLE: View.GONE;
         view.setVisibility(visibility);
     }
 
