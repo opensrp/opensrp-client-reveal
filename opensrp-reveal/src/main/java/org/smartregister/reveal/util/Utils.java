@@ -478,6 +478,7 @@ public class Utils {
 
     public static boolean isKenyaMDALite(){
         return BuildConfig.SELECT_JURISDICTION && Country.KENYA.equals(BuildConfig.BUILD_COUNTRY);
+
     }
 
 }
