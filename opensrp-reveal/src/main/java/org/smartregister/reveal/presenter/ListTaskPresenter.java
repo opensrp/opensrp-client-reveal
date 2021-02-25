@@ -369,6 +369,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         selectedFeatureInterventionType = code;
         if (INACTIVE.name().equals(status)) {
             listTaskView.displayToast(R.string.structure_is_inactive);
+        } if (isKenyaMDALite()) {
+            listTaskView.displayEditCDDTaskCompleteDialog();
         } else if (NOT_VISITED.equals(businessStatus) || !feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayMarkStructureInactiveDialog();
         } else {
@@ -431,6 +433,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         Intent intent = new Intent(listTaskView.getContext(), EditFociBoundaryActivity.class);
         listTaskView.getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void onCDDTaskCompleteStatusEdited() {
+        // TODO implement
     }
 
     @Override
@@ -735,6 +742,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void onMarkStructureInactiveConfirmed() {
         listTaskInteractor.markStructureAsInactive(selectedFeature);
 
+    }
+
+    @Override
+    public void onEditCDDTaskCompleteStatusConfirmed(boolean isTaskComplete) {
+        listTaskInteractor.editCDDTaskCompleteStatus(selectedFeature, isTaskComplete);
     }
 
     @Override
