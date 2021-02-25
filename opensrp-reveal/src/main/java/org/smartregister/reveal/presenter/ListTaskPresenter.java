@@ -436,8 +436,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
-    public void onCDDTaskCompleteStatusEdited() {
-        // TODO implement
+    public void onCDDTaskCompleteStatusEdited(String businessStatus) {
+        updateFeatureTaskBusinessStatus(businessStatus);
     }
 
     @Override
@@ -770,15 +770,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onStructureMarkedIneligible() {
-        for (Feature feature : getFeatureCollection().features()) {
-            if (selectedFeature.id().equals(feature.id())) {
-                feature.addStringProperty(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
-                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
-                break;
-            }
-        }
-
-        listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
+        updateFeatureTaskBusinessStatus(NOT_ELIGIBLE);
     }
 
     @Override
@@ -919,5 +911,17 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             return features.get(0);
         }
         return null;
+    }
+
+    private void updateFeatureTaskBusinessStatus(String businessStatus) {
+        for (Feature feature : getFeatureCollection().features()) {
+            if (selectedFeature.id().equals(feature.id())) {
+                feature.addStringProperty(TASK_BUSINESS_STATUS, businessStatus);
+                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, businessStatus);
+                break;
+            }
+        }
+
+        listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
     }
 }

@@ -132,6 +132,6 @@ public interface ListTaskContract {
       
         void onFociBoundaryLongClicked();
 
-        void onCDDTaskCompleteStatusEdited();
+        void onCDDTaskCompleteStatusEdited(String businessStatus);
     }
 }
