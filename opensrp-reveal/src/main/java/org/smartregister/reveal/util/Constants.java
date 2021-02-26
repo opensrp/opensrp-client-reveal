@@ -529,6 +529,8 @@ public interface Constants {
 
         String HEALTH_WORKER_SUPERVISOR = "health_worker_supervisor";
 
+        String CDD_SUPERVISION_TASK_COMPLETE = "task_complete";
+
     }
 
     interface DateFormat {

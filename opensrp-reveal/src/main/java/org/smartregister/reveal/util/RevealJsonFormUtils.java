@@ -85,7 +85,7 @@ public class RevealJsonFormUtils {
 
     public RevealJsonFormUtils() {
         nonEditablefields = new HashSet<>(Arrays.asList(JsonForm.HOUSEHOLD_ACCESSIBLE,
-                JsonForm.ABLE_TO_SPRAY_FIRST));
+                JsonForm.ABLE_TO_SPRAY_FIRST,JsonForm.CDD_SUPERVISION_TASK_COMPLETE));
     }
 
     public JSONObject getFormJSON(Context context, String formName, Feature feature, String sprayStatus, String familyHead) {
@@ -441,6 +441,9 @@ public class RevealJsonFormUtils {
                             && YES.equalsIgnoreCase(obs.getValue().toString())) {
                         field.put(JsonFormConstants.READ_ONLY, true);
                         field.remove(JsonFormConstants.RELEVANCE);
+                    }
+                    if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY) && nonEditablefields.contains(key)){
+                        field.put(JsonFormConstants.READ_ONLY,true);
                     }
                 }
             } catch (JSONException e) {
