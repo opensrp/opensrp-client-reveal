@@ -5,6 +5,7 @@ import android.os.SystemClock;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.UserLocationContract;
@@ -46,7 +47,7 @@ public class ValidateUserLocationPresenter implements UserLocationContract.UserL
     public void onGetUserLocation(Location location) {
         locationView.hideProgressDialog();
 
-        if(Utils.isZambiaIRSLite()) {
+        if(BuildConfig.SELECT_JURISDICTION ) {
             callback.onGetUserLocation(location);
         } else {
             double offset = callback.getTargetCoordinates().distanceTo(
