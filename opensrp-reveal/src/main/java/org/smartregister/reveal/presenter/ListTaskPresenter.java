@@ -369,6 +369,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         selectedFeatureInterventionType = code;
         if (INACTIVE.name().equals(status)) {
             listTaskView.displayToast(R.string.structure_is_inactive);
+        } if (isKenyaMDALite()) {
+            listTaskView.displayEditCDDTaskCompleteDialog();
         } else if (NOT_VISITED.equals(businessStatus) || !feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayMarkStructureInactiveDialog();
         } else {
@@ -431,6 +433,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         Intent intent = new Intent(listTaskView.getContext(), EditFociBoundaryActivity.class);
         listTaskView.getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void onCDDTaskCompleteStatusEdited(String businessStatus) {
+        updateFeatureTaskBusinessStatus(businessStatus);
     }
 
     @Override
@@ -738,6 +745,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
+    public void onEditCDDTaskCompleteStatusConfirmed(boolean isTaskComplete) {
+        listTaskInteractor.editCDDTaskCompleteStatus(selectedFeature, isTaskComplete);
+    }
+
+    @Override
     public void onStructureMarkedInactive() {
         for (Feature feature : getFeatureCollection().features()) {
             if (selectedFeature.id().equals(feature.id())) {
@@ -758,15 +770,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onStructureMarkedIneligible() {
-        for (Feature feature : getFeatureCollection().features()) {
-            if (selectedFeature.id().equals(feature.id())) {
-                feature.addStringProperty(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
-                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
-                break;
-            }
-        }
-
-        listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
+        updateFeatureTaskBusinessStatus(NOT_ELIGIBLE);
     }
 
     @Override
@@ -907,5 +911,17 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             return features.get(0);
         }
         return null;
+    }
+
+    private void updateFeatureTaskBusinessStatus(String businessStatus) {
+        for (Feature feature : getFeatureCollection().features()) {
+            if (selectedFeature.id().equals(feature.id())) {
+                feature.addStringProperty(TASK_BUSINESS_STATUS, businessStatus);
+                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, businessStatus);
+                break;
+            }
+        }
+
+        listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
     }
 }
