@@ -212,6 +212,8 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_ENUMERATORS, fields.get(JsonForm.DATA_COLLECTOR));
         cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_COMMUNITY_HEALTH_WORKERS, fields.get(JsonForm.CHW_NAME));
         cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_ADHERENCE_OFFICERS, fields.get(JsonForm.ADHERENCE_NAME));
+        cascadeSelect(key,JsonForm.LOCATION,Constants.CONFIGURATION.HEALTH_WORKER_SUPERVISORS,fields.get(JsonForm.HEALTH_WORKER_SUPERVISOR));
+        cascadeSelect(key,JsonForm.LOCATION,Constants.CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS,fields.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME));
     }
 
     private void cascadeSelect(String key, String parentWidget, String configurationKey, JSONObject childWidget) {
@@ -244,5 +246,8 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         }
     }
 
+    public void onGetUserLocation(Location location) {
+        //empty
+    }
 
 }

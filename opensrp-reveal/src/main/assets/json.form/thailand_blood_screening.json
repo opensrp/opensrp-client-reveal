@@ -48,7 +48,7 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "เจาะเลือด SCD",
+    "title": "เจาะเลือด",
     "display_back_button": "true",
     "fields": [
       {

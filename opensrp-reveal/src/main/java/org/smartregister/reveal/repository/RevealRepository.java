@@ -14,6 +14,8 @@ import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.ClientFormRepository;
 import org.smartregister.repository.ClientRelationshipRepository;
 import org.smartregister.repository.EventClientRepository;
+import org.smartregister.repository.EventClientRepository.client_column;
+import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.ManifestRepository;
 import org.smartregister.repository.PlanDefinitionRepository;
@@ -60,10 +62,13 @@ import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.StructureType.RESIDENTIAL;
+import static org.smartregister.reveal.util.Constants.Tables.CLIENT_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.EVENT_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.LARVAL_DIPPINGS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTIONS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.PAOT_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.STRUCTURE_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.TASK_TABLE;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 import static org.smartregister.util.DatabaseMigrationUtils.isColumnExists;
@@ -83,8 +88,8 @@ public class RevealRepository extends Repository {
     public void onCreate(SQLiteDatabase database) {
         super.onCreate(database);
         ConfigurableViewsRepository.createTable(database);
-        EventClientRepository.createTable(database, EventClientRepository.Table.client, EventClientRepository.client_column.values());
-        EventClientRepository.createTable(database, event, EventClientRepository.event_column.values());
+        EventClientRepository.createTable(database, EventClientRepository.Table.client, client_column.values());
+        EventClientRepository.createTable(database, event, event_column.values());
 
         CampaignRepository.createTable(database);
         TaskRepository.createTable(database);
@@ -134,6 +139,12 @@ public class RevealRepository extends Repository {
                     break;
                 case 12:
                     upgradeToVersion12(db);
+                    break;
+                case 13:
+                    upgradeToVersion13(db);
+                    break;
+                case 14:
+                    upgradeToVersion14(db);
                     break;
                 default:
                     break;
@@ -249,10 +260,10 @@ public class RevealRepository extends Repository {
 
         EventClientRepository.createTable(db,
                 EventClientRepository.Table.foreignEvent,
-                EventClientRepository.event_column.values());
+                event_column.values());
         EventClientRepository.createTable(db,
                 EventClientRepository.Table.foreignClient,
-                EventClientRepository.client_column.values());
+                client_column.values());
     }
 
     private void upgradeToVersion9(SQLiteDatabase db) {
@@ -283,6 +294,18 @@ public class RevealRepository extends Repository {
 
     private void upgradeToVersion12(SQLiteDatabase db) {
         TaskRepository.updatePriorityToEnumAndAddRestrictions(db);
+    }
+
+    private void upgradeToVersion13(SQLiteDatabase db) {
+        db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s=? ", EVENT_TABLE, DatabaseKeys.SYNC_STATUS, DatabaseKeys.SYNC_STATUS), new String[]{BaseRepository.TYPE_Unsynced, BaseRepository.TYPE_Task_Unprocessed});
+    }
+
+
+    private void upgradeToVersion14(SQLiteDatabase db) {
+        db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s IS NULL ", EVENT_TABLE, event_column.syncStatus, event_column.eventId), new String[]{BaseRepository.TYPE_Unsynced});
+        db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s like ?  OR %s not like ?", CLIENT_TABLE, client_column.syncStatus, client_column.json, client_column.json), new String[]{BaseRepository.TYPE_Unsynced, "%serverVersion\":0%", "%serverVersion%"});
+        db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s IS NULL OR %s = 0 ", TASK_TABLE, DatabaseKeys.TASK_SYNC_STATUS, DatabaseKeys.SERVER_VERSION, DatabaseKeys.SERVER_VERSION), new String[]{BaseRepository.TYPE_Created});
+        db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s like ?  OR %s not like ?", STRUCTURE_TABLE, DatabaseKeys.TASK_SYNC_STATUS, DatabaseKeys.GEOJSON, DatabaseKeys.GEOJSON), new String[]{BaseRepository.TYPE_Created, "%serverVersion\":0%", "%serverVersion%"});
     }
 
     private void clientProcessEvents(List<String> eventTypes) {

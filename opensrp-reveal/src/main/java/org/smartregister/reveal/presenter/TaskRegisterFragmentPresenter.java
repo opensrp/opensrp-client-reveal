@@ -21,7 +21,6 @@ import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
@@ -47,10 +46,10 @@ import static org.smartregister.domain.Task.INACTIVE_TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
-import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
+import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
-import static org.smartregister.reveal.util.Country.NAMIBIA;
 
 /**
  * Created by samuelgithengi on 3/11/19.
@@ -232,6 +231,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         this.isActionClicked = isActionClicked;
         if (details != null) {
             setTaskDetails(details);
+            boolean hasSingleGroupedTask = (BEDNET_DISTRIBUTION.equals(details.getTaskCode()) || BLOOD_SCREENING.equals(details.getTaskCode())) && details.getTaskCount() == 1;
             if (CASE_CONFIRMATION.equals(details.getTaskCode())) {
                 interactor.getIndexCaseDetails(details.getStructureId(),
                         Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), details.getReasonReference());
@@ -240,6 +240,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                     (BLOOD_SCREENING.equals(details.getTaskCode()) ||
                             BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
                             REGISTER_FAMILY.equals(details.getTaskCode())) ||
+                    hasSingleGroupedTask ||
                     (details.getTaskCount() != null && details.getTaskCount() > 1 // structures with grouped tasks should display the family profile
                             && !(REGISTER_FAMILY.equals(details.getTaskCode()) && Task.TaskStatus.READY.name().equals(details.getTaskStatus())))) { // skip if we have a READY family reg task
                 setTaskDetails(details);
@@ -437,6 +438,10 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         if ((Constants.Intervention.IRS.equals(getTaskDetails().getTaskCode()))
                 && !Task.TaskStatus.READY.name().equals(getTaskDetails().getTaskStatus())) { // no event for READY tasks
             interactor.findLastEvent(getTaskDetails().getTaskEntity(), SPRAY_EVENT);
+        } else if (Constants.Intervention.MOSQUITO_COLLECTION.equals(getTaskDetails().getTaskCode())) {
+            interactor.findLastEvent(getTaskDetails().getTaskEntity(), MOSQUITO_COLLECTION_EVENT);
+        } else if (Constants.Intervention.LARVAL_DIPPING.equals(getTaskDetails().getTaskCode())) {
+            interactor.findLastEvent(getTaskDetails().getTaskEntity(), LARVAL_DIPPING_EVENT);
         } else {
             super.onLocationValidated();
         }

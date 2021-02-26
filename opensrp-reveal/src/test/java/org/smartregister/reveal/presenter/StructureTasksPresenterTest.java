@@ -89,6 +89,29 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
         verify(prefsUtil).getCurrentPlanId();
     }
 
+    @Test
+    public void testRefreshTasksWithNoStructureId(){
+        presenter.refreshTasks();
+        verify(interactor, never()).findTasks(anyString(), anyString(), anyString());
+    }
+
+    @Test
+    public void testRefreshTasks(){
+        String planId = UUID.randomUUID().toString();
+        String structureId = "UUID.randomUUID().toString()";
+        String jurisdictionId = UUID.randomUUID().toString();
+        when(prefsUtil.getCurrentPlanId()).thenReturn(planId);
+        when(prefsUtil.getCurrentOperationalArea()).thenReturn(jurisdictionId);
+        Location jurisdiction = new Location();
+        jurisdiction.setId(jurisdictionId);
+        Cache<Location> cache = mock(Cache.class);
+        when(cache.get(anyString(), any())).thenReturn(jurisdiction);
+        Whitebox.setInternalState(Utils.class, cache);
+        Whitebox.setInternalState(presenter, "structureId", structureId);
+        presenter.refreshTasks();
+        verify(interactor).findTasks(structureId, planId, jurisdictionId);
+        verify(prefsUtil).getCurrentPlanId();
+    }
 
     @Test
     public void testOnTasksFound() {

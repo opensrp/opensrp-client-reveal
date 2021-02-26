@@ -8,7 +8,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Client;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
@@ -40,13 +39,13 @@ import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNC
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
-import static org.smartregister.reveal.util.Constants.EventType.CHILD_REGISTRATION;
-import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
-import static org.smartregister.reveal.util.Constants.EventType.UPDATE_CHILD_REGISTRATION;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
+import static org.smartregister.reveal.util.Constants.EventType.CHILD_REGISTRATION;
+import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.PAOT_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.SUMMARY_EVENT_TYPES;
+import static org.smartregister.reveal.util.Constants.EventType.UPDATE_CHILD_REGISTRATION;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
@@ -118,7 +117,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 }
 
                 String eventType = event.getEventType();
-                if (eventType.equals(SPRAY_EVENT)) {
+                if (eventType.equals(SPRAY_EVENT) || eventType.equals(IRS_LITE_VERIFICATION)) {
                     operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.STRUCTURE_TYPE);
                 } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT) || eventType.equals(LARVAL_DIPPING_EVENT)
                         || eventType.equals(BEDNET_DISTRIBUTION_EVENT) ||
@@ -288,14 +287,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             if (localEvents && BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
                 task.setSyncStatus(BaseRepository.TYPE_Unsynced);
                 revealApplication.setSynced(false);
-            } else if (!localEvents && event.getServerVersion() != 0 && !CoreLibrary.getInstance().isPeerToPeerProcessing()) {
-                // for events synced from server and task exists mark events as being fully synced
-                eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
             }
             taskRepository.addOrUpdate(task);
             operationalAreaId = task.getGroupIdentifier();
-        } else if (!localEvents) {
-            eventClientRepository.markEventAsTaskUnprocessed(event.getFormSubmissionId());
         }
         return operationalAreaId;
     }

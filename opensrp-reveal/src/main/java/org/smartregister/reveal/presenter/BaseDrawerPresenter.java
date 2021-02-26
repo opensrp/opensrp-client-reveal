@@ -175,6 +175,12 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         view.setDistrict(prefsUtil.getCurrentDistrict());
         view.setFacility(prefsUtil.getCurrentFacility(), prefsUtil.getCurrentFacilityLevel());
 
+        if(org.smartregister.reveal.util.Utils.isZambiaIRSLite() || org.smartregister.reveal.util.Utils.isKenyaMDALite()) {
+            view.setFacility(prefsUtil.getCurrentDistrict(), "");
+        } else {
+            view.setFacility(prefsUtil.getCurrentFacility(), prefsUtil.getCurrentFacilityLevel());
+        }
+
         if (BuildConfig.BUILD_COUNTRY != Country.NTD_SCHOOL) {
             view.setOperationalArea(prefsUtil.getCurrentOperationalArea());
         } else {

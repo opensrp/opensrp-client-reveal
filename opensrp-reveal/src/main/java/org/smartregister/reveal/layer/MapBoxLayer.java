@@ -17,8 +17,8 @@ import io.ona.kujaku.plugin.switcher.layer.BaseLayer;
  * Created by samuelgithengi on 10/1/19.
  */
 public class MapBoxLayer extends BaseLayer {
-    private String satelliteLayerId = "mapbox-satellite";
-    private String satelliteSourceId = "mapbox://mapbox.satellite";
+    protected static final String satelliteLayerId = "mapbox-satellite";
+    protected static final String satelliteSourceId = "mapbox://mapbox.satellite";
 
     private LinkedHashSet<Layer> layers = new LinkedHashSet<>();
     private List<Source> sources = new ArrayList<>();

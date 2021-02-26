@@ -12,6 +12,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 
@@ -69,7 +70,7 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
             } else if (StringUtils.isNotBlank(taskDetails.getPersonTested())
                     && Intervention.BLOOD_SCREENING.equals(taskDetails.getTaskCode())
                     && BusinessStatus.COMPLETE.equals(taskDetails.getBusinessStatus())) {
-                String screening = context.getString(R.string.yes).equals(taskDetails.getPersonTested()) ?
+                String screening = Constants.JsonForm.YES.equals(taskDetails.getPersonTested()) ?
                         context.getString(R.string.tested) : context.getString(R.string.not_tested);
                 actionTextView.setText(screening);
             } else {
