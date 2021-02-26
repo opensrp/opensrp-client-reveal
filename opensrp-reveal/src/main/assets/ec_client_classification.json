@@ -170,7 +170,6 @@
             "field": "eventType",
             "field_value": "cdd_supervisor_daily_summary",
             "creates_case": [
-              "event_task",
               "ec_events"
             ]
           },
