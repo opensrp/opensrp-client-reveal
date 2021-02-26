@@ -186,6 +186,7 @@ public class EventRegisterFragment extends BaseDrawerRegisterFragment implements
         List<String> forms = new ArrayList<>();
         forms.add(Constants.SPRAY_EVENT);
         forms.addAll(EventType.SUMMARY_EVENT_TYPES);
+        forms.add(EventType.IRS_LITE_VERIFICATION);
         intent.putExtra(FILTER_CONFIGURATION, FilterConfiguration.builder()
                 .businessStatusLayoutEnabled(true)
                 .businessStatusList(Arrays.asList(BusinessStatus.COMPLETE, BusinessStatus.SPRAYED, BusinessStatus.NOT_SPRAYED, BusinessStatus.NOT_ELIGIBLE))

@@ -43,6 +43,8 @@ public interface UserLocationContract {
 
         void requestUserPassword();
 
+        void onGetUserLocation(Location location);
+
         ValidateUserLocationPresenter getLocationPresenter();
     }
 }

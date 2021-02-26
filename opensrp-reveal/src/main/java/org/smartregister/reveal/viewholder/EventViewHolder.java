@@ -127,11 +127,11 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
 
     public static class RegisterViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView eventDateTextView;
-        private TextView eventTypeTextView;
-        private TextView sopTextView;
-        private TextView householdTextView;
-        private TextView statusTextView;
+        protected TextView eventDateTextView;
+        protected TextView eventTypeTextView;
+        protected TextView sopTextView;
+        protected TextView householdTextView;
+        protected TextView statusTextView;
 
         public RegisterViewHolder(View itemView) {
             super(itemView);

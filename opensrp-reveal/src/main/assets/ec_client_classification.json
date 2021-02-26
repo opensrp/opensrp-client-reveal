@@ -15,6 +15,15 @@
           },
           {
             "field": "eventType",
+            "field_value": "irs_lite_verification",
+            "creates_case": [
+              "sprayed_structures",
+              "event_task",
+              "ec_events"
+            ]
+          },
+          {
+            "field": "eventType",
             "field_value": "Register_Structure",
             "creates_case": [
               "sprayed_structures"
@@ -153,6 +162,13 @@
           {
             "field": "eventType",
             "field_value": "verification",
+            "creates_case": [
+              "ec_events"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "tablet_accountability",
             "creates_case": [
               "ec_events"
             ]

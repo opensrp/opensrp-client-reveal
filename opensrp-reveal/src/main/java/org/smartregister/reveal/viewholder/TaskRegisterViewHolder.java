@@ -2,13 +2,14 @@ package org.smartregister.reveal.viewholder;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
@@ -18,6 +19,8 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 
 
@@ -92,10 +95,11 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
     public void setTaskAction(String actionLabel, TaskDetails task, CardDetails cardDetails, View.OnClickListener onClickListener) {
         actionView.setText(actionLabel);
 
+        boolean hasSingleGroupedTask = (BEDNET_DISTRIBUTION.equals(task.getTaskCode()) || BLOOD_SCREENING.equals(task.getTaskCode())) && task.getTaskCount() == 1;
         // registered family with multiple tasks
         if (cardDetails != null && task.getTaskCount() != null // task grouping only for FI
                 && !(REGISTER_FAMILY.equals(task.getTaskCode()) && Task.TaskStatus.READY.name().equals(task.getTaskStatus()))) { //skip if we have a READY family reg task
-            if (task.getTaskCount() > 1) {
+            if (task.getTaskCount() > 1 || hasSingleGroupedTask) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
 
 

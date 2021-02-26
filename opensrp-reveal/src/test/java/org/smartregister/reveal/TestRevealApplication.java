@@ -13,6 +13,7 @@ import org.smartregister.receiver.ValidateAssignmentReceiver;
 import org.smartregister.repository.Repository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.RevealSyncConfiguration;
 
 import java.util.concurrent.Executors;
 
@@ -30,7 +31,7 @@ public class TestRevealApplication extends RevealApplication {
         mInstance = this;
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
-        CoreLibrary.init(context);
+        CoreLibrary.init(context, new RevealSyncConfiguration());
         ConfigurableViewsLibrary.init(context);
 
         FamilyLibrary.init(context, getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
@@ -60,5 +61,10 @@ public class TestRevealApplication extends RevealApplication {
     public RealmDatabase getRealmDatabase(android.content.Context context) {
 
         return mock(RealmDatabase.class);
+    }
+
+    @Override
+    public void onTerminate() {
+        //do nothing
     }
 }
