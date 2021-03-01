@@ -460,7 +460,7 @@ public class RevealJsonFormUtils {
             LinkedHashMap<String, HashMap<String, String>> repeatingGroupMap = Utils.buildRepeatingGroup(field, obs);
             List<HashMap<String, String>> repeatingGroupMapList = Utils.generateListMapOfRepeatingGrp(repeatingGroupMap);
             new RepeatingGroupGenerator(formJSON.optJSONObject(JsonFormConstants.STEP1),
-                    JsonFormConstants.STEP1,
+                //    JsonFormConstants.STEP1,
                     field.optString(KEY),
                     new HashMap<>(),
                     Constants.JsonForm.REPEATING_GROUP_UNIQUE_ID,

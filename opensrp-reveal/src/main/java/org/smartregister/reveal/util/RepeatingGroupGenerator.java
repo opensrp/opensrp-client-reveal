@@ -33,11 +33,14 @@ public class RepeatingGroupGenerator {
     private Set<String> readOnlyFields;
     private String baseEntityId;
     //    private Map<String, List<Map<String, Object>>> rulesFileMap = new HashMap<>();
-    private String stepName;
+//    private String stepName; /*Uncomment this after native form lib upgrade*?
 
-
+    /**
+     * Argument stepName will be needed after native form lib upgrade
+     */
     public RepeatingGroupGenerator(@NonNull JSONObject step,
-                                   @NonNull String stepName, @NonNull String repeatingGroupKey,
+            /*@NonNull String stepName,*/
+                                   @NonNull String repeatingGroupKey,
                                    @NonNull Map<String, String> columnMap,
                                    @NonNull String uniqueKeyField,
                                    @NonNull List<HashMap<String, String>> storedValues) {
@@ -46,7 +49,7 @@ public class RepeatingGroupGenerator {
         this.storedValues = storedValues;
         this.step = step;
         this.columnMap = columnMap;
-        this.stepName = stepName;
+//        this.stepName = stepName;
     }
 
     public JSONObject getStep() {
@@ -93,7 +96,8 @@ public class RepeatingGroupGenerator {
                             repeatingGrpField.put(JsonFormConstants.VALUE, processColumnValue(columnMap.get(repeatingGrpFieldKey), entryMap.get(columnMap.get(repeatingGrpFieldKey))));
                     }
 
-                    updateFieldProperties(baseEntityIdModified, repeatingGrpField, repeatingGrpFieldKey);
+//                    updateFieldProperties(baseEntityIdModified, repeatingGrpField, repeatingGrpFieldKey);
+                    updateFieldProperties(repeatingGrpField, repeatingGrpFieldKey);
 
                     updateField(repeatingGrpField, entryMap);
                     repeatingGrpField.put(JsonFormConstants.KEY, repeatingGrpFieldKey + "_" + baseEntityIdModified);
@@ -103,7 +107,12 @@ public class RepeatingGroupGenerator {
         }
     }
 
-    private void updateFieldProperties(@NonNull String baseEntityIdModified, @NonNull JSONObject repeatingGrpField, @NonNull String repeatingGrpFieldKey) throws JSONException {
+    /**
+     * Argument baseEntityIdModified will be needed after native form lib upgrade
+     */
+    private void updateFieldProperties(
+            // @NonNull String baseEntityIdModified,
+            @NonNull JSONObject repeatingGrpField, @NonNull String repeatingGrpFieldKey) throws JSONException {
         if (readOnlyFields().contains(repeatingGrpFieldKey))
             repeatingGrpField.put(JsonFormConstants.READ_ONLY, "true");
 
