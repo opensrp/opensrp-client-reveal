@@ -1,7 +1,5 @@
 package org.smartregister.reveal.util;
 
-import com.vijay.jsonwizard.constants.JsonFormConstants;
-
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +19,7 @@ public class RepeatingGroupGeneratorTest {
     @Before
     public void setup() {
         repeatingGroupGenerator = new RepeatingGroupGenerator(new JSONObject(),
-                JsonFormConstants.STEP1,
+             //   JsonFormConstants.STEP1,
                 "",
                 new HashMap<>(),
                 Constants.JsonForm.REPEATING_GROUP_UNIQUE_ID,
