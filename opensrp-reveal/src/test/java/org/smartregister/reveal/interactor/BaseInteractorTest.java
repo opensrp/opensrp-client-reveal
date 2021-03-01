@@ -326,6 +326,7 @@ public class BaseInteractorTest extends BaseUnitTest {
         formObject.put("entity_id",entityId);
         JSONObject details = new JSONObject();
         details.put(DETAILS,details);
+        details.put(TASK_IDENTIFIER, taskId);
         JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), "business_status").put(VALUE, org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE);
         interactor.saveJsonForm(formObject.toString());
 
