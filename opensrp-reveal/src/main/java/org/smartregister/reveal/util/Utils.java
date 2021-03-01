@@ -479,10 +479,9 @@ public class Utils {
      * @param jsonObject
      * @param obs
      * @return
-     * @throws JSONException
      */
     public static LinkedHashMap<String, HashMap<String, String>> buildRepeatingGroup(@NonNull JSONObject jsonObject,
-                                                                                     List<Obs> obs) throws JSONException {
+                                                                                     List<Obs> obs) {
         LinkedHashMap<String, HashMap<String, String>> repeatingGroupMap = new LinkedHashMap<>();
         JSONArray jsonArray = jsonObject.optJSONArray(JsonFormConstants.VALUE);
         List<String> keysArrayList = new ArrayList<>();
@@ -498,18 +497,16 @@ public class Utils {
                 Obs valueField = obs.get(k);
                 String fieldKey = valueField.getFormSubmissionField();
                 List<Object> values = valueField.getValues();
-                if (values != null && !values.isEmpty()) {
-                    if (fieldKey.contains("_")) {
-                        fieldKey = fieldKey.substring(0, fieldKey.lastIndexOf("_"));
-                        if (keysArrayList.contains(fieldKey)) {
-                            String fieldValue = (String) values.get(0);
-                            if (StringUtils.isNotBlank(fieldValue)) {
-                                String fieldKeyId = valueField.getFormSubmissionField().substring(fieldKey.length() + 1);
-                                HashMap<String, String> hashMap = repeatingGroupMap.get(fieldKeyId) == null ? new HashMap<>() : repeatingGroupMap.get(fieldKeyId);
-                                hashMap.put(fieldKey, fieldValue);
-                                hashMap.put(Constants.JsonForm.REPEATING_GROUP_UNIQUE_ID, fieldKeyId);
-                                repeatingGroupMap.put(fieldKeyId, hashMap);
-                            }
+                if (values != null && !values.isEmpty() && fieldKey.contains("_")) {
+                    fieldKey = fieldKey.substring(0, fieldKey.lastIndexOf("_"));
+                    if (keysArrayList.contains(fieldKey)) {
+                        String fieldValue = (String) values.get(0);
+                        if (StringUtils.isNotBlank(fieldValue)) {
+                            String fieldKeyId = valueField.getFormSubmissionField().substring(fieldKey.length() + 1);
+                            HashMap<String, String> hashMap = repeatingGroupMap.get(fieldKeyId) == null ? new HashMap<>() : repeatingGroupMap.get(fieldKeyId);
+                            hashMap.put(fieldKey, fieldValue);
+                            hashMap.put(Constants.JsonForm.REPEATING_GROUP_UNIQUE_ID, fieldKeyId);
+                            repeatingGroupMap.put(fieldKeyId, hashMap);
                         }
                     }
                 }

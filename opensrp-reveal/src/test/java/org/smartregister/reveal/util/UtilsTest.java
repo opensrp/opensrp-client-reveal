@@ -3,18 +3,24 @@ package org.smartregister.reveal.util;
 import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.smartregister.domain.Obs;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -22,6 +28,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES;
@@ -225,6 +232,28 @@ public class UtilsTest {
 
         assertEquals("[[[101.887646,13.515772],[101.887932,13.515634],[101.888134,13.514786],[101.888607,13.514849]]]",actualCoords.toString());
         
+    }
+
+    @Test
+    public void testBuildRepeatingGroup(){
+        JSONObject mockedObject = mock(JSONObject.class);
+        JSONArray mockedJsonArray= mock(JSONArray.class);
+        Obs obs = mock(Obs.class);
+        List<Obs> mockedObs = new ArrayList<>();
+        mockedObs.add(obs);
+        List<Object> obsValues = new ArrayList<>();
+        obsValues.add("some value");
+
+        when(obs.getValues()).thenReturn(obsValues);
+        when(obs.getFormSubmissionField()).thenReturn("field_name");
+        when(mockedObject.optString(JsonFormConstants.KEY)).thenReturn("field");
+        when(mockedJsonArray.length()).thenReturn(1);
+        when(mockedJsonArray.optJSONObject(0)).thenReturn(mockedObject);
+        when(mockedObject.optJSONArray(JsonFormConstants.VALUE)).thenReturn(mockedJsonArray);
+
+        LinkedHashMap<String, HashMap<String, String>> repeatingGroup = Utils.buildRepeatingGroup(mockedObject, mockedObs);
+        assertEquals(1, repeatingGroup.size());
+        assertEquals("some value", repeatingGroup.get("name").get("field"));
     }
 
     @Test
