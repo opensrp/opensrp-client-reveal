@@ -503,12 +503,12 @@
         "label": "Has this task been completed?",
         "options": [
           {
-            "key": "No",
-            "text": "No"
-          },
-          {
             "key": "Yes",
             "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
           }
         ],
         "default": "No",
