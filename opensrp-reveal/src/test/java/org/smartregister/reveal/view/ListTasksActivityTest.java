@@ -1018,6 +1018,15 @@ public class ListTasksActivityTest extends BaseUnitTest {
     }
 
 
+    @Test
+    public void testDisplayEditCDDTaskCompleteDialog(){
+        listTasksActivity.displayEditCDDTaskCompleteDialog();
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+        TextView textView = alertDialog.findViewById(android.R.id.message);
+        assertEquals("Please confirm that the task is complete",textView.getText());
+    }
+
     private void setInterventionTypeForPlan(String interventionType) {
         String plan = UUID.randomUUID().toString();
         PreferencesUtil.getInstance().setCurrentPlan(plan);
