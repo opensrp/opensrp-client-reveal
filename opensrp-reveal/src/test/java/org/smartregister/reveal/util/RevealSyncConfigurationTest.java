@@ -1,5 +1,7 @@
 package org.smartregister.reveal.util;
 
+import android.util.Pair;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -151,6 +154,23 @@ public class RevealSyncConfigurationTest extends BaseUnitTest {
     @Test
     public void testGetAuthenticationActivity() {
         assertEquals(LoginActivity.class, syncConfiguration.getAuthenticationActivity());
+    }
+
+    @Test
+    public void testGetGlobalSettingsQueryParams() {
+        List<Pair<String, String>> getGlobalSettingsQueryParams = syncConfiguration.getGlobalSettingsQueryParams();
+        assertEquals("identifier", getGlobalSettingsQueryParams.get(0).first);
+        assertEquals("global_configs", getGlobalSettingsQueryParams.get(0).second);
+    }
+
+    @Test
+    public void testGetTopAllowedLocationLevel() {
+        assertNull(syncConfiguration.getTopAllowedLocationLevel());
+    }
+
+    @Test
+    public void testGetReadTimeout() {
+        assertEquals(300000, syncConfiguration.getReadTimeout());
     }
 
 }

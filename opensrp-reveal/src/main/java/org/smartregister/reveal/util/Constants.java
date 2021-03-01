@@ -715,6 +715,9 @@ public interface Constants {
 
         String VERSION = "version";
 
+        Object SERVER_VERSION = "server_version";
+
+        Object GEOJSON = "geojson";
     }
 
     interface UseContextCode {
