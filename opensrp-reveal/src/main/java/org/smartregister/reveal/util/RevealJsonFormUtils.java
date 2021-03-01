@@ -455,7 +455,7 @@ public class RevealJsonFormUtils {
         }
     }
 
-    private void generateRepeatingGroupFields(JSONObject field, List<Obs> obs, JSONObject formJSON) {
+    public void generateRepeatingGroupFields(JSONObject field, List<Obs> obs, JSONObject formJSON) {
         try {
             LinkedHashMap<String, HashMap<String, String>> repeatingGroupMap = Utils.buildRepeatingGroup(field, obs);
             List<HashMap<String, String>> repeatingGroupMapList = Utils.generateListMapOfRepeatingGrp(repeatingGroupMap);

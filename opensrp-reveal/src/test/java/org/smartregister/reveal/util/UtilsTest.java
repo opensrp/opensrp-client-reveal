@@ -257,6 +257,15 @@ public class UtilsTest {
     }
 
     @Test
+    public void testGenerateListMapOfRepeatingGrp() {
+        Map<String, HashMap<String, String>> testData = new HashMap<>();
+        testData.put("entry1", new HashMap<>());
+        testData.put("entry2", new HashMap<>());
+        List<HashMap<String, String>> resultData = Utils.generateListMapOfRepeatingGrp(testData);
+        assertEquals(testData.size(), resultData.size());
+    }
+
+    @Test
     public void testGetCoordsFromGeometryReturnsCorrectValuesFromMultiPolygon() {
 
         Feature originalFeature = Feature.fromJson(originalMultipolygonFeatureJson);
