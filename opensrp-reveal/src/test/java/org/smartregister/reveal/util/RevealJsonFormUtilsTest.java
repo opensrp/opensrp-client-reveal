@@ -511,6 +511,13 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
+    public void testGetFormName() {
+        revealJsonFormUtils = spy(revealJsonFormUtils);
+        revealJsonFormUtils.getFormName("X");
+        verify(revealJsonFormUtils).getFormName("X", null);
+    }
+
+    @Test
     public void testGenerateRepeatingGroupFields() throws JSONException {
         JSONObject mockedObject = mock(JSONObject.class);
         JSONObject formObject = mock(JSONObject.class);
