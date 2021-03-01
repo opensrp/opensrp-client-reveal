@@ -428,7 +428,7 @@ public interface Constants {
 
         String REFAPP_CASE_CONFIRMATION_FORM = "json.form/refapp_case_confirmation.json";
 
-        String CDD_SUPERVISOR_DAILY_SUMMARY_FORM = "community_drug_distributor_supervisor_daily_summary_form.json";
+        String CDD_SUPERVISOR_DAILY_SUMMARY_FORM = "json.form/community_drug_distributor_supervisor_daily_summary_form.json";
 
         String JSON_FORM_FOLDER = "json.form/";
 
