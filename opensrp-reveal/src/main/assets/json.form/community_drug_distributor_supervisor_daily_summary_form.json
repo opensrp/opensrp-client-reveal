@@ -510,6 +510,7 @@
             "text": "Yes"
           }
         ],
+        "default": "No",
         "v_required": {
           "value": true,
           "err": "This field is mandatory"
