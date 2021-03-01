@@ -360,7 +360,7 @@ public class RevealJsonFormUtils {
             formName = JsonForm.VERIFICATION_FORM_ZAMBIA;
         } else if (Constants.EventType.TABLET_ACCOUNTABILITY_EVENT.equals(encounterType)){
             formName = JsonForm.TABLET_ACCOUNTABILITY_FORM;
-        }else if(Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY.equals(encounterType)){
+        }else if(Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY.equals(encounterType) || Intervention.CDD_SUPERVISION.equals(taskCode)){
             return JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM;
         }
         return formName;
