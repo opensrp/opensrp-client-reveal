@@ -10,6 +10,7 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -471,6 +472,17 @@ public class Utils {
             default:
                 throw new IllegalStateException("Invalid Sync Entity");
         }
+    }
+    /**
+     * This method takes in a view and a predicate.
+     * Displays the view if predicate is true.
+     * Hides the view otherwise
+     * @param view The view to set visibility on
+     * @param shouldShow The boolean indicating whether to show the view or not
+     */
+    public static void showWhenTrue(View view, boolean shouldShow){
+        int visibility = shouldShow? View.VISIBLE: View.GONE;
+        view.setVisibility(visibility);
     }
 
     /**

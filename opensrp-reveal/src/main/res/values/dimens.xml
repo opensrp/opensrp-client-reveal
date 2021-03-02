@@ -67,6 +67,7 @@
 
     <dimen name="compass_top_margin">35dp</dimen>
     <dimen name="compass_left_margin">8dp</dimen>
+    <dimen name="map_status_label">20sp</dimen>
 
 </resources>
 
