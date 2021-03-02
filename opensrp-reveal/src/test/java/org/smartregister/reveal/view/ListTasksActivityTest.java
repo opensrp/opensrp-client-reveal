@@ -1020,11 +1020,16 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testDisplayEditCDDTaskCompleteDialog(){
+        Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
         listTasksActivity.displayEditCDDTaskCompleteDialog();
         AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
         assertTrue(alertDialog.isShowing());
         TextView textView = alertDialog.findViewById(android.R.id.message);
         assertEquals("Please confirm that the task is complete",textView.getText());
+
+        alertDialog.getButton(BUTTON_POSITIVE).performClick();
+        verify(listTaskPresenter).onEditCDDTaskCompleteStatusConfirmed(eq(true));
+        assertFalse(alertDialog.isShowing());
     }
 
     private void setInterventionTypeForPlan(String interventionType) {
