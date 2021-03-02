@@ -1,23 +1,19 @@
 package org.smartregister.reveal.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mapbox.mapboxsdk.offline.OfflineRegion;
-import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.OfflineMapModel;
-import org.smartregister.reveal.util.Utils;
+import org.smartregister.reveal.util.CustomOfflineRegionCallback;
 import org.smartregister.reveal.viewholder.DownloadedOfflineMapViewHolder;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<DownloadedOfflineMapViewHolder> {
@@ -25,6 +21,7 @@ public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<Downloaded
     private Context context;
 
     private View.OnClickListener offlineMapClickHandler;
+    private int selectedIndex = -1;
 
     private List<OfflineMapModel> offlineMapModels = new ArrayList<>();
 
@@ -45,46 +42,41 @@ public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<Downloaded
     public void onBindViewHolder(@NonNull DownloadedOfflineMapViewHolder viewHolder, int position) {
         OfflineMapModel offlineMapModel = offlineMapModels.get(position);
         viewHolder.setOfflineMapLabel(offlineMapModel.getDownloadAreaLabel());
-        viewHolder.setItemViewListener(offlineMapModel, offlineMapClickHandler);
+        viewHolder.setItemViewListener(offlineMapModel, (view) -> {
+            int oldValue = selectedIndex;
+            selectedIndex = position;
+            if(selectedIndex == oldValue) {
+                selectedIndex = -1;
+            }
+            offlineMapClickHandler.onClick(view);
+            if (oldValue >= 0) {
+                notifyItemChanged(oldValue);
+            }
+        });
+        if (selectedIndex == position) {
+            viewHolder.checkCheckBox(true);
+        } else {
+            switch (offlineMapModel.getOfflineMapStatus()) {
+                case READY:
+                case DOWNLOADED:
+                    viewHolder.checkCheckBox(false);
+                    break;
+                default:
+                    break;
 
-        switch (offlineMapModel.getOfflineMapStatus()) {
-            case READY:
-            case DOWNLOADED:
-                viewHolder.checkCheckBox(false);
-                break;
-            default:
-                break;
-
+            }
         }
 
-        displayOfflineMapSize(offlineMapModel, viewHolder);
+        displayOfflineMapSizeAndStatus(offlineMapModel, viewHolder);
 
     }
 
-    private void displayOfflineMapSize(OfflineMapModel offlineMapModel, DownloadedOfflineMapViewHolder viewHolder ) {
+    private void displayOfflineMapSizeAndStatus(OfflineMapModel offlineMapModel, DownloadedOfflineMapViewHolder viewHolder) {
         if (offlineMapModel == null || offlineMapModel.getOfflineRegion() == null) {
             return;
         }
 
-        offlineMapModel.getOfflineRegion().getStatus(new OfflineRegion.OfflineRegionStatusCallback() {
-            @Override
-            public void onStatus(OfflineRegionStatus status) {
-
-                viewHolder.displayDownloadSizeLabel(true);
-
-                String mapDownloadSize = Formatter.formatFileSize(context, status.getCompletedResourceSize());
-                Date dateCreated = offlineMapModel.getDateCreated() != null ? offlineMapModel.getDateCreated() : new Date();
-                String downloadDate = Utils.formatDate(dateCreated);
-
-                viewHolder.setDownloadedMapSize(context.getString(R.string.offline_map_size, mapDownloadSize, downloadDate));
-
-            }
-
-            @Override
-            public void onError(String error) {
-                // Do nothing
-            }
-        });
+        offlineMapModel.getOfflineRegion().getStatus(new CustomOfflineRegionCallback(viewHolder, offlineMapModel));
 
     }
 

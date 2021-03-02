@@ -1,5 +1,7 @@
 package org.smartregister.reveal.util;
 
+import android.view.View;
+
 import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -29,6 +31,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_GEO_JSON_CIRCLE_SIDES;
@@ -51,6 +54,7 @@ import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundary
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 import static org.smartregister.reveal.util.Utils.getResolveLocationTimeoutInSeconds;
 import static org.smartregister.reveal.util.Utils.isResidentialStructure;
+import static org.smartregister.reveal.util.Utils.showWhenTrue;
 import static org.smartregister.reveal.util.Utils.validateFarStructures;
 
 /**
@@ -273,6 +277,20 @@ public class UtilsTest {
 
         assertEquals("[[[[100.5244829,13.8576014],[100.5242194,13.8435594],[100.5151606,13.8435594],[100.5123746,13.8519458],[100.5244829,13.8576014]]]]",actualCoords.toString());
 
+    }
+
+    @Test
+    public void testShowWhenTrueCheckVisible() {
+        View view = mock(View.class);
+        showWhenTrue(view, true);
+        verify(view).setVisibility(View.VISIBLE);
+    }
+
+    @Test
+    public void testShowWhenTrueCheckGone() {
+        View view = mock(View.class);
+        showWhenTrue(view, false);
+        verify(view).setVisibility(View.GONE);
     }
 
 }
