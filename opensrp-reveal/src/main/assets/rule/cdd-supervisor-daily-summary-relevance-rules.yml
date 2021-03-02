@@ -1,0 +1,23 @@
+---
+name: step1_treated_male_1-4
+description: step1_treated_male_1
+priority: 1
+condition: "step1_ntd_treated.equals('SCH')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_treated_female_1-4
+description: step1_treated_female_1-4
+priority: 1
+condition: "step1_ntd_treated.equals('SCH')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_received_number
+description: step1_received_number
+priority: 1
+condition: "!step1_received_when.equals('None')"
+actions:
+  - "isRelevant = true"
+
+

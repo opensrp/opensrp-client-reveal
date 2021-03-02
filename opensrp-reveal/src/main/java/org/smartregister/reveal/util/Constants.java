@@ -224,6 +224,7 @@ public interface Constants {
                 LARVAL_DIPPING, BCC, CASE_CONFIRMATION,
                 PAOT, IRS, IRS_VERIFICATION);
 
+        String CDD_SUPERVISION = "CDD Supervision";
     }
 
 
@@ -256,6 +257,8 @@ public interface Constants {
         String VERIFICATION_EVENT = "verification";
 
         String CB_SPRAY_AREA_EVENT = "cb_spray_area";
+
+        String CDD_SUPERVISOR_DAILY_SUMMARY =  "cdd_supervisor_daily_summary";
 
         String TABLET_ACCOUNTABILITY_EVENT =  "tablet_accountability";
 
@@ -427,6 +430,8 @@ public interface Constants {
 
         String REFAPP_CASE_CONFIRMATION_FORM = "json.form/refapp_case_confirmation.json";
 
+        String CDD_SUPERVISOR_DAILY_SUMMARY_FORM = "json.form/community_drug_distributor_supervisor_daily_summary_form.json";
+
         String JSON_FORM_FOLDER = "json.form/";
 
         String LOCATION_COMPONENT_ACTIVE = "my_location_active";
@@ -544,6 +549,8 @@ public interface Constants {
 
         String HEALTH_WORKER_SUPERVISOR = "health_worker_supervisor";
 
+        String CDD_SUPERVISION_TASK_COMPLETE = "task_complete";
+
     }
 
     interface DateFormat {
@@ -567,6 +574,7 @@ public interface Constants {
         String REFAPP_EC_CLIENT_FIELDS = "ec_client_fields_refapp.json";
         String KENYA_EC_CLIENT_FIELDS = "ec_client_fields_kenya.json";
     }
+
 
 
     interface StructureType {

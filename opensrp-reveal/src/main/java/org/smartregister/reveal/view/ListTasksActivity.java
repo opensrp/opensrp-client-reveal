@@ -943,6 +943,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
+    public void displayEditCDDTaskCompleteDialog() {
+        AlertDialogUtils.displayNotificationWithCallback(this, R.string.edit_cdd_task_complete_status,
+                R.string.confirm_edit_cdd_task_complete_status, R.string.complete, R.string.incomplete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == BUTTON_POSITIVE) {
+                            listTaskPresenter.onEditCDDTaskCompleteStatusConfirmed(true);
+                        } else  {
+                            listTaskPresenter.onEditCDDTaskCompleteStatusConfirmed(false);
+                        }
+                        dialog.dismiss();
+                    }
+                });
+    }
+
+    @Override
     public void setNumberOfFilters(int numberOfFilters) {
         if (numberOfFilters > 0) {
             filterTasksFab.setVisibility(View.GONE);

@@ -86,7 +86,7 @@ public class RevealJsonFormUtils {
 
     public RevealJsonFormUtils() {
         nonEditablefields = new HashSet<>(Arrays.asList(JsonForm.HOUSEHOLD_ACCESSIBLE,
-                JsonForm.ABLE_TO_SPRAY_FIRST));
+                JsonForm.ABLE_TO_SPRAY_FIRST,JsonForm.CDD_SUPERVISION_TASK_COMPLETE));
     }
 
     public JSONObject getFormJSON(Context context, String formName, Feature feature, String sprayStatus, String familyHead) {
@@ -387,6 +387,8 @@ public class RevealJsonFormUtils {
             }
         } else if (Constants.EventType.TABLET_ACCOUNTABILITY_EVENT.equals(encounterType)){
             formName = JsonForm.TABLET_ACCOUNTABILITY_FORM;
+        }else if(Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY.equals(encounterType) || Intervention.CDD_SUPERVISION.equals(taskCode)){
+            return JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM;
         }
         return formName;
     }
@@ -470,6 +472,9 @@ public class RevealJsonFormUtils {
                             field.put(JsonFormConstants.READ_ONLY, true);
                             field.remove(JsonFormConstants.RELEVANCE);
                         }
+                    }
+                    if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY) && nonEditablefields.contains(key)){
+                        field.put(JsonFormConstants.READ_ONLY,true);
                     }
                 }
                 if (JsonFormConstants.REPEATING_GROUP.equals(field.optString(TYPE))) {
@@ -649,6 +654,13 @@ public class RevealJsonFormUtils {
                         PreferencesUtil.getInstance().getCurrentOperationalArea());
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.WARDS, fieldsMap.get(JsonForm.LOCATION), PreferencesUtil.getInstance().getCurrentOperationalArea());
                 break;
+            case JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        CONFIGURATION.HEALTH_WORKER_SUPERVISORS, fieldsMap.get(JsonForm.HEALTH_WORKER_SUPERVISOR),
+                        PreferencesUtil.getInstance().getCurrentOperationalArea());
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS, fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),
+                        PreferencesUtil.getInstance().getCurrentOperationalArea());
             default:
                 break;
         }

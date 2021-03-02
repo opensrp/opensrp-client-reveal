@@ -549,6 +549,7 @@ public class Utils {
         return BuildConfig.SELECT_JURISDICTION ? SELECT_JURISDICTION_MAX_SELECT_ZOOM_LEVEL  : MAX_SELECT_ZOOM_LEVEL;
     }
 
+
     public static boolean isKenyaMDALite() {
         return (BuildConfig.SELECT_JURISDICTION && Country.KENYA.equals(BuildConfig.BUILD_COUNTRY));
 

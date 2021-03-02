@@ -48,6 +48,7 @@ import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY;
 import static org.smartregister.reveal.util.Constants.EventType.DAILY_SUMMARY_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_FIELD_OFFICER_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
@@ -64,6 +65,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.Intervention.CDD_SUPERVISION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -643,6 +645,33 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         String actualFormName = revealJsonFormUtils.getFormName(TABLET_ACCOUNTABILITY_EVENT, null);
         assertEquals(JsonForm.TABLET_ACCOUNTABILITY_FORM, actualFormName);
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+
+    @Test
+    public void testGetCDDSupervisionForm(){
+        Whitebox.setInternalState(BuildConfig.class,BuildConfig.BUILD_COUNTRY,Country.KENYA);
+        String actualFormName = revealJsonFormUtils.getFormName(CDD_SUPERVISOR_DAILY_SUMMARY,null);
+        assertEquals(JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM,actualFormName);
+    }
+
+   @Test
+    public void testGetCDDSupervisionFormFromTaskCode(){
+        Whitebox.setInternalState(BuildConfig.class,BuildConfig.BUILD_COUNTRY,Country.KENYA);
+        String actualFormName = revealJsonFormUtils.getFormName(null,CDD_SUPERVISION);
+        assertEquals(JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM,actualFormName);
+    }
+    @Test
+    public void testPopulateCDDSupervisionFormWithServerOptions() throws JSONException {
+        JSONObject formJSON = new JSONObject(AssetHandler.readFileFromAssetsFolder(JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM, context));
+        revealJsonFormUtils = spy(revealJsonFormUtils);
+        Map<String,JSONObject> fieldsMap = revealJsonFormUtils.getFields(formJSON);
+        PreferencesUtil.getInstance().setCurrentOperationalArea("emuhaya");
+        revealJsonFormUtils.populateFormWithServerOptions(JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM,formJSON);
+
+        verify(revealJsonFormUtils).populateServerOptions(serverConfigs,Constants.CONFIGURATION.HEALTH_WORKER_SUPERVISORS,fieldsMap.get(JsonForm.HEALTH_WORKER_SUPERVISOR),"emuhaya");
+        verify(revealJsonFormUtils).populateServerOptions(serverConfigs,Constants.CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS,fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),"emuhaya");
+
     }
 }
 

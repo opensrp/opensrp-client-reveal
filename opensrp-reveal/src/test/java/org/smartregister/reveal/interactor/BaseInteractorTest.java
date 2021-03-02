@@ -63,7 +63,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
+import static org.smartregister.reveal.util.Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
+import static org.smartregister.reveal.util.Constants.JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.PAOT_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.APP_VERSION_NAME;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
@@ -313,6 +315,25 @@ public class BaseInteractorTest extends BaseUnitTest {
         verify(interactor, timeout(ASYNC_TIMEOUT)).handleLasteventFound(eventCaptor.capture());
         assertNotNull(eventCaptor.getValue());
         assertEquals(bloodScreeningEvent, eventCaptor.getValue());
+    }
+
+    @Test
+    public void testSaveCDDSupervisionForm() throws JSONException {
+        String form = AssetHandler.readFileFromAssetsFolder(CDD_SUPERVISOR_DAILY_SUMMARY_FORM,context);
+        JSONObject formObject = new JSONObject(form);
+        String entityId = UUID.randomUUID().toString();
+        String taskId = UUID.randomUUID().toString();
+        formObject.put("entity_id",entityId);
+        JSONObject details = new JSONObject();
+        details.put(DETAILS,details);
+        details.put(TASK_IDENTIFIER, taskId);
+        JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), "business_status").put(VALUE, org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE);
+        interactor.saveJsonForm(formObject.toString());
+
+        verify(eventClientRepository,timeout(ASYNC_TIMEOUT)).addEvent(anyString(),eventJSONObjectCaptor.capture());
+        verify(clientProcessor,timeout(ASYNC_TIMEOUT)).processClient(eventClientCaptor.capture(),eq(true));
+        assertEquals(CDD_SUPERVISOR_DAILY_SUMMARY,eventJSONObjectCaptor.getValue().get("eventType"));
+
     }
 
     private Cursor createFamilyCursor() {

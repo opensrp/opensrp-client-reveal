@@ -85,6 +85,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_XXX;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
+import static org.smartregister.reveal.util.Constants.Intervention.CDD_SUPERVISION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -115,6 +116,7 @@ import static org.smartregister.reveal.util.Utils.getMaxZoomLevel;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 import static org.smartregister.reveal.util.Utils.isFocusInvestigation;
 import static org.smartregister.reveal.util.Utils.isFocusInvestigationOrMDA;
+import static org.smartregister.reveal.util.Utils.isKenyaMDALite;
 import static org.smartregister.reveal.util.Utils.isZambiaIRSLite;
 import static org.smartregister.reveal.util.Utils.validateFarStructures;
 
@@ -330,7 +332,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         String code = getPropertyValue(feature, TASK_CODE);
         selectedFeatureInterventionType = code;
         if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || IRS_VERIFICATION.equals(code) || REGISTER_FAMILY.equals(code))
-                && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
+                && (NOT_VISITED.equals(businessStatus) || businessStatus == null) || shouldOpenCDDSupervisionForm(businessStatus, code)) {
             if (validateFarStructures()) {
                 validateUserLocation();
             } else {
@@ -353,9 +355,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
         } else if (IRS_VERIFICATION.equals(code) && isZambiaIRSLite()) {
             listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
-        } else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
+        }
+        else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
         }
+    }
+
+    private boolean shouldOpenCDDSupervisionForm(String businessStatus, String code) {
+        return CDD_SUPERVISION.equals(code) && isKenyaMDALite() && (NOT_VISITED.equals(businessStatus) || IN_PROGRESS.equals(businessStatus));
     }
 
     private void onFeatureSelectedByLongClick(Feature feature) {
@@ -366,6 +373,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         selectedFeatureInterventionType = code;
         if (INACTIVE.name().equals(status)) {
             listTaskView.displayToast(R.string.structure_is_inactive);
+        } if (isKenyaMDALite()) {
+            listTaskView.displayEditCDDTaskCompleteDialog();
         } else if (NOT_VISITED.equals(businessStatus) || !feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayMarkStructureInactiveDialog();
         } else {
@@ -428,6 +437,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         Intent intent = new Intent(listTaskView.getContext(), EditFociBoundaryActivity.class);
         listTaskView.getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void onCDDTaskCompleteStatusEdited(String businessStatus) {
+        updateFeatureTaskBusinessStatus(businessStatus);
     }
 
     @Override
@@ -546,6 +560,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             jsonFormUtils.populateFormWithServerOptions(formName, formJson);
         } else if(isZambiaIRSLite()) {
             jsonFormUtils.populateFormWithServerOptions(formName, formJson);
+        }else if(isKenyaMDALite()){
+            jsonFormUtils.populateFormWithServerOptions(formName, formJson);
         }
         listTaskView.startJsonForm(formJson);
     }
@@ -601,7 +617,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
         }
         listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
-        listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
+       if(!isKenyaMDALite()){
+           listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
+       }
     }
 
     @Override
@@ -733,6 +751,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
+    public void onEditCDDTaskCompleteStatusConfirmed(boolean isTaskComplete) {
+        listTaskInteractor.editCDDTaskCompleteStatus(selectedFeature, isTaskComplete);
+    }
+
+    @Override
     public void onStructureMarkedInactive() {
         for (Feature feature : getFeatureCollection().features()) {
             if (selectedFeature.id().equals(feature.id())) {
@@ -753,15 +776,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onStructureMarkedIneligible() {
-        for (Feature feature : getFeatureCollection().features()) {
-            if (selectedFeature.id().equals(feature.id())) {
-                feature.addStringProperty(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
-                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
-                break;
-            }
-        }
-
-        listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
+        updateFeatureTaskBusinessStatus(NOT_ELIGIBLE);
     }
 
     @Override
@@ -902,5 +917,17 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             return features.get(0);
         }
         return null;
+    }
+
+    private void updateFeatureTaskBusinessStatus(String businessStatus) {
+        for (Feature feature : getFeatureCollection().features()) {
+            if (selectedFeature.id().equals(feature.id())) {
+                feature.addStringProperty(TASK_BUSINESS_STATUS, businessStatus);
+                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, businessStatus);
+                break;
+            }
+        }
+
+        listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
     }
 }
