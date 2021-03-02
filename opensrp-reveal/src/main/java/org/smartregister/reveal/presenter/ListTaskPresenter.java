@@ -330,7 +330,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         String code = getPropertyValue(feature, TASK_CODE);
         selectedFeatureInterventionType = code;
         if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || IRS_VERIFICATION.equals(code) || REGISTER_FAMILY.equals(code))
-                && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
+                && (NOT_VISITED.equals(businessStatus) || businessStatus == null) || shouldOpenCDDSupervisionForm(businessStatus, code)) {
             if (validateFarStructures()) {
                 validateUserLocation();
             } else {
@@ -353,12 +353,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
         } else if (IRS_VERIFICATION.equals(code) && isZambiaIRSLite()) {
             listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
-        }else if (CDD_SUPERVISION.equals(code) && isKenyaMDALite() && (NOT_VISITED.equals(businessStatus) || IN_PROGRESS.equals(businessStatus))){
-            startForm(selectedFeature, null, selectedFeatureInterventionType);
         }
         else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
         }
+    }
+
+    private boolean shouldOpenCDDSupervisionForm(String businessStatus, String code) {
+        return CDD_SUPERVISION.equals(code) && isKenyaMDALite() && (NOT_VISITED.equals(businessStatus) || IN_PROGRESS.equals(businessStatus));
     }
 
     private void onFeatureSelectedByLongClick(Feature feature) {

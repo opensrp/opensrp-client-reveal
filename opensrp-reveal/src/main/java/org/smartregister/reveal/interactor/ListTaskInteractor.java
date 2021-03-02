@@ -135,7 +135,7 @@ public class ListTaskInteractor extends BaseInteractor {
         } else if (IRS_VERIFICATION.equals(interventionType)) {
             sql = String.format("SELECT %s, %s, %s, %s, %s, %s FROM %s WHERE id= ?",
                     TRUE_STRUCTURE, ELIGIBLE_STRUCTURE, REPORT_SPRAY, CHALK_SPRAY, STICKER_SPRAY, CARD_SPRAY, IRS_VERIFICATION_TABLE);
-        } else if (REGISTER_FAMILY.equals(interventionType) || CDD_SUPERVISION.equals(interventionType)) {
+        } else if (REGISTER_FAMILY.equals(interventionType)) {
             sql = String.format("SELECT %s, %s, %s FROM %s WHERE %s = ?",
                     BUSINESS_STATUS, AUTHORED_ON, OWNER, TASK_TABLE, FOR);
         }
