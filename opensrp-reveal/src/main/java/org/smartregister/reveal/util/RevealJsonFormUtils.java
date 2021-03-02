@@ -385,7 +385,6 @@ public class RevealJsonFormUtils {
             } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
                 formName = JsonForm.VERIFICATION_FORM_SENEGAL;
             }
-            formName = JsonForm.VERIFICATION_FORM_ZAMBIA;
         } else if (Constants.EventType.TABLET_ACCOUNTABILITY_EVENT.equals(encounterType)){
             formName = JsonForm.TABLET_ACCOUNTABILITY_FORM;
         }
