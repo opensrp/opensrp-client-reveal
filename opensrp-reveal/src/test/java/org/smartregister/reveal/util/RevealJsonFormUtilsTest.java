@@ -3,7 +3,9 @@ package org.smartregister.reveal.util;
 import android.content.Context;
 
 import com.mapbox.geojson.Feature;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -15,6 +17,7 @@ import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Geometry;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
+import org.smartregister.domain.Obs;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
@@ -36,6 +39,8 @@ import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -508,7 +513,39 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         verify(revealJsonFormUtils).populateServerOptions(serverConfigs, Constants.CONFIGURATION.FIELD_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER), "Lusaka");
     }
 
+
+    public void testGetFormName() {
+        revealJsonFormUtils = spy(revealJsonFormUtils);
+        revealJsonFormUtils.getFormName("X");
+        verify(revealJsonFormUtils).getFormName("X", null);
+    }
+
     @Test
+    public void testGenerateRepeatingGroupFields() throws JSONException {
+        JSONObject mockedObject = mock(JSONObject.class);
+        JSONObject formObject = mock(JSONObject.class);
+        JSONArray mockedJsonArray= mock(JSONArray.class);
+        Obs obs = mock(Obs.class);
+        List<Obs> mockedObs = new ArrayList<>();
+        mockedObs.add(obs);
+        List<Object> obsValues = new ArrayList<>();
+        obsValues.add("some value");
+
+        when(obs.getValues()).thenReturn(obsValues);
+        when(obs.getFormSubmissionField()).thenReturn("field_name");
+        when(mockedObject.optString(JsonFormConstants.KEY)).thenReturn("field");
+        when(mockedJsonArray.length()).thenReturn(1);
+        when(mockedJsonArray.optJSONObject(0)).thenReturn(mockedObject);
+        when(mockedObject.optJSONArray(JsonFormConstants.VALUE)).thenReturn(mockedJsonArray);
+        when(formObject.optJSONObject(JsonFormConstants.STEP1)).thenReturn(formObject);
+        when(formObject.optJSONArray(JsonFormConstants.FIELDS)).thenReturn(mockedJsonArray);
+        when(mockedObject.toString()).thenReturn("{\"type\"=\"label\", \"key\"=\"field\" }");
+
+        revealJsonFormUtils.generateRepeatingGroupFields(mockedObject, mockedObs, formObject);
+        verify(mockedJsonArray).put(anyInt(), any());
+    }
+  
+   @Test
     public void testGetTabletAccountabilityForm(){
         Whitebox.setInternalState(BuildConfig.class,BuildConfig.BUILD_COUNTRY,Country.KENYA);
         String actualFormName = revealJsonFormUtils.getFormName(TABLET_ACCOUNTABILITY_EVENT,null);
@@ -523,7 +560,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         assertEquals(JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM,actualFormName);
     }
 
-
+   @Test
     public void testGetCDDSupervisionFormFromTaskCode(){
         Whitebox.setInternalState(BuildConfig.class,BuildConfig.BUILD_COUNTRY,Country.KENYA);
         String actualFormName = revealJsonFormUtils.getFormName(null,CDD_SUPERVISION);
