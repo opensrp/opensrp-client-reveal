@@ -52,6 +52,7 @@ import static org.smartregister.family.util.Constants.KEY.FAMILY_HEAD_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.family.util.DBConstants.KEY.RELATIONAL_ID;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.AUTHORED_ON;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
@@ -62,11 +63,11 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ELIGIBLE_STRUCTURE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FIRST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID_;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_UPDATED_DATE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.OWNER;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_COMMENTS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
@@ -513,6 +514,31 @@ public class ListTaskInteractor extends BaseInteractor {
     @Override
     public void handleLasteventFound(org.smartregister.domain.Event event) {
         getPresenter().onEventFound(event);
+    }
+
+    public void editCDDTaskCompleteStatus(Feature feature, boolean isTaskComplete) {
+
+        String taskIdentifier = getPropertyValue(feature, TASK_IDENTIFIER);
+
+        Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
+        Map<String, String> details = new HashMap<>();
+        details.put(TASK_IDENTIFIER, taskIdentifier);
+        details.put(Constants.Properties.TASK_BUSINESS_STATUS, task.getBusinessStatus());
+        details.put(Constants.Properties.TASK_STATUS, task.getStatus().name());
+        details.put(Constants.Properties.LOCATION_ID, feature.id());
+        details.put(Constants.Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
+        String businessStatus = isTaskComplete ? COMPLETE : IN_PROGRESS;
+        task.setBusinessStatus(businessStatus);
+        task.setStatus(Task.TaskStatus.COMPLETED);
+        task.setLastModified(new DateTime());
+        taskRepository.addOrUpdate(task);
+        revealApplication.setSynced(false);
+        appExecutors.mainThread().execute(new Runnable() {
+            @Override
+            public void run() {
+                ((ListTaskPresenter) presenterCallBack).onCDDTaskCompleteStatusEdited(businessStatus);
+            }
+        });
     }
 
 }

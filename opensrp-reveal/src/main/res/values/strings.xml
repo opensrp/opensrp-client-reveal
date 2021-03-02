@@ -435,5 +435,7 @@
     <string name="view_paot_details">View Details</string>
     <string name="tablet_accountability_form">Enter Tablet Accountability Form</string>
 
+    <string name="edit_cdd_task_complete_status">Edit Task Complete Status</string>
+    <string name="confirm_edit_cdd_task_complete_status">Please confirm that the task is complete</string>
 
 </resources>

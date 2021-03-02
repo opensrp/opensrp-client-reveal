@@ -289,6 +289,22 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
 
     @Test
+    public void testEditCDDTaskCompleteStatus(){
+        Feature feature = TestingUtils.getStructure();
+        String taskIdentifier = getPropertyValue(feature, TASK_IDENTIFIER);
+        Task task = TestingUtils.getTask("entity-id");
+        task.setIdentifier(taskIdentifier);
+        when(taskRepository.getTaskByIdentifier(anyString())).thenReturn(task);
+        listTaskInteractor.editCDDTaskCompleteStatus(feature,true);
+        assertEquals(COMPLETED,task.getStatus());
+        assertEquals("Complete",task.getBusinessStatus());
+        listTaskInteractor.editCDDTaskCompleteStatus(feature,false);
+        assertEquals(COMPLETED,task.getStatus());
+        assertEquals("In Progress",task.getBusinessStatus());
+
+    }
+
+    @Test
     public void testFetchPAOTFormDetails() {
         String feature = UUID.randomUUID().toString();
         when(database.rawQuery(any(), any())).thenReturn(createPAOTCursor());
