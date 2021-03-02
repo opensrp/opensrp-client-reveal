@@ -8,6 +8,7 @@ import java.util.Date;
 
 public class OfflineMapModel {
 
+    public boolean isPending;
     private Location location;
 
     private OfflineRegion offlineRegion;

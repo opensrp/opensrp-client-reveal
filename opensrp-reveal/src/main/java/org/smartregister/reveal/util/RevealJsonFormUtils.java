@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,6 +58,7 @@ import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.JsonForm.JSON_FORM_FOLDER;
@@ -71,6 +73,7 @@ import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.ZONE;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
+import static org.smartregister.reveal.util.Utils.isZambiaIRSLite;
 
 
 /**
@@ -341,7 +344,10 @@ public class RevealJsonFormUtils {
             } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.REFAPP_MDA_DISPENSE_FORM;
             }
-        } else if (IRS_VERIFICATION.equals(encounterType) || Intervention.IRS_VERIFICATION.equals(taskCode)) {
+        } else if (IRS_VERIFICATION.equals(encounterType) || Intervention.IRS_VERIFICATION.equals(taskCode) || IRS_LITE_VERIFICATION.equals(encounterType)) {
+            if(isZambiaIRSLite()) {
+                return JsonForm.IRS_LITE_VERIFICATION;
+            }
             formName = JsonForm.ZAMBIA_IRS_VERIFICATION_FORM;
         } else if (Constants.EventType.DAILY_SUMMARY_EVENT.equals(encounterType)) {
             if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
@@ -379,6 +385,9 @@ public class RevealJsonFormUtils {
             } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
                 formName = JsonForm.VERIFICATION_FORM_SENEGAL;
             }
+            formName = JsonForm.VERIFICATION_FORM_ZAMBIA;
+        } else if (Constants.EventType.TABLET_ACCOUNTABILITY_EVENT.equals(encounterType)){
+            formName = JsonForm.TABLET_ACCOUNTABILITY_FORM;
         }
         return formName;
     }
@@ -452,17 +461,39 @@ public class RevealJsonFormUtils {
                             keys.put(optionsKeyValue.get(value.toString()));
                         }
                         field.put(VALUE, keys);
-                    } else
-                        field.put(VALUE, obs.getValue());
-                    if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA && nonEditablefields.contains(key)
-                            && YES.equalsIgnoreCase(obs.getValue().toString())) {
-                        field.put(JsonFormConstants.READ_ONLY, true);
-                        field.remove(JsonFormConstants.RELEVANCE);
+
+                    } else {
+                        if (!JsonFormConstants.REPEATING_GROUP.equals(field.optString(TYPE))) {
+                            field.put(VALUE, obs.getValue());
+                        }
+                        if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA && nonEditablefields.contains(key)
+                                && YES.equalsIgnoreCase(obs.getValue().toString())) {
+                            field.put(JsonFormConstants.READ_ONLY, true);
+                            field.remove(JsonFormConstants.RELEVANCE);
+                        }
                     }
+                }
+                if (JsonFormConstants.REPEATING_GROUP.equals(field.optString(TYPE))) {
+                    generateRepeatingGroupFields(field, event.getObs(), formJSON);
                 }
             } catch (JSONException e) {
                 Timber.e(e);
             }
+        }
+    }
+
+    public void generateRepeatingGroupFields(JSONObject field, List<Obs> obs, JSONObject formJSON) {
+        try {
+            LinkedHashMap<String, HashMap<String, String>> repeatingGroupMap = Utils.buildRepeatingGroup(field, obs);
+            List<HashMap<String, String>> repeatingGroupMapList = Utils.generateListMapOfRepeatingGrp(repeatingGroupMap);
+            new RepeatingGroupGenerator(formJSON.optJSONObject(JsonFormConstants.STEP1),
+                //    JsonFormConstants.STEP1,
+                    field.optString(KEY),
+                    new HashMap<>(),
+                    Constants.JsonForm.REPEATING_GROUP_UNIQUE_ID,
+                    repeatingGroupMapList).init();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -519,11 +550,12 @@ public class RevealJsonFormUtils {
 
     public void populateFormWithServerOptions(String formName, JSONObject formJSON) {
 
-        Map<String, JSONObject> fieldsMap = getFields(formJSON);
+            Map<String, JSONObject> fieldsMap = getFields(formJSON);
         switch (formName) {
 
             case JsonForm.IRS_SA_DECISION_ZAMBIA:
             case JsonForm.CB_SPRAY_AREA_ZAMBIA:
+            case JsonForm.IRS_LITE_VERIFICATION:
             case JsonForm.MOBILIZATION_FORM_ZAMBIA:
             case JsonForm.IRS_SA_DECISION_SENEGAL:
             case JsonForm.CB_SPRAY_AREA_SENEGAL:
@@ -555,7 +587,9 @@ public class RevealJsonFormUtils {
                             dataCollector);
                 }
 
-                if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
+                if (isZambiaIRSLite()) {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA));
+                } else if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(HEALTH_CENTER));
                 } else {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
@@ -576,7 +610,9 @@ public class RevealJsonFormUtils {
                             dataCollector.split(":")[0]);
                 }
 
-                if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
+                if (isZambiaIRSLite()) {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA));
+                } else if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(HEALTH_CENTER));
                 } else {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
@@ -603,6 +639,16 @@ public class RevealJsonFormUtils {
                             dataCollector);
                 }
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DISTRICTS, fieldsMap.get(JsonForm.DISTRICT), PreferencesUtil.getInstance().getCurrentProvince());
+                break;
+
+            case JsonForm.TABLET_ACCOUNTABILITY_FORM:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        CONFIGURATION.HEALTH_WORKER_SUPERVISORS, fieldsMap.get(JsonForm.HEALTH_WORKER_SUPERVISOR),
+                        PreferencesUtil.getInstance().getCurrentOperationalArea());
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS, fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),
+                        PreferencesUtil.getInstance().getCurrentOperationalArea());
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.WARDS, fieldsMap.get(JsonForm.LOCATION), PreferencesUtil.getInstance().getCurrentOperationalArea());
                 break;
             default:
                 break;

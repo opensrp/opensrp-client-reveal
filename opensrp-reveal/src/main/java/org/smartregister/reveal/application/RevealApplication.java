@@ -123,11 +123,11 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
         context.updateCommonFtsObject(createCommonFtsObject());
-        forceRemoteLoginForInConsistentUsername();
         // Initialize Modules
         Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
         P2POptions p2POptions = new P2POptions(true);
         CoreLibrary.init(context, new RevealSyncConfiguration(), BuildConfig.BUILD_TIMESTAMP, p2POptions);
+        forceRemoteLoginForInConsistentUsername();
         if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.NAMIBIA_EC_CLIENT_FIELDS);
         } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
@@ -138,6 +138,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.REFAPP_EC_CLIENT_FIELDS);
         } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL) {
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.SENEGAL_EC_CLIENT_FIELDS);
+        } else if(BuildConfig.BUILD_COUNTRY == Country.KENYA){
+            CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.KENYA_EC_CLIENT_FIELDS);
         }
         ConfigurableViewsLibrary.init(context);
         FamilyLibrary.init(context, getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);

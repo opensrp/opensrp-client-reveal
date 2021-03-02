@@ -3,6 +3,7 @@ package org.smartregister.reveal.task;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -37,6 +38,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
 
     private final PreferencesUtil prefsUtil;
     private final SQLiteDatabase sqLiteDatabase;
+    private LinearLayout indicatorParentView;
     private ProgressIndicatorView progressIndicator;
     private ProgressIndicatorView progressIndicator2;
     private ProgressIndicatorView progressIndicator3;
@@ -54,6 +56,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
 
     @Override
     protected void onPreExecute() {
+        indicatorParentView = activity.findViewById(R.id.progressIndicatorViewsParent);
         progressIndicator = activity.findViewById(R.id.progressIndicatorView);
         progressIndicator2 = activity.findViewById(R.id.progressIndicatorView2);
         progressIndicator3 = activity.findViewById(R.id.progressIndicatorView3);
@@ -65,7 +68,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     protected IndicatorDetails doInBackground(Void... params) {
         IndicatorDetails indicatorDetails = null;
 
-        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.SENEGAL) {
+        if ((BuildConfig.BUILD_COUNTRY == Country.ZAMBIA && !Utils.isZambiaIRSLite()) || BuildConfig.BUILD_COUNTRY == Country.SENEGAL) {
             indicatorDetails = IndicatorUtils.processIndicators(this.tasks);
             indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateSprayIndicators(this.activity, indicatorDetails));
         } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
@@ -106,6 +109,11 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             Timber.w("progress indicator or indicators is null");
             return;
         }
+
+        if(Utils.isZambiaIRSLite()) {
+            indicatorParentView.setVisibility(View.GONE);
+        }
+
         if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.SENEGAL) {
             progressIndicator.setProgress(indicatorDetails.getProgress());
             progressIndicator.setTitle(this.activity.getString(R.string.n_percent, indicatorDetails.getProgress()));

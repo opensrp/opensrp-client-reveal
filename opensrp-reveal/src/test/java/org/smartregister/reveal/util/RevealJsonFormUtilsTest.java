@@ -3,36 +3,61 @@ package org.smartregister.reveal.util;
 import android.content.Context;
 
 import com.mapbox.geojson.Feature;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Geometry;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
+import org.smartregister.domain.Obs;
+import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.DAILY_SUMMARY_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.IRS_FIELD_OFFICER_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.IRS_SA_DECISION_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
+import static org.smartregister.reveal.util.Constants.EventType.MDA_ADHERENCE;
+import static org.smartregister.reveal.util.Constants.EventType.MDA_DISPENSE;
+import static org.smartregister.reveal.util.Constants.EventType.MOBILIZATION_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.PAOT_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.TEAM_LEADER_DOS_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.VERIFICATION_EVENT;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
@@ -47,6 +72,7 @@ import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.TASK_RESET_EVENT;
+import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 /**
@@ -56,11 +82,19 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
 
     private RevealJsonFormUtils revealJsonFormUtils;
 
+    @Mock
+    private LocationHelper locationHelper;
+
+    @Mock
+    private Map<String, Object> serverConfigs;
+
     private Context context = RuntimeEnvironment.application;
 
     @Before
     public void setUp() {
         revealJsonFormUtils = new RevealJsonFormUtils();
+        Whitebox.setInternalState(revealJsonFormUtils, "locationHelper", locationHelper);
+        Whitebox.setInternalState(RevealApplication.getInstance(), "serverConfigs", serverConfigs);
     }
 
     @Test
@@ -340,5 +374,172 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         assertEquals(JsonForm.ADD_STRUCTURE_FORM, actualFormName);
     }
 
+    @Test
+    public void testGetThailandAddStructureForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        String actualFormName = revealJsonFormUtils.getFormName(REGISTER_STRUCTURE_EVENT, null);
+        assertEquals(JsonForm.THAILAND_ADD_STRUCTURE_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetNamibiaAddStructureForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
+        String actualFormName = revealJsonFormUtils.getFormName(REGISTER_STRUCTURE_EVENT, null);
+        assertEquals(JsonForm.NAMIBIA_ADD_STRUCTURE_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetRefAppPAOTForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        String actualFormName = revealJsonFormUtils.getFormName(PAOT_EVENT, null);
+        assertEquals(JsonForm.REFAPP_PAOT_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetZambiaMDAAdherenceForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        String actualFormName = revealJsonFormUtils.getFormName(MDA_ADHERENCE, Constants.Intervention.MDA_ADHERENCE);
+        assertEquals(JsonForm.ZAMBIA_MDA_ADHERENCE_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetRefAppMDAAdherenceForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        String actualFormName = revealJsonFormUtils.getFormName(MDA_ADHERENCE, Constants.Intervention.MDA_ADHERENCE);
+        assertEquals(JsonForm.REFAPP_MDA_ADHERENCE_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetZambiaMDADispenceForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        String actualFormName = revealJsonFormUtils.getFormName(MDA_DISPENSE, Constants.Intervention.MDA_DISPENSE);
+        assertEquals(JsonForm.ZAMBIA_MDA_DISPENSE_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetRefAppMDADispenseForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        String actualFormName = revealJsonFormUtils.getFormName(MDA_DISPENSE, Constants.Intervention.MDA_DISPENSE);
+        assertEquals(JsonForm.REFAPP_MDA_DISPENSE_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetZambiaIRSVerificationForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", Boolean.FALSE);
+        String actualFormName = revealJsonFormUtils.getFormName(IRS_VERIFICATION, null);
+        assertEquals(JsonForm.ZAMBIA_IRS_VERIFICATION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetZambiaDailySummaryForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        String actualFormName = revealJsonFormUtils.getFormName(DAILY_SUMMARY_EVENT, null);
+        assertEquals(JsonForm.DAILY_SUMMARY_ZAMBIA, actualFormName);
+    }
+
+    @Test
+    public void testGetZambiaIRSFieldOfficerForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        String actualFormName = revealJsonFormUtils.getFormName(IRS_FIELD_OFFICER_EVENT, null);
+        assertEquals(JsonForm.IRS_FIELD_OFFICER_ZAMBIA, actualFormName);
+    }
+
+    @Test
+    public void testGetZambiaIRSSADecisionForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        String actualFormName = revealJsonFormUtils.getFormName(IRS_SA_DECISION_EVENT, null);
+        assertEquals(JsonForm.IRS_SA_DECISION_ZAMBIA, actualFormName);
+    }
+
+    @Test
+    public void testGetZambiaMobilizationForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        String actualFormName = revealJsonFormUtils.getFormName(MOBILIZATION_EVENT, null);
+        assertEquals(JsonForm.MOBILIZATION_FORM_ZAMBIA, actualFormName);
+    }
+
+    @Test
+    public void testGetTeamLeaderDOSForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        String actualFormName = revealJsonFormUtils.getFormName(TEAM_LEADER_DOS_EVENT, null);
+        assertEquals(JsonForm.TEAM_LEADER_DOS_ZAMBIA, actualFormName);
+    }
+
+    @Test
+    public void testGetVerificationEventForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        String actualFormName = revealJsonFormUtils.getFormName(VERIFICATION_EVENT, null);
+        assertEquals(JsonForm.VERIFICATION_FORM_ZAMBIA, actualFormName);
+    }
+
+    @Test
+    public void testPopulateUserAssignedLocations() throws Exception {
+
+        JSONObject formJSON = new JSONObject(AssetHandler.readFileFromAssetsFolder(JsonForm.TEAM_LEADER_DOS_ZAMBIA, context));
+        List<String> defaultLocations = new ArrayList<>();
+        defaultLocations.add("Lusaka");
+        when(locationHelper.generateDefaultLocationHierarchy(any())).thenReturn(defaultLocations);
+
+        Whitebox.invokeMethod(revealJsonFormUtils, "populateUserAssignedLocations", formJSON, JsonForm.ZONE, Arrays.asList(HEALTH_CENTER));
+        assertEquals("Lusaka", JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJSON), JsonForm.ZONE).getJSONArray("keys").get(0));
+        assertEquals("Lusaka", JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJSON), JsonForm.ZONE).getJSONArray("values").get(0));
+    }
+
+    @Test
+    public void testPopulateIRSSADecisionFormWithServerOptions() throws JSONException {
+
+        JSONObject formJSON = new JSONObject(AssetHandler.readFileFromAssetsFolder(JsonForm.IRS_SA_DECISION_ZAMBIA, context));
+        revealJsonFormUtils = spy(revealJsonFormUtils);
+        Map<String, JSONObject> fieldsMap = revealJsonFormUtils.getFields(formJSON);
+        PreferencesUtil.getInstance().setCurrentDistrict("Lusaka");
+        revealJsonFormUtils.populateFormWithServerOptions(JsonForm.IRS_SA_DECISION_ZAMBIA,formJSON);
+
+        verify(revealJsonFormUtils).populateServerOptions(serverConfigs, Constants.CONFIGURATION.SUPERVISORS, fieldsMap.get(JsonForm.SUPERVISOR), "Lusaka");
+    }
+
+    @Test
+    public void testPopulateVerificationFormWithServerOptions() throws JSONException {
+
+        JSONObject formJSON = new JSONObject(AssetHandler.readFileFromAssetsFolder(JsonForm.VERIFICATION_FORM_ZAMBIA, context));
+        revealJsonFormUtils = spy(revealJsonFormUtils);
+        Map<String, JSONObject> fieldsMap = revealJsonFormUtils.getFields(formJSON);
+        PreferencesUtil.getInstance().setCurrentDistrict("Lusaka");
+        revealJsonFormUtils.populateFormWithServerOptions(JsonForm.VERIFICATION_FORM_ZAMBIA,formJSON);
+
+        verify(revealJsonFormUtils).populateServerOptions(serverConfigs, Constants.CONFIGURATION.FIELD_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER), "Lusaka");
+    }
+
+    @Test
+    public void testGetFormName() {
+        revealJsonFormUtils = spy(revealJsonFormUtils);
+        revealJsonFormUtils.getFormName("X");
+        verify(revealJsonFormUtils).getFormName("X", null);
+    }
+
+    @Test
+    public void testGenerateRepeatingGroupFields() throws JSONException {
+        JSONObject mockedObject = mock(JSONObject.class);
+        JSONObject formObject = mock(JSONObject.class);
+        JSONArray mockedJsonArray= mock(JSONArray.class);
+        Obs obs = mock(Obs.class);
+        List<Obs> mockedObs = new ArrayList<>();
+        mockedObs.add(obs);
+        List<Object> obsValues = new ArrayList<>();
+        obsValues.add("some value");
+
+        when(obs.getValues()).thenReturn(obsValues);
+        when(obs.getFormSubmissionField()).thenReturn("field_name");
+        when(mockedObject.optString(JsonFormConstants.KEY)).thenReturn("field");
+        when(mockedJsonArray.length()).thenReturn(1);
+        when(mockedJsonArray.optJSONObject(0)).thenReturn(mockedObject);
+        when(mockedObject.optJSONArray(JsonFormConstants.VALUE)).thenReturn(mockedJsonArray);
+        when(formObject.optJSONObject(JsonFormConstants.STEP1)).thenReturn(formObject);
+        when(formObject.optJSONArray(JsonFormConstants.FIELDS)).thenReturn(mockedJsonArray);
+        when(mockedObject.toString()).thenReturn("{\"type\"=\"label\", \"key\"=\"field\" }");
+
+        revealJsonFormUtils.generateRepeatingGroupFields(mockedObject, mockedObs, formObject);
+        verify(mockedJsonArray).put(anyInt(), any());
+    }
 }
 

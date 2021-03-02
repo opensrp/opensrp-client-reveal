@@ -219,7 +219,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         String interventionType = null;
         try {
             encounterType = jsonForm.getString(ENCOUNTER_TYPE);
-            if (encounterType.equals(SPRAY_EVENT)) {
+            if (encounterType.equals(SPRAY_EVENT) || encounterType.equals(EventType.IRS_LITE_VERIFICATION)) {
                 interventionType = IRS;
             } else if (encounterType.equals(MOSQUITO_COLLECTION_EVENT)) {
                 interventionType = MOSQUITO_COLLECTION;

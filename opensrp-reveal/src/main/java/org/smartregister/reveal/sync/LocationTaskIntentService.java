@@ -2,17 +2,16 @@ package org.smartregister.reveal.sync;
 
 import android.app.IntentService;
 import android.content.Intent;
+
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
-import org.smartregister.domain.db.EventClient;
 import org.smartregister.job.SyncServiceJob;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
-import org.smartregister.repository.BaseRepository;
-import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.RevealSyncSettingsServiceJob;
@@ -25,10 +24,7 @@ import org.smartregister.sync.helper.TaskServiceHelper;
 import org.smartregister.util.NetworkUtils;
 import org.smartregister.util.SyncUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import timber.log.Timber;
 
@@ -85,8 +81,8 @@ public class LocationTaskIntentService extends IntentService {
         return super.onStartCommand(intent, flags, startId);
     }
 
-
-    private void doSync() {
+    @VisibleForTesting
+    protected void doSync() {
         sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
         LocationServiceHelper locationServiceHelper = new LocationServiceHelper(
                 RevealApplication.getInstance().getLocationRepository(),
@@ -113,8 +109,6 @@ public class LocationTaskIntentService extends IntentService {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCED);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         }
-
-        clientProcessEvents(extractStructureIds(syncedStructures, synchedTasks));
 
         if (!org.smartregister.util.Utils.isEmptyCollection(syncedStructures)
                 || !org.smartregister.util.Utils.isEmptyCollection(synchedTasks)) {
@@ -162,41 +156,5 @@ public class LocationTaskIntentService extends IntentService {
         return false;
     }
 
-    /**
-     * Extracts a set of Structures ids from syched structures and tasks
-     *
-     * @param syncedStructures the list of synced structures
-     * @param synchedTasks     the list of synced tasks
-     * @return a set of baseEntityIds
-     */
-    private Set<String> extractStructureIds(List<Location> syncedStructures, List<Task> synchedTasks) {
-        Set<String> structureIds = new HashSet<>();
-        if (!org.smartregister.util.Utils.isEmptyCollection(syncedStructures)) {
-            for (Location structure : syncedStructures) {
-                structureIds.add(structure.getId());
-            }
-        }
-        if (!org.smartregister.util.Utils.isEmptyCollection(synchedTasks)) {
-            for (Task task : synchedTasks) {
-                structureIds.add(task.getForEntity());
-            }
-        }
-        return structureIds;
-    }
-
-    /**
-     * Clients Processes events of a set of structure baseEntityIds that have the task status TYPE_Task_Unprocessed
-     *
-     * @param syncedStructuresIds the set of structure baseEntityIds to client process
-     */
-    private void clientProcessEvents(Set<String> syncedStructuresIds) {
-        if (org.smartregister.util.Utils.isEmptyCollection(syncedStructuresIds))
-            return;
-        EventClientRepository ecRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
-        List<EventClient> eventClients = ecRepository.getEventsByBaseEntityIdsAndSyncStatus(BaseRepository.TYPE_Task_Unprocessed, new ArrayList<>(syncedStructuresIds));
-        if (!eventClients.isEmpty()) {
-            RevealClientProcessor.getInstance(getApplicationContext()).processClient(eventClients);
-        }
-    }
 
 }

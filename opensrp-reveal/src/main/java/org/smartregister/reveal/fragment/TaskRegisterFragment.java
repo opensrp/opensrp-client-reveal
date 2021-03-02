@@ -68,6 +68,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_S
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
+import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.TASK_RESET_INTERVENTIONS;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 
@@ -213,8 +214,9 @@ public class TaskRegisterFragment extends BaseDrawerRegisterFragment implements 
     }
 
     public void displayTaskActionDialog(TaskDetails details, View view) {
+        int viewDetailsStringResource =  PAOT.equals(details.getTaskCode()) ? R.string.view_paot_details : R.string.view_details;
         AlertDialogUtils.displayNotificationWithCallback(getContext(), R.string.select_task_action,
-                R.string.choose_action, R.string.view_details, R.string.undo, new Dialog.OnClickListener() {
+                R.string.choose_action, viewDetailsStringResource, R.string.undo, new Dialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {

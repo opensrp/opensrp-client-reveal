@@ -106,6 +106,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
@@ -118,9 +119,10 @@ import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 import static org.smartregister.reveal.util.Utils.displayDistanceScale;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
-import static org.smartregister.reveal.util.Utils.getSyncEntityString;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
+import static org.smartregister.reveal.util.Utils.getSyncEntityString;
+import static org.smartregister.reveal.util.Utils.isZambiaIRSLite;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -277,6 +279,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.register_family).setOnClickListener(this);
 
+        if(BuildConfig.SELECT_JURISDICTION) {
+            findViewById(R.id.btn_add_structure).setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -332,7 +337,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
-                Style.Builder builder = new Style.Builder().fromUri(getString(R.string.reveal_satellite_style));
+                String satelliteStyle = BuildConfig.SELECT_JURISDICTION ? getString(R.string.reveal_select_jurisdiction_style) : getString(R.string.reveal_satellite_style);
+                Style.Builder builder = new Style.Builder().fromUri(satelliteStyle);
                 mapboxMap.setStyle(builder, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
@@ -487,7 +493,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
         } else if (v.getId() == R.id.btn_undo_spray) {
-            displayResetInterventionTaskDialog(IRS);
+            if(isZambiaIRSLite()) {
+                displayResetInterventionTaskDialog(IRS_VERIFICATION);
+            } else {
+                displayResetInterventionTaskDialog(IRS);
+            }
+
         } else if (v.getId() == R.id.btn_record_mosquito_collection) {
             listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
         } else if (v.getId() == R.id.btn_undo_mosquito_collection) {
@@ -642,6 +653,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
+                if (BuildConfig.SELECT_JURISDICTION ) {
+                    RevealApplication.getInstance().getAppExecutors().mainThread().execute(() -> {
+                        for (Feature feature : featureCollection.features()) {
+                            createIRSLiteOABoundaryLayer(feature);
+                        }
+                    });
+                }
+
                 if (listTaskPresenter.getInterventionLabel() == R.string.focus_investigation && revealMapHelper.getIndexCaseLineLayer() == null) {
                     revealMapHelper.addIndexCaseLayers(mMapboxMap, getContext(), featureCollection);
                 } else {
@@ -658,6 +677,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 .setLabelColorInt(Color.WHITE)
                 .setBoundaryColor(Color.WHITE)
                 .setBoundaryWidth(getResources().getDimension(R.dimen.operational_area_boundary_width)).build();
+    }
+
+    private void createIRSLiteOABoundaryLayer(Feature operationalArea) {
+        if (operationalArea != null) {
+
+            BoundaryLayer.Builder boundaryBuilder = new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalArea))
+                    .setLabelProperty(org.smartregister.reveal.util.Constants.Map.NAME_PROPERTY)
+                    .setLabelTextSize(getResources().getDimension(R.dimen.operational_area_boundary_text_size))
+                    .setLabelColorInt(Color.WHITE)
+                    .setBoundaryWidth(getResources().getDimension(R.dimen.irs_lite_operational_area_boundary_width));
+            kujakuMapView.addLayer(boundaryBuilder.build());
+        }
     }
 
     @Override
@@ -702,7 +733,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void displaySelectedFeature(Feature feature, LatLng clickedPoint, double zoomlevel) {
         adjustFocusPoint(clickedPoint);
         kujakuMapView.centerMap(clickedPoint, ANIMATE_TO_LOCATION_DURATION, zoomlevel);
-        if (selectedGeoJsonSource != null) {
+        if (selectedGeoJsonSource != null && !BuildConfig.SELECT_JURISDICTION) {
             selectedGeoJsonSource.setGeoJson(FeatureCollection.fromFeature(feature));
         }
     }
@@ -827,11 +858,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         }
         syncProgressSnackbar.dismiss();
         if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_failed, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(rootView, org.smartregister.R.string.sync_failed, Snackbar.LENGTH_SHORT).show();
         } else if (fetchStatus.equals(FetchStatus.nothingFetched)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_SHORT).show();
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_SHORT).show();
         }
     }
 

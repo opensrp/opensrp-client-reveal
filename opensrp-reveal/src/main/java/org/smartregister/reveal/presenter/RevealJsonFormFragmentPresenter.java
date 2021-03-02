@@ -204,12 +204,16 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         super.onItemSelected(parent, view, position, id);
         String key = (String) parent.getTag(R.id.key);
         Map<String, JSONObject> fields = jsonFormUtils.getFields(jsonFormView.getmJSONObject());
+        cascadeSelect(key, JsonForm.DISTRICT, Constants.CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_BELONG));
+        cascadeSelect(key, JsonForm.DISTRICT, Constants.CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_SEEK));
         cascadeSelect(key, JsonForm.DATA_COLLECTOR, Constants.CONFIGURATION.SPRAY_OPERATORS, fields.get(JsonForm.SPRAY_OPERATOR_CODE));
         cascadeSelect(key, JsonForm.HFC_BELONG, Constants.CONFIGURATION.COMMUNITY_HEALTH_WORKERS, fields.get(JsonForm.CHW_NAME));
         cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_CORDINATORS, fields.get(JsonForm.COORDINATOR_NAME));
         cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_ENUMERATORS, fields.get(JsonForm.DATA_COLLECTOR));
         cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_COMMUNITY_HEALTH_WORKERS, fields.get(JsonForm.CHW_NAME));
         cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_ADHERENCE_OFFICERS, fields.get(JsonForm.ADHERENCE_NAME));
+        cascadeSelect(key,JsonForm.LOCATION,Constants.CONFIGURATION.HEALTH_WORKER_SUPERVISORS,fields.get(JsonForm.HEALTH_WORKER_SUPERVISOR));
+        cascadeSelect(key,JsonForm.LOCATION,Constants.CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS,fields.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME));
     }
 
     private void cascadeSelect(String key, String parentWidget, String configurationKey, JSONObject childWidget) {
@@ -242,5 +246,8 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         }
     }
 
+    public void onGetUserLocation(Location location) {
+        //empty
+    }
 
 }

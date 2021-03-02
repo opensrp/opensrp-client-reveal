@@ -7,9 +7,11 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.util.ReflectionHelpers;
 import org.robolectric.util.ReflectionHelpers.ClassParameter;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.UserLocationContract;
 
@@ -41,6 +43,7 @@ public class ValidateUserLocationPresenterTest extends BaseUnitTest {
         location = new Location("test");
         location.setLatitude(12.1212);
         location.setLongitude(67.2232);
+        Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", false);
     }
 
     @Test
