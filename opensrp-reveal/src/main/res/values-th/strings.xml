@@ -286,5 +286,7 @@
     <string name="search_hint">ใส่ชื่อบุคคลหรือบ้านเลขที่เพื่อค้นหา</string>
     <string name="x_years">%1$dปี</string>
     <string name="view_paot_details">เปลี่ยนคำเป็น “แก้ไข”</string>
+    <string name="downloading">กำลังดาวน์โหลด</string>
+    <string name="map_download_progress">กำลังดาวน์โหลด: %,.2f %%</string>
 
 </resources>
