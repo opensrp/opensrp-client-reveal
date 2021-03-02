@@ -516,6 +516,10 @@ public interface Constants {
 
         String MOP_UP = "mopup";
 
+        String GENERATED_GRP = "generated_group";
+
+        String REPEATING_GROUP_UNIQUE_ID = "unique_id";
+
         String YES =  "Yes";
 
         String LOCATION = "location";
