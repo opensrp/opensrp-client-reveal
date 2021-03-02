@@ -513,7 +513,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         verify(revealJsonFormUtils).populateServerOptions(serverConfigs, Constants.CONFIGURATION.FIELD_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER), "Lusaka");
     }
 
-
+    @Test
     public void testGetFormName() {
         revealJsonFormUtils = spy(revealJsonFormUtils);
         revealJsonFormUtils.getFormName("X");
