@@ -82,7 +82,6 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAM
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TRUE_STRUCTURE;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
-import static org.smartregister.reveal.util.Constants.Intervention.CDD_SUPERVISION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;

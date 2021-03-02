@@ -615,7 +615,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
         }
         listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
-        listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
+       if(!isKenyaMDALite()){
+           listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
+       }
     }
 
     @Override
