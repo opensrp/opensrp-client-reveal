@@ -2,10 +2,11 @@ package org.smartregister.reveal.fragment;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,8 +21,11 @@ import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowProgressDialog;
 import org.robolectric.shadows.ShadowToast;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.presenter.OtherFormsFragmentPresenter;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Country;
 
 import java.util.ArrayList;
 
@@ -116,65 +120,170 @@ public class SummaryFormsFragmentTest extends BaseUnitTest {
 
     @Test
     public void testOpeningDailySummaryForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         Whitebox.setInternalState(fragment, "presenter", presenter);
         Button btnDailySummary = Whitebox.getInternalState(fragment, "btnDailySummary");
         doNothing().when(presenter).showBasicForm(anyString());
         btnDailySummary.performClick();
         verify(presenter).showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.DAILY_SUMMARY_ZAMBIA);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
     public void testOpeningTeamLeaderDosForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         Whitebox.setInternalState(fragment, "presenter", presenter);
         Button btnTeamLeaderDos = Whitebox.getInternalState(fragment, "btnTeamLeaderDos");
         doNothing().when(presenter).showBasicForm(anyString());
         btnTeamLeaderDos.performClick();
         verify(presenter).showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.TEAM_LEADER_DOS_ZAMBIA);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
     public void testOpeningCBSprayForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         Whitebox.setInternalState(fragment, "presenter", presenter);
         Button btnCbSprayArea = Whitebox.getInternalState(fragment, "btnCbSprayArea");
         doNothing().when(presenter).showBasicForm(anyString());
         btnCbSprayArea.performClick();
         verify(presenter).showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.CB_SPRAY_AREA_ZAMBIA);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
     public void testOpeningIRSSADecisionForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         Whitebox.setInternalState(fragment, "presenter", presenter);
         Button btnIrsSaDecision = Whitebox.getInternalState(fragment, "btnIrsSaDecision");
         doNothing().when(presenter).showBasicForm(anyString());
         btnIrsSaDecision.performClick();
         verify(presenter).showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.IRS_SA_DECISION_ZAMBIA);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
     public void testOpeningMobilizationForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         Whitebox.setInternalState(fragment, "presenter", presenter);
         Button btnMobilization = Whitebox.getInternalState(fragment, "btnMobilization");
         doNothing().when(presenter).showBasicForm(anyString());
         btnMobilization.performClick();
         verify(presenter).showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.MOBILIZATION_FORM_ZAMBIA);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
     public void testOpeningIRSFieldOfficerForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         Whitebox.setInternalState(fragment, "presenter", presenter);
         Button btnIrsFieldOfficer = Whitebox.getInternalState(fragment, "btnIrsFieldOfficer");
         doNothing().when(presenter).showBasicForm(anyString());
         btnIrsFieldOfficer.performClick();
         verify(presenter).showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.IRS_FIELD_OFFICER_ZAMBIA);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
     public void testOpeningVerificationForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         Whitebox.setInternalState(fragment, "presenter", presenter);
         Button btnVerificationForm = Whitebox.getInternalState(fragment, "btnVerificationForm");
         doNothing().when(presenter).showBasicForm(anyString());
         btnVerificationForm.performClick();
         verify(presenter).showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.VERIFICATION_FORM_ZAMBIA);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testOpeningSenegalDailySummaryForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        Whitebox.setInternalState(fragment, "presenter", presenter);
+        Button btnDailySummary = Whitebox.getInternalState(fragment, "btnDailySummary");
+        doNothing().when(presenter).showBasicForm(anyString());
+        btnDailySummary.performClick();
+        verify(presenter).showBasicForm(Constants.JsonForm.DAILY_SUMMARY_SENEGAL);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testOpeningSenegalTeamLeaderDosForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        Whitebox.setInternalState(fragment, "presenter", presenter);
+        Button btnTeamLeaderDos = Whitebox.getInternalState(fragment, "btnTeamLeaderDos");
+        doNothing().when(presenter).showBasicForm(anyString());
+        btnTeamLeaderDos.performClick();
+        verify(presenter).showBasicForm(Constants.JsonForm.TEAM_LEADER_DOS_SENEGAL);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testOpeningSenegalCBSprayForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        Whitebox.setInternalState(fragment, "presenter", presenter);
+        Button btnCbSprayArea = Whitebox.getInternalState(fragment, "btnCbSprayArea");
+        doNothing().when(presenter).showBasicForm(anyString());
+        btnCbSprayArea.performClick();
+        verify(presenter).showBasicForm(Constants.JsonForm.CB_SPRAY_AREA_SENEGAL);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testOpeningSenegalIRSSADecisionForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        Whitebox.setInternalState(fragment, "presenter", presenter);
+        Button btnIrsSaDecision = Whitebox.getInternalState(fragment, "btnIrsSaDecision");
+        doNothing().when(presenter).showBasicForm(anyString());
+        btnIrsSaDecision.performClick();
+        verify(presenter).showBasicForm(Constants.JsonForm.IRS_SA_DECISION_SENEGAL);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testOpeningSnegalMobilizationForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        Whitebox.setInternalState(fragment, "presenter", presenter);
+        Button btnMobilization = Whitebox.getInternalState(fragment, "btnMobilization");
+        doNothing().when(presenter).showBasicForm(anyString());
+        btnMobilization.performClick();
+        verify(presenter).showBasicForm(Constants.JsonForm.MOBILIZATION_FORM_SENEGAL);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testOpeningSenegalIRSFieldOfficerForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        Whitebox.setInternalState(fragment, "presenter", presenter);
+        Button btnIrsFieldOfficer = Whitebox.getInternalState(fragment, "btnIrsFieldOfficer");
+        doNothing().when(presenter).showBasicForm(anyString());
+        btnIrsFieldOfficer.performClick();
+        verify(presenter).showBasicForm(Constants.JsonForm.IRS_FIELD_OFFICER_SENEGAL);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testOpeningSenegalVerificationForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        Whitebox.setInternalState(fragment, "presenter", presenter);
+        Button btnVerificationForm = Whitebox.getInternalState(fragment, "btnVerificationForm");
+        doNothing().when(presenter).showBasicForm(anyString());
+        btnVerificationForm.performClick();
+        verify(presenter).showBasicForm(Constants.JsonForm.VERIFICATION_FORM_SENEGAL);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
 }
