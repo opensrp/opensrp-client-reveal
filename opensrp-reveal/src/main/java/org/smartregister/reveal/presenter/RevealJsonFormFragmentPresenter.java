@@ -100,7 +100,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                 String fieldKey = mStepName + " (" + mStepDetails.optString("title") + ") :" + key;
                 if (!validationStatus.isValid()) {
                     getInvalidFields().put(fieldKey, validationStatus);
-                    showError = false;
+                    showError = !validationStatus.getErrorMessage().equalsIgnoreCase(getView().getContext().getResources().getString(R.string.register_outside_boundary_warning));
                 } else {
                     getInvalidFields().remove(fieldKey);
                     if (isFormValid() && validateFarStructures()) {
