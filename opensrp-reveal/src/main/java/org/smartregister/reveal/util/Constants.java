@@ -366,6 +366,8 @@ public interface Constants {
 
         String SPRAY_FORM_ZAMBIA = "json.form/zambia_spray_form.json";
 
+        String SPRAY_FORM_SENEGAL = "json.form/senegal_spray_form.json";
+
         String LARVAL_DIPPING_FORM = "json.form/larval_dipping_form.json";
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
@@ -486,6 +488,20 @@ public interface Constants {
 
         String VERIFICATION_FORM_ZAMBIA = "json.form/zambia_verification_form.json";
 
+        String DAILY_SUMMARY_SENEGAL= "json.form/senegal_daily_summary.json";
+
+        String TEAM_LEADER_DOS_SENEGAL = "json.form/senegal_team_leader_dos.json";
+
+        String CB_SPRAY_AREA_SENEGAL = "json.form/senegal_cb_spray_area.json";
+
+        String IRS_SA_DECISION_SENEGAL = "json.form/senegal_irs_sa_decision.json";
+
+        String MOBILIZATION_FORM_SENEGAL = "json.form/senegal_mobilization_form.json";
+
+        String IRS_FIELD_OFFICER_SENEGAL = "json.form/senegal_irs_field_officer.json";
+
+        String VERIFICATION_FORM_SENEGAL = "json.form/senegal_verification_form.json";
+
         String TABLET_ACCOUNTABILITY_FORM = "json.form/tablet_accountability_form.json";
 
         String SPRAY_OPERATOR_CODE = "sprayop_code";
@@ -554,6 +570,7 @@ public interface Constants {
         String NAMIBIA_EC_CLIENT_FIELDS = "ec_client_fields_namibia.json";
         String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
         String ZAMBIA_EC_CLIENT_FIELDS = "ec_client_fields_zambia.json";
+        String SENEGAL_EC_CLIENT_FIELDS = "ec_client_fields_senegal.json";
         String REFAPP_EC_CLIENT_FIELDS = "ec_client_fields_refapp.json";
         String KENYA_EC_CLIENT_FIELDS = "ec_client_fields_kenya.json";
     }

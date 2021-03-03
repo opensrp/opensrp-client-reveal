@@ -1,0 +1,286 @@
+---
+name: step1_eligibility
+description: step1_eligibility
+priority: 1
+condition: "!(step1_nonresidential_type.equals('noStructure') || step1_nonresidential_type.equals('notHabitable'))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_residential_noteligible
+description: step1_residential_noteligible
+priority: 1
+condition: "step1_structure_type.equals('residential') && step1_eligibility.equals('notEligible')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notreseidential_eligible
+description: step1_notreseidential_eligible
+priority: 1
+condition: "step1_structure_type.equals('nonResidential') && step1_eligibility.equals('eligible')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_rooms_sprayed
+description: step1_rooms_sprayed
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_partiallysprayed_reason
+description: step1_partiallysprayed_reason
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) < Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_totalpop_toaster_error
+description: step1_sprayed_totalpop_toaster_error
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && step1_sprayed_males != null && step1_sprayed_females != null && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) == 0)"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_totalpop_toaster_info
+description: step1_sprayed_totalpop_toaster_info
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && step1_sprayed_males != null && step1_sprayed_females != null && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) > 0)"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_totalpop_approve
+description: step1_sprayed_totalpop_approve
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && step1_sprayed_males != null && step1_sprayed_females != null && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) > 0)"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_pregwomen
+description: step1_sprayed_pregwomen
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_childrenU5
+description: step1_sprayed_childrenU5
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0))) > 1"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_nets_available
+description: step1_sprayed_nets_available
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_nets_use
+description: step1_sprayed_nets_use
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_childrenU5_validation_err
+description: step1_sprayed_childrenU5_validation_err
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0))) > 0 && (step1_sprayed_childrenU5 > (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0))) || step1_sprayed_childrenU5 > (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) - Integer.valueOf(helper.ifNull(step1_sprayed_pregwomen,0))))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_nets_use_validation_err
+description: step1_sprayed_nets_use_validation_err
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_sprayed_nets_use,0)) > (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0))) || Integer.valueOf(helper.ifNull(step1_sprayed_nets_use,0)) > Integer.valueOf(helper.ifNull(step1_sprayed_nets_available,9999)))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_total_uNet
+description: step1_sprayed_total_uNet
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_sprayed_nets_use,0)) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_total_uNet_validation_err
+description: step1_sprayed_total_uNet_validation_err
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_sprayed_nets_use,0)) > 0 && (Integer.valueOf(helper.ifNull(step1_sprayed_total_uNet,0)) > (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0))) || Integer.valueOf(helper.ifNull(step1_sprayed_total_uNet,0)) < Integer.valueOf(helper.ifNull(step1_sprayed_nets_use,0)))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_pregwomen_uNet
+description: step1_sprayed_pregwomen_uNet
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_sprayed_nets_use,0)) > 0 && Integer.valueOf(helper.ifNull(step1_sprayed_pregwomen,0)) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_pregwomen_uNet_validation_err
+description: step1_sprayed_pregwomen_uNet_validation_err
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_sprayed_nets_use,0)) > 0 && Integer.valueOf(helper.ifNull(step1_sprayed_pregwomen,0)) > 0 && ( Integer.valueOf(helper.ifNull(step1_sprayed_pregwomen_uNet,0)) > Integer.valueOf(helper.ifNull(step1_sprayed_pregwomen,0)) || Integer.valueOf(helper.ifNull(step1_sprayed_pregwomen_uNet,0)) > Integer.valueOf(helper.ifNull(step1_sprayed_total_uNet,0)) )"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_u5_uNet
+description: step1_sprayed_u5_uNet
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && helper.ifNull(step1_sprayed_nets_use,0) > 0 && Integer.valueOf(helper.ifNull(step1_sprayed_childrenU5,0)) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_u5_uNet_validation_err
+description: step1_sprayed_u5_uNet_validation_err
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_sprayed_u5_uNet,0)) > Integer.valueOf(helper.ifNull(step1_sprayed_childrenU5,0)) || Integer.valueOf(helper.ifNull(step1_sprayed_u5_uNet,0)) > (Integer.valueOf(helper.ifNull(step1_sprayed_total_uNet,0)) - Integer.valueOf(helper.ifNull(step1_sprayed_pregwomen_uNet,0))))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_serial_number
+description: step1_serial_number
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && step1_new_sachet.equals('yes')"
+actions:
+  - "isRelevant = true"
+
+
+
+
+
+
+---
+name: step1_notsprayed_totalpop_toaster_error
+description: step1_notsprayed_totalpop_toaster_error
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && step1_notsprayed_males != null && step1_notsprayed_females != null && (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0)) == 0)"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notsprayed_pregwomen
+description: step1_notsprayed_pregwomen
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_notsprayed_females,0)) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notsprayed_childrenU5
+description: step1_notsprayed_childrenU5
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0))) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notsprayed_nets_available
+description: step1_notsprayed_nets_available
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notsprayed_nets_use
+description: step1_notsprayed_nets_use
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_notsprayed_nets_available,0)) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notsprayed_childrenU5_validation_err
+description: step1_notsprayed_childrenU5_validation_err
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0))) > 0 && (Integer.valueOf(helper.ifNull(step1_notsprayed_childrenU5,0)) > (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0))) || Integer.valueOf(helper.ifNull(step1_notsprayed_childrenU5,0)) > (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0)) - Integer.valueOf(helper.ifNull(step1_notsprayed_pregwomen,0))))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notsprayed_nets_use_validation_err
+description: step1_notsprayed_nets_use_validation_err
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_notsprayed_nets_use,0)) > (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0))) || Integer.valueOf(helper.ifNull(step1_notsprayed_nets_use,0)) > Integer.valueOf(helper.ifNull(step1_notsprayed_nets_available,9999)))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notsprayed_total_uNet
+description: step1_notsprayed_total_uNet
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_notsprayed_nets_use,0)) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notsprayed_total_uNet_validation_err
+description: step1_notsprayed_total_uNet_validation_err
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_notsprayed_nets_use,0)) > 0 && (Integer.valueOf(helper.ifNull(step1_notsprayed_total_uNet,0)) > (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0))) || Integer.valueOf(helper.ifNull(step1_notsprayed_total_uNet,0)) < Integer.valueOf(helper.ifNull(step1_notsprayed_nets_use,0)))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notsprayed_pregwomen_uNet
+description: step1_notsprayed_pregwomen_uNet
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_notsprayed_nets_use,0)) > 0 && Integer.valueOf(helper.ifNull(step1_notsprayed_pregwomen,0)) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notsprayed_pregwomen_uNet_validation_err
+description: step1_notsprayed_pregwomen_uNet_validation_err
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_notsprayed_nets_use,0)) > 0 && Integer.valueOf(helper.ifNull(step1_notsprayed_pregwomen,0)) > 0 && ( Integer.valueOf(helper.ifNull(step1_notsprayed_pregwomen_uNet,0)) > Integer.valueOf(helper.ifNull(step1_notsprayed_pregwomen,0)) || Integer.valueOf(helper.ifNull(step1_notsprayed_pregwomen_uNet,0)) > Integer.valueOf(helper.ifNull(step1_notsprayed_total_uNet,0)) )"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notsprayed_u5_uNet
+description: step1_notsprayed_u5_uNet
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_notsprayed_nets_use,0)) > 0 && Integer.valueOf(helper.ifNull(step1_notsprayed_childrenU5,0)) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notsprayed_u5_uNet_validation_err
+description: step1_notsprayed_u5_uNet_validation_err
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_notsprayed_u5_uNet,0)) > Integer.valueOf(helper.ifNull(step1_notsprayed_childrenU5,0)) || Integer.valueOf(helper.ifNull(step1_notsprayed_u5_uNet,0)) > (Integer.valueOf(helper.ifNull(step1_notsprayed_total_uNet,0)) - Integer.valueOf(helper.ifNull(step1_notsprayed_pregwomen_uNet,0))))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_structure_num
+description: step1_structure_num
+priority: 1
+condition: "step1_eligibility.equals('eligible') && !( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
+actions:
+  - "isRelevant = true"
+---
+name: step1_refused_reason
+description: step1_refused_reason
+priority: 1
+condition: "step1_notsprayed_reason.equals('refused') && ( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sbc
+description: step1_sbc
+priority: 1
+condition: "step1_eligibility.equals('eligible') && ( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
+actions:
+  - "isRelevant = true"
+---
+name: step1_health_service
+description: step1_health_service
+priority: 1
+condition: "step1_eligibility.equals('eligible') && ( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
+actions:
+  - "isRelevant = true"
+---
+name: step1_preferred_source
+description: step1_preferred_source
+priority: 1
+condition: "step1_sbc.equals('Yes') && step1_about_malaria.equals('Yes') && ( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
+actions:
+  - "isRelevant = true"
+---
+name: step1_partiallysprayed_reason
+description: step1_partiallysprayed_reason
+priority: 1
+condition: "Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) > Integer.valueOf(helper.ifNull(step1_rooms_eligible,0))"
+actions:
+  - "isRelevant = true"

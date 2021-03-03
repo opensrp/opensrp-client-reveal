@@ -51,6 +51,7 @@ import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATIO
 import static org.smartregister.reveal.util.Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY;
 import static org.smartregister.reveal.util.Constants.EventType.DAILY_SUMMARY_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_FIELD_OFFICER_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_SA_DECISION_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.MDA_ADHERENCE;
@@ -544,12 +545,106 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         revealJsonFormUtils.generateRepeatingGroupFields(mockedObject, mockedObs, formObject);
         verify(mockedJsonArray).put(anyInt(), any());
     }
-  
-   @Test
-    public void testGetTabletAccountabilityForm(){
-        Whitebox.setInternalState(BuildConfig.class,BuildConfig.BUILD_COUNTRY,Country.KENYA);
-        String actualFormName = revealJsonFormUtils.getFormName(TABLET_ACCOUNTABILITY_EVENT,null);
-        assertEquals(JsonForm.TABLET_ACCOUNTABILITY_FORM,actualFormName);
+
+    @Test
+    public void testGetSEnegalSprayForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, null);
+        assertEquals(JsonForm.SPRAY_FORM_SENEGAL, actualFormName);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testGetThailandMosquitoCollectionForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        String actualFormName = revealJsonFormUtils.getFormName(MOSQUITO_COLLECTION_EVENT, null);
+        assertEquals(JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM, actualFormName);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testGetRefAppMosquitoCollectionForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        String actualFormName = revealJsonFormUtils.getFormName(MOSQUITO_COLLECTION_EVENT, null);
+        assertEquals(JsonForm.REFAPP_MOSQUITO_COLLECTION_FORM, actualFormName);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testGetIRSLiteVerificationForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", true);
+        String actualFormName = revealJsonFormUtils.getFormName(IRS_LITE_VERIFICATION, null);
+        assertEquals(JsonForm.IRS_LITE_VERIFICATION, actualFormName);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+        Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", false);
+    }
+
+    @Test
+    public void testGetSenegalDailySummaryForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        String actualFormName = revealJsonFormUtils.getFormName(DAILY_SUMMARY_EVENT, null);
+        assertEquals(JsonForm.DAILY_SUMMARY_SENEGAL, actualFormName);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testGetSenegalIRSFieldOfficerForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        String actualFormName = revealJsonFormUtils.getFormName(IRS_FIELD_OFFICER_EVENT, null);
+        assertEquals(JsonForm.IRS_FIELD_OFFICER_SENEGAL, actualFormName);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testGetSenegalIRSSADecisionForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        String actualFormName = revealJsonFormUtils.getFormName(IRS_SA_DECISION_EVENT, null);
+        assertEquals(JsonForm.IRS_SA_DECISION_SENEGAL, actualFormName);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testGetSenegalMobilizationForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        String actualFormName = revealJsonFormUtils.getFormName(MOBILIZATION_EVENT, null);
+        assertEquals(JsonForm.MOBILIZATION_FORM_SENEGAL, actualFormName);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testGetSenegalTeamLeaderDOSForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        String actualFormName = revealJsonFormUtils.getFormName(TEAM_LEADER_DOS_EVENT, null);
+        assertEquals(JsonForm.TEAM_LEADER_DOS_SENEGAL, actualFormName);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testGetSenegalVerificationForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        String actualFormName = revealJsonFormUtils.getFormName(VERIFICATION_EVENT, null);
+        assertEquals(JsonForm.VERIFICATION_FORM_SENEGAL, actualFormName);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testGetTabletAccountalbilityForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
+        String actualFormName = revealJsonFormUtils.getFormName(TABLET_ACCOUNTABILITY_EVENT, null);
+        assertEquals(JsonForm.TABLET_ACCOUNTABILITY_FORM, actualFormName);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
 
@@ -576,6 +671,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
 
         verify(revealJsonFormUtils).populateServerOptions(serverConfigs,Constants.CONFIGURATION.HEALTH_WORKER_SUPERVISORS,fieldsMap.get(JsonForm.HEALTH_WORKER_SUPERVISOR),"emuhaya");
         verify(revealJsonFormUtils).populateServerOptions(serverConfigs,Constants.CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS,fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),"emuhaya");
+
     }
 }
 
