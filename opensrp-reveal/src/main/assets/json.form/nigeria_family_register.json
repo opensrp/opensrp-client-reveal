@@ -206,7 +206,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "openmrs_data_type": "text",
-        "type": "edit_text",
+        "type": "spinner",
         "hint": "To which compound does this structure belong?",
         "v_required": {
           "value": true,
