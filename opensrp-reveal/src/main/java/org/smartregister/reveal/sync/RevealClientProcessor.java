@@ -17,7 +17,7 @@ import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
-imporhttps://github.com/OpenSRP/opensrp-client-reveal/pull/1277/conflict?name=opensrp-reveal%252Fsrc%252Fmain%252Fjava%252Forg%252Fsmartregister%252Freveal%252Futil%252FCountry.java&ancestor_oid=548168eb7ef9fc28a5d576445303d524c0723674&base_oid=22f82e278421d1cf2a20ff80946f99d3ca96849d&head_oid=b251744cfe48355c80934e1bf02a81fd0d2a8621t org.smartregister.repository.EventClientRepository;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
