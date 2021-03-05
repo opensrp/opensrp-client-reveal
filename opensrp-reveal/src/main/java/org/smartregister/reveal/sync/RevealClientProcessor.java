@@ -17,7 +17,7 @@ import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
-import org.smartregister.repository.EventClientRepository;
+imporhttps://github.com/OpenSRP/opensrp-client-reveal/pull/1277/conflict?name=opensrp-reveal%252Fsrc%252Fmain%252Fjava%252Forg%252Fsmartregister%252Freveal%252Futil%252FCountry.java&ancestor_oid=548168eb7ef9fc28a5d576445303d524c0723674&base_oid=22f82e278421d1cf2a20ff80946f99d3ca96849d&head_oid=b251744cfe48355c80934e1bf02a81fd0d2a8621t org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
@@ -39,6 +39,8 @@ import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNC
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
+import static org.smartregister.reveal.util.Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY;
+import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.EventType.CHILD_REGISTRATION;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
@@ -117,7 +119,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 }
 
                 String eventType = event.getEventType();
-                if (eventType.equals(SPRAY_EVENT) || eventType.equals(IRS_LITE_VERIFICATION)) {
+                if (eventType.equals(SPRAY_EVENT) || eventType.equals(IRS_LITE_VERIFICATION) || CDD_SUPERVISOR_DAILY_SUMMARY.equals(eventType)) {
                     operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.STRUCTURE_TYPE);
                 } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT) || eventType.equals(LARVAL_DIPPING_EVENT)
                         || eventType.equals(BEDNET_DISTRIBUTION_EVENT) ||

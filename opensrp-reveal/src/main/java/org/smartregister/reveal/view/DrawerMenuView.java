@@ -156,7 +156,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         if (planTextView != null)
             planTextView.setOnClickListener(this);
 
-        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) { // Enable P2P sync and other forms
+        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.SENEGAL) { // Enable P2P sync and other forms
             p2pSyncTextView.setVisibility(View.VISIBLE);
             p2pSyncTextView.setOnClickListener(this);
 

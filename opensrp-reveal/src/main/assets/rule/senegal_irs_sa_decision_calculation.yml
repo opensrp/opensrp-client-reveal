@@ -1,0 +1,49 @@
+---
+name: step1_structures_toreach90
+description: step1_structures_toreach90
+priority: 1
+condition: "true"
+actions:
+  - "calculation = java.lang.Math.round( Double.valueOf(helper.ifNull(step1_structures_ground,0)) * 0.90 )"
+---
+name: step1_structures_toreach90_info
+description: step1_structures_toreach90_info
+priority: 1
+condition: "true"
+actions:
+  - "calculation = ['structures_toreach90' : step1_structures_toreach90]"
+---
+name: step1_spray_effectiveness
+description: step1_spray_effectiveness
+priority: 1
+condition: "true"
+actions:
+  - "calculation = java.lang.Math.round( 100 * Double.valueOf(helper.ifNull(step1_structures_sprayed,0)) / Double.valueOf(helper.ifNull(step1_structures_ground,0)) )"
+---
+name: step1_structures_remaining
+description: step1_structures_remaining
+priority: 1
+condition: "true"
+actions:
+  - "calculation = helper.ifNull(step1_structures_ground,0) - helper.ifNull(step1_structures_sprayed,0)"
+---
+name: step1_structures_tospray
+description: step1_structures_tospray
+priority: 1
+condition: "true"
+actions:
+  - "calculation = java.lang.Math.max(step1_structures_toreach90 - helper.ifNull(step1_structures_sprayed,0), 0)"
+---
+name: step1_display2
+description: step1_display2
+priority: 1
+condition: "true"
+actions:
+  - "calculation = ['structures_tospray' : step1_structures_tospray, 'structures_remaining' : step1_structures_remaining, 'spray_effectiveness' : step1_spray_effectiveness]"
+---
+name: step1_display3
+description: step1_display3
+priority: 1
+condition: "true"
+actions:
+  - "calculation = ['spray_effectiveness' : step1_spray_effectiveness]"
