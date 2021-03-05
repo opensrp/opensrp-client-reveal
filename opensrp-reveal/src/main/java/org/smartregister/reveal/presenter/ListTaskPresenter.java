@@ -16,6 +16,9 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
+import net.sqlcipher.Cursor;
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -69,6 +72,7 @@ import timber.log.Timber;
 
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_NEUTRAL;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.KEYS;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
@@ -82,6 +86,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALUES;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_XXX;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
@@ -553,6 +558,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         dataCollector);
             }
 
+            if(JsonForm.SPRAY_FORM_SENEGAL.equals(formName)){
+                populateCompoundStructureOptions(formJson);
+            }
         } else if (JsonForm.SPRAY_FORM_REFAPP.equals(formName)) {
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DATA_COLLECTORS, jsonFormUtils.getFields(formJson).get(JsonForm.DATA_COLLECTOR), prefsUtil.getCurrentDistrict());
         } else if (cardDetails instanceof SprayCardDetails && isZambiaIRSLite()) {
@@ -929,5 +937,33 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
 
         listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
+    }
+    private  void populateCompoundStructureOptions(JSONObject form){
+        SQLiteDatabase database = RevealApplication.getInstance().getRepository().getReadableDatabase();
+        JSONArray keys = new JSONArray();
+        JSONArray values = new JSONArray();
+        Cursor cursor = null;
+        try{
+            String query = String.format("SELECT %s,%s FROM %s WHERE %s IS NOT NULL",Constants.DatabaseKeys.ID,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.Tables.SPRAYED_STRUCTURES,Constants.DatabaseKeys.COMPOUND_HEAD_NAME);
+            cursor = database.rawQuery(query,new String[]{});
+            while (cursor.moveToNext()) {
+                String structureId = cursor.getString(cursor.getColumnIndex(Constants.DatabaseKeys.ID));
+                String compoundHeadName = cursor.getString(cursor.getColumnIndex(Constants.DatabaseKeys.COMPOUND_HEAD_NAME));
+                keys.put(structureId);
+                values.put(compoundHeadName);
+            }
+        } catch (Exception e) {
+            Timber.e(e, "Error find Sprayed Structures with compound head names ");
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        JSONObject compoundStructureField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),JsonForm.COMPOUND_STRUCTURE);
+        try {
+            compoundStructureField.put(KEYS,keys);
+            compoundStructureField.put(VALUES, values);
+        } catch (JSONException e) {
+            Timber.e(e, "Error populating %s Options",JsonForm.COMPOUND_STRUCTURE);
+        }
     }
 }
