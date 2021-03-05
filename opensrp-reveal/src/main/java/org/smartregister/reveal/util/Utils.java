@@ -134,7 +134,7 @@ public class Utils {
     }
 
     public static Location getOperationalAreaLocation(String operationalArea) {
-       return cache.get(operationalArea, new CacheableData<Location>() {
+        return cache.get(operationalArea, new CacheableData<Location>() {
             @Override
             public Location fetch() {
                 return RevealApplication.getInstance().getLocationRepository().getLocationByName(operationalArea);
@@ -143,7 +143,7 @@ public class Utils {
     }
 
     public static Location getStructureByName(String structureName) {
-        return cache.get(structureName, () -> RevealApplication.getInstance().getStructureRepository().getLocationByName(structureName));
+        return cache.get("struct-" + structureName, () -> RevealApplication.getInstance().getStructureRepository().getLocationByName(structureName));
     }
 
     public static Location getLocationById(String locationId) {
@@ -431,16 +431,17 @@ public class Utils {
 
     /**
      * This method takes in a geometry object and returns a JSONArray representation of the coordinates
-     * @param updatedGeometry The geometry of the updated feature
+     *
+     * @param updatedGeometry  The geometry of the updated feature
      * @param originalGeometry The geometry of the original feature used to determine whether
      *                         it was a MultiPolygon or a Polygon
      * @return
      */
     public static JSONArray getCoordsFromGeometry(Geometry updatedGeometry, Geometry originalGeometry) {
-        JSONObject editedGeometryJson ;
+        JSONObject editedGeometryJson;
         JSONArray updatedCoords = null;
         try {
-            if (originalGeometry instanceof  MultiPolygon) {
+            if (originalGeometry instanceof MultiPolygon) {
                 MultiPolygon editedGeometryMultiPolygon = MultiPolygon.fromPolygon((Polygon) updatedGeometry);
                 editedGeometryJson = new JSONObject(editedGeometryMultiPolygon.toJson());
             } else {
@@ -454,7 +455,7 @@ public class Utils {
     }
 
     public static String getSyncEntityString(SyncEntity syncEntity) {
-        Context context =  RevealApplication.getInstance().getContext().applicationContext();
+        Context context = RevealApplication.getInstance().getContext().applicationContext();
         switch (syncEntity) {
             case EVENTS:
                 return context.getString(R.string.events);
