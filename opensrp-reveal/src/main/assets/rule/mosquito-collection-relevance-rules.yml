@@ -5,3 +5,17 @@ priority: 1
 condition: "step1_task_business_status =='Complete' || step1_task_business_status =='In Progress'"
 actions:
   - "isRelevant = true"
+---
+name: step1_collectionMethod
+description: Show the collectionMethod field based on the task_business_status
+priority: 1
+condition: "step1_task_business_status =='Incomplete' || step1_task_business_status =='Complete' || step1_task_business_status =='In Progress'"
+actions:
+  - "isRelevant = true"
+---
+name: step1_collectionPlace
+description: Show the collectionPlace field based on the task_business_status
+priority: 1
+condition: "step1_task_business_status =='Incomplete' || step1_task_business_status =='Complete' || step1_task_business_status =='In Progress'"
+actions:
+  - "isRelevant = true"
