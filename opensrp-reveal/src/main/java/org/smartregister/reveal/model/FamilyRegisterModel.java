@@ -17,9 +17,7 @@ import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.JsonFormUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import timber.log.Timber;
 
