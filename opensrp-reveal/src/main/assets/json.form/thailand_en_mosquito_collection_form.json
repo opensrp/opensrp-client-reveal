@@ -162,42 +162,6 @@
         }
       },
       {
-        "key": "task_business_status",
-        "label": "Status",
-        "type": "native_radio",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "options": [
-          {
-            "key": "In Progress",
-            "text": "In Progress"
-          },
-          {
-            "key": "Incomplete",
-            "text": "Incomplete"
-          },
-          {
-            "key": "Not Eligible",
-            "text": "Not Eligible"
-          },
-          {
-            "key": "Complete",
-            "text": "Complete"
-          }
-        ],
-        "v_required": {
-          "value": true,
-          "err": "Please specify status"
-        },
-        "relevance": {
-          "step1:collectionConducted": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
-      },
-      {
         "key": "collectionMethod",
         "label": "Collection method",
         "type": "native_radio",
