@@ -118,7 +118,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "First name",
+        "hint": "Given name",
         "edit_type": "name",
         "v_required": {
           "value": "true",
@@ -154,11 +154,11 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "last_name",
         "type": "edit_text",
-        "hint": "Surname",
+        "hint": "Family Name",
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter the surname"
+          "err": "Please enter the family name"
         }
       },
       {
@@ -270,15 +270,43 @@
         }
       },
       {
+        "key": "pregnant",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Pregnant",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "Yes",
+            "text": "Yes"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Please enter whether she is pregnant"
+        },
+        "relevance": {
+          "step2:sex": {
+            "type": "string",
+            "ex": "equalTo(., \"Female\")"
+          }
+        }
+      },
+      {
         "key": "phone_number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
         "type": "edit_text",
-        "hint": "Phone number",
+        "hint": "Patient phone number",
         "v_numeric": {
           "value": "true",
-          "err": "Please enter a number"
+          "err": "Please enter patient phone number"
         },
         "v_regex": {
           "value": "^$|0[0-9]{8,9}",
@@ -286,34 +314,42 @@
         }
       },
       {
-        "key": "sleeps_outdoors",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Does this person spend the night outdoors?",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Please select whether this person spends the night outdoors"
-        }
-      },
-      {
         "key": "occupation",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Person's Occupation",
+        "type": "native_radio",
+        "label": "Person's Occupation",
+        "options": [
+          {
+            "key": "Nurse",
+            "text": "Nurse"
+          },
+          {
+            "key": "Student",
+            "text": "Student"
+          },
+          {
+            "key": "Teacher",
+            "text": "Teacher"
+          },
+          {
+            "key": "Truck_driver",
+            "text": "Truck driver"
+          },
+          {
+            "key": "Migrant_labour",
+            "text": "Migrant Labour"
+          },
+          {
+            "key": "Farmer",
+            "text": "Farmer"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -328,19 +364,47 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Citizenship",
+        "label": "Nationality",
         "options": [
           {
-            "key": "Thai",
-            "text": "Thai"
+            "key": "Botswana",
+            "text": "Botswana"
           },
           {
-            "key": "Migrant-1",
-            "text": "Migrant 1"
+            "key": "Cambodia",
+            "text": "Cambodia"
           },
           {
-            "key": "Migrant-2",
-            "text": "Migrant 2"
+            "key": "Haiti",
+            "text": "Haiti"
+          },
+          {
+            "key": "Honduras",
+            "text": "Honduras"
+          },
+          {
+            "key": "Laos",
+            "text": "Laos"
+          },
+          {
+            "key": "Mozambique",
+            "text": "Mozambique"
+          },
+          {
+            "key": "Namibia",
+            "text": "Namibia"
+          },
+          {
+            "key": "South_Africa",
+            "text": "South Africa"
+          },
+          {
+            "key": "Vietnam",
+            "text": "Vietnam"
+          },
+          {
+            "key": "Zimbabwe",
+            "text": "Zimbabwe"
           }
         ],
         "v_required": {
