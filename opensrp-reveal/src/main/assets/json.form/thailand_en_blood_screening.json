@@ -48,7 +48,7 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "Blood Screening",
+    "title": "Diagnosis",
     "display_back_button": "true",
     "fields": [
       {
@@ -116,24 +116,28 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Type of blood screening",
+        "label": "Detection Setting",
         "options": [
           {
-            "key": "RACD/CIS",
-            "text": "Reactive Case Detection / Case Investigation Screening"
+            "key": "PCD",
+            "text": "Passive (PCD)"
           },
           {
-            "key": "SCD",
-            "text": "Special Case Detection"
+            "key": "RACD",
+            "text": "Reactive (RACD)"
           },
           {
-            "key": "MBS",
-            "text": "Mass Blood Screening"
+            "key": "PACD",
+            "text": "Proactive (PACD)"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
           }
         ],
         "v_required": {
           "value": "true",
-          "err": "select type of blood screening"
+          "err": "select type of detection setting"
         },
         "relevance": {
           "step1:eligiblePerson": {
@@ -143,30 +147,21 @@
         }
       },
       {
-        "key": "forestGoerYesNo",
+        "key": "caseTestingProtocolOther",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Has this person spent the night outside within the past two weeks?",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
+        "type": "edit_text",
+        "hint": "Specify other detection setting",
+        "text_size": "8sp",
         "v_required": {
-          "value": true,
-          "err": "This field is required"
+          "value": "true",
+          "err": "A reason must be entered"
         },
         "relevance": {
-          "step1:eligiblePerson": {
+          "step1:caseTestingProtocol": {
             "type": "string",
-            "ex": "equalTo(., \"1\")"
+            "ex": "equalTo(., \"Other\")"
           }
         }
       },
@@ -176,7 +171,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Was this person tested?",
+        "label": "Has the person been tested?",
         "options": [
           {
             "key": "Yes",
@@ -199,20 +194,46 @@
         }
       },
       {
-        "key": "notTestedReason",
+        "key": "testResults",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Reason this person was not tested?",
+        "label": "Test results",
         "options": [
           {
-            "key": "Not present",
-            "text": "Not present"
+            "key": "Positive",
+            "text": "Positive"
           },
           {
-            "key": "Refused",
-            "text": "Refused"
+            "key": "Negative",
+            "text": "Negative"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "diagnosisConfirmedBy",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Has the person been tested?",
+        "options": [
+          {
+            "key": "RDT",
+            "text": "RDT"
+          },
+          {
+            "key": "Microscopy",
+            "text": "Microscopy"
+          },
+          {
+            "key": "PCR",
+            "text": "PCR"
           },
           {
             "key": "Other",
@@ -221,156 +242,264 @@
         ],
         "v_required": {
           "value": true,
-          "err": "Enter reason person was not tested"
+          "err": "This field is required"
         },
         "relevance": {
-          "step1:personTested": {
+          "step1:testResults": {
             "type": "string",
-            "ex": "equalTo(., \"No\")"
+            "ex": "equalTo(., \"Positive\")"
           }
         }
       },
       {
-        "key": "testType",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Which type of test was used?",
-        "options": [
-          {
-            "key": "Microscopy",
-            "text": "Microscopy"
-          },
-          {
-            "key": "RDT",
-            "text": "RDT"
-          }
-        ],
-        "value": "Microscopy",
-        "v_required": {
-          "value": true,
-          "err": "A test type is required"
-        },
-        "relevance": {
-          "step1:personTested": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
-      },
-      {
-        "key": "slideNumber",
+        "key": "diagnosisConfirmedByOther",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Slide Number",
-        "edit_type": "number",
+        "hint": "Specify diagnosis specified by",
+        "text_size": "8sp",
         "v_required": {
-          "value": true,
-          "err": "The slide number is required"
-        },
-        "v_numeric": {
           "value": "true",
-          "err": "Enter a number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Must be greater than or equal to 0"
+          "err": "A reason must be entered"
         },
         "relevance": {
-          "step1:testType": {
+          "step1:diagnosisConfirmedBy": {
             "type": "string",
-            "ex": "equalTo(., \"Microscopy\")"
+            "ex": "equalTo(., \"Other\")"
           }
         }
       },
       {
-        "key": "testRdtResult",
+        "key": "diagnosisConfirmedByRDT",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "RDT Result",
+        "label": "Specifies identified?",
         "options": [
           {
-            "key": "Negative",
-            "text": "Negative"
+            "key": "P_falciparum",
+            "text": "P. falciparum"
           },
           {
-            "key": "PositiveFalciparum",
-            "text": "Positive - Falciparum"
+            "key": "P_vivax",
+            "text": "P. vivax"
           },
           {
-            "key": "PositiveVivax",
-            "text": "Positive - Vivax"
-          },
-          {
-            "key": "PositiveMixed",
-            "text": "Positive - Mixed"
-          },
-          {
-            "key": "Inconclusive",
-            "text": "Inconclusive"
+            "key": "Mixed",
+            "text": "Mixed"
           }
         ],
         "v_required": {
-          "value": "true",
-          "err": "Please select RDT result"
+          "value": true,
+          "err": "This field is required"
         },
         "relevance": {
-          "step1:testType": {
+          "step1:diagnosisConfirmedBy": {
             "type": "string",
             "ex": "equalTo(., \"RDT\")"
           }
         }
       },
       {
-        "key": "testMicrosResult",
+        "key": "diagnosisConfirmedByMicroscopy",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "check_box",
-        "label": "Microscopy Result",
-        "combine_checkbox_option_values": "true",
+        "type": "native_radio",
+        "label": "Specifies identified?",
         "options": [
           {
-            "key": "Negative",
-            "text": "Negative"
+            "key": "P_falciparum",
+            "text": "P. falciparum"
           },
           {
-            "key": "PositiveFalciparum",
-            "text": "Positive - Falciparum"
+            "key": "P_vivax",
+            "text": "P. vivax"
           },
           {
-            "key": "PositiveVivax",
-            "text": "Positive - Vivax"
+            "key": "P_ovale",
+            "text": "P. ovale"
           },
           {
-            "key": "PositiveMalariae",
-            "text": "Positive - Malariae"
-          },
-          {
-            "key": "PositiveOvalae",
-            "text": "Positive - Ovalae"
-          },
-          {
-            "key": "PositiveKnowelsi",
-            "text": "Positive - Knowelsi"
-          },
-          {
-            "key": "Fg",
-            "text": "Fg"
+            "key": "P_malariae",
+            "text": "P. malariae"
           }
         ],
-        "exclusive": [
-          "Negative"
-        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
         "relevance": {
-          "step1:testType": {
+          "step1:diagnosisConfirmedBy": {
             "type": "string",
             "ex": "equalTo(., \"Microscopy\")"
+          }
+        }
+      },
+      {
+        "key": "parasiteDensity",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Specifies identified?",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "v_numeric": {
+        "value": "true",
+        "err": "Please enter a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Number must be equal or greater than 0"
+        },
+        "relevance": {
+          "step1:diagnosisConfirmedBy": {
+            "type": "string",
+            "ex": "equalTo(., \"Microscopy\")"
+          }
+        }
+      },
+      {
+        "key": "gametocytesPresent",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Specifies identified?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:diagnosisConfirmedBy": {
+            "type": "string",
+            "ex": "equalTo(., \"Microscopy\")"
+          }
+        }
+      },
+      {
+        "key": "diagnosisType",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Diagnosis type?",
+        "options": [
+          {
+            "key": "Uncomplicated",
+            "text": "Uncomplicated"
+          },
+          {
+            "key": "complicated",
+            "text": "complicated"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:testResults": {
+            "type": "string",
+            "ex": "equalTo(., \"Positive\")"
+          }
+        }
+      },
+      {
+        "key": "daysWithSymptoms",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "label": "Number of days with symptoms?",
+        "text_size": "8sp",
+        "v_numeric": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Number must be equal or greater than 0"
+        },
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:testResults": {
+            "type": "string",
+            "ex": "equalTo(., \"Positive\")"
+          }
+        }
+      },
+      {
+        "key": "treatedOrReferred",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Patient treated or referred for treatment?",
+        "options": [
+          {
+            "key": "Treated",
+            "text": "Treated"
+          },
+          {
+            "key": "Referred",
+            "text": "Referred for treatment"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:testResults": {
+            "type": "string",
+            "ex": "equalTo(., \"Positive\")"
+          }
+        }
+      },
+      {
+        "key": "isIndexCase",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this index case?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:testResults": {
+            "type": "string",
+            "ex": "equalTo(., \"Positive\")"
           }
         }
       },

@@ -103,6 +103,29 @@
         }
       },
       {
+        "key": "collectionConducted",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is mosquito collection conducted?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "value": "1",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
         "key": "task_business_status",
         "label": "Status",
         "type": "native_radio",
@@ -132,26 +155,114 @@
           "err": "Please specify status"
         },
         "relevance": {
-          "step1:eligibleMos": {
+          "step1:collectionConducted": {
             "type": "string",
-            "ex": "equalTo(., \"1\")"
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
       {
-        "key": "trap_start",
-        "type": "date_picker",
+        "key": "collectionMethod",
+        "label": "Collection method",
+        "type": "native_radio",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "hint": "Date trap was set",
-        "max_date": "today",
+        "options": [
+          {
+            "key": "Human landing catches",
+            "text": "Human landing catches"
+          },
+          {
+            "key": "Pyrethrum spray catches",
+            "text": "Pyrethrum spray catches"
+          },
+          {
+            "key": "CDC-Light traps",
+            "text": "CDC-Light traps"
+          },
+          {
+            "key": "Prokopack",
+            "text": "Prokopack"
+          },
+          {
+            "key": "Pit traps",
+            "text": "Pit traps"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "Please specify collection method"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
               "rules-file": "mosquito-collection-relevance-rules.yml"
             }
           }
+        }
+      },
+      {
+        "key": "collectionPlace",
+        "label": "Collection place",
+        "type": "native_radio",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "options": [
+          {
+            "key": "Indoor",
+            "text": "Indoor"
+          },
+          {
+            "key": "Outdoors",
+            "text": "Outdoors"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "Please specify collection place"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "mosquito-collection-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "pfalcipurum",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of P. falcipurum collected?",
+        "text_size": "8sp",
+        "v_numeric": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Number must be equal or greater than 0"
+        }
+      },
+      {
+        "key": "pvivax",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of P. Vivax collected?",
+        "text_size": "8sp",
+        "v_numeric": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Number must be equal or greater than 0"
         }
       },
       {
