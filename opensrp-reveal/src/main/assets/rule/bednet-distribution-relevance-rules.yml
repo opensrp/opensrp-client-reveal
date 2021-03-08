@@ -54,3 +54,66 @@ priority: 1
 condition: "step1_existingLLIHNs > 0"
 actions:
 - "isRelevant = true"
+---
+name: step1_structuresMapped
+description: Display if interventionsCarried is 1 or 3
+priority: 1
+condition: "step1_interventionsCarried == '1' || step1_interventionsCarried == '3'"
+actions:
+- "isRelevant = true"
+---
+name: step1_irsConductedInVisit
+description: Display if interventionsCarried is 1 or 3
+priority: 1
+condition: "step1_interventionsCarried == '1' || step1_interventionsCarried == '3'"
+actions:
+- "isRelevant = true"
+---
+name: step1_sprayedInLastYear
+description: Display if interventionsCarried is 1 or 3
+priority: 1
+condition: "step1_interventionsCarried == '1' || step1_interventionsCarried == '3'"
+actions:
+- "isRelevant = true"
+---
+name: step1_structuresSprayedInVisit
+description: Display if interventionsCarried is 1 or 3
+priority: 1
+condition: "step1_irsConductedInVisit == 'Yes' && (step1_interventionsCarried == '1' || step1_interventionsCarried == '3')"
+actions:
+- "isRelevant = true"
+---
+name: step1_structuresInHousehold
+description: Display if interventionsCarried is 1 or 3
+priority: 1
+condition: "step1_interventionsCarried == '1' || step1_interventionsCarried == '3'"
+actions:
+- "isRelevant = true"
+---
+name: step1_peopleInHousehold
+description: Display if interventionsCarried is 2 or 3
+priority: 1
+condition: "step1_interventionsCarried == '2' || step1_interventionsCarried == '3'"
+actions:
+- "isRelevant = true"
+---
+name: step1_numPeopleSleptUnderNet
+description: Display if interventionsCarried is 2 or 3
+priority: 1
+condition: "step1_interventionsCarried == '2' || step1_interventionsCarried == '3'"
+actions:
+- "isRelevant = true"
+---
+name: step1_numNetsDistributed
+description: Display if interventionsCarried is 2 or 3
+priority: 1
+condition: "step1_interventionsCarried == '2' || step1_interventionsCarried == '3'"
+actions:
+- "isRelevant = true"
+---
+name: step1_existingLLINs
+description: Display if interventionsCarried is 2 or 3
+priority: 1
+condition: "step1_interventionsCarried == '2' || step1_interventionsCarried == '3'"
+actions:
+- "isRelevant = true"
