@@ -57,6 +57,31 @@
     "next": "step2",
     "fields": [
       {
+        "key": "investigation_date",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "date_picker",
+        "hint": "Date of investigation",
+        "expanded": false,
+        "duration": {
+          "label": "Age"
+        },
+        "min_date": "today-120y",
+        "max_date": "today",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the date of investigation"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "family-register-relevance.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "fam_name",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
@@ -68,30 +93,6 @@
           "value": "true",
           "err": "Please enter first name of Head of Household"
         }
-      },
-      {
-        "key": "house_number",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person_address",
-        "openmrs_entity_id": "address2",
-        "type": "edit_text",
-        "hint": "House Number"
-      },
-      {
-        "key": "street",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person_address",
-        "openmrs_entity_id": "street",
-        "type": "edit_text",
-        "hint": "Street"
-      },
-      {
-        "key": "landmark",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person_address",
-        "openmrs_entity_id": "landmark",
-        "type": "edit_text",
-        "hint": "Landmark"
       }
     ]
   },
