@@ -72,13 +72,6 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the date of investigation"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "family-register-relevance.yml"
-            }
-          }
         }
       },
       {
@@ -93,6 +86,29 @@
           "value": "true",
           "err": "Please enter first name of Head of Household"
         }
+      },
+      {
+        "key": "house_population",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of people in household", "v_numeric_integer": {
+        "value": "true",
+        "err": "Please enter a number"
+         },
+        "v_min": {
+          "value": "0",
+          "err": "Age must be equal or greater than 0"
+        }
+      },
+      {
+        "key": "street",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Name of village/town"
       }
     ]
   },
@@ -282,8 +298,8 @@
             "text": "Yes"
           },
           {
-            "key": "Yes",
-            "text": "Yes"
+            "key": "No",
+            "text": "No"
           }
         ],
         "v_required": {
