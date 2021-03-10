@@ -480,11 +480,11 @@
         "label": "Has this data been verified with hard copy forms",
         "options": [
           {
-            "key": "Yes",
+            "key": "verified",
             "text": "Yes"
           },
           {
-            "key": "No",
+            "key": "not verified",
             "text": "No"
           }
         ],
