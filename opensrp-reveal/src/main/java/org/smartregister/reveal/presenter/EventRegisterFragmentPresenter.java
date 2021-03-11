@@ -11,6 +11,7 @@ import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Event;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.EventRegisterContract;
@@ -20,6 +21,7 @@ import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.Arrays;
@@ -92,6 +94,21 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
     }
 
     protected String[] mainColumns(String tableName) {
+        if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
+          return new String[]{
+                    tableName + ".relationalid",
+                    tableName + "." + DatabaseKeys.EVENT_DATE,
+                    tableName + "." + DatabaseKeys.EVENT_TYPE,
+                    tableName + "." + DatabaseKeys.SOP,
+                    tableName + "." + DatabaseKeys.ENTITY,
+                    tableName + "." + DatabaseKeys.STATUS,
+                    tableName + "." + DatabaseKeys.FORM_SUBMISSION_ID,
+                    tableName + "." + DatabaseKeys.BASE_ENTITY_ID,
+                    tableName + "." + DatabaseKeys.SPRAYED,
+                    tableName + "." + DatabaseKeys.FOUND,
+                    tableName + "." + DatabaseKeys.DATA_COLLECTION_DATE
+            };
+        }
         String[] columns = new String[]{
                 tableName + ".relationalid",
                 tableName + "." + DatabaseKeys.EVENT_DATE,
