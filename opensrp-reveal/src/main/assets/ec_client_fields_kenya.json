@@ -761,6 +761,14 @@
             "field": "obs.fieldCode",
             "concept": "data_verification"
           }
+        },
+        {
+          "column_name": "data_collection_date",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "date"
+          }
         }
       ]
     }
