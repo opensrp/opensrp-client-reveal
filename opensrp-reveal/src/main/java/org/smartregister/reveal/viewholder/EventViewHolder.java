@@ -12,10 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.joda.time.DateTime;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.cursoradapter.RecyclerViewProvider;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.EventRegisterDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.util.Utils;
 import org.smartregister.view.contract.SmartRegisterClient;
 import org.smartregister.view.contract.SmartRegisterClients;
@@ -149,6 +151,10 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
             householdTextView = itemView.findViewById(R.id.entity);
             statusTextView = itemView.findViewById(R.id.status);
             dataCollectionDateTextView = itemView.findViewById(R.id.data_collection_date);
+
+            if(!Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
+                dataCollectionDateTextView.setVisibility(View.GONE);
+            }
         }
     }
 

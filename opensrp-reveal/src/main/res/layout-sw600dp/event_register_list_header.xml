@@ -86,7 +86,7 @@
 
 
         <org.smartregister.view.customcontrols.CustomFontTextView
-            android:id="@+id/data_collection_date"
+            android:id="@+id/data_collection_date_header"
             style="@style/CustomFontTextViewStyle.ClientList"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
