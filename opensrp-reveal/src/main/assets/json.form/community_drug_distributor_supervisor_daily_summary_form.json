@@ -480,14 +480,15 @@
         "label": "Has this data been verified with hard copy forms",
         "options": [
           {
-            "key": "Yes",
+            "key": "verified",
             "text": "Yes"
           },
           {
-            "key": "No",
+            "key": "not verified",
             "text": "No"
           }
         ],
+        "value": "not verified",
         "v_required": {
           "value": true,
           "err": "This field is mandatory"
