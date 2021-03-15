@@ -335,6 +335,48 @@
         }
       },
       {
+        "key": "sch_drug_validation_err",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "Only PZQ drug is used for SCH NTD you selected earlier",
+        "text_size": "8sp",
+        "text_color": "#CF0800",
+        "toaster_type": "problem",
+        "v_required": {
+          "value": "true"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "cdd-supervisor-daily-summary-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sth_drug_validation_err",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "Only ALB or MBZ drug is used for this NTD you selected earlier",
+        "text_size": "8sp",
+        "text_color": "#CF0800",
+        "toaster_type": "problem",
+        "v_required": {
+          "value": "true"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "cdd-supervisor-daily-summary-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "received_when",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
