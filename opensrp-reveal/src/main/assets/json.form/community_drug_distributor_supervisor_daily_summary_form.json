@@ -394,6 +394,20 @@
         }
       },
       {
+        "key": "total_tablet_admin_max",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "cdd-supervisor-daily-summary-calculation.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "adminstered",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -417,6 +431,14 @@
         "v_min": {
           "value": "0",
           "err": "This field must be greater than or equal to 0"
+        },
+        "v_max": {
+          "value": "999999999",
+          "err": "This field must be less that or equal to 999999999"
+        },
+        "v_relative_max": {
+          "value": "total_tablet_admin_max",
+          "err": "By Selecting,Initial balance,Total admnistered today must be less than or equal tablets received"
         }
       },
       {

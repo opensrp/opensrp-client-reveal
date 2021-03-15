@@ -20,3 +20,12 @@ priority: 1
 condition: "true"
 actions:
  - "calculation = step1_task_complete == 'Yes' ? 'Complete': 'In Progress' "
+
+---
+name: step1_total_tablet_admin_max
+description: step1_total_tablet_admin_max
+priority: 1
+condition: "true"
+actions:
+ - "calculation = (step1_received_when.equals('Initial balance') ? step1_received_number : 999999999)"
+
