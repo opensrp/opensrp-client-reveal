@@ -480,7 +480,7 @@
         },
         "v_relative_max": {
           "value": "total_tablet_admin_max",
-          "err": "By Selecting,Initial balance,Total admnistered today must be less than or equal tablets received"
+          "err": "You selected Initial balance, therefore  the total administered today must be less than or equal initial tablets received"
         }
       },
       {
