@@ -1073,6 +1073,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         feature.addStringProperty(TASK_IDENTIFIER, "task-1");
         feature.addStringProperty(TASK_CODE, IRS_VERIFICATION);
         feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, COMPLETE);
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", feature);
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelectedByNormalClick", feature);
         verify(listTaskInteractor).fetchInterventionDetails(IRS_VERIFICATION, "id1", false);
@@ -1088,6 +1089,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         Country buildcountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", true);
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", feature);
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelectedByNormalClick", feature);
         verify(listTaskInteractor).fetchInterventionDetails(IRS, "id1", false);
