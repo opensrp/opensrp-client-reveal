@@ -134,8 +134,8 @@ public class LocationTaskIntentServiceTest extends BaseUnitTest {
     @Test
     public void testHasChangesInCurrentOperationalAreaWithStructuresInOA() {
         Location location = TestingUtils.gson.fromJson(TestingUtils.structureJSON, Location.class);
-        List<Task> tasks = new ArrayList<>(TestingUtils.createTasks());
-        List<Location> locations = Collections.singletonList(location);
+        List<Task> tasks = new ArrayList<>();
+        List<Location> locations = new ArrayList();
         ReflectionHelpers.ClassParameter<?>[] parameters = ReflectionHelpers.ClassParameter.fromComponentLists(new Class[]{List.class, List.class}, new Object[]{locations, tasks});
         assertFalse(ReflectionHelpers.callInstanceMethod(intentService, "hasChangesInCurrentOperationalArea", parameters));
 
@@ -143,7 +143,9 @@ public class LocationTaskIntentServiceTest extends BaseUnitTest {
         Cache<Location> cache = mock(Cache.class);
         when(cache.get(anyString(), any())).thenReturn(operationalArea);
         ReflectionHelpers.setStaticField(Utils.class, "cache", cache);
-
+        tasks = new ArrayList<>(TestingUtils.createTasks());
+        locations = Collections.singletonList(location);
+        parameters = ReflectionHelpers.ClassParameter.fromComponentLists(new Class[]{List.class, List.class}, new Object[]{locations, tasks});
         assertTrue(ReflectionHelpers.callInstanceMethod(intentService, "hasChangesInCurrentOperationalArea", parameters));
 
     }
