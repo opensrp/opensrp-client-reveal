@@ -100,9 +100,9 @@
     <string name="distance_from_center">%1.0f ม. จากใจกลาง %2s </string>
 
     <string name="mosquito_collection_point">สถานที่ทำการเก็บตัวอย่างยุง</string>
-    <string name="record_mosquito_collection">บันทึก\nCollection</string>
+    <string name="record_mosquito_collection">จับยุง</string>
     <string name="larval_breeding_site">แหล่งเพาะพันธุ์ตัวอ่อนยุง</string>
-    <string name="record_larvacide">บันทึก\nDipping</string>
+    <string name="record_larvacide">ตักลูกน้ำ</string>
     <string name="bcc">BCC การสื่อสารเพื่อปรับเปลี่ยนพฤติกรรม</string>
     <string name="record_bcc">บันทึก\nBCC</string>
     <string name="record_status">บันทึก\nStatus</string>
