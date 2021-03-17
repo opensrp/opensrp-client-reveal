@@ -342,12 +342,12 @@
         }
       },
       {
-        "key": "structureheadname",
+        "key": "compoundStructure",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Enter the name of the head of this structure",
+        "type": "spinner",
+        "hint": "Select name of the head of the compound",
         "text_size": "8sp",
         "v_required": {
           "value": "true",
@@ -361,12 +361,12 @@
         }
       },
       {
-        "key": "compoundStructure",
+        "key": "structureheadname",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Select name of the head of the compound",
+        "type": "edit_text",
+        "hint": "Enter the name of the head of this structure",
         "text_size": "8sp",
         "v_required": {
           "value": "true",
