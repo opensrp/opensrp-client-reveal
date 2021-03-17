@@ -27,6 +27,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
@@ -78,6 +79,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -1073,7 +1075,8 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         feature.addStringProperty(TASK_IDENTIFIER, "task-1");
         feature.addStringProperty(TASK_CODE, IRS_VERIFICATION);
         feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, COMPLETE);
-        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", feature);
+        prefsUtil.setCurrentPlan("IRS_1");
+        prefsUtil.setInterventionTypeForPlan("IRS_1", "IRS");
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelectedByNormalClick", feature);
         verify(listTaskInteractor).fetchInterventionDetails(IRS_VERIFICATION, "id1", false);
@@ -1089,7 +1092,8 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         Country buildcountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         Whitebox.setInternalState(BuildConfig.class, "SELECT_JURISDICTION", true);
-        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", feature);
+        prefsUtil.setCurrentPlan("IRS_1");
+        prefsUtil.setInterventionTypeForPlan("IRS_1", "IRS");
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelectedByNormalClick", feature);
         verify(listTaskInteractor).fetchInterventionDetails(IRS, "id1", false);
