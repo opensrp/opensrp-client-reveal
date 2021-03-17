@@ -62,6 +62,8 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
         } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
             indicatorDetails.setTarget(calculateTarget());
             indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateNamibiaSprayIndicators(this.activity, indicatorDetails));
+        } else if(BuildConfig.BUILD_COUNTRY == Country.NIGERIA){
+            indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateNigeriaIndicators(this.activity,indicatorDetails));
         }
         return indicatorDetails;
 
@@ -122,13 +124,30 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             progressIndicator2.setTitle(this.activity.getString(R.string.n_percent, coverage));
 
             progressIndicator.setVisibility(View.GONE);
+        } else if(BuildConfig.BUILD_COUNTRY == Country.NIGERIA){
+
+            //calculate first , then set
+            progressIndicator.setSubTitle(this.activity.getString(R.string.found_coverage));
+            progressIndicator.setProgress(0);
+            progressIndicator.setTitle(this.activity.getString(R.string.n_percent,0));
+
+
+            progressIndicator2.setSubTitle(this.activity.getString(R.string.distribution_coverage));
+            progressIndicator2.setProgress(1);
+            progressIndicator2.setTitle(this.activity.getString(R.string.n_percent,1));
+
+
+            progressIndicator3.setSubTitle(this.activity.getString(R.string.and_individuals_complete));
+            progressIndicator3.setProgress(3);
+            progressIndicator3.setTitle(this.activity.getString(R.string.n_percent,3));
+
         }
 
         tableView.setTableData(Arrays.asList(new String[]{this.activity.getString(R.string.indicator), this.activity.getString(R.string.value)}), indicatorDetails.getSprayIndicatorList());
 
         //Show or hide depending on plan
 
-        ((View) progressIndicator.getParent()).setVisibility(Utils.getInterventionLabel() == R.string.irs ? View.VISIBLE : View.GONE);
+        ((View) progressIndicator.getParent()).setVisibility(Utils.getInterventionLabel() == R.string.irs || Country.NIGERIA == BuildConfig.BUILD_COUNTRY ? View.VISIBLE : View.GONE);
 
         if (activity instanceof ListTasksActivity)
             ((ListTasksActivity) activity).positionMyLocationAndLayerSwitcher();

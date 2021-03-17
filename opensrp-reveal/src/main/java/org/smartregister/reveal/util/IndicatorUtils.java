@@ -3,6 +3,7 @@ package org.smartregister.reveal.util;
 import android.content.Context;
 
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.IndicatorDetails;
 import org.smartregister.reveal.model.TaskDetails;
@@ -69,7 +70,7 @@ public class IndicatorUtils {
 
             for (int i = 0; i < tasks.size(); i++) {
 
-                if (Constants.Intervention.IRS.equals(tasks.get(i).getTaskCode())) {
+                if (Constants.Intervention.IRS.equals(tasks.get(i).getTaskCode()) || Country.NIGERIA.equals(BuildConfig.BUILD_COUNTRY)) {
 
                     indicatorDetailsMap.put(tasks.get(i).getStructureId(), tasks.get(i));
                 }
@@ -104,7 +105,6 @@ public class IndicatorUtils {
 
         return indicatorDetails;
     }
-
 
     public static List<String> populateNamibiaSprayIndicators(Context context, IndicatorDetails indicatorDetails) {
         List<String> sprayIndicator = new ArrayList<>();
@@ -155,5 +155,36 @@ public class IndicatorUtils {
         sprayIndicator.add(String.valueOf(indicatorDetails.getNotSprayed()));
 
         return sprayIndicator;
+    }
+
+    public static List<String> populateNigeriaIndicators(Context context,IndicatorDetails indicatorDetails){
+        List<String> indicators = new ArrayList<>();
+
+        indicators.add(context.getResources().getString(R.string.structure_total));
+        indicators.add(String.valueOf(indicatorDetails.getTotalStructures()));
+
+        indicators.add(context.getResources().getString(R.string.structure_visited));
+        indicators.add(String.valueOf(000));
+
+        indicators.add(context.getResources().getString(R.string.structure_not_visited));
+        indicators.add(String.valueOf(indicatorDetails.getNotVisited()));
+
+        indicators.add(context.getResources().getString(R.string.structure_confirmed_eligible));
+        indicators.add(String.valueOf(000));
+
+        indicators.add(context.getResources().getString(R.string.structure_complete_drug_distribution));
+        indicators.add(String.valueOf(000));
+
+
+        indicators.add(context.getResources().getString(R.string.structure_partial_drug_distribution));
+        indicators.add(String.valueOf(000));
+
+        indicators.add(context.getResources().getString(R.string.individual_total_number_of_children_eligible_3_to_49_mos));
+        indicators.add(String.valueOf(000));
+
+        indicators.add(context.getResources().getString(R.string.individual_total_treated_3_to_59_mos));
+        indicators.add(String.valueOf(000));
+
+        return indicators;
     }
 }
