@@ -346,9 +346,11 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Select name of the head of the compound",
-        "text_size": "8sp",
+        "type": "multi_select_list",
+        "dialogTitle": "Select name of the head of the compound",
+        "buttonText": "+ Select name of the head of the compound",
+        "searchHint": "Type Name head of the compound",
+         "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"

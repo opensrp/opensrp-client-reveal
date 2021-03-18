@@ -940,17 +940,26 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
     private  void populateCompoundStructureOptions(JSONObject form){
         SQLiteDatabase database = RevealApplication.getInstance().getRepository().getReadableDatabase();
-        JSONArray keys = new JSONArray();
-        JSONArray values = new JSONArray();
+        JSONObject option;
+        JSONObject property;
+        JSONArray options = new JSONArray();
         Cursor cursor = null;
         try{
             String query = String.format("SELECT %s,%s FROM %s WHERE %s IS NOT NULL",Constants.DatabaseKeys.ID,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.Tables.SPRAYED_STRUCTURES,Constants.DatabaseKeys.COMPOUND_HEAD_NAME);
             cursor = database.rawQuery(query,new String[]{});
             while (cursor.moveToNext()) {
+                property = new JSONObject();
+                property.put("presumed-id","err");
+                property.put("confirmed-id","err");
+
                 String structureId = cursor.getString(cursor.getColumnIndex(Constants.DatabaseKeys.ID));
                 String compoundHeadName = cursor.getString(cursor.getColumnIndex(Constants.DatabaseKeys.COMPOUND_HEAD_NAME));
-                keys.put(structureId);
-                values.put(compoundHeadName);
+
+                option = new JSONObject();
+                option.put("key",structureId);
+                option.put("text",compoundHeadName);
+                option.put("property",property);
+                options.put(option);
             }
         } catch (Exception e) {
             Timber.e(e, "Error find Sprayed Structures with compound head names ");
@@ -960,8 +969,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
         JSONObject compoundStructureField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),JsonForm.COMPOUND_STRUCTURE);
         try {
-            compoundStructureField.put(KEYS,keys);
-            compoundStructureField.put(VALUES, values);
+            compoundStructureField.put("options", options);
         } catch (JSONException e) {
             Timber.e(e, "Error populating %s Options",JsonForm.COMPOUND_STRUCTURE);
         }
