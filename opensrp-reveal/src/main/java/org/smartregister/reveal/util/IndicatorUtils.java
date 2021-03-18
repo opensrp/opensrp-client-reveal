@@ -2,9 +2,13 @@ package org.smartregister.reveal.util;
 
 import android.content.Context;
 
+import net.sqlcipher.Cursor;
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.IndicatorDetails;
 import org.smartregister.reveal.model.TaskDetails;
 
@@ -13,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import timber.log.Timber;
 
 /**
  * Created by ndegwamartin on 2019-09-27.
@@ -95,16 +101,27 @@ public class IndicatorUtils {
 
                     indicatorDetails.setIneligible(indicatorDetails.getIneligible() + 1);
 
+                } else if(Constants.BusinessStatusWrapper.DRUG_DISTRIBUTION_COMPLETE.contains(entry.getValue().getBusinessStatus())){
+
+                    indicatorDetails.setCompleteDrugDistribution(indicatorDetails.getCompleteDrugDistribution() + 1);
+
+                } else  if(Constants.BusinessStatusWrapper.DRUG_DISTRIBUTION_PARTIAL.contains(entry.getValue().getBusinessStatus())){
+
+                    indicatorDetails.setPartialDrugDistribution(indicatorDetails.getPartialDrugDistribution() + 1);
+
                 }
             }
 
         }
 
         indicatorDetails.setTotalStructures(indicatorDetailsMap.size() - indicatorDetails.getIneligible());
+
         indicatorDetails.setProgress(indicatorDetails.getTotalStructures() > 0 ? Math.round(indicatorDetails.getSprayed() * 100 / indicatorDetails.getTotalStructures()) : 0);
 
         return indicatorDetails;
     }
+
+
 
     public static List<String> populateNamibiaSprayIndicators(Context context, IndicatorDetails indicatorDetails) {
         List<String> sprayIndicator = new ArrayList<>();
@@ -163,28 +180,91 @@ public class IndicatorUtils {
         indicators.add(context.getResources().getString(R.string.structure_total));
         indicators.add(String.valueOf(indicatorDetails.getTotalStructures()));
 
+
+        int structureVisited = indicatorDetails.getTotalStructures() - indicatorDetails.getIneligible() - indicatorDetails.getNotVisited();
         indicators.add(context.getResources().getString(R.string.structure_visited));
-        indicators.add(String.valueOf(000));
+        indicators.add(String.valueOf(structureVisited));
 
         indicators.add(context.getResources().getString(R.string.structure_not_visited));
         indicators.add(String.valueOf(indicatorDetails.getNotVisited()));
 
         indicators.add(context.getResources().getString(R.string.structure_confirmed_eligible));
-        indicators.add(String.valueOf(000));
+        indicators.add(String.valueOf(indicatorDetails.getFoundStructures()));
+
 
         indicators.add(context.getResources().getString(R.string.structure_complete_drug_distribution));
-        indicators.add(String.valueOf(000));
+        indicators.add(String.valueOf(indicatorDetails.getCompleteDrugDistribution()));
 
 
         indicators.add(context.getResources().getString(R.string.structure_partial_drug_distribution));
-        indicators.add(String.valueOf(000));
+        indicators.add(String.valueOf(indicatorDetails.getPartialDrugDistribution()));
 
         indicators.add(context.getResources().getString(R.string.individual_total_number_of_children_eligible_3_to_49_mos));
         indicators.add(String.valueOf(000));
 
         indicators.add(context.getResources().getString(R.string.individual_total_treated_3_to_59_mos));
-        indicators.add(String.valueOf(000));
+        indicators.add(String.valueOf(indicatorDetails.getTotalIndividualTreated()));
 
         return indicators;
     }
+
+    public static IndicatorDetails processIndicatorsNigeria(List<TaskDetails> tasks) {
+        //TODO: move to other method, and perform logic based on interventions and country
+        Map<String, List<TaskDetails>> indicatorDetailsMap = new HashMap<>();
+        IndicatorDetails indicatorDetails = new IndicatorDetails();
+
+        if (tasks != null) {
+
+            for (int i = 0; i < tasks.size(); i++) {
+
+                if (Constants.Intervention.IRS.equals(tasks.get(i).getTaskCode()) || Country.NIGERIA.equals(BuildConfig.BUILD_COUNTRY)) {
+                    String structureId = tasks.get(i).getStructureId();
+                    List<TaskDetails> taskDetails = indicatorDetailsMap.get(structureId);
+                    if(taskDetails == null){
+                        taskDetails  = new ArrayList<>();
+                    }
+                    taskDetails.add(tasks.get(i));
+                    indicatorDetailsMap.put(tasks.get(i).getStructureId(),taskDetails);
+                }
+
+            }
+
+            for(Map.Entry<String,List<TaskDetails>> entry : indicatorDetailsMap.entrySet()){
+
+                for(TaskDetails task: entry.getValue()){
+                        if((task.getTaskCode().equals(Constants.Intervention.MDA_DISPENSE) || task.getTaskCode().equals(Constants.Intervention.REGISTER_FAMILY)) && Constants.BusinessStatusWrapper.NOT_ELIGIBLE.contains(task.getBusinessStatus())){
+                            indicatorDetails.setIneligible(indicatorDetails.getIneligible() + 1);
+                            break;
+                        }
+                        if(Constants.BusinessStatusWrapper.NOT_VISITED.equals(task.getBusinessStatus())){
+                            indicatorDetails.setNotVisited(indicatorDetails.getNotVisited() + 1);
+                            break;
+                        }
+
+                        if(task.getTaskCode().equals(Constants.Intervention.MDA_DISPENSE) && Constants.BusinessStatusWrapper.DRUG_DISTRIBUTION_COMPLETE.contains(task.getBusinessStatus())){
+                            indicatorDetails.setCompleteDrugDistribution(indicatorDetails.getCompleteDrugDistribution() + 1);
+                            break;
+                        }
+
+                        if(task.getTaskCode().equals(Constants.Intervention.MDA_DISPENSE) && Constants.BusinessStatusWrapper.DRUG_DISTRIBUTION_PARTIAL.contains(task.getBusinessStatus())){
+                            indicatorDetails.setPartialDrugDistribution(indicatorDetails.getPartialDrugDistribution() + 1);
+                        }
+                        if(task.getTaskCode().equals(Constants.Intervention.REGISTER_FAMILY)  && Constants.BusinessStatusWrapper.SPRAYED.contains(task.getBusinessStatus())) {
+                            indicatorDetails.setFoundStructures(indicatorDetails.getFoundStructures() + 1);
+                        }
+                }
+
+            }
+
+            //TODO: the following should be encoded in tasks. or we must have enough data on local db to read these.
+            indicatorDetails.setTotalIndividualTreated(0);
+            indicatorDetails.setChildrenEligible(0);
+        }
+
+        indicatorDetails.setTotalStructures(indicatorDetailsMap.size());
+        return indicatorDetails;
+    }
 }
+
+
+

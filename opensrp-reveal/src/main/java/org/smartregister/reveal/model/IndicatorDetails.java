@@ -17,6 +17,10 @@ public class IndicatorDetails {
     private int roomCoverage;
     private List<String> sprayIndicatorList;
     private int target;
+    private int completeDrugDistribution;
+    private int partialDrugDistribution;
+    private int totalIndividualTreated;
+    private int childrenEligible;
 
     public int getSprayed() {
         return sprayed;
@@ -98,4 +102,35 @@ public class IndicatorDetails {
         this.roomCoverage = roomCoverage;
     }
 
+    public int getCompleteDrugDistribution() {
+        return completeDrugDistribution;
+    }
+
+    public void setCompleteDrugDistribution(int completeDrugDistribution) {
+        this.completeDrugDistribution = completeDrugDistribution;
+    }
+
+    public int getPartialDrugDistribution() {
+        return partialDrugDistribution;
+    }
+
+    public void setPartialDrugDistribution(int partialDrugDistribution) {
+        this.partialDrugDistribution = partialDrugDistribution;
+    }
+
+    public int getTotalIndividualTreated() {
+        return totalIndividualTreated;
+    }
+
+    public void setTotalIndividualTreated(int totalIndividualTreated) {
+        this.totalIndividualTreated = totalIndividualTreated;
+    }
+
+    public int getChildrenEligible() {
+        return childrenEligible;
+    }
+
+    public void setChildrenEligible(int childrenEligible) {
+        this.childrenEligible = childrenEligible;
+    }
 }

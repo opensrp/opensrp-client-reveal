@@ -56,7 +56,12 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     @Override
     protected IndicatorDetails doInBackground(Void... params) {
         IndicatorDetails indicatorDetails = null;
-        indicatorDetails = IndicatorUtils.processIndicators(this.tasks);
+        if(BuildConfig.BUILD_COUNTRY == Country.NIGERIA){
+            indicatorDetails = IndicatorUtils.processIndicatorsNigeria(this.tasks);
+        } else{
+            indicatorDetails = IndicatorUtils.processIndicators(this.tasks);
+
+        }
         if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
             indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateSprayIndicators(this.activity, indicatorDetails));
         } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
@@ -126,20 +131,24 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             progressIndicator.setVisibility(View.GONE);
         } else if(BuildConfig.BUILD_COUNTRY == Country.NIGERIA){
 
-            //calculate first , then set
+            int  visited = (indicatorDetails.getTotalStructures() - indicatorDetails.getIneligible() - indicatorDetails.getNotVisited());
+            int totalStructures = indicatorDetails.getTotalStructures();
+            int foundCoverage = totalStructures > 0 ? Math.round(visited * 100 / totalStructures) : 0;
             progressIndicator.setSubTitle(this.activity.getString(R.string.found_coverage));
-            progressIndicator.setProgress(0);
-            progressIndicator.setTitle(this.activity.getString(R.string.n_percent,0));
+            progressIndicator.setProgress(foundCoverage);
+            progressIndicator.setTitle(this.activity.getString(R.string.n_percent,foundCoverage));
 
 
+            int distributionCoverage = indicatorDetails.getFoundStructures() > 0 ? Math.round(indicatorDetails.getCompleteDrugDistribution() * 100 / indicatorDetails.getFoundStructures()):0;
             progressIndicator2.setSubTitle(this.activity.getString(R.string.distribution_coverage));
-            progressIndicator2.setProgress(1);
-            progressIndicator2.setTitle(this.activity.getString(R.string.n_percent,1));
+            progressIndicator2.setProgress(distributionCoverage);
+            progressIndicator2.setTitle(this.activity.getString(R.string.n_percent,distributionCoverage));
 
 
+            int individualsComplete =  indicatorDetails.getChildrenEligible() > 0 ? Math.round(indicatorDetails.getTotalIndividualTreated()* 100 /indicatorDetails.getChildrenEligible()): 0;
             progressIndicator3.setSubTitle(this.activity.getString(R.string.and_individuals_complete));
-            progressIndicator3.setProgress(3);
-            progressIndicator3.setTitle(this.activity.getString(R.string.n_percent,3));
+            progressIndicator3.setProgress(individualsComplete);
+            progressIndicator3.setTitle(this.activity.getString(R.string.n_percent,individualsComplete));
 
         }
 
