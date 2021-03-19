@@ -200,7 +200,7 @@ public class IndicatorUtils {
         indicators.add(String.valueOf(indicatorDetails.getPartialDrugDistribution()));
 
         indicators.add(context.getResources().getString(R.string.individual_total_number_of_children_eligible_3_to_49_mos));
-        indicators.add(String.valueOf(000));
+        indicators.add(String.valueOf(indicatorDetails.getChildrenEligible()));
 
         indicators.add(context.getResources().getString(R.string.individual_total_treated_3_to_59_mos));
         indicators.add(String.valueOf(indicatorDetails.getTotalIndividualTreated()));
@@ -212,7 +212,7 @@ public class IndicatorUtils {
         //TODO: move to other method, and perform logic based on interventions and country
         Map<String, List<TaskDetails>> indicatorDetailsMap = new HashMap<>();
         IndicatorDetails indicatorDetails = new IndicatorDetails();
-
+        List<String> structures = new ArrayList<>();
         if (tasks != null) {
 
             for (int i = 0; i < tasks.size(); i++) {
@@ -231,6 +231,7 @@ public class IndicatorUtils {
 
             for(Map.Entry<String,List<TaskDetails>> entry : indicatorDetailsMap.entrySet()){
 
+                    structures.add(entry.getKey());
                 for(TaskDetails task: entry.getValue()){
                         if((task.getTaskCode().equals(Constants.Intervention.MDA_DISPENSE) || task.getTaskCode().equals(Constants.Intervention.REGISTER_FAMILY)) && Constants.BusinessStatusWrapper.NOT_ELIGIBLE.contains(task.getBusinessStatus())){
                             indicatorDetails.setIneligible(indicatorDetails.getIneligible() + 1);
@@ -257,12 +258,43 @@ public class IndicatorUtils {
             }
 
             //TODO: the following should be encoded in tasks. or we must have enough data on local db to read these.
-            indicatorDetails.setTotalIndividualTreated(0);
-            indicatorDetails.setChildrenEligible(0);
+            indicatorDetails.setTotalIndividualTreated(getChildren(true, structures));
+            indicatorDetails.setChildrenEligible(getChildren(false, structures));
+
         }
 
         indicatorDetails.setTotalStructures(indicatorDetailsMap.size());
         return indicatorDetails;
+    }
+
+    private static int getChildren(boolean treated,List<String> structureIds){
+        SQLiteDatabase database = RevealApplication.getInstance().getRepository().getReadableDatabase();
+        int totalIndividualsTreated = 0;
+        StringBuilder structures = new StringBuilder("");
+        for(String structureId : structureIds){
+            if(structureIds.size() == structureIds.indexOf(structureId) + 1 ){
+                structures.append(String.format("'%s'",structureId));
+            } else {
+                structures.append(String.format("'%s',",structureId));
+            }
+        }
+        String query;
+        if(treated){
+            query = String.format("SELECT COUNT(*) FROM %s WHERE %s = 'Yes' AND %s = 'twelveToFiftyNine' and %s in (%s)", FamilyConstants.TABLE_NAME.FAMILY_MEMBER, Constants.DatabaseKeys.ADMINISTERED_SPAQ,Constants.DatabaseKeys.JOB_AID,Constants.DatabaseKeys.STRUCTURE_ID,structures.toString());
+        } else{
+            query  = String.format("SELECT COUNT(*) FROM  %s where %s IS NOT NULL", FamilyConstants.TABLE_NAME.FAMILY_MEMBER, Constants.DatabaseKeys.JOB_AID,structures.toString());
+        }
+
+        Cursor cursor = null;
+        try{
+            cursor = database.rawQuery(query,new String[]{});
+            while (cursor.moveToNext()) {
+                totalIndividualsTreated = cursor.getInt(0);
+            }
+        } catch (Exception e) {
+            Timber.e(e, "Error reading %s  table",FamilyConstants.TABLE_NAME.FAMILY_MEMBER);
+        }
+        return totalIndividualsTreated;
     }
 }
 

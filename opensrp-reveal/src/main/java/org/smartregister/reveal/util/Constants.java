@@ -690,6 +690,8 @@ public interface Constants {
 
         String NUMBER_OF_ADDITIONAL_DOSES = "number_of_additional_doses";
 
+        String JOB_AID = "job_aid";
+
     }
 
     interface UseContextCode {
