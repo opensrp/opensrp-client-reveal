@@ -1,5 +1,7 @@
 package org.smartregister.reveal.presenter;
 
+import androidx.annotation.VisibleForTesting;
+
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.json.JSONException;
@@ -125,7 +127,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
 
     @Override
     public void onEventFound(Event event) {
-        String formName = view.getJsonFormUtils().getFormName(this.eventRegisterDetails.getEventType(), null);
+        String formName = view.getJsonFormUtils().getFormName(this.eventRegisterDetails.getEventType());
         if (StringUtils.isBlank(formName)) {
             view.displayError(R.string.opening_form_title, R.string.form_not_found);
         } else {
@@ -133,7 +135,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
             view.getJsonFormUtils().populateForm(event, formJSON);
             view.getJsonFormUtils().populateFormWithServerOptions(formName, formJSON);
             try {
-                formJSON.put(ENTITY_ID, event.getBaseEntityId());
+                formJSON.put(ENTITY_ID, StringUtils.isBlank(event.getBaseEntityId()) ? JSONObject.NULL : event.getBaseEntityId());
                 formJSON.put(DETAILS, new JSONObject(event.getDetails()));
             } catch (JSONException e) {
                 Timber.e(e);
@@ -148,9 +150,18 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
         view.startMapActivity();
     }
 
+    public EventRegisterDetails getEventRegisterDetails() {
+        return eventRegisterDetails;
+    }
+
+    @VisibleForTesting
+    public void setEventRegisterDetails(EventRegisterDetails eventRegisterDetails) {
+        this.eventRegisterDetails = eventRegisterDetails;
+    }
+
     public void onEventSelected(EventRegisterDetails details) {
         view.showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
-        this.eventRegisterDetails = details;
+        setEventRegisterDetails(details);
         interactor.findEvent(details.getFormSubmissionId());
     }
 
@@ -159,9 +170,18 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
         view.openFilterActivity(filterParams);
     }
 
+    public final TaskFilterParams getFilterParams() {
+        return filterParams;
+    }
+
+    @VisibleForTesting
+    public void setFilterParams(TaskFilterParams taskFilterParams){
+        this.filterParams = taskFilterParams;
+    }
+
     @Override
     public void filterTasks(TaskFilterParams filterParams) {
-        this.filterParams = filterParams;
+        setFilterParams(filterParams);
         initializeQueries(getMainCondition());
     }
 

@@ -229,6 +229,7 @@ public interface Constants {
 
 
     interface EventType {
+        String SPRAY_EVENT = Constants.SPRAY_EVENT;
 
         String CASE_CONFIRMATION_EVENT = "case_confirmation";
 
