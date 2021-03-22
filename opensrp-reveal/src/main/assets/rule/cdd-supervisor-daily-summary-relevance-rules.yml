@@ -1,15 +1,15 @@
 ---
-name: step1_treated_male_1-4
-description: step1_treated_male_1
+name: step1_treated_male_1_to_4
+description: step1_treated_male_1_to_4
 priority: 1
-condition: "step1_ntd_treated.equals('SCH')"
+condition: "!step1_ntd_treated.equals('SCH')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_treated_female_1-4
-description: step1_treated_female_1-4
+name: step1_treated_female_1_to_4
+description: step1_treated_female_1_to_4
 priority: 1
-condition: "step1_ntd_treated.equals('SCH')"
+condition: "!step1_ntd_treated.equals('SCH')"
 actions:
   - "isRelevant = true"
 ---
