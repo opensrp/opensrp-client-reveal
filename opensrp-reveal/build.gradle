@@ -105,13 +105,32 @@ android {
                 project.logger.error("oauth.client.secret variable is not set in your local.properties")
             }
 
-
+            if (properties != null) {
+                def envsArray = "[ "
+                properties.toSorted().findAll {
+                    return it.key.toString().contains("oauth.client") && it.key.toString().tokenize(".").size() > 3
+                }.groupBy {
+                    return it.key.toString().contains("secret")
+                }[true].each {
+                    def env = it.key.toString().tokenize(".")[2]
+                    print(env)
+                    envsArray += """${getJavaMap([env   : "$env",
+                                                  id    : properties["oauth.client." + env + ".id"],
+                                                  secret: properties["oauth.client." + env + ".secret"],
+                                                  url: properties["oauth.client." + env + ".url"]
+                    ])},"""
+                }
+                envsArray = envsArray.substring(0, envsArray.length() - 1)
+                envsArray += "]"
+                buildConfigField "String", "ENV_ARRAY", "\"${envsArray}\""
+            }
         } else {
             println("local.properties does not exist")
             buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
             buildConfigField "String", "DG_CONNECT_ID", "\"sample_key\""
             buildConfigField "String", "OAUTH_CLIENT_ID", "\"sample_client_id\""
             buildConfigField "String", "OAUTH_CLIENT_SECRET", "\"sample_client_secret\""
+            buildConfigField "String", "ENV_ARRAY", '"[]"'
         }
     }
     dexOptions {
@@ -184,6 +203,13 @@ android {
 
 }
 
+private static String getJavaMap(apiUrlMap) {
+    def hashMap = "{ "
+    apiUrlMap.each { k, v -> hashMap += "\\\"${k}\\\":" + "\\\"${v.toString().replace("\"", '')}\\\"" + "," }
+    hashMap = hashMap.substring(0, hashMap.length() - 1)
+    return hashMap + "}"
+}
+
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
     maxHeapSize = "4g"
@@ -206,7 +232,7 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
     }
 
-    implementation('org.smartregister:opensrp-client-core:4.2.11-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:4.2.13-SWITCH-CLIENTS-test3-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'

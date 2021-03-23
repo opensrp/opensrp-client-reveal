@@ -3,7 +3,8 @@ package org.smartregister.reveal.util;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import org.smartregister.SyncConfiguration;
+import org.smartregister.EnvironmentManager;
+import org.smartregister.PropertiesSyncConfiguration;
 import org.smartregister.SyncFilter;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.LocationRepository;
@@ -18,16 +19,18 @@ import java.util.List;
 /**
  * Created by samuelgithengi on 11/29/18.
  */
-public class RevealSyncConfiguration extends SyncConfiguration {
+public class RevealSyncConfiguration extends PropertiesSyncConfiguration {
 
     private AllSharedPreferences sharedPreferences;
 
     private LocationRepository locationRepository;
 
     public RevealSyncConfiguration() {
+        super(new EnvironmentManager(BuildConfig.ENV_ARRAY));
     }
 
     public RevealSyncConfiguration(LocationRepository locationRepository, AllSharedPreferences sharedPreferences) {
+        this();
         this.locationRepository = locationRepository;
         this.sharedPreferences = sharedPreferences;
     }
@@ -127,16 +130,6 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     @Override
     public boolean clearDataOnNewTeamLogin() {
         return true;
-    }
-
-    @Override
-    public String getOauthClientId() {
-        return BuildConfig.OAUTH_CLIENT_ID;
-    }
-
-    @Override
-    public String getOauthClientSecret() {
-        return BuildConfig.OAUTH_CLIENT_SECRET;
     }
 
     @Override
