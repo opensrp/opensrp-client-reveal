@@ -102,7 +102,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGetFormNameShouldReturnThailandLarvalDippingFormForLarvalDippingEvent() {
+    public void testGetFormNameCountryZambiaShouldReturnLarvalDippingFormForLarvalDippingEvent() {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         assertEquals(JsonForm.LARVAL_DIPPING_FORM, revealJsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, null));
@@ -110,12 +110,12 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGetFormNameShouldReturnThailandLarvalDippingFormForLarvalDippingIntervention() {
+    public void testGetFormNameShouldReturnLarvalDippingFormForLarvalDippingIntervention() {
         assertEquals(revealJsonFormUtils.getFormName(null, LARVAL_DIPPING), JsonForm.LARVAL_DIPPING_FORM);
     }
 
     @Test
-    public void testGetFormNameShouldReturnThailandMosquitoCollectionFormForLarvalDippingEvent() {
+    public void testGetFormNameCountryZambiaShouldReturnMosquitoCollectionFormForLarvalDippingEvent() {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         assertEquals(JsonForm.MOSQUITO_COLLECTION_FORM, revealJsonFormUtils.getFormName(MOSQUITO_COLLECTION_EVENT, null));
@@ -123,20 +123,20 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGetFormNameShouldReturnThailandMosquitoCollectionFormForLarvalDippingIntervention() {
+    public void testGetFormNameShouldReturnMosquitoCollectionFormForLarvalDippingIntervention() {
         assertEquals(revealJsonFormUtils.getFormName(null, MOSQUITO_COLLECTION), JsonForm.MOSQUITO_COLLECTION_FORM);
     }
 
     @Test
     public void testGetFormNameShouldReturnPAOTForm() {
-        assertEquals(JsonForm.PAOT_FORM, revealJsonFormUtils.getFormName(null, Constants.EventType.PAOT_EVENT));
+        assertEquals(JsonForm.PAOT_FORM, revealJsonFormUtils.getFormName(null, Constants.Intervention.PAOT));
     }
 
     @Test
-    public void testGetFormNameShouldReturnThailandPAOTForm() {
+    public void testGetFormNameCountryThailandShouldReturnThailandPAOTForm() {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
-        assertEquals(JsonForm.THAILAND_PAOT_FORM, revealJsonFormUtils.getFormName(null, Constants.EventType.PAOT_EVENT));
+        assertEquals(JsonForm.THAILAND_PAOT_FORM, revealJsonFormUtils.getFormName(null, Constants.Intervention.PAOT));
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
@@ -162,7 +162,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testgetFormJSON() throws JSONException  {
+    public void testGetFormJSON() throws JSONException {
         StructureTaskDetails task = new StructureTaskDetails("d12202fb-d347-4d7a-8859-fb370304c34c");
         task.setBusinessStatus("Not Visited");
         task.setTaskEntity("c72310fd-9c60-403e-a6f8-e38bf5d6359b");
@@ -547,7 +547,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGetSEnegalSprayForm() {
+    public void testGetSenegalSprayForm() {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
         String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, null);
@@ -639,7 +639,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGetTabletAccountalbilityForm() {
+    public void testGetTabletAccountabilityForm() {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
         String actualFormName = revealJsonFormUtils.getFormName(TABLET_ACCOUNTABILITY_EVENT, null);
