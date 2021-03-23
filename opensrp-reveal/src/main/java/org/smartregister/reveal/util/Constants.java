@@ -309,10 +309,9 @@ public interface Constants {
 
         List<String> SPRAYED = Arrays.asList(BusinessStatus.SPRAYED, BusinessStatus.COMPLETE, BusinessStatus.PARTIALLY_SPRAYED);
         List<String> NOT_SPRAYED = Arrays.asList(BusinessStatus.NOT_SPRAYED, BusinessStatus.IN_PROGRESS, BusinessStatus.INCOMPLETE);
-        List<String> NOT_ELIGIBLE = Arrays.asList(BusinessStatus.NOT_SPRAYABLE, BusinessStatus.NOT_ELIGIBLE,BusinessStatus.INELIGIBLE);
+        List<String> NOT_ELIGIBLE = Arrays.asList(BusinessStatus.NOT_SPRAYABLE, BusinessStatus.NOT_ELIGIBLE);
         List<String> NOT_VISITED = Arrays.asList(BusinessStatus.NOT_VISITED);
-        List<String> DRUG_DISTRIBUTION_COMPLETE = Arrays.asList(BusinessStatus.SMC_COMPLETE,BusinessStatus.SPAQ_COMPLETE);
-        List<String> DRUG_DISTRIBUTION_PARTIAL = Arrays.asList(BusinessStatus.PARTIALLY_RECEIVED,BusinessStatus.TASKS_INCOMPLETE);
+        List<String> MDA_DISPENSE_ELIGIBLE_STATUS = Arrays.asList(BusinessStatus.NOT_VISITED,BusinessStatus.SMC_COMPLETE,BusinessStatus.NOT_DISPENSED);
     }
 
     interface Map {
