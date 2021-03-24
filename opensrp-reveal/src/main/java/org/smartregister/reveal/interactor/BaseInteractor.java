@@ -42,6 +42,7 @@ import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Intervention;
@@ -243,6 +244,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 jsonForm.put(ENTITY_ID, UUID.randomUUID().toString());
             }else if (CDD_SUPERVISOR_DAILY_SUMMARY.equals(encounterType)){
                 interventionType = CDD_SUPERVISION;
+            } else if(encounterType.equals(EventType.TABLET_ACCOUNTABILITY_EVENT)){
+                String location = JsonFormUtils.getFieldValue(jsonForm.toString(),JsonForm.LOCATION);
+                jsonForm.put(ENTITY_ID,getLocationId(location));
             }
         } catch (JSONException e) {
             Timber.e(e);
@@ -510,5 +514,17 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             }
         });
 
+    }
+    private String getLocationId(String locationName){
+        String locationId = null;
+        String query = String.format("select %s from  %s where %s = ? limit 1", ID_, STRUCTURES_TABLE, Constants.DatabaseKeys.NAME);
+        try(Cursor cursor = getDatabase().rawQuery(query,new String[]{locationName})){
+            if(cursor.moveToFirst()){
+                locationId = cursor.getString(0);
+            }
+        }catch (SQLException e){
+            Timber.e(e);
+        }
+        return locationId;
     }
 }
