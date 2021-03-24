@@ -943,10 +943,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         JSONObject option;
         JSONObject property;
         JSONArray options = new JSONArray();
-        Cursor cursor = null;
-        try{
-            String query = String.format("SELECT %s,%s FROM %s WHERE %s IS NOT NULL",Constants.DatabaseKeys.ID,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.Tables.SPRAYED_STRUCTURES,Constants.DatabaseKeys.COMPOUND_HEAD_NAME);
-            cursor = database.rawQuery(query,new String[]{});
+        String query = String.format("SELECT %s,%s FROM %s WHERE %s IS NOT NULL",Constants.DatabaseKeys.ID,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.Tables.SPRAYED_STRUCTURES,Constants.DatabaseKeys.COMPOUND_HEAD_NAME);
+        try(Cursor cursor = database.rawQuery(query,new String[]{})){;
             while (cursor.moveToNext()) {
                 property = new JSONObject();
                 property.put("presumed-id","err");
@@ -963,9 +961,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
         } catch (Exception e) {
             Timber.e(e, "Error find Sprayed Structures with compound head names ");
-        } finally {
-            if (cursor != null)
-                cursor.close();
         }
         JSONObject compoundStructureField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),JsonForm.COMPOUND_STRUCTURE);
         try {
