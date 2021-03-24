@@ -2,6 +2,8 @@ package org.smartregister.reveal.util;
 
 import android.content.Context;
 
+import androidx.core.util.Pair;
+
 import com.mapbox.geojson.Feature;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
@@ -733,7 +735,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         assertEquals(JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM,actualFormName);
     }
 
-   @Test
+    @Test
     public void testGetCDDSupervisionFormFromTaskCode(){
         Whitebox.setInternalState(BuildConfig.class,BuildConfig.BUILD_COUNTRY,Country.KENYA);
         String actualFormName = revealJsonFormUtils.getFormName(null,CDD_SUPERVISION);
@@ -840,10 +842,32 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         verify(fieldJsonObject).remove(eq(JsonFormConstants.RELEVANCE));
     }
 
+    @SuppressWarnings("SameParameterValue")
+    private JSONArray exampleSettingsConfigJSONArray(final String filterKey) throws JSONException {
+        JSONArray options = new JSONArray();
+        options.put(new JSONObject());
+        JSONObject keyJSONObjectOptions = new JSONObject();
+        keyJSONObjectOptions.put(filterKey, options);
+        JSONArray testServerConfigJSONArray = mock(JSONArray.class);
+        when(testServerConfigJSONArray.optJSONObject(eq(0))).thenReturn(keyJSONObjectOptions);
+        return testServerConfigJSONArray;
+    }
+
     @Test
-    public void testPopulateServerOptions() {
-        // TODO
-//        revealJsonFormUtils.populateServerOptions();
+    public void testPopulateServerOptions() throws JSONException {
+        final String fakeSettingsConfigKey = "dummy_key";
+        final String fakeFilterKey = "dummy_filter_key";
+        Map<String, Object> testsServerConfig = spy(new HashMap<>());
+        JSONArray testServerConfigJSONArray = exampleSettingsConfigJSONArray(fakeFilterKey);
+        testsServerConfig.put(fakeSettingsConfigKey, testServerConfigJSONArray);
+
+        JSONObject testField = mock(JSONObject.class);
+        when(testsServerConfig.get(eq(fakeSettingsConfigKey))).thenReturn(testServerConfigJSONArray);
+
+        Pair<JSONArray, JSONArray> keyValuePaired= revealJsonFormUtils.populateServerOptions(testsServerConfig, fakeSettingsConfigKey, testField, fakeFilterKey);
+        assertNotNull(keyValuePaired);
+        verify(testField).put(eq(JsonFormConstants.KEYS), any(JSONArray.class));
+        verify(testField).put(eq(JsonFormConstants.VALUES), any(JSONArray.class));
     }
 }
 
