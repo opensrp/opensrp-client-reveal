@@ -27,6 +27,9 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
 
     private CommonPersonObject familyHeadPersonObject;
 
+    private com.vijay.jsonwizard.utils.FormUtils formUtils = new com.vijay.jsonwizard.utils.FormUtils();
+
+
     public FamilyProfileModel(String familyName) {
         super(familyName);
     }
@@ -72,7 +75,6 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
 
     @Override
     public JSONObject getFormAsJson(String formName, String entityId, String currentLocationId) throws Exception {
-        com.vijay.jsonwizard.utils.FormUtils formUtils = new com.vijay.jsonwizard.utils.FormUtils();
         String formattedFormName = formName.replace(Constants.JsonForm.JSON_FORM_FOLDER, "").replace(JsonFormConstants.JSON_FILE_EXTENSION, "");
         JSONObject form = formUtils.getFormJsonFromRepositoryOrAssets(RevealApplication.getInstance().getApplicationContext(), formattedFormName);
         if (form == null) {
