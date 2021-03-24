@@ -2,7 +2,6 @@ package org.smartregister.reveal.model;
 
 import com.vijay.jsonwizard.utils.FormUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
