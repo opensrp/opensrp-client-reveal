@@ -749,6 +749,8 @@ public interface Constants {
 
         String COMPOUND_STRUCTURE = "compound_structure";
 
+        String SPRAY_DATE = "spray_date";
+
     }
 
     interface UseContextCode {
