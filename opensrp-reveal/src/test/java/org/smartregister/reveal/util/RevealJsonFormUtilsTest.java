@@ -199,7 +199,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     public void testGetFormNameCountryThailandShouldReturnThailandPAOTForm() {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
-        assertEquals(JsonForm.THAILAND_PAOT_FORM, revealJsonFormUtils.getFormName(null, Constants.Intervention.PAOT));
+        assertEquals(JsonForm.THAILAND_PAOT_FORM, revealJsonFormUtils.getFormName(null, PAOT));
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
@@ -747,7 +747,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         Map<String, Object> keyAndTextMap = new HashMap<>(firstField.length());
         for (int i = 0; i < firstField.length(); i++) {
             JSONObject option = firstField.getJSONObject(i);
-            keyAndTextMap.put(option.getString(JsonFormConstants.KEY), option.getString(JsonFormConstants.TEXT));
+            keyAndTextMap.put(option.getString(JsonFormConstants.KEY), option.getString(TEXT));
         }
         return keyAndTextMap;
     }
@@ -807,7 +807,8 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         org.smartregister.domain.Event event = eventFor(obs);
 
         JSONObject fieldJsonObject = mock(JSONObject.class);
-        final String testKey = "namibia_test_key", typeTest = "type_test";
+        final String testKey = "namibia_test_key";
+        final String typeTest = "type_test";
         when(fieldJsonObject.getString(eq(JsonFormConstants.KEY))).thenReturn(testKey);
         when(fieldJsonObject.optString(eq(JsonFormConstants.TYPE))).thenReturn(typeTest);
 
