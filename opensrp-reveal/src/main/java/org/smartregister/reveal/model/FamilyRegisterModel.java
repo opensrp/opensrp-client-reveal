@@ -25,11 +25,12 @@ import static org.smartregister.util.JsonFormUtils.VALUE;
  */
 public class FamilyRegisterModel extends BaseFamilyRegisterModel {
 
-    private String structureId;
+    private final String structureId;
     private final String taskId;
     private final String taskBusinessStatus;
     private final String taskStatus;
     private final String structureName;
+    private final FormUtils formUtils = new FormUtils();
 
 
     public FamilyRegisterModel(String structureId, String taskId, String taskBusinessStatus, String taskStatus, String structureName) {
@@ -61,7 +62,6 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
 
     @Override
     public JSONObject getFormAsJson(String formName, String entityId, String currentLocationId) throws Exception {
-        FormUtils formUtils = new FormUtils();
         String formattedFormName = formName.replace(Constants.JsonForm.JSON_FORM_FOLDER, "").replace(JsonFormConstants.JSON_FILE_EXTENSION, "");
         JSONObject form = formUtils.getFormJsonFromRepositoryOrAssets(RevealApplication.getInstance().getApplicationContext(), formattedFormName);
         JSONObject familyNameFieldJSONObject = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), FAMILY_NAME);
