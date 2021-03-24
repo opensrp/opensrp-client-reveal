@@ -30,6 +30,7 @@ import org.smartregister.util.JsonFormUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -173,8 +174,11 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGetFormNameShouldReturnLarvalDippingFormForLarvalDippingIntervention() {
-        assertEquals(revealJsonFormUtils.getFormName(null, LARVAL_DIPPING), JsonForm.LARVAL_DIPPING_FORM);
+    public void testGetFormNameShouldReturnThailandLarvalDippingFormForLarvalDippingIntervention() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND_EN);
+        assertEquals(JsonForm.THAILAND_EN_LARVAL_DIPPING_FORM, revealJsonFormUtils.getFormName(null, LARVAL_DIPPING));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
@@ -186,13 +190,24 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGetFormNameShouldReturnMosquitoCollectionFormForLarvalDippingIntervention() {
-        assertEquals(revealJsonFormUtils.getFormName(null, MOSQUITO_COLLECTION), JsonForm.MOSQUITO_COLLECTION_FORM);
+    public void testGetFormNameShouldReturnMosquitoCollectionFormForMosquitoCollectionIntervention() {
+        List<Country> excludedCountries = Arrays.asList(Country.ZAMBIA, Country.NAMIBIA, Country.BOTSWANA, Country.KENYA, Country.SENEGAL);
+        Collections.shuffle(excludedCountries);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, excludedCountries.get(0));
+        assertEquals(JsonForm.MOSQUITO_COLLECTION_FORM, revealJsonFormUtils.getFormName(null, MOSQUITO_COLLECTION));
     }
 
     @Test
     public void testGetFormNameShouldReturnPAOTForm() {
-        assertEquals(JsonForm.PAOT_FORM, revealJsonFormUtils.getFormName(null, Constants.Intervention.PAOT));
+        List<Country> countryList = Arrays.asList(Country.values());
+        List<Country> excludedCountries = new ArrayList<>(countryList.size());
+        for (Country country : countryList) {
+            if (country.equals(Country.THAILAND) || country.equals(Country.REFAPP)) continue;
+            excludedCountries.add(country);
+        }
+        Collections.shuffle(excludedCountries);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, excludedCountries.get(0));
+        assertEquals(JsonForm.PAOT_FORM, revealJsonFormUtils.getFormName(null, PAOT));
     }
 
     @Test
