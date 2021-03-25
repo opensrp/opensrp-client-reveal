@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.OfflineMapsFragmentContract;
 
 import io.ona.kujaku.services.MapboxOfflineDownloaderService;
@@ -44,7 +45,7 @@ public abstract class BaseOfflineMapsFragment extends Fragment implements Offlin
 
     @Override
     public void displayToast(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(RevealApplication.getInstance(), message, Toast.LENGTH_LONG).show();
     }
 
     @Override

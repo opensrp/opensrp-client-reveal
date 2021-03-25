@@ -12,19 +12,40 @@
         android:layout_weight="1"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    <Button
-        android:id="@+id/download_map"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="8dp"
-        android:background="@drawable/download_map_bg"
-        android:paddingStart="@dimen/detect_case_padding"
-        android:paddingEnd="@dimen/detect_case_padding"
-        android:text="@string/download"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:visibility="visible" />
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/delete_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="8dp"
+            android:background="@drawable/delete_map_bg"
+            android:paddingStart="@dimen/detect_case_padding"
+            android:paddingEnd="@dimen/detect_case_padding"
+            android:text="@string/delete_caps"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/download_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="8dp"
+            android:background="@drawable/download_map_bg"
+            android:paddingStart="@dimen/detect_case_padding"
+            android:paddingEnd="@dimen/detect_case_padding"
+            android:text="@string/download"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:visibility="visible" />
+    </LinearLayout>
 
 </LinearLayout>

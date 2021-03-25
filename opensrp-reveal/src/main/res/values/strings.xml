@@ -301,6 +301,7 @@
     <string name="download">Download</string>
     <string name="downloading">Downloading</string>
     <string name="delete">Delete</string>
+    <string name="delete_caps">DELETE</string>
     <string name="select_offline_map_to_delete">Please select an offline map to delete</string>
     <string name="select_offline_map_to_download">Please select an offline map to download</string>
     <string name="offline_map_size">Size %1$s Downloaded %2$s </string>
@@ -426,11 +427,17 @@
     <string name="start_p2p_syc">Start P2P Sync</string>
 
     <string name="events">Events</string>
+    <string name="ok">Done</string>
     <string name="locations">Locations</string>
     <string name="plans">Plans</string>
     <string name="structures">Structures</string>
     <string name="tasks_text">Tasks</string>
     <string name="registration_info">Registration info</string>
     <string name="view_paot_details">View Details</string>
+    <string name="tablet_accountability_form">Enter Tablet Accountability Form</string>
+
+    <string name="edit_cdd_task_complete_status">Edit Task Complete Status</string>
+    <string name="confirm_edit_cdd_task_complete_status">Please confirm that the task is complete</string>
+    <string name="cancel_no">Cancel</string>
 
 </resources>

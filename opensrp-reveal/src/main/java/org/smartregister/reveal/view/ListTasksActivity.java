@@ -281,7 +281,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.register_family).setOnClickListener(this);
 
-        if (isZambiaIRSLite()) {
+        if(BuildConfig.SELECT_JURISDICTION) {
             findViewById(R.id.btn_add_structure).setVisibility(View.GONE);
         }
     }
@@ -354,7 +354,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
                         RevealMapHelper.addBaseLayers(kujakuMapView, style, ListTasksActivity.this);
 
-                        if (getBuildCountry() != Country.ZAMBIA) {
+                        if (getBuildCountry() != Country.ZAMBIA && getBuildCountry() != Country.SENEGAL) {
                             layerSwitcherFab.setVisibility(View.GONE);
                         }
 
@@ -431,7 +431,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     public void positionMyLocationAndLayerSwitcher() {
         FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
-        if (getBuildCountry() != Country.ZAMBIA && getBuildCountry() != Country.NAMIBIA &&
+        if (getBuildCountry() != Country.ZAMBIA && getBuildCountry() != Country.NAMIBIA && getBuildCountry() != Country.SENEGAL &&
                 !(getBuildCountry() == Country.REFAPP && R.string.irs == org.smartregister.reveal.util.Utils.getInterventionLabel())) {
             positionMyLocationAndLayerSwitcher(myLocationButtonParams, myLocationButtonParams.topMargin);
         } else {
@@ -656,7 +656,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
-                if (isZambiaIRSLite()) {
+                if (BuildConfig.SELECT_JURISDICTION ) {
                     RevealApplication.getInstance().getAppExecutors().mainThread().execute(() -> {
                         for (Feature feature : featureCollection.features()) {
                             createIRSLiteOABoundaryLayer(feature);
@@ -736,7 +736,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void displaySelectedFeature(Feature feature, LatLng clickedPoint, double zoomlevel) {
         adjustFocusPoint(clickedPoint);
         kujakuMapView.centerMap(clickedPoint, ANIMATE_TO_LOCATION_DURATION, zoomlevel);
-        if (selectedGeoJsonSource != null && !isZambiaIRSLite()) {
+        if (selectedGeoJsonSource != null && !BuildConfig.SELECT_JURISDICTION) {
             selectedGeoJsonSource.setGeoJson(FeatureCollection.fromFeature(feature));
         }
     }
@@ -940,6 +940,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == BUTTON_POSITIVE)
                             listTaskPresenter.onMarkStructureInactiveConfirmed();
+                        dialog.dismiss();
+                    }
+                });
+    }
+
+    @Override
+    public void displayEditCDDTaskCompleteDialog() {
+        AlertDialogUtils.displayNotificationWithCallback(this, R.string.edit_cdd_task_complete_status,
+                R.string.confirm_edit_cdd_task_complete_status, R.string.complete, R.string.incomplete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == BUTTON_POSITIVE) {
+                            listTaskPresenter.onEditCDDTaskCompleteStatusConfirmed(true);
+                        } else  {
+                            listTaskPresenter.onEditCDDTaskCompleteStatusConfirmed(false);
+                        }
                         dialog.dismiss();
                     }
                 });

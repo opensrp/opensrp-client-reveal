@@ -1,20 +1,28 @@
 package org.smartregister.reveal.util;
 
+import android.view.View;
+
 import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.smartregister.domain.Obs;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -23,6 +31,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_GEO_JSON_CIRCLE_SIDES;
@@ -45,6 +54,7 @@ import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundary
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 import static org.smartregister.reveal.util.Utils.getResolveLocationTimeoutInSeconds;
 import static org.smartregister.reveal.util.Utils.isResidentialStructure;
+import static org.smartregister.reveal.util.Utils.showWhenTrue;
 import static org.smartregister.reveal.util.Utils.validateFarStructures;
 
 /**
@@ -228,6 +238,37 @@ public class UtilsTest {
     }
 
     @Test
+    public void testBuildRepeatingGroup(){
+        JSONObject mockedObject = mock(JSONObject.class);
+        JSONArray mockedJsonArray= mock(JSONArray.class);
+        Obs obs = mock(Obs.class);
+        List<Obs> mockedObs = new ArrayList<>();
+        mockedObs.add(obs);
+        List<Object> obsValues = new ArrayList<>();
+        obsValues.add("some value");
+
+        when(obs.getValues()).thenReturn(obsValues);
+        when(obs.getFormSubmissionField()).thenReturn("field_name");
+        when(mockedObject.optString(JsonFormConstants.KEY)).thenReturn("field");
+        when(mockedJsonArray.length()).thenReturn(1);
+        when(mockedJsonArray.optJSONObject(0)).thenReturn(mockedObject);
+        when(mockedObject.optJSONArray(JsonFormConstants.VALUE)).thenReturn(mockedJsonArray);
+
+        LinkedHashMap<String, HashMap<String, String>> repeatingGroup = Utils.buildRepeatingGroup(mockedObject, mockedObs);
+        assertEquals(1, repeatingGroup.size());
+        assertEquals("some value", repeatingGroup.get("name").get("field"));
+    }
+
+    @Test
+    public void testGenerateListMapOfRepeatingGrp() {
+        Map<String, HashMap<String, String>> testData = new HashMap<>();
+        testData.put("entry1", new HashMap<>());
+        testData.put("entry2", new HashMap<>());
+        List<HashMap<String, String>> resultData = Utils.generateListMapOfRepeatingGrp(testData);
+        assertEquals(testData.size(), resultData.size());
+    }
+
+    @Test
     public void testGetCoordsFromGeometryReturnsCorrectValuesFromMultiPolygon() {
 
         Feature originalFeature = Feature.fromJson(originalMultipolygonFeatureJson);
@@ -236,6 +277,20 @@ public class UtilsTest {
 
         assertEquals("[[[[100.5244829,13.8576014],[100.5242194,13.8435594],[100.5151606,13.8435594],[100.5123746,13.8519458],[100.5244829,13.8576014]]]]",actualCoords.toString());
 
+    }
+
+    @Test
+    public void testShowWhenTrueCheckVisible() {
+        View view = mock(View.class);
+        showWhenTrue(view, true);
+        verify(view).setVisibility(View.VISIBLE);
+    }
+
+    @Test
+    public void testShowWhenTrueCheckGone() {
+        View view = mock(View.class);
+        showWhenTrue(view, false);
+        verify(view).setVisibility(View.GONE);
     }
 
 }

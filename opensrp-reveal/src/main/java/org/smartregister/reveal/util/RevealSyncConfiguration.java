@@ -1,6 +1,7 @@
 package org.smartregister.reveal.util;
 
 import android.text.TextUtils;
+import android.util.Pair;
 
 import org.smartregister.SyncConfiguration;
 import org.smartregister.SyncFilter;
@@ -11,6 +12,7 @@ import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.view.activity.BaseLoginActivity;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -150,5 +152,10 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     public boolean runPlanEvaluationOnClientProcessing() {
         return true;
+    }
+
+    @Override
+    public List<Pair<String, String>> getGlobalSettingsQueryParams() {
+        return Collections.singletonList(Pair.create("identifier", "global_configs"));
     }
 }

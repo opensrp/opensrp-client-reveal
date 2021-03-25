@@ -165,7 +165,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     private void populateLocationsFromPreferences() {
         view.setDistrict(prefsUtil.getCurrentDistrict());
-        if(org.smartregister.reveal.util.Utils.isZambiaIRSLite()) {
+        if(org.smartregister.reveal.util.Utils.isZambiaIRSLite() || org.smartregister.reveal.util.Utils.isKenyaMDALite()) {
             view.setFacility(prefsUtil.getCurrentDistrict(), "");
         } else {
             view.setFacility(prefsUtil.getCurrentFacility(), prefsUtil.getCurrentFacilityLevel());
@@ -235,7 +235,8 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(OPERATIONAL_AREA);
         List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
         int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name())
-                || name.get(0).equalsIgnoreCase(Country.NAMIBIA.name()) ? 3 : 2;
+                || name.get(0).equalsIgnoreCase(Country.NAMIBIA.name())
+                ||name.get(0).toUpperCase().startsWith(Country.SENEGAL.name()) ? 3 : 2;
         if (name.get(0).toUpperCase().startsWith(Country.ZAMBIA.name()) && name.size() > 4) {
             districtOffset = name.size() - 2;
         }

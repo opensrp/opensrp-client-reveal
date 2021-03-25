@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.OfflineMapModel;
+import org.smartregister.reveal.util.CustomOfflineRegionCallback;
 import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.viewholder.DownloadedOfflineMapViewHolder;
 
@@ -22,12 +25,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.mapbox.mapboxsdk.offline.OfflineRegion.STATE_ACTIVE;
+import static com.mapbox.mapboxsdk.offline.OfflineRegion.STATE_INACTIVE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.DOWNLOADED;
 import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.READY;
 
@@ -104,6 +112,66 @@ public class DownloadedOfflineMapAdapterTest extends BaseUnitTest {
         assertEquals(1, adapter.getItemCount());
         verify(adapter).notifyDataSetChanged();
 
+    }
+
+    @Test
+    public void testDisplayDownloadingWhenStatusActive(){
+        LinearLayout vg = new LinearLayout(context);
+        DownloadedOfflineMapViewHolder holder = adapter.onCreateViewHolder(vg,0);
+        holder = spy(holder);
+        CustomOfflineRegionCallback callback = new CustomOfflineRegionCallback(holder, new OfflineMapModel());
+        OfflineRegionStatus mockStatus = mock(OfflineRegionStatus.class);
+
+        when(mockStatus.getCompletedResourceCount()).thenReturn(1000L);
+        when(mockStatus.getDownloadState()).thenReturn(STATE_ACTIVE);
+        when(mockStatus.isComplete()).thenReturn(false);
+
+        callback.onStatus(mockStatus);
+        verify(holder).displayDownloading();
+    }
+
+    @Test
+    public void testDisplayIncompleteWhenStatusInActiveAndIncomplete(){
+        LinearLayout vg = new LinearLayout(context);
+        DownloadedOfflineMapViewHolder holder = adapter.onCreateViewHolder(vg,0);
+        holder = spy(holder);
+        CustomOfflineRegionCallback callback = new CustomOfflineRegionCallback(holder, new OfflineMapModel());
+        OfflineRegionStatus mockStatus = mock(OfflineRegionStatus.class);
+
+        when(mockStatus.getCompletedResourceCount()).thenReturn(1000L);
+        when(mockStatus.getDownloadState()).thenReturn(STATE_INACTIVE);
+        when(mockStatus.isComplete()).thenReturn(false);
+
+        callback.onStatus(mockStatus);
+        verify(holder).displayIncomplete();
+    }
+
+    @Test
+    public void testDisplaySuccessWhenStatusCompleted(){
+        LinearLayout vg = new LinearLayout(context);
+        DownloadedOfflineMapViewHolder holder = adapter.onCreateViewHolder(vg,0);
+        holder = spy(holder);
+        CustomOfflineRegionCallback callback = new CustomOfflineRegionCallback(holder, new OfflineMapModel());
+        OfflineRegionStatus mockStatus = mock(OfflineRegionStatus.class);
+
+        when(mockStatus.getCompletedResourceCount()).thenReturn(1000L);
+        when(mockStatus.isComplete()).thenReturn(true);
+
+        callback.onStatus(mockStatus);
+        verify(holder).displaySuccess();
+    }
+
+    @Test
+    public void testStatusErrorDoNothing() {
+        LinearLayout vg = new LinearLayout(context);
+        DownloadedOfflineMapViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+        holder = spy(holder);
+        CustomOfflineRegionCallback callback = new CustomOfflineRegionCallback(holder, new OfflineMapModel());
+
+        callback.onError("");
+        verify(holder, never()).displayDownloading();
+        verify(holder, never()).displayIncomplete();
+        verify(holder, never()).displaySuccess();
     }
 
 }

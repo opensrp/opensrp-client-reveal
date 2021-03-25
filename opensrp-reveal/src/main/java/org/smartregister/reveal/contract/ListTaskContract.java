@@ -73,6 +73,8 @@ public interface ListTaskContract {
 
         void displayMarkStructureInactiveDialog();
 
+        void displayEditCDDTaskCompleteDialog();
+
         void setNumberOfFilters(int numberOfFilters);
 
         void setSearchPhrase(String searchPhrase);
@@ -109,6 +111,8 @@ public interface ListTaskContract {
 
         void onMarkStructureInactiveConfirmed();
 
+        void onEditCDDTaskCompleteStatusConfirmed(boolean isComplete);
+
         void onStructureMarkedInactive();
 
         void onMarkStructureIneligibleConfirmed();
@@ -128,5 +132,7 @@ public interface ListTaskContract {
         void findLastEvent(String featureId, String eventType);
       
         void onFociBoundaryLongClicked();
+
+        void onCDDTaskCompleteStatusEdited(String businessStatus);
     }
 }

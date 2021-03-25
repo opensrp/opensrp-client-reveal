@@ -10,6 +10,7 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.mapbox.geojson.Geometry;
 import com.mapbox.geojson.MultiPolygon;
 import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -33,6 +35,7 @@ import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Action;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.Obs;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.SyncEntity;
 import org.smartregister.domain.tag.FormTag;
@@ -55,7 +58,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -486,13 +491,86 @@ public class Utils {
                 throw new IllegalStateException("Invalid Sync Entity");
         }
     }
+    /**
+     * This method takes in a view and a predicate.
+     * Displays the view if predicate is true.
+     * Hides the view otherwise
+     * @param view The view to set visibility on
+     * @param shouldShow The boolean indicating whether to show the view or not
+     */
+    public static void showWhenTrue(View view, boolean shouldShow){
+        int visibility = shouldShow? View.VISIBLE: View.GONE;
+        view.setVisibility(visibility);
+    }
 
+    /**
+     * Builds a map of repeating grp id and its contents
+     *
+     * @param jsonObject
+     * @param obs
+     * @return
+     */
+    public static LinkedHashMap<String, HashMap<String, String>> buildRepeatingGroup(@NonNull JSONObject jsonObject,
+                                                                                     List<Obs> obs) {
+        LinkedHashMap<String, HashMap<String, String>> repeatingGroupMap = new LinkedHashMap<>();
+        JSONArray jsonArray = jsonObject.optJSONArray(JsonFormConstants.VALUE);
+        List<String> keysArrayList = new ArrayList<>();
+
+        if (jsonArray != null) {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject valueField = jsonArray.optJSONObject(i);
+                String fieldKey = valueField.optString(JsonFormConstants.KEY);
+                keysArrayList.add(fieldKey);
+            }
+
+            for (int k = 0; k < obs.size(); k++) {
+                Obs valueField = obs.get(k);
+                String fieldKey = valueField.getFormSubmissionField();
+                List<Object> values = valueField.getValues();
+                if (values != null && !values.isEmpty() && fieldKey.contains("_")) {
+                    fieldKey = fieldKey.substring(0, fieldKey.lastIndexOf("_"));
+                    if (keysArrayList.contains(fieldKey)) {
+                        String fieldValue = (String) values.get(0);
+                        if (StringUtils.isNotBlank(fieldValue)) {
+                            String fieldKeyId = valueField.getFormSubmissionField().substring(fieldKey.length() + 1);
+                            HashMap<String, String> hashMap = repeatingGroupMap.get(fieldKeyId) == null ? new HashMap<>() : repeatingGroupMap.get(fieldKeyId);
+                            hashMap.put(fieldKey, fieldValue);
+                            hashMap.put(Constants.JsonForm.REPEATING_GROUP_UNIQUE_ID, fieldKeyId);
+                            repeatingGroupMap.put(fieldKeyId, hashMap);
+                        }
+                    }
+                }
+            }
+        }
+
+        return repeatingGroupMap;
+    }
+
+    /**
+     * Converts Map<String, HashMap<String, String>> to List<HashMap<String, String>>
+     *
+     * @param map
+     * @return
+     */
+    public static List<HashMap<String, String>> generateListMapOfRepeatingGrp(Map<String, HashMap<String, String>> map) {
+        List<HashMap<String, String>> mapList = new ArrayList<>();
+        for (Map.Entry<String, HashMap<String, String>> entry : map.entrySet()) {
+            mapList.add(entry.getValue());
+        }
+        return mapList;
+    }
     public static boolean isZambiaIRSLite() {
         return (BuildConfig.SELECT_JURISDICTION && Country.ZAMBIA.equals(BuildConfig.BUILD_COUNTRY));
     }
 
     public static int getMaxZoomLevel() {
         return BuildConfig.SELECT_JURISDICTION ? SELECT_JURISDICTION_MAX_SELECT_ZOOM_LEVEL  : MAX_SELECT_ZOOM_LEVEL;
+    }
+
+
+    public static boolean isKenyaMDALite() {
+        return (BuildConfig.SELECT_JURISDICTION && Country.KENYA.equals(BuildConfig.BUILD_COUNTRY));
+
     }
 
 }

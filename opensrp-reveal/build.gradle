@@ -57,8 +57,8 @@ android {
         applicationId "org.smartregister.reveal"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 30
-        versionName "6.0.0-RC2"
+        versionCode 32
+        versionName "6.0.0-RC3"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -134,7 +134,7 @@ android {
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", 'opensrp_base_url', '"https://reveal-zm.smartregister.org/opensrp/"'
-            buildConfigField "Integer", "DATABASE_VERSION", '13'
+            buildConfigField "Integer", "DATABASE_VERSION", '14'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
@@ -153,7 +153,7 @@ android {
 
         debug {
             resValue "string", 'opensrp_base_url', '"https://reveal-stage.smartregister.org/opensrp/"'
-            buildConfigField "Integer", "DATABASE_VERSION", '13'
+            buildConfigField "Integer", "DATABASE_VERSION", '14'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
@@ -162,7 +162,7 @@ android {
             buildConfigField "long", "PULL_UNIQUE_IDS_MINUTES", '15'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
             buildConfigField "float", "MY_LOCATION_BUFFER", '25'
-            buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
+            buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'false'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '60'
             buildConfigField "boolean", "DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK", 'false'
             buildConfigField "boolean", "DISPLAY_DISTANCE_SCALE", 'true'
@@ -211,7 +211,7 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
     }
 
-    implementation('org.smartregister:opensrp-client-core:4.2.7-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:4.2.11-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'
@@ -239,7 +239,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.14.2.0-SNAPSHOT@aar') {
+    ///Upgrade to latest native forms issue tracked here
+    //https://github.com/OpenSRP/opensrp-client-reveal/issues/1235
+    implementation('org.smartregister:opensrp-client-native-form:1.14.2.2-FORM-CONFIG-RULES-FIX-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'cardview-v7'
@@ -274,7 +276,7 @@ dependencies {
 
     // Repackaged jars will be placed here, adding them to classpath
     implementation fileTree(dir: "./build/libs", include: ['*.jar'])
-    
+
 
     testImplementation 'junit:junit:4.13'
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: '2.2'
