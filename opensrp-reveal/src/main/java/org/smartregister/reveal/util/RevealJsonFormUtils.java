@@ -394,6 +394,10 @@ public class RevealJsonFormUtils {
         return formName;
     }
 
+    public String getFormName(String encounterType) {
+        return getFormName(encounterType, null);
+    }
+
     public void populatePAOTForm(MosquitoHarvestCardDetails cardDetails, JSONObject formJson) {
         if (formJson == null)
             return;
