@@ -244,9 +244,6 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 jsonForm.put(ENTITY_ID, UUID.randomUUID().toString());
             }else if (CDD_SUPERVISOR_DAILY_SUMMARY.equals(encounterType)){
                 interventionType = CDD_SUPERVISION;
-            } else if(encounterType.equals(EventType.TABLET_ACCOUNTABILITY_EVENT)){
-                String location = JsonFormUtils.getFieldValue(jsonForm.toString(),JsonForm.LOCATION);
-                jsonForm.put(ENTITY_ID,getLocationId(location));
             }
         } catch (JSONException e) {
             Timber.e(e);
@@ -258,6 +255,15 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             @Override
             public void run() {
                 try {
+                    if(finalEncounterType.equals(EventType.TABLET_ACCOUNTABILITY_EVENT)){
+                        String locationName = JsonFormUtils.getFieldValue(jsonForm.toString(),JsonForm.LOCATION);
+                        Location location = RevealApplication.getInstance().getLocationRepository().getLocationByName(locationName);
+                        if(location == null){
+                            jsonForm.put(ENTITY_ID,null);
+                        } else {
+                            jsonForm.put(ENTITY_ID,location.getId());
+                        }
+                    }
                     org.smartregister.domain.Event event = saveEvent(jsonForm, finalEncounterType, STRUCTURE);
                     clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
                     appExecutors.mainThread().execute(new Runnable() {
