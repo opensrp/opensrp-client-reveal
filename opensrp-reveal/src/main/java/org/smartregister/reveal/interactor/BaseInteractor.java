@@ -521,16 +521,4 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         });
 
     }
-    private String getLocationId(String locationName){
-        String locationId = null;
-        String query = String.format("select %s from  %s where %s = ? limit 1", ID_, STRUCTURES_TABLE, Constants.DatabaseKeys.NAME);
-        try(Cursor cursor = getDatabase().rawQuery(query,new String[]{locationName})){
-            if(cursor.moveToFirst()){
-                locationId = cursor.getString(0);
-            }
-        }catch (SQLException e){
-            Timber.e(e);
-        }
-        return locationId;
-    }
 }
