@@ -476,7 +476,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     public void testGetRefAppPAOTForm() {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
         String actualFormName = revealJsonFormUtils.getFormName(PAOT_EVENT, null);
-        assertEquals(JsonForm.REFAPP_PAOT_FORM, actualFormName);
+        assertEquals(JsonForm.PAOT_FORM, actualFormName);
     }
 
     @Test
@@ -649,7 +649,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
         String actualFormName = revealJsonFormUtils.getFormName(MOSQUITO_COLLECTION_EVENT, null);
-        assertEquals(JsonForm.REFAPP_MOSQUITO_COLLECTION_FORM, actualFormName);
+        assertEquals(JsonForm.THAILAND_EN_MOSQUITO_COLLECTION_FORM, actualFormName);
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
