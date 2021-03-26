@@ -42,6 +42,7 @@ import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Intervention;
@@ -254,6 +255,10 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             @Override
             public void run() {
                 try {
+                    if(finalEncounterType.equals(EventType.TABLET_ACCOUNTABILITY_EVENT)){
+                        String locationName = JsonFormUtils.getFieldValue(jsonForm.toString(),JsonForm.LOCATION);
+                        jsonForm.put(ENTITY_ID, getStructureIdByName(locationName));
+                    }
                     org.smartregister.domain.Event event = saveEvent(jsonForm, finalEncounterType, STRUCTURE);
                     clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
                     appExecutors.mainThread().execute(new Runnable() {
@@ -511,4 +516,17 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         });
 
     }
+    private String getStructureIdByName(String locationName){
+        String structureId = null;
+        String query = String.format("select %s from  %s where %s = ? limit 1", ID_, STRUCTURES_TABLE, Constants.DatabaseKeys.NAME);
+        try(Cursor cursor = getDatabase().rawQuery(query,new String[]{locationName})){
+            if(cursor.moveToFirst()){
+                structureId = cursor.getString(0);
+            }
+        }catch (SQLException e){
+            Timber.e(e);
+        }
+        return structureId;
+    }
+
 }
