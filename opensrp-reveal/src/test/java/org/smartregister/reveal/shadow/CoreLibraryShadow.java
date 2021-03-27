@@ -12,6 +12,6 @@ public class CoreLibraryShadow {
 
     @Implementation
     private static void checkPlatformMigrations() {
-        //do nothing
+        // Do nothing
     }
 }
