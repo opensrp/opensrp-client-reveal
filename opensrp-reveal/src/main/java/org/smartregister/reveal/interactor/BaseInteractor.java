@@ -44,13 +44,13 @@ import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.receiver.TaskGenerationReceiver;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -250,6 +250,10 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             @Override
             public void run() {
                 try {
+                    if(finalEncounterType.equals(EventType.TABLET_ACCOUNTABILITY_EVENT)){
+                        String locationName = JsonFormUtils.getFieldValue(jsonForm.toString(),JsonForm.LOCATION);
+                        jsonForm.put(ENTITY_ID, getStructureIdByName(locationName));
+                    }
                     org.smartregister.domain.Event event = saveEvent(jsonForm, finalEncounterType, STRUCTURE);
                     clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
                     appExecutors.mainThread().execute(new Runnable() {
@@ -490,4 +494,17 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         });
 
     }
+    private String getStructureIdByName(String locationName){
+        String structureId = null;
+        String query = String.format("select %s from  %s where %s = ? limit 1", ID_, STRUCTURES_TABLE, Constants.DatabaseKeys.NAME);
+        try(Cursor cursor = getDatabase().rawQuery(query,new String[]{locationName})){
+            if(cursor.moveToFirst()){
+                structureId = cursor.getString(0);
+            }
+        }catch (SQLException e){
+            Timber.e(e);
+        }
+        return structureId;
+    }
+
 }
