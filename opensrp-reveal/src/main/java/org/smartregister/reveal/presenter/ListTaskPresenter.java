@@ -559,7 +559,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
 
             if(JsonForm.SPRAY_FORM_SENEGAL.equals(formName)){
-                populateCompoundStructureOptions(formJson);
+                jsonFormUtils.populateCompoundStructureOptions(formJson);
             }
         } else if (JsonForm.SPRAY_FORM_REFAPP.equals(formName)) {
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DATA_COLLECTORS, jsonFormUtils.getFields(formJson).get(JsonForm.DATA_COLLECTOR), prefsUtil.getCurrentDistrict());
@@ -938,35 +938,5 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
     }
-    private  void populateCompoundStructureOptions(JSONObject form){
-        SQLiteDatabase database = RevealApplication.getInstance().getRepository().getReadableDatabase();
-        JSONObject option;
-        JSONObject property;
-        JSONArray options = new JSONArray();
-        String query = String.format("SELECT %s,%s FROM %s WHERE %s IS NOT NULL ORDER BY %s DESC",Constants.DatabaseKeys.ID,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.Tables.SPRAYED_STRUCTURES,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.DatabaseKeys.SPRAY_DATE);
-        try(Cursor cursor = database.rawQuery(query,new String[]{})){;
-            while (cursor.moveToNext()) {
-                property = new JSONObject();
-                property.put("presumed-id","err");
-                property.put("confirmed-id","err");
 
-                String structureId = cursor.getString(cursor.getColumnIndex(Constants.DatabaseKeys.ID));
-                String compoundHeadName = cursor.getString(cursor.getColumnIndex(Constants.DatabaseKeys.COMPOUND_HEAD_NAME));
-
-                option = new JSONObject();
-                option.put("key",structureId);
-                option.put("text",compoundHeadName);
-                option.put("property",property);
-                options.put(option);
-            }
-        } catch (Exception e) {
-            Timber.e(e, "Error find Sprayed Structures with compound head names ");
-        }
-        JSONObject compoundStructureField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),JsonForm.COMPOUND_STRUCTURE);
-        try {
-            compoundStructureField.put("options", options);
-        } catch (JSONException e) {
-            Timber.e(e, "Error populating %s Options",JsonForm.COMPOUND_STRUCTURE);
-        }
-    }
 }
