@@ -66,8 +66,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.json.Json;
-
 import timber.log.Timber;
 
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
@@ -113,7 +111,6 @@ import static org.smartregister.util.JsonFormUtils.VALUE;
 import static org.smartregister.util.JsonFormUtils.VALUES;
 import static org.smartregister.util.JsonFormUtils.getJSONObject;
 import static org.smartregister.util.JsonFormUtils.getString;
-import static org.smartregister.util.JsonFormUtils.value;
 
 
 /**
