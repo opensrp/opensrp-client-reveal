@@ -79,6 +79,8 @@ public interface TaskRegisterFragmentContract {
 
         void openFamilyProfile(CommonPersonObjectClient family, BaseTaskDetails taskDetails);
 
+        void openTasksScreen(BaseTaskDetails taskDetails);
+
         void displayIndexCaseDetails(JSONObject indexCase);
 
         void setNumberOfFilters(int numberOfFilters);

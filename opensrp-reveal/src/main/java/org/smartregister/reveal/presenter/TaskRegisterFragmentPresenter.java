@@ -231,7 +231,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         this.isActionClicked = isActionClicked;
         if (details != null) {
             setTaskDetails(details);
-            boolean hasSingleGroupedTask = (BEDNET_DISTRIBUTION.equals(details.getTaskCode()) || BLOOD_SCREENING.equals(details.getTaskCode())) && details.getTaskCount() == 1;
+            boolean nonResidentialTasks = (BEDNET_DISTRIBUTION.equals(details.getTaskCode()) || BLOOD_SCREENING.equals(details.getTaskCode()));
             if (CASE_CONFIRMATION.equals(details.getTaskCode())) {
                 interactor.getIndexCaseDetails(details.getStructureId(),
                         Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), details.getReasonReference());
@@ -240,11 +240,14 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                     (BLOOD_SCREENING.equals(details.getTaskCode()) ||
                             BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
                             REGISTER_FAMILY.equals(details.getTaskCode())) ||
-                    hasSingleGroupedTask ||
                     (details.getTaskCount() != null && details.getTaskCount() > 1 // structures with grouped tasks should display the family profile
                             && !(REGISTER_FAMILY.equals(details.getTaskCode()) && Task.TaskStatus.READY.name().equals(details.getTaskStatus())))) { // skip if we have a READY family reg task
                 setTaskDetails(details);
-                interactor.fetchFamilyDetails(details.getStructureId());
+                if (nonResidentialTasks) {
+                    getView().openTasksScreen(getTaskDetails());
+                } else {
+                    interactor.fetchFamilyDetails(details.getStructureId());
+                }
             } else {
                 getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
                 interactor.getStructure(details);
