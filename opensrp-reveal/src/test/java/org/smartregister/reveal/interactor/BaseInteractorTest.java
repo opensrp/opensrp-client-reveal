@@ -63,10 +63,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID_;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
 import static org.smartregister.reveal.util.Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM;
+import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION;
 import static org.smartregister.reveal.util.Constants.JsonForm.PAOT_STATUS;
+import static org.smartregister.reveal.util.Constants.JsonForm.TABLET_ACCOUNTABILITY_FORM;
 import static org.smartregister.reveal.util.Constants.Properties.APP_VERSION_NAME;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
@@ -336,6 +340,20 @@ public class BaseInteractorTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testEntityIdOnSaveTableAccountabilityForm() throws Exception {
+        String form = AssetHandler.readFileFromAssetsFolder(TABLET_ACCOUNTABILITY_FORM,context);
+        JSONObject formObject = new JSONObject(form);
+        String locationName = "sampleLocation";
+        String locationId = UUID.randomUUID().toString();
+        JSONObject locationField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject),LOCATION);
+        locationField.put("value",locationName);
+        String searchQuery = String.format("select %s from  %s where %s = ? limit 1", ID_, STRUCTURES_TABLE, org.smartregister.reveal.util.Constants.DatabaseKeys.NAME);
+        when(database.rawQuery(searchQuery, new String[]{locationName})).thenReturn(createFindStructureCursor(locationName,locationId));
+        interactor.saveJsonForm(formObject.toString());
+        verify(eventClientRepository,timeout(ASYNC_TIMEOUT)).addEvent(eq(locationId),eventJSONObjectCaptor.capture());
+    }
+
     private Cursor createFamilyCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{
                 Constants.INTENT_KEY.BASE_ENTITY_ID
@@ -353,6 +371,13 @@ public class BaseInteractorTest extends BaseUnitTest {
         cursor.addRow(new Object[]{
                 TestingUtils.bloodScreeningEventJSON
         });
+        return cursor;
+    }
+
+    private Cursor createFindStructureCursor(String locationName,String locationId){
+        MatrixCursor cursor = new MatrixCursor(new String[]{locationName});
+        cursor.addRow( new Object[]{locationId});
+
         return cursor;
     }
 
