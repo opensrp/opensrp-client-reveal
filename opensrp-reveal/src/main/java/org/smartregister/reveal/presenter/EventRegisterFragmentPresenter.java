@@ -24,7 +24,9 @@ import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.Utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import timber.log.Timber;
@@ -89,26 +91,17 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
 
     private String mainSelect(String tableName, String mainCondition) {
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
-        queryBUilder.selectInitiateMainTable(tableName, mainColumns(tableName));
+        if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
+            List<String> mainColumns =  new ArrayList<>(Arrays.asList(mainColumns(tableName)));
+            mainColumns.add(tableName + "." + DatabaseKeys.DATA_COLLECTION_DATE);
+            queryBUilder.selectInitiateMainTable(tableName, mainColumns.toArray(new String[mainColumns.size()]));
+        }else{
+            queryBUilder.selectInitiateMainTable(tableName, mainColumns(tableName));
+        }
         return queryBUilder.mainCondition(mainCondition);
     }
 
     protected String[] mainColumns(String tableName) {
-        if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
-          return new String[]{
-                    tableName + ".relationalid",
-                    tableName + "." + DatabaseKeys.EVENT_DATE,
-                    tableName + "." + DatabaseKeys.EVENT_TYPE,
-                    tableName + "." + DatabaseKeys.SOP,
-                    tableName + "." + DatabaseKeys.ENTITY,
-                    tableName + "." + DatabaseKeys.STATUS,
-                    tableName + "." + DatabaseKeys.FORM_SUBMISSION_ID,
-                    tableName + "." + DatabaseKeys.BASE_ENTITY_ID,
-                    tableName + "." + DatabaseKeys.SPRAYED,
-                    tableName + "." + DatabaseKeys.FOUND,
-                    tableName + "." + DatabaseKeys.DATA_COLLECTION_DATE
-            };
-        }
         String[] columns = new String[]{
                 tableName + ".relationalid",
                 tableName + "." + DatabaseKeys.EVENT_DATE,
