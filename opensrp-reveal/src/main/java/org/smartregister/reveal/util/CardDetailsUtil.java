@@ -65,7 +65,7 @@ public class CardDetailsUtil {
                 cardDetails.setReason(null);
                 break;
             case PARTIALLY_SPRAYED:
-                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.SENEGAL) {
                     formatCardDetailsForCompletedTasks(cardDetails);
                 } else {
                     cardDetails.setStatusColor(R.color.partially_sprayed);
@@ -250,7 +250,7 @@ public class CardDetailsUtil {
             case IN_PROGRESS:
                 return context.getString(R.string.in_progress);
             case PARTIALLY_SPRAYED:
-                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.SENEGAL) {
                     return context.getString(R.string.sprayed);
                 } else {
                     return context.getString(R.string.partially_sprayed);

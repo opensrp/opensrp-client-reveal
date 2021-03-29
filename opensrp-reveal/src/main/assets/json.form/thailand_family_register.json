@@ -253,7 +253,7 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "gender",
         "type": "native_radio",
-        "label": "เพศ",
+        "label": "กรุณาเลือกเพศ",
         "options": [
           {
             "key": "Male",

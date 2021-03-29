@@ -42,6 +42,7 @@ import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Intervention;
@@ -81,10 +82,12 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TA
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.Intervention.CDD_SUPERVISION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -219,7 +222,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         String interventionType = null;
         try {
             encounterType = jsonForm.getString(ENCOUNTER_TYPE);
-            if (encounterType.equals(SPRAY_EVENT)) {
+            if (encounterType.equals(SPRAY_EVENT) || encounterType.equals(EventType.IRS_LITE_VERIFICATION)) {
                 interventionType = IRS;
             } else if (encounterType.equals(MOSQUITO_COLLECTION_EVENT)) {
                 interventionType = MOSQUITO_COLLECTION;
@@ -239,6 +242,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 interventionType = Intervention.IRS_VERIFICATION;
             } else if (encounterType.equals(EventType.DAILY_SUMMARY_EVENT)) {
                 jsonForm.put(ENTITY_ID, UUID.randomUUID().toString());
+            }else if (CDD_SUPERVISOR_DAILY_SUMMARY.equals(encounterType)){
+                interventionType = CDD_SUPERVISION;
             }
         } catch (JSONException e) {
             Timber.e(e);
@@ -250,6 +255,10 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             @Override
             public void run() {
                 try {
+                    if(finalEncounterType.equals(EventType.TABLET_ACCOUNTABILITY_EVENT)){
+                        String locationName = JsonFormUtils.getFieldValue(jsonForm.toString(),JsonForm.LOCATION);
+                        jsonForm.put(ENTITY_ID, getStructureIdByName(locationName));
+                    }
                     org.smartregister.domain.Event event = saveEvent(jsonForm, finalEncounterType, STRUCTURE);
                     clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
                     appExecutors.mainThread().execute(new Runnable() {
@@ -507,4 +516,17 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         });
 
     }
+    private String getStructureIdByName(String locationName){
+        String structureId = null;
+        String query = String.format("select %s from  %s where %s = ? limit 1", ID_, STRUCTURES_TABLE, Constants.DatabaseKeys.NAME);
+        try(Cursor cursor = getDatabase().rawQuery(query,new String[]{locationName})){
+            if(cursor.moveToFirst()){
+                structureId = cursor.getString(0);
+            }
+        }catch (SQLException e){
+            Timber.e(e);
+        }
+        return structureId;
+    }
+
 }

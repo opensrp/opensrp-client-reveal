@@ -1,0 +1,480 @@
+{
+  "count": "1",
+  "encounter_type": "tablet_accountability",
+  "form_version": "0.0.1",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": ""
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": ""
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "Enter Tablet Accountability Form",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "location",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Select the Location ( ward )",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "health_worker_supervisor",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of CDD Supervisor",
+        "v_required": {
+          "value": "true",
+          "err": "This field is required."
+        }
+      },
+      {
+        "key": "cdd_name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of CDD",
+        "v_required": {
+          "value": "true",
+          "err": "This field is required."
+        }
+      },
+      {
+        "key": "drug_distributed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "What drug was dispensed?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "PZQ",
+            "text": "Praziquantel (PZQ)"
+          },
+          {
+            "key": "ALB",
+            "text": "Albendazole (ALB)"
+          },
+          {
+            "key": "MBZ",
+            "text": "Mebendazole (MBZ)"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "pzq_received",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Number of PZQ tablets Received",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "pzq_top_up",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Number of PZQ tablet top-ups received",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sum_pzq_received_and_top_up",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "pzq_returned",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Number of PZQ Returned",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-relevance-rules.yml"
+            }
+          }
+        },
+        "constraints": [
+          {
+            "type": "numeric",
+            "ex": "lessThanEqualTo(.,step1:sum_pzq_received_and_top_up)",
+            "err": "Value should be less than or equal to sum of PZQ received and PZQ top-ups"
+          }
+        ]
+      },
+      {
+        "key": "albendazole_received",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Number of Albendazole tablets Received",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "albendazole_top_up",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Number of Albendazole tablet top-ups received",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sum_alb_received_and_top_up",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "albendazole_returned",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Number of Albendazole Returned",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-relevance-rules.yml"
+            }
+          }
+        },
+        "constraints": [
+          {
+            "type": "numeric",
+            "ex": "lessThanEqualTo(.,step1:sum_alb_received_and_top_up)",
+            "err": "Value should be less than or equal to sum of Albendazole received and Albendazole top-ups"
+          }
+        ]
+      },
+      {
+        "key": "mebendezole_received",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Number of Mebendezole tablets Received",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mebendazole_top_up",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Number of Mebendazole tablet top-ups received",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sum_mbz_received_and_top_up",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mebendazole_returned",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Number of Mebendazole Returned",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "tablet-accountability-relevance-rules.yml"
+            }
+          }
+        },
+        "constraints": [
+          {
+            "type": "numeric",
+            "ex": "lessThanEqualTo(.,step1:sum_mbz_received_and_top_up)",
+            "err": "Value should be less than or equal to sum of Mebendezole received and Mebendezole top-ups"
+          }
+        ]
+      }
+    ]
+  }
+}

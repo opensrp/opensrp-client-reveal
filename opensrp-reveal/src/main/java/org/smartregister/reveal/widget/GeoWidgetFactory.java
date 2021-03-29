@@ -121,7 +121,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                     }
                 } else if ((validator instanceof GeoFencingValidator)
                         && !validator.isValid("", true)
-                        && Country.ZAMBIA == BuildConfig.BUILD_COUNTRY) {
+                        && (Country.ZAMBIA == BuildConfig.BUILD_COUNTRY
+                        || Country.SENEGAL == BuildConfig.BUILD_COUNTRY)) {
                     // perform within op area validation
                     GeoFencingValidator geoFencingValidator = (GeoFencingValidator) validator;
                     int title = R.string.register_outside_boundary_title;
@@ -254,7 +255,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
 
-                Style.Builder builder = new Style.Builder().fromUri(context.getString(R.string.reveal_satellite_style));
+                String satelliteStyle = BuildConfig.SELECT_JURISDICTION ? context.getString(R.string.reveal_select_jurisdiction_style) : context.getString(R.string.reveal_satellite_style);
+                Style.Builder builder = new Style.Builder().fromUri(satelliteStyle);
 
                 mapboxMap.setStyle(builder, new Style.OnStyleLoaded() {
                     @Override

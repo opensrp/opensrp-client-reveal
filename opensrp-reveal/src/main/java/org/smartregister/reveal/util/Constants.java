@@ -115,6 +115,9 @@ public interface Constants {
         String MDA_CATCHMENT_AREAS = "mda_catchment_areas";
         String DISPLAY_DISTANCE_SCALE = "display_distance_scale";
         String DISTRICTS = "districts";
+        String WARDS = "wards";
+        String COMMUNITY_DRUG_DISTRIBUTORS = "community_drug_distributors";
+        String HEALTH_WORKER_SUPERVISORS = "health_worker_supervisors";
 
     }
 
@@ -221,6 +224,7 @@ public interface Constants {
                 LARVAL_DIPPING, BCC, CASE_CONFIRMATION,
                 PAOT, IRS, IRS_VERIFICATION);
 
+        String CDD_SUPERVISION = "CDD Supervision";
     }
 
 
@@ -238,6 +242,8 @@ public interface Constants {
 
         String IRS_VERIFICATION = "irs_verification";
 
+        String IRS_LITE_VERIFICATION = "irs_lite_verification";
+
         String DAILY_SUMMARY_EVENT = "daily_summary";
 
         String IRS_FIELD_OFFICER_EVENT = "irs_field_officer";
@@ -252,8 +258,12 @@ public interface Constants {
 
         String CB_SPRAY_AREA_EVENT = "cb_spray_area";
 
+        String CDD_SUPERVISOR_DAILY_SUMMARY =  "cdd_supervisor_daily_summary";
+
+        String TABLET_ACCOUNTABILITY_EVENT =  "tablet_accountability";
+
         List<String> SUMMARY_EVENT_TYPES = Arrays.asList(DAILY_SUMMARY_EVENT, IRS_FIELD_OFFICER_EVENT,
-                IRS_SA_DECISION_EVENT, MOBILIZATION_EVENT, TEAM_LEADER_DOS_EVENT, VERIFICATION_EVENT);
+                IRS_SA_DECISION_EVENT, MOBILIZATION_EVENT, TEAM_LEADER_DOS_EVENT, VERIFICATION_EVENT,TABLET_ACCOUNTABILITY_EVENT);
     }
 
     interface Tables {
@@ -313,6 +323,7 @@ public interface Constants {
 
     interface Map {
         int MAX_SELECT_ZOOM_LEVEL = 16;
+        int SELECT_JURISDICTION_MAX_SELECT_ZOOM_LEVEL = 12;
         int CLICK_SELECT_RADIUS = 24;
         String NAME_PROPERTY = "name";
         double DOWNLOAD_MAX_ZOOM = 21.0;
@@ -354,6 +365,8 @@ public interface Constants {
         String SPRAY_FORM_REFAPP = "json.form/refapp_spray_form.json";
 
         String SPRAY_FORM_ZAMBIA = "json.form/zambia_spray_form.json";
+
+        String SPRAY_FORM_SENEGAL = "json.form/senegal_spray_form.json";
 
         String LARVAL_DIPPING_FORM = "json.form/larval_dipping_form.json";
 
@@ -417,6 +430,8 @@ public interface Constants {
 
         String REFAPP_CASE_CONFIRMATION_FORM = "json.form/refapp_case_confirmation.json";
 
+        String CDD_SUPERVISOR_DAILY_SUMMARY_FORM = "json.form/community_drug_distributor_supervisor_daily_summary_form.json";
+
         String JSON_FORM_FOLDER = "json.form/";
 
         String LOCATION_COMPONENT_ACTIVE = "my_location_active";
@@ -463,6 +478,8 @@ public interface Constants {
 
         String CB_SPRAY_AREA_ZAMBIA = "json.form/zambia_cb_spray_area.json";
 
+        String IRS_LITE_VERIFICATION = "json.form/zambia_irs_lite_verification.json";
+
         String IRS_SA_DECISION_ZAMBIA = "json.form/zambia_irs_sa_decision.json";
 
         String MOBILIZATION_FORM_ZAMBIA = "json.form/zambia_mobilization_form.json";
@@ -470,6 +487,22 @@ public interface Constants {
         String IRS_FIELD_OFFICER_ZAMBIA = "json.form/zambia_irs_field_officer.json";
 
         String VERIFICATION_FORM_ZAMBIA = "json.form/zambia_verification_form.json";
+
+        String DAILY_SUMMARY_SENEGAL= "json.form/senegal_daily_summary.json";
+
+        String TEAM_LEADER_DOS_SENEGAL = "json.form/senegal_team_leader_dos.json";
+
+        String CB_SPRAY_AREA_SENEGAL = "json.form/senegal_cb_spray_area.json";
+
+        String IRS_SA_DECISION_SENEGAL = "json.form/senegal_irs_sa_decision.json";
+
+        String MOBILIZATION_FORM_SENEGAL = "json.form/senegal_mobilization_form.json";
+
+        String IRS_FIELD_OFFICER_SENEGAL = "json.form/senegal_irs_field_officer.json";
+
+        String VERIFICATION_FORM_SENEGAL = "json.form/senegal_verification_form.json";
+
+        String TABLET_ACCOUNTABILITY_FORM = "json.form/tablet_accountability_form.json";
 
         String SPRAY_OPERATOR_CODE = "sprayop_code";
 
@@ -504,7 +537,20 @@ public interface Constants {
 
         String MOP_UP = "mopup";
 
+        String GENERATED_GRP = "generated_group";
+
+        String REPEATING_GROUP_UNIQUE_ID = "unique_id";
+
         String YES =  "Yes";
+
+        String LOCATION = "location";
+
+        String COMMUNITY_DRUG_DISTRIBUTOR_NAME = "cdd_name";
+
+        String HEALTH_WORKER_SUPERVISOR = "health_worker_supervisor";
+
+        String CDD_SUPERVISION_TASK_COMPLETE = "task_complete";
+
     }
 
     interface DateFormat {
@@ -524,8 +570,11 @@ public interface Constants {
         String NAMIBIA_EC_CLIENT_FIELDS = "ec_client_fields_namibia.json";
         String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
         String ZAMBIA_EC_CLIENT_FIELDS = "ec_client_fields_zambia.json";
+        String SENEGAL_EC_CLIENT_FIELDS = "ec_client_fields_senegal.json";
         String REFAPP_EC_CLIENT_FIELDS = "ec_client_fields_refapp.json";
+        String KENYA_EC_CLIENT_FIELDS = "ec_client_fields_kenya.json";
     }
+
 
 
     interface StructureType {
@@ -687,6 +736,9 @@ public interface Constants {
 
         String VERSION = "version";
 
+        Object SERVER_VERSION = "server_version";
+
+        Object GEOJSON = "geojson";
     }
 
     interface UseContextCode {

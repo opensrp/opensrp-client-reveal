@@ -5,15 +5,17 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.core.util.Pair;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.core.util.Pair;
 
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
@@ -21,6 +23,7 @@ import com.mapbox.geojson.Geometry;
 import com.mapbox.geojson.MultiPolygon;
 import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -31,6 +34,7 @@ import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.Obs;
 import org.smartregister.domain.SyncEntity;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.job.DocumentConfigurationServiceJob;
@@ -51,9 +55,10 @@ import org.smartregister.util.RecreateECUtil;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -73,6 +78,8 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MDA;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
+import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
+import static org.smartregister.reveal.util.Constants.Map.SELECT_JURISDICTION_MAX_SELECT_ZOOM_LEVEL;
 
 public class Utils {
 
@@ -133,7 +140,7 @@ public class Utils {
 
 
     public static Location getOperationalAreaLocation(String operationalArea) {
-       return cache.get(operationalArea, new CacheableData<Location>() {
+        return cache.get(operationalArea, new CacheableData<Location>() {
             @Override
             public Location fetch() {
                 return RevealApplication.getInstance().getLocationRepository().getLocationByName(operationalArea);
@@ -426,16 +433,17 @@ public class Utils {
 
     /**
      * This method takes in a geometry object and returns a JSONArray representation of the coordinates
-     * @param updatedGeometry The geometry of the updated feature
+     *
+     * @param updatedGeometry  The geometry of the updated feature
      * @param originalGeometry The geometry of the original feature used to determine whether
      *                         it was a MultiPolygon or a Polygon
      * @return
      */
     public static JSONArray getCoordsFromGeometry(Geometry updatedGeometry, Geometry originalGeometry) {
-        JSONObject editedGeometryJson ;
+        JSONObject editedGeometryJson;
         JSONArray updatedCoords = null;
         try {
-            if (originalGeometry instanceof  MultiPolygon) {
+            if (originalGeometry instanceof MultiPolygon) {
                 MultiPolygon editedGeometryMultiPolygon = MultiPolygon.fromPolygon((Polygon) updatedGeometry);
                 editedGeometryJson = new JSONObject(editedGeometryMultiPolygon.toJson());
             } else {
@@ -449,7 +457,7 @@ public class Utils {
     }
 
     public static String getSyncEntityString(SyncEntity syncEntity) {
-        Context context =  RevealApplication.getInstance().getContext().applicationContext();
+        Context context = RevealApplication.getInstance().getContext().applicationContext();
         switch (syncEntity) {
             case EVENTS:
                 return context.getString(R.string.events);
@@ -464,6 +472,87 @@ public class Utils {
             default:
                 throw new IllegalStateException("Invalid Sync Entity");
         }
+    }
+    /**
+     * This method takes in a view and a predicate.
+     * Displays the view if predicate is true.
+     * Hides the view otherwise
+     * @param view The view to set visibility on
+     * @param shouldShow The boolean indicating whether to show the view or not
+     */
+    public static void showWhenTrue(View view, boolean shouldShow){
+        int visibility = shouldShow? View.VISIBLE: View.GONE;
+        view.setVisibility(visibility);
+    }
+
+    /**
+     * Builds a map of repeating grp id and its contents
+     *
+     * @param jsonObject
+     * @param obs
+     * @return
+     */
+    public static LinkedHashMap<String, HashMap<String, String>> buildRepeatingGroup(@NonNull JSONObject jsonObject,
+                                                                                     List<Obs> obs) {
+        LinkedHashMap<String, HashMap<String, String>> repeatingGroupMap = new LinkedHashMap<>();
+        JSONArray jsonArray = jsonObject.optJSONArray(JsonFormConstants.VALUE);
+        List<String> keysArrayList = new ArrayList<>();
+
+        if (jsonArray != null) {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject valueField = jsonArray.optJSONObject(i);
+                String fieldKey = valueField.optString(JsonFormConstants.KEY);
+                keysArrayList.add(fieldKey);
+            }
+
+            for (int k = 0; k < obs.size(); k++) {
+                Obs valueField = obs.get(k);
+                String fieldKey = valueField.getFormSubmissionField();
+                List<Object> values = valueField.getValues();
+                if (values != null && !values.isEmpty() && fieldKey.contains("_")) {
+                    fieldKey = fieldKey.substring(0, fieldKey.lastIndexOf("_"));
+                    if (keysArrayList.contains(fieldKey)) {
+                        String fieldValue = (String) values.get(0);
+                        if (StringUtils.isNotBlank(fieldValue)) {
+                            String fieldKeyId = valueField.getFormSubmissionField().substring(fieldKey.length() + 1);
+                            HashMap<String, String> hashMap = repeatingGroupMap.get(fieldKeyId) == null ? new HashMap<>() : repeatingGroupMap.get(fieldKeyId);
+                            hashMap.put(fieldKey, fieldValue);
+                            hashMap.put(Constants.JsonForm.REPEATING_GROUP_UNIQUE_ID, fieldKeyId);
+                            repeatingGroupMap.put(fieldKeyId, hashMap);
+                        }
+                    }
+                }
+            }
+        }
+
+        return repeatingGroupMap;
+    }
+
+    /**
+     * Converts Map<String, HashMap<String, String>> to List<HashMap<String, String>>
+     *
+     * @param map
+     * @return
+     */
+    public static List<HashMap<String, String>> generateListMapOfRepeatingGrp(Map<String, HashMap<String, String>> map) {
+        List<HashMap<String, String>> mapList = new ArrayList<>();
+        for (Map.Entry<String, HashMap<String, String>> entry : map.entrySet()) {
+            mapList.add(entry.getValue());
+        }
+        return mapList;
+    }
+    public static boolean isZambiaIRSLite() {
+        return (BuildConfig.SELECT_JURISDICTION && Country.ZAMBIA.equals(BuildConfig.BUILD_COUNTRY));
+    }
+
+    public static int getMaxZoomLevel() {
+        return BuildConfig.SELECT_JURISDICTION ? SELECT_JURISDICTION_MAX_SELECT_ZOOM_LEVEL  : MAX_SELECT_ZOOM_LEVEL;
+    }
+
+
+    public static boolean isKenyaMDALite() {
+        return (BuildConfig.SELECT_JURISDICTION && Country.KENYA.equals(BuildConfig.BUILD_COUNTRY));
+
     }
 
 }

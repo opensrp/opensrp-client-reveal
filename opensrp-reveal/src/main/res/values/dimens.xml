@@ -44,6 +44,7 @@
 
     <dimen name="operational_area_boundary_text_size">10sp</dimen>
     <dimen name="operational_area_boundary_width">1dp</dimen>
+    <dimen name="irs_lite_operational_area_boundary_width">0dp</dimen>
     <dimen name="task_action_text">18sp</dimen>
     <dimen name="case_section_margin">16dp</dimen>
     <dimen name="case_details_margin">8dp</dimen>
@@ -66,6 +67,7 @@
 
     <dimen name="compass_top_margin">35dp</dimen>
     <dimen name="compass_left_margin">8dp</dimen>
+    <dimen name="map_status_label">20sp</dimen>
 
 </resources>
 

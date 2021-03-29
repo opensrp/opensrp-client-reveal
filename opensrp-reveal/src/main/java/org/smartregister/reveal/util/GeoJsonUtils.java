@@ -74,7 +74,8 @@ public class GeoJsonUtils {
 
                 taskProperties = new HashMap<>();
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
-                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA  && PARTIALLY_SPRAYED.equals(task.getBusinessStatus())) { // Set here for non residential structures
+                if ((BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.SENEGAL)
+                        && PARTIALLY_SPRAYED.equals(task.getBusinessStatus())) { // Set here for non residential structures
                     taskProperties.put(TASK_BUSINESS_STATUS, SPRAYED);
                 } else {
                     taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());

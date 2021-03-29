@@ -1,11 +1,14 @@
 package org.smartregister.reveal.fragment;
 
 import android.content.Context;
-import androidx.core.util.Pair;
-import androidx.appcompat.app.AppCompatActivity;
+import android.view.View;
 import android.widget.CheckBox;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
+
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
+import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,6 +21,7 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.shadows.ShadowToast;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
@@ -33,13 +37,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.mapbox.mapboxsdk.offline.OfflineRegion.STATE_ACTIVE;
+import static com.mapbox.mapboxsdk.offline.OfflineRegion.STATE_INACTIVE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyObject;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.DOWNLOADED;
 
 /**
@@ -72,7 +83,7 @@ public class DownloadedOfflineMapsFragmentTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        org.smartregister.Context.bindtypes= new ArrayList<>();
+        org.smartregister.Context.bindtypes = new ArrayList<>();
         fragment = new DownloadedOfflineMapsFragment();
         AppCompatActivity activity = Robolectric.buildActivity(AppCompatActivity.class).create().start().get();
         activity.setContentView(R.layout.activity_offline_maps);
@@ -157,7 +168,7 @@ public class DownloadedOfflineMapsFragmentTest extends BaseUnitTest {
         Whitebox.setInternalState(fragment, "callback", callback);
         OfflineMapModel expectedOfflineMapModel = TestingUtils.getOfflineMapModel();
         expectedOfflineMapModel.setOfflineMapStatus(DOWNLOADED);
-        List<OfflineMapModel> offlineMapModelList =  new ArrayList<>(Collections.singletonList(expectedOfflineMapModel));
+        List<OfflineMapModel> offlineMapModelList = new ArrayList<>(Collections.singletonList(expectedOfflineMapModel));
         Whitebox.setInternalState(fragment, "downloadedOfflineMapModelList", offlineMapModelList);
 
         List<OfflineMapModel> originalDownloadedOfflineMapModelList = Whitebox.getInternalState(fragment, "downloadedOfflineMapModelList");
@@ -196,6 +207,75 @@ public class DownloadedOfflineMapsFragmentTest extends BaseUnitTest {
         fragment.setOfflineDownloadedMapNames(offlineRegionInfo);
 
         verify(presenter).fetchOAsWithOfflineDownloads(anyObject());
+    }
+
+    @Test
+    public void testDownloadCompleted() {
+        OfflineMapModel model = TestingUtils.getOfflineMapModel();
+        model.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.DOWNLOAD_STARTED);
+        List<OfflineMapModel> expectedOfflineMapModels = Collections.singletonList(model);
+        Whitebox.setInternalState(fragment, "callback", callback);
+
+        fragment.setDownloadedOfflineMapModelList(expectedOfflineMapModels);
+        fragment.downloadCompleted(model.getDownloadAreaId());
+        assertEquals(DOWNLOADED, model.getOfflineMapStatus());
+        verify(callback).onMapDownloaded(offlineMapModelCaptor.capture());
+        assertEquals(model, offlineMapModelCaptor.getValue());
+    }
+
+    @Test
+    public void testMapDownloadMap() {
+        OfflineMapModel model = TestingUtils.getOfflineMapModel();
+        model.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.DOWNLOAD_STARTED);
+        OfflineRegion offlineRegion = mock(OfflineRegion.class);
+        model.setOfflineRegion(offlineRegion);
+        OfflineRegionStatus mockStatus = mock(OfflineRegionStatus.class);
+        when(mockStatus.getDownloadState()).thenReturn(STATE_INACTIVE);
+        Whitebox.setInternalState(fragment, "adapter", adapter);
+
+        doAnswer(arg -> {
+            ((OfflineRegion.OfflineRegionStatusCallback) arg.getArgument(0)).onStatus(mockStatus);
+            return null;
+        }).when(offlineRegion).getStatus(any());
+        List<OfflineMapModel> expectedOfflineMapModels = Collections.singletonList(model);
+        fragment.downloadMap(expectedOfflineMapModels);
+        verify(adapter).notifyDataSetChanged();
+        verify(offlineRegion).setDownloadState(STATE_ACTIVE);
+    }
+
+    @Test
+    public void testDeleteDownloadedOfflineMapsWhenNothingSelected() {
+        fragment.deleteDownloadedOfflineMaps();
+        assertEquals("Please select an offline map to delete", ShadowToast.getTextOfLatestToast());
+    }
+
+    @Test
+    public void testOnClick() {
+        View view = mock(CheckBox.class);
+        when(view.getId()).thenReturn(R.id.offline_map_checkbox);
+        when(view.getTag(R.id.offline_map_checkbox)).thenReturn(mock(OfflineMapModel.class));
+        fragment = spy(fragment);
+        fragment.onClick(view);
+        verify(fragment).updateOfflineMapsTodelete(view);
+    }
+
+    @Test
+    public void testOnStatusChangedWhenComplete() {
+        OfflineRegionStatus mockStatus = mock(OfflineRegionStatus.class);
+        when(mockStatus.isComplete()).thenReturn(true);
+        Whitebox.setInternalState(fragment, "callback", callback);
+        fragment.onStatusChanged(mockStatus);
+        verify(callback).onMapDownloaded(null);
+    }
+
+    @Test
+    public void testOnStatusChangedWhenInProgress() {
+        OfflineRegionStatus mockStatus = mock(OfflineRegionStatus.class);
+        when(mockStatus.isComplete()).thenReturn(false);
+        when(mockStatus.getCompletedResourceCount()).thenReturn(100L);
+        when(mockStatus.getRequiredResourceCount()).thenReturn(200L);
+        fragment.onStatusChanged(mockStatus);
+        assertEquals("Downloading: 50.00 %",ShadowToast.getTextOfLatestToast());
     }
 
 }
