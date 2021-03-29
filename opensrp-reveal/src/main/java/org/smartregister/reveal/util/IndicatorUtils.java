@@ -196,8 +196,6 @@ public class IndicatorUtils {
         if (tasks != null) {
 
             for (int i = 0; i < tasks.size(); i++) {
-
-                if (Constants.Intervention.IRS.equals(tasks.get(i).getTaskCode()) || Country.NIGERIA.equals(BuildConfig.BUILD_COUNTRY)) {
                     String structureId = tasks.get(i).getStructureId();
                     List<TaskDetails> taskDetails = indicatorDetailsMap.get(structureId);
                     if(taskDetails == null){
@@ -205,15 +203,10 @@ public class IndicatorUtils {
                     }
                     taskDetails.add(tasks.get(i));
                     indicatorDetailsMap.put(tasks.get(i).getStructureId(),taskDetails);
-                }
-
             }
 
             for(Map.Entry<String,List<TaskDetails>> entry : indicatorDetailsMap.entrySet()){
                 for(TaskDetails task: entry.getValue()){
-                    if(task.getTaskCode().equals(Constants.Intervention.REGISTER_FAMILY.equals(task.getTaskCode()) && Constants.BusinessStatus.NOT_VISITED.equals(task.getBusinessStatus()))){
-                        indicatorDetails.setNotVisited(indicatorDetails.getNotVisited() + 1);
-                    }
                     if(Constants.BusinessStatusWrapper.NOT_ELIGIBLE.contains(task.getBusinessStatus())){
                         indicatorDetails.setIneligible(indicatorDetails.getIneligible() + 1);
                         break;
@@ -222,15 +215,13 @@ public class IndicatorUtils {
                         indicatorDetails.setFoundStructures(indicatorDetails.getFoundStructures() + 1);
                         break;
                     }
-
                 }
+                indicatorDetails.setNotVisited(indicatorDetails.getNotVisited() + calculateStructuresNotFamilyRegistered(entry.getValue()));
                 indicatorDetails.setCompleteDrugDistribution(indicatorDetails.getCompleteDrugDistribution() + calculateDrugCompletion(entry.getValue()));
                 indicatorDetails.setPartialDrugDistribution(indicatorDetails.getPartialDrugDistribution() + calculatePartialDrugDistribution(entry.getValue()));
                 indicatorDetails.setChildrenEligible(indicatorDetails.getChildrenEligible() + calculateChildrenEligible(entry.getValue()));
                 indicatorDetails.setTotalIndividualTreated(indicatorDetails.getTotalIndividualTreated() + calculateChildrenTreated(entry.getValue()));
-
             }
-
         }
 
         indicatorDetails.setTotalStructures(indicatorDetailsMap.size() - indicatorDetails.getIneligible());
@@ -294,6 +285,17 @@ public class IndicatorUtils {
             }
         }
         return reconComplete ? treated : 0;
+    }
+
+    private static int calculateStructuresNotFamilyRegistered(List<TaskDetails> tasks){
+        int notVisited = 0;
+        for(TaskDetails task : tasks){
+            if(task.getTaskCode().equals(Constants.Intervention.REGISTER_FAMILY) && Constants.BusinessStatus.NOT_VISITED.equals(task.getBusinessStatus())){
+                notVisited++;
+                break;
+            }
+        }
+        return notVisited;
     }
 }
 
