@@ -1,8 +1,8 @@
 package org.smartregister.reveal.util;
 
 import android.content.Context;
+
 import org.smartregister.domain.Task;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.IndicatorDetails;
 import org.smartregister.reveal.model.TaskDetails;
