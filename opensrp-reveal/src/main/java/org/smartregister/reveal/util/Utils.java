@@ -190,6 +190,18 @@ public class Utils {
         return Float.valueOf(getGlobalConfig(CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES, BuildConfig.MY_LOCATION_BUFFER + ""));
     }
 
+    public static long getSyncInterval() {
+        return Long.parseLong(getGlobalConfig(CONFIGURATION.SYNC_INTERVAL_IN_MINUTES, getDefaultSyncInterval()));
+    }
+
+    private static String getDefaultSyncInterval() {
+        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+            return Constants.THAILAND_SYNC_INTERVAL;
+        } else {
+            return BuildConfig.SYNC_INTERVAL_IN_MINUTES + "";
+        }
+    }
+
 
     public static Float getPixelsPerDPI(Resources resources) {
         return TypedValue.applyDimension(
