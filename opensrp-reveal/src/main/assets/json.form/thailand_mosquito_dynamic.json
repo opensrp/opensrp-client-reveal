@@ -1,0 +1,174 @@
+{
+  "count": "1",
+  "encounter_type": "mosquito_collection",
+  "form_version": "0.0.1",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "{{thailand_mosquito_collection_form.step1.title}}",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "eligibleMos",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "label": "{{thailand_mosquito_collection_form.step1.eligibleMos.label}}",
+        "options": [
+          {
+            "key": "1",
+            "text": "Eligible"
+          },
+          {
+            "key": "0",
+            "text": "InEligible"
+          }
+        ],
+        "value": "1",
+        "v_required": {
+          "value": true,
+          "err": "{{thailand_mosquito_collection_form.step1.eligibleMos.v_required.err}}"
+        }
+      },
+      {
+        "key": "whyNotEligibleMos",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "{{thailand_mosquito_collection_form.step1.whyNotEligibleMos.label}}",
+        "options": [
+          {
+            "key": "No longer collection site",
+            "text": "{{thailand_mosquito_collection_form.step1.whyNotEligibleMos.options.No_longer_collection_site.text}}"
+          },
+          {
+            "key": "99",
+            "text": "{{thailand_mosquito_collection_form.step1.whyNotEligibleMos.options.99.text}}"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "{{thailand_mosquito_collection_form.step1.whyNotEligibleMos.v_required.err}}"
+        },
+        "relevance": {
+          "step1:eligibleMos": {
+            "type": "string",
+            "ex": "equalTo(., \"0\")"
+          }
+        }
+      },
+      {
+        "key": "task_business_status",
+        "label": "{{thailand_mosquito_collection_form.step1.task_business_status.label}}",
+        "type": "native_radio",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "options": [
+          {
+            "key": "In Progress",
+            "text": "{{thailand_mosquito_collection_form.step1.task_business_status.options.In_Progress.text}}"
+          },
+          {
+            "key": "Incomplete",
+            "text": "{{thailand_mosquito_collection_form.step1.task_business_status.options.Incomplete.text}}"
+          },
+          {
+            "key": "Not Eligible",
+            "text": "{{thailand_mosquito_collection_form.step1.task_business_status.options.Not_Eligible.text}}"
+          },
+          {
+            "key": "Complete",
+            "text": "{{thailand_mosquito_collection_form.step1.task_business_status.options.Complete.text}}"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "{{thailand_mosquito_collection_form.step1.task_business_status.v_required.err}}"
+        },
+        "relevance": {
+          "step1:eligibleMos": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "trap_start",
+        "type": "date_picker",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "{{thailand_mosquito_collection_form.step1.trap_start.hint}}",
+        "max_date": "today",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "mosquito-collection-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "mosquito-collection-calculation-rules.yml"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "properties_file_name": "thailand_mosquito_collection_form"
+}
