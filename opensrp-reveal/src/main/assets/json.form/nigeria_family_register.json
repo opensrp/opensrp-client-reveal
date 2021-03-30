@@ -113,9 +113,10 @@
           "err": "This field is required"
         },
         "relevance": {
-          "step1:eligibleRes": {
-            "type": "string",
-            "ex": "equalTo(., \"0\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-family-register-relevance.yml"
+            }
           }
         }
       },
@@ -139,6 +140,13 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-family-register-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -163,9 +171,10 @@
           "err": "This field is required"
         },
         "relevance": {
-          "step1:compoundPart": {
-            "type": "string",
-            "ex": "equalTo(., \"1\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-family-register-relevance.yml"
+            }
           }
         }
       },
@@ -194,9 +203,10 @@
           "err": "Number must be equal or less than 50"
         },
         "relevance": {
-          "step1:withinCompound": {
-            "type": "string",
-            "ex": "equalTo(., \"1\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-family-register-relevance.yml"
+            }
           }
         }
       },
@@ -213,9 +223,10 @@
           "err": "This field is required"
         },
         "relevance": {
-          "step1:withinCompound": {
-            "type": "string",
-            "ex": "equalTo(., \"0\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-family-register-relevance.yml"
+            }
           }
         }
       },
@@ -231,7 +242,14 @@
         "text_color": "#000000",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
-        "openmrs_entity_id": ""
+        "openmrs_entity_id": "",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-family-register-relevance.yml"
+            }
+          }
+        }
       },
       {
         "key": "family_name",
@@ -249,6 +267,13 @@
         "v_regex": {
           "value": "[A-Za-z\\s\\.\\-]*",
           "err": "Please enter a valid surname, not a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-family-register-relevance.yml"
+            }
+          }
         }
       }
     ]
@@ -268,6 +293,13 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-family-register-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -286,6 +318,13 @@
         "v_regex": {
           "value": "[A-Za-z\\s\\.\\-]*",
           "err": "Please enter a valid name, not a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-family-register-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -302,7 +341,14 @@
             "text_size": "18px",
             "value": "true"
           }
-        ]
+        ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-family-register-relevance.yml"
+            }
+          }
+        }
       },
       {
         "key": "surname",
@@ -363,6 +409,13 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the sex"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-family-register-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -404,7 +457,14 @@
             "text_size": "18px",
             "value": "true"
           }
-        ]
+        ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-family-register-relevance.yml"
+            }
+          }
+        }
       },
       {
         "key": "age",
@@ -423,6 +483,23 @@
           "err": "Please enter the age"
         },
         "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-family-register-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "not_eligible_structure_label",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "On Save this structure will be marked not eligible",
+        "text_color": "#000000",
+        "toaster_type": "info",
+        "calculation": {
           "rules-engine": {
             "ex-rules": {
               "rules-file": "nigeria-family-register-relevance.yml"
