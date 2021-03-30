@@ -1026,14 +1026,6 @@ public class ListTasksActivityTest extends BaseUnitTest {
     }
 
     @Test
-    public void testSetOperationalArea() {
-        Whitebox.setInternalState(listTasksActivity, "drawerView", drawerView);
-        listTasksActivity.setOperationalArea("operational area");
-        verify(drawerView).setOperationalArea("operational area");
-    }
-
-
-    @Test
     public void testDisplayEditCDDTaskCompleteDialog(){
         Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
         listTasksActivity.displayEditCDDTaskCompleteDialog();
