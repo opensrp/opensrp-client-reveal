@@ -1,8 +1,10 @@
 package org.smartregister.reveal.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -10,6 +12,8 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.fragment.StructureTasksFragment;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.view.activity.MultiLanguageActivity;
+
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON_FRAGMENT;
 
 public class StructureTasksActivity extends MultiLanguageActivity {
 
@@ -41,6 +45,16 @@ public class StructureTasksActivity extends MultiLanguageActivity {
                 onBackPressed();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == io.ona.kujaku.utils.Constants.RequestCode.LOCATION_SETTINGS ||
+                requestCode == REQUEST_CODE_GET_JSON_FRAGMENT) {
+            structureTasksFragment.onActivityResult(requestCode, resultCode, data);
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
 }
