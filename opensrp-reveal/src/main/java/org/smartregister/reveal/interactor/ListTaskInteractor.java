@@ -410,14 +410,14 @@ public class ListTaskInteractor extends BaseInteractor {
             Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
             Map<String, String> details = new HashMap<>();
             details.put(TASK_IDENTIFIER, taskIdentifier);
-            details.put(Constants.Properties.TASK_BUSINESS_STATUS, task.getBusinessStatus());
-            details.put(Constants.Properties.TASK_STATUS, task.getStatus().name());
             details.put(Constants.Properties.LOCATION_ID, feature.id());
             details.put(Constants.Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
             details.put(Constants.Properties.PLAN_IDENTIFIER,task.getPlanIdentifier());
             task.setBusinessStatus(NOT_ELIGIBLE);
             task.setStatus(Task.TaskStatus.COMPLETED);
             task.setLastModified(new DateTime());
+            details.put(Constants.Properties.TASK_BUSINESS_STATUS, task.getBusinessStatus());
+            details.put(Constants.Properties.TASK_STATUS, task.getStatus().name());
             taskRepository.addOrUpdate(task);
             revealApplication.setSynced(false);
             Event event = FamilyJsonFormUtils.createFamilyEvent(task.getForEntity(), feature.id(), details, FamilyConstants.EventType.FAMILY_REGISTRATION_INELIGIBLE);
