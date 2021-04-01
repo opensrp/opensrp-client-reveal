@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "bednet_distribution",
+  "encounter_type": "drug_reconcilliation",
   "entity_id": "",
   "metadata": {
     "start": {
