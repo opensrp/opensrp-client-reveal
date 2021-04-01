@@ -369,6 +369,48 @@
         }
       },
       {
+        "key": "sch_drug_validation_err",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "Only PZQ drug is used for SCH NTD you selected earlier",
+        "text_size": "8sp",
+        "text_color": "#CF0800",
+        "toaster_type": "problem",
+        "v_required": {
+          "value": "true"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "cdd-supervisor-daily-summary-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sth_drug_validation_err",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "Only ALB or MBZ drug is used for this NTD you selected earlier",
+        "text_size": "8sp",
+        "text_color": "#CF0800",
+        "toaster_type": "problem",
+        "v_required": {
+          "value": "true"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "cdd-supervisor-daily-summary-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "received_when",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -428,6 +470,20 @@
         }
       },
       {
+        "key": "total_tablet_admin_max",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "cdd-supervisor-daily-summary-calculation.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "adminstered",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -451,6 +507,14 @@
         "v_min": {
           "value": "0",
           "err": "This field must be greater than or equal to 0"
+        },
+        "v_max": {
+          "value": "999999999",
+          "err": "This field must be less that or equal to 999999999"
+        },
+        "v_relative_max": {
+          "value": "total_tablet_admin_max",
+          "err": "You selected Initial balance, therefore  the total administered today must be less than or equal initial tablets received"
         }
       },
       {
@@ -522,6 +586,7 @@
             "text": "No"
           }
         ],
+        "value": "not verified",
         "v_required": {
           "value": true,
           "err": "This field is mandatory"
@@ -544,6 +609,7 @@
             "text": "No"
           }
         ],
+        "value": "No",
         "v_required": {
           "value": true,
           "err": "This field is mandatory"
