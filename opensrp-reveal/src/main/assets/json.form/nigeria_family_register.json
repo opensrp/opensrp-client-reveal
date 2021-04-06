@@ -101,13 +101,16 @@
         "options": [
           {
             "key": "1",
-            "text": "Yes"
+            "text": "Yes",
+            "value": "1"
           },
           {
             "key": "0",
-            "text": "No"
+            "text": "No",
+            "value": "0"
           }
         ],
+        "read_only": true,
         "v_required": {
           "value": true,
           "err": "This field is required"
