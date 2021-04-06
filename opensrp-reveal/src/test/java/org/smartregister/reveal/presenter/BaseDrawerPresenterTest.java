@@ -37,7 +37,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -86,7 +88,7 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
     private ArgumentCaptor<String> entireTreeString;
 
     @Captor
-    private ArgumentCaptor<ArrayList<String>> arrayListArgumentCaptor;
+    private ArgumentCaptor<List<String>> arrayListArgumentCaptor;
 
     @Captor
     private ArgumentCaptor<Pair<String, ArrayList<String>>> pairArgumentCaptor;
@@ -298,7 +300,7 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
     }
 
     @Test
-    public void testIsChangedCurrentSelectio() {
+    public void testIsChangedCurrentSelection() {
         Whitebox.setInternalState(presenter, "changedCurrentSelection", true);
 
         boolean actualIsChangedCurrentSelection = presenter.isChangedCurrentSelection();
@@ -307,7 +309,7 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
     }
 
     @Test
-    public void testSetChangedCurrentSelectio() {
+    public void testSetChangedCurrentSelection() {
         assertFalse(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
 
         presenter.setChangedCurrentSelection(true);
@@ -316,7 +318,7 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
     }
 
     @Test
-    public void testOnDraweClosed() {
+    public void testOnDrawerClosed() {
         presenter.onDrawerClosed();
         verify(drawerActivity).onDrawerClosed();
     }
@@ -348,6 +350,16 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         verify(preferencesUtil).setCurrentPlanId("plan_1");
         verify(view).setPlan("IRS Lusaka");
         assertTrue(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
+    }
+
+    @Test
+    public void testOnShowOperationalAreaSelectorNullShowsErrorProcessingHierarchy(){
+        Whitebox.setInternalState(presenter, "locationHelper", locationHelper);
+        when(locationHelper.generateDefaultLocationHierarchy(anyList()))
+                .thenReturn(null);
+        presenter.onShowOperationalAreaSelector();
+        verify(locationHelper, times(2)).generateDefaultLocationHierarchy(anyList());
+        verify(view).displayNotification(eq(R.string.error_fetching_location_hierarchy_title), eq(R.string.error_fetching_location_hierarchy));
     }
 
     @Test

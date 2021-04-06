@@ -176,7 +176,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     @Override
     public void onShowOperationalAreaSelector() {
         Pair<String, ArrayList<String>> locationHierarchy = extractLocationHierarchy();
-        if (locationHierarchy == null) {//try to evict location hierachy in cache
+        if (locationHierarchy == null) {//try to evict location hierarchy in cache
             revealApplication.getContext().anmLocationController().evict();
             locationHierarchy = extractLocationHierarchy();
         }
