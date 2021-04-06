@@ -101,6 +101,8 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
         btnHFWSupervisorChecklist=view.findViewById(R.id.hfw_supervisor_checklist);
 
         if(Country.NIGERIA.equals(BuildConfig.BUILD_COUNTRY)){
+            btnTeamLeaderDos.setVisibility(View.GONE);
+            view.findViewById(R.id.separator3).setVisibility(View.GONE);
             btnCbSprayArea.setVisibility(View.GONE);
             view.findViewById(R.id.separator4).setVisibility(View.GONE);
             btnIrsSaDecision.setVisibility(View.GONE);
