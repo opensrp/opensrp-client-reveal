@@ -2,14 +2,14 @@
 name: step2_surname
 description: surname relevance
 priority: 1
-condition: "!(step1_eligibleRes.equals('0') && step1_isPeopleLiving.equals('0')) && !step2_same_as_fam_name.contains('same_as_fam_name')"
+condition: "!step2_same_as_fam_name.contains('same_as_fam_name')"
 actions:
   - "isRelevant = true"
 ---
 name: step2_dob
 description: dob relevance
 priority: 1
-condition: "!(step1_eligibleRes.equals('0') && step1_isPeopleLiving.equals('0')) && !step2_dob_unknown.contains('dob_unknown')"
+condition: "!step2_dob_unknown.contains('dob_unknown')"
 actions:
   - "isRelevant = true"
 ---
@@ -19,112 +19,3 @@ priority: 1
 condition: "step2_dob_unknown.contains('dob_unknown')"
 actions:
   - "isRelevant = true"
----
-name: step1_isPeopleLiving
-description: step1_isPeopleLiving
-priority: 1
-condition: "step1_eligibleRes.equals('0')"
-actions:
-  - "isRelevant = true"
----
-name: step1_compoundPart
-description: step1_compoundPart
-priority: 1
-condition: "!(step1_eligibleRes.equals('0') && step1_isPeopleLiving.equals('0'))"
-actions:
-  - "isRelevant = true"
-
----
-name: step1_withinCompound
-description: step1_withinCompound
-priority: 1
-condition: "step1_compoundPart.equals('1')"
-actions:
-  - "isRelevant = true"
-
----
-name: step1_numCompoundStructures
-description: step1_numCompoundStructures
-priority: 1
-condition: "step1_withinCompound.equals('1')"
-actions:
-  - "isRelevant = true"
-
----
-name: step1_compoundStructure
-description: step1_compoundStructure
-priority: 1
-condition: "step1_withinCompound.equals('0')"
-actions:
-  - "isRelevant = true"
-
----
-name: step1_label_1
-description: step1_label_1
-priority: 1
-condition: "!(step1_eligibleRes.equals('0') && step1_isPeopleLiving.equals('0'))"
-actions:
-  - "isRelevant = true"
-
----
-name: step1_family_name
-description: step1_family_name
-priority: 1
-condition: "!(step1_eligibleRes.equals('0') && step1_isPeopleLiving.equals('0'))"
-actions:
-  - "isRelevant = true"
----
-name: step2_unique_id
-description: step2_unique_id
-priority: 1
-condition: "!(step1_eligibleRes.equals('0') && step1_isPeopleLiving.equals('0'))"
-actions:
-  - "isRelevant = true"
----
-name: step2_unique_id
-description: step2_unique_id
-priority: 1
-condition: "!(step1_eligibleRes.equals('0') && step1_isPeopleLiving.equals('0'))"
-actions:
-  - "isRelevant = true"
-
----
-name: step2_first_name
-description: step2_first_name
-priority: 1
-condition: "!(step1_eligibleRes.equals('0') && step1_isPeopleLiving.equals('0'))"
-actions:
-  - "isRelevant = true"
----
-name: step2_same_as_fam_name
-description: step2_same_as_fam_name
-priority: 1
-condition: "!(step1_eligibleRes.equals('0') && step1_isPeopleLiving.equals('0'))"
-actions:
-  - "isRelevant = true"
-
----
-name: step2_same_as_fam_name
-description: step2_same_as_fam_name
-priority: 1
-condition: "!(step1_eligibleRes.equals('0') && step1_isPeopleLiving.equals('0'))"
-actions:
-  - "isRelevant = true"
-
----
-name: step2_sex
-description: step2_sex
-priority: 1
-condition: "!(step1_eligibleRes.equals('0') && step1_isPeopleLiving.equals('0'))"
-actions:
-  - "isRelevant = true"
----
-name: step2_dob_unknown
-description: step2_dob_unknown
-priority: 1
-condition: "!(step1_eligibleRes.equals('0') && step1_isPeopleLiving.equals('0'))"
-actions:
-  - "isRelevant = true"
-
-
-
