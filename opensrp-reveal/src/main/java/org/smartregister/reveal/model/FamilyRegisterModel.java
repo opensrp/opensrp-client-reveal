@@ -22,8 +22,6 @@ import java.util.List;
 
 import timber.log.Timber;
 
-import static com.vijay.jsonwizard.constants.JsonFormConstants.KEYS;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUES;
 import static org.smartregister.reveal.util.FamilyConstants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 import static org.smartregister.util.JsonFormUtils.VALUE;
@@ -83,8 +81,6 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
 
     private void populateCompoundStructureOptions(JSONObject form){
         SQLiteDatabase database = RevealApplication.getInstance().getRepository().getReadableDatabase();
-        JSONArray keys = new JSONArray();
-        JSONArray values = new JSONArray();
         JSONObject property;
         JSONObject option;
         JSONArray options = new JSONArray();
