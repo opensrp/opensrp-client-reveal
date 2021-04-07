@@ -14,10 +14,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONObject;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.OtherFormsfragmentContract;
 import org.smartregister.reveal.presenter.OtherFormsFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.SummaryFormsActivity;
@@ -97,6 +99,21 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
         btnHfwLevelReferral =  view.findViewById(R.id.hfw_level_referral);
         btnCDDSupervisorChecklist=view.findViewById(R.id.cdd_supervisor_checklist);
         btnHFWSupervisorChecklist=view.findViewById(R.id.hfw_supervisor_checklist);
+
+        if(Country.NIGERIA.equals(BuildConfig.BUILD_COUNTRY)){
+            btnTeamLeaderDos.setVisibility(View.GONE);
+            view.findViewById(R.id.separator3).setVisibility(View.GONE);
+            btnCbSprayArea.setVisibility(View.GONE);
+            view.findViewById(R.id.separator4).setVisibility(View.GONE);
+            btnIrsSaDecision.setVisibility(View.GONE);
+            view.findViewById(R.id.separator5).setVisibility(View.GONE);
+            btnMobilization.setVisibility(View.GONE);
+            view.findViewById(R.id.separator6).setVisibility(View.GONE);
+            btnIrsFieldOfficer.setVisibility(View.GONE);
+            view.findViewById(R.id.separator7).setVisibility(View.GONE);
+            btnVerificationForm.setVisibility(View.GONE);
+            view.findViewById(R.id.separator8).setVisibility(View.GONE);
+        }
         setClickListeners();
     }
 
