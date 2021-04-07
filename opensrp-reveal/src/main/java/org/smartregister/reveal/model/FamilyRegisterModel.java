@@ -127,6 +127,7 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
           for(Obs obs : eventClient.getEvent().getObs()){
               if(obs.getFormSubmissionField().equals(FamilyConstants.FormKeys.COMPOUND_STRUCTURE)){
                   obs.setValues(Arrays.asList(correctValue.get(KEY).toString()));
+                  obs.setFieldCode(FamilyConstants.FormKeys.COMPOUND_STRUCTURE);
                   break;
               }
           }
