@@ -6,6 +6,8 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.AllConstants;
+import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.domain.Location;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.model.BaseFamilyRegisterModel;
@@ -18,12 +20,14 @@ import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.JsonFormUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 import timber.log.Timber;
 
 import static org.smartregister.reveal.util.FamilyConstants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
+import static org.smartregister.util.JsonFormUtils.KEY;
 import static org.smartregister.util.JsonFormUtils.VALUE;
 
 /**
@@ -61,6 +65,9 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
             Location operationalArea = org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
             if (operationalArea != null)
                 eventClient.getEvent().setLocationId(operationalArea.getId());
+            if(Country.NIGERIA.equals(BuildConfig.BUILD_COUNTRY) && eventClient.getEvent().getEntityType().equals(FamilyConstants.TABLE_NAME.FAMILY)){
+                correctCompoundStructureFieldMultiSelectValue(eventClient, jsonString);
+            }
         }
         return eventClientList;
     }
@@ -79,7 +86,7 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
         return form;
     }
 
-    private void populateCompoundStructureOptions(JSONObject form){
+    public static void populateCompoundStructureOptions(JSONObject form){
         SQLiteDatabase database = RevealApplication.getInstance().getRepository().getReadableDatabase();
         JSONObject property;
         JSONObject option;
@@ -89,8 +96,8 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
             while (cursor.moveToNext()) {
 
                 property = new JSONObject();
-                property.put("presumed-id","err");
-                property.put("confirmed-id","err");
+                property.put("presumed-id","er");
+                property.put("confirmed-id","er");
 
                 String structureId = cursor.getString(cursor.getColumnIndex(Constants.DatabaseKeys.STRUCTURE_ID));
                 String firsName = cursor.getString(cursor.getColumnIndex(Constants.DatabaseKeys.FIRST_NAME));
@@ -104,12 +111,28 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
             }
 
             JSONObject compoundStructureField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), FamilyConstants.FormKeys.COMPOUND_STRUCTURE);
-            compoundStructureField.put("options", options);
+            compoundStructureField.put(AllConstants.OPTIONS, options);
         }catch (JSONException e) {
                 Timber.e(e, "Error populating %s Options",FamilyConstants.FormKeys.COMPOUND_STRUCTURE);
         } catch (Exception e) {
             Timber.e(e, "Error find Families ");
         }
+
+    }
+
+    private void correctCompoundStructureFieldMultiSelectValue(FamilyEventClient eventClient, String jsonString){
+      try {
+          JSONObject correctValue = (JSONObject) new JSONArray(JsonFormUtils.getFieldValue(jsonString,FamilyConstants.FormKeys.COMPOUND_STRUCTURE)).get(0);
+          eventClient.getEvent().addDetails(FamilyConstants.FormKeys.COMPOUND_STRUCTURE,correctValue.get(KEY).toString());
+          for(Obs obs : eventClient.getEvent().getObs()){
+              if(obs.getFormSubmissionField().equals(FamilyConstants.FormKeys.COMPOUND_STRUCTURE)){
+                  obs.setValues(Arrays.asList(correctValue.get(KEY).toString()));
+                  break;
+              }
+          }
+      }catch (JSONException e){
+         Timber.e(e);
+      }
 
     }
 
