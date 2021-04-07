@@ -113,10 +113,9 @@ android {
                     return it.key.toString().contains("secret")
                 }[true].each {
                     def env = it.key.toString().tokenize(".")[2]
-                    print(env)
                     envsArray += """${getJavaMap([env   : "$env",
-                                                  id    : properties["oauth.client." + env + ".id"],
-                                                  secret: properties["oauth.client." + env + ".secret"],
+                                                  'client.id'    : properties["oauth.client." + env + ".id"],
+                                                  'client.secret' : properties["oauth.client." + env + ".secret"],
                                                   url: properties["oauth.client." + env + ".url"]
                     ])},"""
                 }
