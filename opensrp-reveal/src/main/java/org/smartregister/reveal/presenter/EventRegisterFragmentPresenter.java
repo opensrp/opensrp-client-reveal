@@ -11,6 +11,7 @@ import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Event;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.EventRegisterContract;
@@ -20,9 +21,12 @@ import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.Utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import timber.log.Timber;
@@ -87,7 +91,13 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
 
     private String mainSelect(String tableName, String mainCondition) {
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
-        queryBUilder.selectInitiateMainTable(tableName, mainColumns(tableName));
+        if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
+            List<String> mainColumns =  new ArrayList<>(Arrays.asList(mainColumns(tableName)));
+            mainColumns.add(tableName + "." + DatabaseKeys.DATA_COLLECTION_DATE);
+            queryBUilder.selectInitiateMainTable(tableName, mainColumns.toArray(new String[mainColumns.size()]));
+        }else{
+            queryBUilder.selectInitiateMainTable(tableName, mainColumns(tableName));
+        }
         return queryBUilder.mainCondition(mainCondition);
     }
 
