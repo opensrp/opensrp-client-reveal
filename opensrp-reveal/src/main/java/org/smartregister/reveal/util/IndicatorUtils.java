@@ -160,7 +160,7 @@ public class IndicatorUtils {
         List<String> indicators = new ArrayList<>();
 
         indicators.add(context.getResources().getString(R.string.structure_total));
-        indicators.add(String.valueOf(indicatorDetails.getTotalStructures()));
+        indicators.add(String.valueOf(indicatorDetails.getTotalStructures() - indicatorDetails.getIneligible()));
 
 
         int structureVisited = indicatorDetails.getTotalStructures() - indicatorDetails.getIneligible() - indicatorDetails.getNotVisited();
@@ -224,7 +224,7 @@ public class IndicatorUtils {
             }
         }
 
-        indicatorDetails.setTotalStructures(indicatorDetailsMap.size() - indicatorDetails.getIneligible());
+        indicatorDetails.setTotalStructures(indicatorDetailsMap.size());
         return indicatorDetails;
     }
 
