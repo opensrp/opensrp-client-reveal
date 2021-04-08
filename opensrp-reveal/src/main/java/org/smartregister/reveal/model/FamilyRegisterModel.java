@@ -123,16 +123,20 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
 
     private void correctCompoundStructureFieldMultiSelectValue(FamilyEventClient eventClient, String jsonString){
       try {
-          JSONObject correctValue = (JSONObject) new JSONArray(JsonFormUtils.getFieldValue(jsonString,FamilyConstants.FormKeys.COMPOUND_STRUCTURE)).get(0);
-          eventClient.getEvent().addDetails(FamilyConstants.FormKeys.COMPOUND_STRUCTURE,correctValue.get(KEY).toString());
-          for(Obs obs : eventClient.getEvent().getObs()){
-              if(obs.getFormSubmissionField().equals(FamilyConstants.FormKeys.COMPOUND_STRUCTURE)){
-                  obs.setValues(Arrays.asList(correctValue.get(KEY).toString()));
-                  obs.setHumanReadableValues(Arrays.asList(correctValue.get(KEY).toString()));
-                  obs.setFieldCode(FamilyConstants.FormKeys.COMPOUND_STRUCTURE);
-                  break;
+          String compoundStructure = JsonFormUtils.getFieldValue(jsonString,FamilyConstants.FormKeys.COMPOUND_STRUCTURE);
+          if(compoundStructure != null){
+              JSONObject correctValue = (JSONObject) new JSONArray(compoundStructure).get(0);
+              eventClient.getEvent().addDetails(FamilyConstants.FormKeys.COMPOUND_STRUCTURE,correctValue.get(KEY).toString());
+              for(Obs obs : eventClient.getEvent().getObs()){
+                  if(obs.getFormSubmissionField().equals(FamilyConstants.FormKeys.COMPOUND_STRUCTURE)){
+                      obs.setValues(Arrays.asList(correctValue.get(KEY).toString()));
+                      obs.setHumanReadableValues(Arrays.asList(correctValue.get(KEY).toString()));
+                      obs.setFieldCode(FamilyConstants.FormKeys.COMPOUND_STRUCTURE);
+                      break;
+                  }
               }
           }
+
       }catch (JSONException e){
          Timber.e(e);
       }
