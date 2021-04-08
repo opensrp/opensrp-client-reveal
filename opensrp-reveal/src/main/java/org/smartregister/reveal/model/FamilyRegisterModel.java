@@ -25,6 +25,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.smartregister.reveal.util.FamilyConstants.DatabaseKeys.COMPOUND_STRUCTURE;
 import static org.smartregister.reveal.util.FamilyConstants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 import static org.smartregister.util.JsonFormUtils.KEY;
@@ -127,6 +128,7 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
           for(Obs obs : eventClient.getEvent().getObs()){
               if(obs.getFormSubmissionField().equals(FamilyConstants.FormKeys.COMPOUND_STRUCTURE)){
                   obs.setValues(Arrays.asList(correctValue.get(KEY).toString()));
+                  obs.setHumanReadableValues(Arrays.asList(correctValue.get(KEY).toString()));
                   obs.setFieldCode(FamilyConstants.FormKeys.COMPOUND_STRUCTURE);
                   break;
               }
