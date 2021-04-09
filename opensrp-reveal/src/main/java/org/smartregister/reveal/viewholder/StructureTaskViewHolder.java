@@ -28,7 +28,7 @@ import java.util.Locale;
 public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
 
     private final static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.getDefault());
-    private final static SimpleDateFormat thailandDateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+    private final static SimpleDateFormat ddMMyyDateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
 
     private Context context;
 
@@ -116,7 +116,7 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
 
     private SimpleDateFormat supportedDateFormat(){
         if (BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN){
-            return thailandDateFormat;
+            return ddMMyyDateFormat;
         }
         return dateFormat;
     }
