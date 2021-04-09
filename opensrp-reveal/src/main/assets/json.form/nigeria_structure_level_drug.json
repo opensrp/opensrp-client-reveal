@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "drug_reconcilliation",
+  "encounter_type": "mda_drug_reconciliation",
   "entity_id": "",
   "metadata": {
     "start": {
