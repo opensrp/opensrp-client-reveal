@@ -131,8 +131,8 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             progressIndicator.setVisibility(View.GONE);
         } else if(BuildConfig.BUILD_COUNTRY == Country.NIGERIA){
 
-            int  visited = (indicatorDetails.getTotalStructures() - indicatorDetails.getIneligible() - indicatorDetails.getNotVisited());
-            int totalStructures = indicatorDetails.getTotalStructures();
+            int totalStructures = indicatorDetails.getTotalStructures() - indicatorDetails.getIneligible();
+            int  visited = totalStructures - indicatorDetails.getNotVisited();
             int foundCoverage = totalStructures > 0 ? Math.round(visited * 100 / totalStructures) : 0;
             progressIndicator.setSubTitle(this.activity.getString(R.string.found_coverage));
             progressIndicator.setProgress(foundCoverage);
