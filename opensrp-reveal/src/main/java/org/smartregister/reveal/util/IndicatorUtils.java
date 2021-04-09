@@ -158,12 +158,12 @@ public class IndicatorUtils {
 
     public static List<String> populateNigeriaIndicators(Context context,IndicatorDetails indicatorDetails){
         List<String> indicators = new ArrayList<>();
-
+        int totalStructures = indicatorDetails.getTotalStructures() - indicatorDetails.getIneligible();
         indicators.add(context.getResources().getString(R.string.structure_total));
-        indicators.add(String.valueOf(indicatorDetails.getTotalStructures() - indicatorDetails.getIneligible()));
+        indicators.add(String.valueOf(totalStructures));
 
 
-        int structureVisited = indicatorDetails.getTotalStructures() - indicatorDetails.getIneligible() - indicatorDetails.getNotVisited();
+        int structureVisited = totalStructures - indicatorDetails.getNotVisited();
         indicators.add(context.getResources().getString(R.string.structure_visited));
         indicators.add(String.valueOf(structureVisited));
 
