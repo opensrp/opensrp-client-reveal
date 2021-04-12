@@ -568,6 +568,12 @@ public interface Constants {
 
     }
 
+    interface EventsRegister {
+        String VIEW_IDENTIFIER = "event_register";
+
+        String TABLE_NAME = "ec_events";
+    }
+
     interface DatabaseKeys {
 
         String TASK_TABLE = "task";

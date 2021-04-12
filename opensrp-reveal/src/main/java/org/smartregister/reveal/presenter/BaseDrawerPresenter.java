@@ -3,7 +3,7 @@ package org.smartregister.reveal.presenter;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import android.app.Activity;
-
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
@@ -23,6 +23,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.view.EventRegisterActivity;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
@@ -399,6 +400,12 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
                 syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_red));
             }
         }
+    }
+
+    @Override
+    public void onShowFilledForms() {
+        if (drawerActivity.getActivity() != null)
+            drawerActivity.getActivity().startActivity(new Intent(drawerActivity.getActivity(), EventRegisterActivity.class));
     }
 
 }

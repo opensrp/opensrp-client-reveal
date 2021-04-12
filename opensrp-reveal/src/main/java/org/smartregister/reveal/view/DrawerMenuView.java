@@ -333,6 +333,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             startOtherFormsActivity();
         else if (v.getId() == R.id.btn_navMenu_offline_maps)
             presenter.onShowOfflineMaps();
+        else if (v.getId() == R.id.btn_navMenu_filled_forms)
+            presenter.onShowFilledForms();
         else if (v.getId() == R.id.sync_button) {
             toggleProgressBarView(true);
             org.smartregister.reveal.util.Utils.startImmediateSync();

@@ -98,6 +98,8 @@ public interface BaseDrawerContract {
         void onPlanValidated(boolean isValid);
 
         void updateSyncStatusDisplay(boolean synced);
+
+        void onShowFilledForms();
     }
 
     interface Interactor {
