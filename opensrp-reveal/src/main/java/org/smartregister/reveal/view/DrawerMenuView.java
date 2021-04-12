@@ -164,6 +164,9 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             summaryFormsTextView.setVisibility(View.VISIBLE);
             summaryFormsTextView.setOnClickListener(this);
 
+            TextView filledForms = headerView.findViewById(R.id.btn_navMenu_filled_forms);
+            filledForms.setVisibility(View.VISIBLE);
+            filledForms.setOnClickListener(this);
         }
 
         offlineMapTextView.setVisibility(View.VISIBLE);
