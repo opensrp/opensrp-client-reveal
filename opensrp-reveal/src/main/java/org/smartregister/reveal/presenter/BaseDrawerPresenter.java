@@ -173,11 +173,23 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         view.setOperationalArea(prefsUtil.getCurrentOperationalArea());
     }
 
+    private void updateCurrentLocationId(final String locationId){
+        sharedPreferences.saveDefaultLocalityId(sharedPreferences.fetchRegisteredANM(), locationId);
+    }
+
+    private void updateCheckLocationId(){
+        if (StringUtils.isBlank(prefsUtil.getCurrentOperationalAreaId())){
+            prefsUtil.reApplySetCurrentOperationalArea();
+            updateCurrentLocationId(prefsUtil.getCurrentOperationalAreaId());
+        }
+    }
+
     @Override
     public void onShowOperationalAreaSelector() {
         Pair<String, ArrayList<String>> locationHierarchy = extractLocationHierarchy();
         if (locationHierarchy == null) {//try to evict location hierarchy in cache
             revealApplication.getContext().anmLocationController().evict();
+            updateCheckLocationId();
             locationHierarchy = extractLocationHierarchy();
         }
         if (locationHierarchy != null) {
@@ -245,7 +257,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
             String operationalArea = name.get(name.size() - 1);
             prefsUtil.setCurrentOperationalArea(operationalArea);
-            sharedPreferences.saveDefaultLocalityId(sharedPreferences.fetchRegisteredANM(), prefsUtil.getCurrentOperationalAreaId());
+            updateCurrentLocationId(prefsUtil.getCurrentOperationalAreaId());
             Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - districtOffset), name.get(name.size() - 1), entireTree);
             if (facility != null) {
                 prefsUtil.setCurrentFacility(facility.second);

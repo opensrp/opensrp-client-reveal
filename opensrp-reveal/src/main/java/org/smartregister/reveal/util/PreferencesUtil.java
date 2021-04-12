@@ -60,6 +60,11 @@ public class PreferencesUtil {
         }
     }
 
+    public void reApplySetCurrentOperationalArea() {
+        final String operationalArea = allSharedPreferences.getPreference(CURRENT_OPERATIONAL_AREA);
+        setCurrentOperationalArea(operationalArea);
+    }
+
     public String getCurrentOperationalArea() {
         return allSharedPreferences.getPreference(CURRENT_OPERATIONAL_AREA);
     }
