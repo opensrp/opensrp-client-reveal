@@ -154,11 +154,11 @@
         "hint": "What is the reason(s) for referral?",
         "values": [
          "Child vomited twice",
-          "Other Reason - specify"
+          "Other Reason"
         ],
         "keys": [
           "Child vomited twice",
-          "Other Reason - specify"
+          "Other Reason"
         ],
         "relevance": {
           "step1:childHfReferred": {
@@ -178,7 +178,7 @@
         "relevance": {
           "step1:referralReason": {
             "type": "string",
-            "ex": "equalTo(., \"Other Reason - specify\")"
+            "ex": "equalTo(., \"Other Reason\")"
           }
         },
         "v_regex": {
