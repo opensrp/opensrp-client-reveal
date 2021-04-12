@@ -153,11 +153,13 @@
         "type": "spinner",
         "hint": "What is the reason(s) for referral?",
         "values": [
-         "Child vomited twice",
+         "Severe sickness / fever",
+          "Severe allergy or adverse reaction",
           "Other Reason"
         ],
         "keys": [
-          "Child vomited twice",
+          "Severe sickness / fever",
+          "Severe allergy or adverse reaction",
           "Other Reason"
         ],
         "relevance": {
