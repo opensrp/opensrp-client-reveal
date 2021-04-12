@@ -427,6 +427,7 @@
     <string name="start_p2p_syc">Start P2P Sync</string>
 
     <string name="events">Events</string>
+    <string name="sync_started">Sync Started</string>
     <string name="ok">Done</string>
     <string name="locations">Locations</string>
     <string name="plans">Plans</string>

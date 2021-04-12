@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -156,6 +157,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private SyncProgressBroadcastReceiver syncProgressBroadcastReceiver = new SyncProgressBroadcastReceiver(this);
 
     private boolean hasRequestedLocation;
+
+    private boolean startedToastShown;
+
+    private boolean completedToastShown;
 
     private BaseDrawerContract.View drawerView;
 
@@ -839,8 +844,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void onSyncStart() {
-        if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
-            displayToast(org.smartregister.R.string.syncing);
+        if (SyncStatusBroadcastReceiver.getInstance().isSyncing() && !startedToastShown) {
+            displayToast(R.string.sync_started);
+            startedToastShown = true;
+            completedToastShown = false;
         }
         toggleProgressBarView(true);
     }
@@ -848,9 +855,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onSyncInProgress(FetchStatus fetchStatus) {
         if (FetchStatus.fetched.equals(fetchStatus)) {
-            displayToast(org.smartregister.R.string.syncing);
             return;
         }
+        if (completedToastShown) return;
+        //To cover against consecutive sync starts firing, turn the flag off with delay
+        new Handler().postDelayed(() -> startedToastShown = false, 5000);
         if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
             displayToast(org.smartregister.R.string.sync_failed);
         } else if (fetchStatus.equals(FetchStatus.nothingFetched)) {
@@ -858,6 +867,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
             displayToast(org.smartregister.R.string.sync_failed_no_internet);
         }
+        completedToastShown = true;
     }
 
     @Override
@@ -883,7 +893,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         listTaskPresenter.onResume();
 
         if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
-            displayToast(org.smartregister.R.string.syncing);
+        //    displayToast(org.smartregister.R.string.syncing);
             toggleProgressBarView(true);
         }
     }

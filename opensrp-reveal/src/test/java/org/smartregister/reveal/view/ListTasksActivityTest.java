@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -720,41 +719,48 @@ public class ListTasksActivityTest extends BaseUnitTest {
         listTasksActivity = spy(listTasksActivity);
         doNothing().when(listTasksActivity).toggleProgressBarView(true);
         listTasksActivity.onSyncStart();
-        assertEquals(listTasksActivity.getString(R.string.syncing), ShadowToast.getTextOfLatestToast());
+        assertEquals(listTasksActivity.getString(R.string.sync_started), ShadowToast.getTextOfLatestToast());
     }
 
 
     @Test
-    public void testOnSyncInProgressFetchedDataSnackBarIsStillShown() {
+    public void testOnSyncInProgressFetchedDataToastIsNotShown() {
         init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.fetched);
-        assertEquals(listTasksActivity.getString(R.string.syncing), ShadowToast.getTextOfLatestToast());
+        assertEquals(0, ShadowToast.shownToastCount());
     }
 
+    @Test
+    public void testOnConsecutiveSyncCompletedToastIsShownOnce() {
+        init(listTasksActivity);
+        listTasksActivity.onSyncInProgress(FetchStatus.nothingFetched);
+        listTasksActivity.onSyncInProgress(FetchStatus.nothingFetched);
+        assertEquals(1, ShadowToast.shownToastCount());
+    }
 
     @Test
-    public void testOnSyncInProgressFetchFailedSnackBarIsDismissed() {
+    public void testOnSyncInProgressFetchFailedToastWithFailedIsShown() {
         init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.fetchedFailed);
         assertEquals(listTasksActivity.getString(R.string.sync_failed), ShadowToast.getTextOfLatestToast());
     }
 
     @Test
-    public void testOnSyncInProgressNothingFetchedSnackBarIsDismissed() {
+    public void testOnSyncInProgressNothingFetchedSyncCompletedIsShown() {
         init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.nothingFetched);
         assertEquals(listTasksActivity.getString(R.string.sync_complete), ShadowToast.getTextOfLatestToast());
     }
 
     @Test
-    public void testOnSyncInProgressNoConnectionSnackBarIsDismissed() {
+    public void testOnSyncInProgressNoConnectionCheckConnectionIsShown() {
         init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.noConnection);
         assertEquals(listTasksActivity.getString(R.string.sync_failed_no_internet), ShadowToast.getTextOfLatestToast());
     }
 
     @Test
-    public void testOnSyncCompleteSnackBarIsDismissed() {
+    public void testOnSyncCompleteToastCompleteIsShown() {
         init(listTasksActivity);
         listTasksActivity = spy(listTasksActivity);
         doNothing().when(listTasksActivity).toggleProgressBarView(false);
