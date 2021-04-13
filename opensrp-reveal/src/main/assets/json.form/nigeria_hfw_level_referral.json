@@ -641,11 +641,7 @@
             "key": "no",
             "text": "No"
           }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
+        ]
       },
       {
         "key": "isNationalPVFormCompleted",
