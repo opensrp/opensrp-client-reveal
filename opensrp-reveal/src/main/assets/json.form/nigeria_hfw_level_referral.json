@@ -408,6 +408,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-hfw-level-referral-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -518,6 +525,10 @@
           {
             "key": "no",
             "text": "No"
+          },
+          {
+            "key": "n/a",
+            "text": "N/A"
           }
         ],
         "v_required": {
@@ -541,6 +552,10 @@
           {
             "key": "no",
             "text": "No"
+          },
+          {
+            "key": "n/a",
+            "text": "N/A"
           }
         ],
         "v_required": {
@@ -555,11 +570,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Name and dose of ACT",
-        "text_size": "8sp",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
+        "text_size": "8sp"
       },
       {
         "key": "isChildNegativeRDT",
@@ -630,11 +641,7 @@
             "key": "no",
             "text": "No"
           }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
+        ]
       },
       {
         "key": "isNationalPVFormCompleted",
@@ -676,11 +683,7 @@
             "key": "no",
             "text": "No"
           }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
+        ]
       },
       {
         "key": "checklist_outcome",
