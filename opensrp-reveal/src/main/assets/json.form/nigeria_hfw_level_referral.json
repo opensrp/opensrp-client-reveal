@@ -408,6 +408,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-hfw-level-referral-relevance.yml"
+            }
+          }
         }
       },
       {
