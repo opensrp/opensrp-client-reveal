@@ -90,7 +90,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
             } else if (Utils.isMDA()) {
                 int age = Years.yearsBetween(new DateTime(birthDate.getTime()), DateTime.now()).getYears();
                 int months =  Months.monthsBetween(new DateTime(birthDate.getTime()),DateTime.now()).getMonths();
-                if (age < Constants.MDA_MIN_AGE && months >= 3) {
+                if (age < Constants.MDA_MIN_AGE && months >= Constants.SMC_DISPENSE_MIN_MONTHS) {
                     taskUtils.generateMDADispenseTask(applicationContext, baseEntityId, structureId);
                     RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
                 }
