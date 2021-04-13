@@ -552,6 +552,10 @@
           {
             "key": "no",
             "text": "No"
+          },
+          {
+            "key": "n/a",
+            "text": "N/A"
           }
         ],
         "v_required": {
