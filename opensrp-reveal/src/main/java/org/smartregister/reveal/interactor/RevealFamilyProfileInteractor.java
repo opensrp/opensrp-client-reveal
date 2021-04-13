@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.joda.time.DateTime;
+import org.joda.time.Months;
 import org.joda.time.Years;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -88,7 +89,8 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                 RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
             } else if (Utils.isMDA()) {
                 int age = Years.yearsBetween(new DateTime(birthDate.getTime()), DateTime.now()).getYears();
-                if (age < Constants.MDA_MIN_AGE) {
+                int months =  Months.monthsBetween(new DateTime(birthDate.getTime()),DateTime.now()).getMonths();
+                if (age < Constants.MDA_MIN_AGE && months >= 3) {
                     taskUtils.generateMDADispenseTask(applicationContext, baseEntityId, structureId);
                     RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
                 }
