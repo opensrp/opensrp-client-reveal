@@ -570,11 +570,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Name and dose of ACT",
-        "text_size": "8sp",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
+        "text_size": "8sp"
       },
       {
         "key": "isChildNegativeRDT",
