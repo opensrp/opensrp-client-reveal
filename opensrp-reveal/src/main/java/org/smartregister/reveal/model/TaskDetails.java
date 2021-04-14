@@ -385,8 +385,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         this.groupedTaskCodes = stringBuilder.toString();
     }
 
-    public boolean isNonResidential() {
-        return getFamilyMemberNames() != null && getFamilyMemberNames().equalsIgnoreCase("NR");
+    public boolean isResidential() {
+        return getFamilyMemberNames() != null && !getFamilyMemberNames().equalsIgnoreCase("NR");
     }
 
     public int getPendingTasksCount(){

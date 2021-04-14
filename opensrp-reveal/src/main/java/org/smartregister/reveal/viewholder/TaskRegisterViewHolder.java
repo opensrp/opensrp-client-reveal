@@ -97,7 +97,7 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
         boolean hasSingleGroupedTask = (BEDNET_DISTRIBUTION.equals(task.getTaskCode()) || BLOOD_SCREENING.equals(task.getTaskCode())) && task.getTaskCount() == 1;
         // registered family with multiple tasks
-        if (cardDetails != null && !task.isNonResidential() && task.getTaskCount() != null // task grouping only for FI
+        if (cardDetails != null && task.isResidential() && task.getTaskCount() != null // task grouping only for FI
                 && !(REGISTER_FAMILY.equals(task.getTaskCode()) && Task.TaskStatus.READY.name().equals(task.getTaskStatus()))) { //skip if we have a READY family reg task
             if (task.getTaskCount() > 1 || hasSingleGroupedTask) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
