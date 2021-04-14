@@ -32,6 +32,7 @@ import timber.log.Timber;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.CHECK_BOX;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.HIDDEN;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.HINT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
 import static org.smartregister.AllConstants.OPTIONS;
 import static org.smartregister.AllConstants.TEXT;
@@ -44,6 +45,7 @@ import static org.smartregister.family.util.DBConstants.KEY.STREET;
 import static org.smartregister.family.util.DBConstants.KEY.UNIQUE_ID;
 import static org.smartregister.family.util.DBConstants.KEY.VILLAGE_TOWN;
 import static org.smartregister.reveal.util.FamilyConstants.FormKeys.AGE_UNKNOWN;
+import static org.smartregister.reveal.util.FamilyConstants.FormKeys.CHILD_STAY_PERM;
 import static org.smartregister.reveal.util.FamilyConstants.FormKeys.DOb_UNKOWN_NOTE;
 
 /**
@@ -225,7 +227,12 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                         Timber.e(Log.getStackTraceString(e));
                     }
                 }
-
+                if(isFamilyHead) {
+                    JSONObject childStayPermField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), CHILD_STAY_PERM);
+                    childStayPermField.put(TYPE,HIDDEN);
+                    JSONObject firstNameField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), FIRST_NAME);
+                    firstNameField.put(HINT,"First name of Head of Household");
+                }
                 return form;
             }
         } catch (Exception e) {
