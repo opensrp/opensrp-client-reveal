@@ -241,7 +241,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                             BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
                             REGISTER_FAMILY.equals(details.getTaskCode())) ||
                     hasSingleGroupedTask ||
-                    (details.isResidential() && details.getTaskCount() > 1 // structures with grouped tasks should display the family profile
+                    (details.isResidential() && details.getTaskCount() != null && details.getTaskCount() > 1 // structures with grouped tasks should display the family profile
                             && !(REGISTER_FAMILY.equals(details.getTaskCode()) && Task.TaskStatus.READY.name().equals(details.getTaskStatus())))) { // skip if we have a READY family reg task
                 setTaskDetails(details);
                 interactor.fetchFamilyDetails(details.getStructureId());
