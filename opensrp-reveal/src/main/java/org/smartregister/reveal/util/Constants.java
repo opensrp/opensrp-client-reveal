@@ -71,6 +71,8 @@ public interface Constants {
     String ACTIONS = "actions";
     String THAILAND_SYNC_INTERVAL = "720";
 
+    int SYNC_BACK_OFF_DELAY = 5000;
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";

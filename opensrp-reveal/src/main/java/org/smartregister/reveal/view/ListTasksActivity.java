@@ -115,6 +115,7 @@ import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_F
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_TASK_LISTS;
+import static org.smartregister.reveal.util.Constants.SYNC_BACK_OFF_DELAY;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 import static org.smartregister.reveal.util.Utils.displayDistanceScale;
@@ -859,7 +860,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         }
         if (completedToastShown) return;
         //To cover against consecutive sync starts firing, turn the flag off with delay
-        new Handler().postDelayed(() -> startedToastShown = false, 5000);
+        new Handler().postDelayed(() -> startedToastShown = false, SYNC_BACK_OFF_DELAY);
         if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
             displayToast(org.smartregister.R.string.sync_failed);
         } else if (fetchStatus.equals(FetchStatus.nothingFetched)) {
