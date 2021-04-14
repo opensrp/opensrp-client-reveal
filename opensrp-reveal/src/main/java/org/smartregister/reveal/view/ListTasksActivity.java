@@ -893,7 +893,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         listTaskPresenter.onResume();
 
         if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
-        //    displayToast(org.smartregister.R.string.syncing);
             toggleProgressBarView(true);
         }
     }
