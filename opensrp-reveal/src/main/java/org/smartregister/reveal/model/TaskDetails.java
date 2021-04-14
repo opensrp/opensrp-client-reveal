@@ -389,7 +389,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         return getFamilyMemberNames() != null && !getFamilyMemberNames().equalsIgnoreCase("NR");
     }
 
-    public int getPendingTasksCount(){
+    public int getPendingTasksCount() {
+        if (getTaskCount() == null) return 1;
         return getTaskCount() - getCompleteTaskCount();
     }
 }
