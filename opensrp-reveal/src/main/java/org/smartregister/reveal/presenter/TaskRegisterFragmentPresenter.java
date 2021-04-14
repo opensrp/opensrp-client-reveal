@@ -436,7 +436,11 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void onLocationValidated() {
         if (Constants.Intervention.REGISTER_FAMILY.equals(getTaskDetails().getTaskCode())) {
-            getView().registerFamily(getTaskDetails());
+            if (Task.TaskStatus.READY.name().equals(getTaskDetails().getTaskStatus())) {
+                getView().registerFamily(getTaskDetails());
+            } else {
+                interactor.fetchFamilyDetails(getTaskDetails().getStructureId());
+            }
         }
 
         if ((Constants.Intervention.IRS.equals(getTaskDetails().getTaskCode()))
