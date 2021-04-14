@@ -26,12 +26,14 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.StructureTaskAdapter;
 import org.smartregister.reveal.contract.StructureTasksContract;
+import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.presenter.StructureTasksPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.reveal.view.StructureTasksActivity;
 
 import java.util.List;
 import java.util.Set;
@@ -128,9 +130,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
         detectCaseButton = view.findViewById(R.id.detect_case);
 
-        detectCaseButton.setOnClickListener((View v) -> {
-            presenter.onDetectCase();
-        });
+        detectCaseButton.setOnClickListener((View v) -> presenter.onDetectCase());
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -237,14 +237,16 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     @Override
     public void displayResetTaskInfoDialog(StructureTaskDetails taskDetails) {
         AlertDialogUtils.displayNotificationWithCallback(getContext(), R.string.undo_task_title,
-                R.string.undo_task_msg, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == BUTTON_POSITIVE)
-                            presenter.resetTaskInfo(taskDetails);
-                        dialog.dismiss();
-                    }
+                R.string.undo_task_msg, R.string.confirm, R.string.cancel, (dialog, which) -> {
+                    if (which == BUTTON_POSITIVE)
+                        presenter.resetTaskInfo(taskDetails);
+                    dialog.dismiss();
                 });
+    }
+
+    @Override
+    public void registerFamily(BaseTaskDetails taskDetails) {
+        ((StructureTasksActivity) getActivity()).startFamilyRegistration(taskDetails);
     }
 
     @Override
