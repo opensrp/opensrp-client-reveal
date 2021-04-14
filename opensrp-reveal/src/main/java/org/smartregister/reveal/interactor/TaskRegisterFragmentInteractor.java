@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Event;
+import org.smartregister.domain.Task;
 import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BuildConfig;
@@ -282,6 +283,9 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
             task.setHouseNumber(cursor.getString(cursor.getColumnIndex(HOUSE_NUMBER)));
             task.setFamilyMemberNames(cursor.getString(cursor.getColumnIndex(FAMILY_MEMBER_NAMES)));
             task.setGroupedTaskCodes(cursor.getString(cursor.getColumnIndex(GROUPED_STRUCTURE_TASK_CODE_AND_STATUS)));
+        } else {
+            task.setTaskCount(1);
+            task.setCompleteTaskCount(task.getTaskStatus().equals(COMPLETED.name()) ? 1 : 0);
         }
         Location location = new Location((String) null);
 
