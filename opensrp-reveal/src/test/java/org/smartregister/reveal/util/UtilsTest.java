@@ -297,7 +297,7 @@ public class UtilsTest {
         RevealApplication revealApplication = initRevealApplicationMock();
         when(revealApplication.getServerConfigs()).thenReturn(new HashMap<>());
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
-        assertEquals(Utils.getSyncInterval(), 15);
+        assertEquals(Utils.getSyncInterval(), 480);
     }
 
     @Test
