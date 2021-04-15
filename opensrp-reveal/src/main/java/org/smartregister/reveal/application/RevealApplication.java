@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
+import org.smartregister.EnvironmentManager;
 import org.smartregister.P2POptions;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
@@ -126,7 +127,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         // Initialize Modules
         Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
         P2POptions p2POptions = new P2POptions(true);
-        CoreLibrary.init(context, new RevealSyncConfiguration(), BuildConfig.BUILD_TIMESTAMP, p2POptions);
+        CoreLibrary.init(context, new RevealSyncConfiguration(new EnvironmentManager(BuildConfig.ENV_ARRAY)), BuildConfig.BUILD_TIMESTAMP, p2POptions);
         forceRemoteLoginForInConsistentUsername();
         if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.NAMIBIA_EC_CLIENT_FIELDS);

@@ -25,12 +25,12 @@ public class RevealSyncConfiguration extends PropertiesSyncConfiguration {
 
     private LocationRepository locationRepository;
 
-    public RevealSyncConfiguration() {
-        super(new EnvironmentManager(BuildConfig.ENV_ARRAY));
+    public RevealSyncConfiguration(EnvironmentManager environmentManager) {
+        super(environmentManager);
     }
 
-    public RevealSyncConfiguration(LocationRepository locationRepository, AllSharedPreferences sharedPreferences) {
-        this();
+    public RevealSyncConfiguration(EnvironmentManager environmentManager, LocationRepository locationRepository, AllSharedPreferences sharedPreferences) {
+        this(environmentManager);
         this.locationRepository = locationRepository;
         this.sharedPreferences = sharedPreferences;
     }
