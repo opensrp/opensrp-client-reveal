@@ -83,6 +83,7 @@ import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
+import org.smartregister.util.NetworkUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -861,11 +862,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         if (completedToastShown) return;
         //To cover against consecutive sync starts firing, turn the flag off with delay
         new Handler().postDelayed(() -> startedToastShown = false, SYNC_BACK_OFF_DELAY);
-        if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
+        boolean isNetworkAvailable = NetworkUtils.isNetworkAvailable();
+        if (fetchStatus.equals(FetchStatus.fetchedFailed) && isNetworkAvailable) {
             displayToast(org.smartregister.R.string.sync_failed);
         } else if (fetchStatus.equals(FetchStatus.nothingFetched)) {
             displayToast(org.smartregister.R.string.sync_complete);
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
+            displayToast(org.smartregister.R.string.sync_failed_no_internet);
+        } else if (fetchStatus.equals(FetchStatus.fetchedFailed) && !isNetworkAvailable) {
             displayToast(org.smartregister.R.string.sync_failed_no_internet);
         }
         completedToastShown = true;
