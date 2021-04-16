@@ -6,6 +6,8 @@ import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.AllConstants;
 import org.smartregister.clientandeventmodel.Obs;
@@ -25,7 +27,9 @@ import org.smartregister.reveal.interactor.RevealFamilyProfileInteractor;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
@@ -35,6 +39,7 @@ import org.smartregister.reveal.util.Utils;
 import timber.log.Timber;
 
 import static org.smartregister.family.util.Constants.INTENT_KEY.BASE_ENTITY_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TYPE_FIELD;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
@@ -60,6 +65,9 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         preferencesUtil = PreferencesUtil.getInstance();
         getStructureId(familyBaseEntityId);
         getFamilyName(familyHead);
+        if(Utils.isCountryBuild(Country.NIGERIA)){
+            setPlanAndTaskIdentifiers(familyBaseEntityId);
+        }
         setInteractor(new RevealFamilyProfileInteractor(this));
         try {
             familyJsonFormUtils = new FamilyJsonFormUtils(getView().getApplicationContext());
@@ -301,5 +309,39 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         } catch (Exception e) {
             Timber.e(e, "Error opening add member form");
         }
+    }
+
+    private void setPlanAndTaskIdentifiers(String familyBaseEntityId) {
+        appExecutors.diskIO().execute(() -> {
+           JSONObject eventsByBaseEntityId =  RevealApplication.getInstance().getContext().getEventClientRepository().getEventsByBaseEntityId(familyBaseEntityId);
+            JSONArray events = eventsByBaseEntityId.optJSONArray("events");
+            JSONObject familyRegistrationEvent = null;
+               for(int i=0;i<events.length();i++){
+                   try {
+                       JSONObject event = events.getJSONObject(i);
+                       String eventType = event.getString(EVENT_TYPE_FIELD);
+                       if(eventType.equals(FamilyConstants.EventType.FAMILY_REGISTRATION)){
+                           familyRegistrationEvent = event;
+                           break;
+                       }
+                   } catch (JSONException e) {
+                       Timber.e(e);
+                   }
+               }
+               if(familyRegistrationEvent != null){
+                   try {
+                       JSONObject details = familyRegistrationEvent.getJSONObject(Constants.DETAILS);
+                       String planIdentifier =  details.getString(Constants.Properties.PLAN_IDENTIFIER);
+                       String taskIdentifier = details.getString(Constants.Properties.TASK_IDENTIFIER);
+                       appExecutors.mainThread().execute(() -> {
+                           getModel().setPlanIdentifier(planIdentifier);
+                           getModel().setTaskIdentifier(taskIdentifier);
+                       });
+                   } catch (JSONException e) {
+                       Timber.e(e);
+                   }
+               }
+        });
+
     }
 }

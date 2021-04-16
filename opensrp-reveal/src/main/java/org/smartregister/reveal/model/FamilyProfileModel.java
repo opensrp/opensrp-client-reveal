@@ -25,6 +25,10 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
 
     private CommonPersonObject familyHeadPersonObject;
 
+    private String taskIdentifier;
+
+    private String planIdentifier;
+
     public FamilyProfileModel(String familyName) {
         super(familyName);
     }
@@ -59,12 +63,33 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
         }
         eventClient.getEvent().addDetails(Constants.Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
         eventClient.getEvent().setLocationId(org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea()).getId());
+        if(planIdentifier != null){
+            eventClient.getEvent().addDetails(Constants.Properties.PLAN_IDENTIFIER,planIdentifier);
+        }
+        if(taskIdentifier !=null){
+            eventClient.getEvent().addDetails(Constants.Properties.TASK_IDENTIFIER,taskIdentifier);
+        }
     }
 
     public void setStructureId(String structureId) {
         this.structureId = structureId;
     }
 
+    public String getTaskIdentifier() {
+        return taskIdentifier;
+    }
+
+    public void setTaskIdentifier(String taskIdentifier) {
+        this.taskIdentifier = taskIdentifier;
+    }
+
+    public String getPlanIdentifier() {
+        return planIdentifier;
+    }
+
+    public void setPlanIdentifier(String planIdentifier) {
+        this.planIdentifier = planIdentifier;
+    }
 
     @Override
     public JSONObject getFormAsJson(String formName, String entityId, String currentLocationId) throws Exception {
