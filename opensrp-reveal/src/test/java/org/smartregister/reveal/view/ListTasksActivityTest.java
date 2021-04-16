@@ -40,7 +40,6 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
-import org.robolectric.Shadows;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowConnectivityManager;
@@ -753,7 +752,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnSyncInProgressFetchFailedWithNoNetwork() {
         ConnectivityManager connectivityManager = (ConnectivityManager)listTasksActivity.getSystemService("connectivity");
-        ShadowConnectivityManager shadowConnectivityManager = Shadows.shadowOf(connectivityManager);
+        ShadowConnectivityManager shadowConnectivityManager = shadowOf(connectivityManager);
         NetworkInfo networkInfo =  ShadowNetworkInfo.newInstance(NetworkInfo.DetailedState.DISCONNECTED, ConnectivityManager.TYPE_WIFI, 0, true, NetworkInfo.State.DISCONNECTED);
         shadowConnectivityManager.setActiveNetworkInfo(networkInfo);
         init(listTasksActivity);
