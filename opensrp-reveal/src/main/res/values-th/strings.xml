@@ -230,7 +230,7 @@
     <string name="downloaded">ดาวน์โหลดแล้ว</string>
     <string name="download">ดาวน์โหลด</string>
     <string name="delete">ลบจุด</string>
-    <string name="delete_caps">ลบจุด่</string>
+    <string name="delete_caps">ลบ</string>
     <string name="clear">ล้างตัวกรอง</string>
     <string name="sort_by">จัดเรียงตาม</string>
     <string name="status">สถานะ</string>
@@ -263,7 +263,7 @@
     <string name="confirm_archive_family_message">ยืนยันการลบข้อมูลครัวเรือนโปรดยืนยันว่าคุณต้องการลบข้อมูลครัวเรือนของบ้านหลังนี้ หากยืนยัน ข้อมูลจะถูกลบและไม่สามารถเรียกคืนได้</string>
     <string name="confirm">ตกลง</string>
     <string name="archive_member">ลบข้อมูลบุคคลนี้</string>
-    <string name="confirm_archive_member">ลบข้อมูลบุคคลนี้โปรดยืนยันว่าคุณต้องการลบข้อมูลบุคคลนี้ หากยืนยัน ข้อมูลและกิจกรรมที่ถูกบันทึกภายใต้บุคคลนี้จะถูกลบและไม่สามารถเรียกคืนได้</string>
+    <string name="confirm_archive_member">โปรดยืนยันว่าคุณต้องการลบข้อมูลบุคคลนี้ หากยืนยัน ข้อมูลและกิจกรรมที่ถูกบันทึกภายใต้บุคคลนี้จะถูกลบและไม่สามารถเรียกคืนได้</string>
 
     <string name="mark_location_inactive">ทำเครื่องหมายว่าตำแหน่งนี้ไม่ใช้งาน</string>
     <string name="confirm_mark_location_inactive">โปรดยืนยันว่าตำแหน่งนี้ควรทำเครื่องหมายว่าไม่ใช้งาน</string>
@@ -279,7 +279,7 @@
     <string name="undo">ยกเลิก</string>
 
     <string name="registration_info">แก้ไขข้อมูล</string>
-    <string name="yes">ค้าง</string>
+    <string name="yes">ใช่</string>
     <string name="select_task_action">คุณต้องการแก้ไขหรือล้างค่าที่เคยบันทึกของกิจกรรมนี้ใช่หรือไม่?</string>
     <string name="view_details">แก้ไข</string>
     <string name="choose_action">โปรดเลือก</string>
@@ -289,6 +289,7 @@
     <string name="last_edited">แก้ไขวันที่ %1s</string>
     <string name="ok">ตกลง</string>
     <string name="cancel_no">ไม่ใช่</string>
+    <string name="done">ตกลง</string>
     <string name="view_paot_details">เปลี่ยนคำเป็น “แก้ไข”</string>
     <string name="downloading">กำลังดาวน์โหลด</string>
     <string name="map_download_progress">กำลังดาวน์โหลด: %,.2f %%</string>

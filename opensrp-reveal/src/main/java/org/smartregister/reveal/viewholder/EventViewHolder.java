@@ -12,10 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.joda.time.DateTime;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.cursoradapter.RecyclerViewProvider;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.EventRegisterDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.util.Utils;
 import org.smartregister.view.contract.SmartRegisterClient;
 import org.smartregister.view.contract.SmartRegisterClients;
@@ -32,6 +34,7 @@ import java.util.Map;
  */
 public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.RegisterViewHolder> {
 
+    public static final String CDD_SUPERVISOR_DAILY_SUMMARY = "Cdd Supervisor Daily Summary";
     private final Context context;
     private final View.OnClickListener registerClickListener;
     private final View.OnClickListener paginationClickListener;
@@ -49,6 +52,12 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
         DateTime eventDate = DateTime.parse(Utils.getValue(pc.getColumnmaps(), DatabaseKeys.EVENT_DATE, false));
         registerViewHolder.eventDateTextView.setText(eventDate.toString("dd-M-YYYY"));
         String eventType = Utils.getValue(pc.getColumnmaps(), DatabaseKeys.EVENT_TYPE, true);
+
+        if(CDD_SUPERVISOR_DAILY_SUMMARY.equals(eventType)){
+            String dataCollectionDate = Utils.getValue(pc.getColumnmaps(),DatabaseKeys.DATA_COLLECTION_DATE,false);
+            registerViewHolder.dataCollectionDateTextView.setText(dataCollectionDate);
+        }
+
         if (eventType.equalsIgnoreCase(Constants.SPRAY_EVENT)) {
             eventType = context.getString(R.string.hh_form);
         }
@@ -132,6 +141,7 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
         protected TextView sopTextView;
         protected TextView householdTextView;
         protected TextView statusTextView;
+        protected TextView dataCollectionDateTextView;
 
         public RegisterViewHolder(View itemView) {
             super(itemView);
@@ -140,6 +150,11 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
             sopTextView = itemView.findViewById(R.id.sop);
             householdTextView = itemView.findViewById(R.id.entity);
             statusTextView = itemView.findViewById(R.id.status);
+            dataCollectionDateTextView = itemView.findViewById(R.id.data_collection_date);
+
+            if(!Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
+                dataCollectionDateTextView.setVisibility(View.GONE);
+            }
         }
     }
 

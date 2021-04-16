@@ -367,6 +367,7 @@
     <string name="index_case_confirmed">Index Case Confirmed</string>
 
     <string name="tested">Tested</string>
+    <string name="done">Done</string>
     <string name="not_tested">Not Tested</string>
     <string name="yes">Yes</string>
 
@@ -438,6 +439,7 @@
 
     <string name="edit_cdd_task_complete_status">Edit Task Complete Status</string>
     <string name="confirm_edit_cdd_task_complete_status">Please confirm that the task is complete</string>
+    <string name="data_collection_date">Data Collected</string>
     <string name="cancel_no">Cancel</string>
 
 </resources>
