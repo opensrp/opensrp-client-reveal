@@ -64,6 +64,7 @@ public class CardDetailsUtil {
             case BusinessStatus.SMC_COMPLETE:
             case BusinessStatus.SPAQ_COMPLETE:
             case BusinessStatus.ALL_TASKS_COMPLETE:
+            case BusinessStatus.FAMILY_REGISTERED:
             case BusinessStatus.COMPLETE:
                 formatCardDetailsForCompletedTasks(cardDetails);
                 break;
