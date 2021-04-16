@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +40,11 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
+import org.robolectric.Shadows;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.shadows.ShadowConnectivityManager;
+import org.robolectric.shadows.ShadowNetworkInfo;
 import org.robolectric.shadows.ShadowProgressDialog;
 import org.robolectric.shadows.ShadowToast;
 import org.smartregister.Context;
@@ -743,6 +748,17 @@ public class ListTasksActivityTest extends BaseUnitTest {
         init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.fetchedFailed);
         assertEquals(listTasksActivity.getString(R.string.sync_failed), ShadowToast.getTextOfLatestToast());
+    }
+
+    @Test
+    public void testOnSyncInProgressFetchFailedWithNoNetwork() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)listTasksActivity.getSystemService("connectivity");
+        ShadowConnectivityManager shadowConnectivityManager = Shadows.shadowOf(connectivityManager);
+        NetworkInfo networkInfo =  ShadowNetworkInfo.newInstance(NetworkInfo.DetailedState.DISCONNECTED, ConnectivityManager.TYPE_WIFI, 0, true, NetworkInfo.State.DISCONNECTED);
+        shadowConnectivityManager.setActiveNetworkInfo(networkInfo);
+        init(listTasksActivity);
+        listTasksActivity.onSyncInProgress(FetchStatus.fetchedFailed);
+        assertEquals(listTasksActivity.getString(R.string.sync_failed_no_internet), ShadowToast.getTextOfLatestToast());
     }
 
     @Test
