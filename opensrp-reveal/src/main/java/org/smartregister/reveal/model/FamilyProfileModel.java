@@ -65,6 +65,9 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
         this.structureId = structureId;
     }
 
+    public String getStructureId() {
+        return structureId;
+    }
 
     @Override
     public JSONObject getFormAsJson(String formName, String entityId, String currentLocationId) throws Exception {

@@ -231,7 +231,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
                 }
             } else {
                 if (updateAge < Constants.MDA_MIN_AGE && updateMonths >= Constants.SMC_DISPENSE_MIN_MONTHS) {
-                    TaskUtils.getInstance().generateMDADispenseTask(RevealApplication.getInstance().getContext().applicationContext(), familyEventClient.getClient().getBaseEntityId(), familyEventClient.getEvent().getLocationId());
+                    TaskUtils.getInstance().generateMDADispenseTask(RevealApplication.getInstance().getContext().applicationContext(), familyEventClient.getClient().getBaseEntityId(), ((FamilyProfileModel) profileModel).getStructureId());
                 }
             }
         }
