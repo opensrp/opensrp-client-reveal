@@ -336,6 +336,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             mapView.setTag(com.vijay.jsonwizard.R.id.address, stepName + ":" + jsonObject.optString(JsonFormConstants.KEY));
             mapView.setTag(com.vijay.jsonwizard.R.id.key, jsonObject.optString(JsonFormConstants.KEY));
             mapView.setTag(com.vijay.jsonwizard.R.id.openmrs_entity_parent, openMrsEntityParent);
+            mapView.setTag(com.vijay.jsonwizard.R.id.extraPopup, false);
             mapView.setTag(com.vijay.jsonwizard.R.id.openmrs_entity, openMrsEntity);
             mapView.setTag(com.vijay.jsonwizard.R.id.openmrs_entity_id, openMrsEntityId);
             mapView.setTag(com.vijay.jsonwizard.R.id.type, jsonObject.optString(JsonFormConstants.TYPE));
