@@ -322,10 +322,10 @@ public class GeoJsonUtils {
                 || hasNotDispensedAndSMCCompleteOnly
                 || hasNotDispensedAndSMCCompleteAndInEligible) {
             state.nonReceived = true;
-        } else if (singleStatusCompleteMdaTasks || multiStatusCompleteMdaTasks){
-            state.fullyReceived = true;
         } else if (mdaStatusMap.get(INELIGIBLE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)) {
             state.nonEligible = true;
+        } else if (singleStatusCompleteMdaTasks || multiStatusCompleteMdaTasks){
+            state.fullyReceived = true;
         } else if (hasNonCompletedTasks
                 && ((mdaStatusMap.get(NOT_DISPENSED) > 0) || (mdaStatusMap.get(INELIGIBLE) > 0) || (mdaStatusMap.get(SMC_COMPLETE) > 0))
                 && ((mdaStatusMap.get(NOT_DISPENSED) != mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)) )) { // not the only dispense task
