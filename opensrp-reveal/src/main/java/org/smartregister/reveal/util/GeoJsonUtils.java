@@ -129,7 +129,7 @@ public class GeoJsonUtils {
             switch (task.getCode()) {
                 case REGISTER_FAMILY:
                     state.familyRegTaskExists = true;
-                    state.familyRegistered = COMPLETE.equals(task.getBusinessStatus()) || FAMILY_REGISTERED.equals(task.getBusinessStatus());
+                    state.familyRegistered = COMPLETE.equals(task.getBusinessStatus());
                     state.ineligibleForFamReg = NOT_ELIGIBLE.equals(task.getBusinessStatus());
                     break;
                 case BEDNET_DISTRIBUTION:
