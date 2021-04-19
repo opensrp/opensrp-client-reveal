@@ -10,7 +10,6 @@ import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants;
