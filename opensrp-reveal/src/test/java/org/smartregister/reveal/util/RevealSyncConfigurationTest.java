@@ -26,6 +26,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
@@ -83,6 +84,13 @@ public class RevealSyncConfigurationTest extends BaseUnitTest {
         when(locationRepository.getAllLocationIds()).thenReturn(Collections.singletonList("122132"));
         assertEquals("122132", syncConfiguration.getSyncFilterValue());
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testGetSettingsSyncFilterValue() {
+        when(allSharedPreferences.fetchRegisteredANM()).thenReturn("122132");
+        when(allSharedPreferences.fetchDefaultTeamId(anyString())).thenReturn("122132");
+        assertEquals("122132", syncConfiguration.getSettingsSyncFilterValue());
     }
 
     @Test
