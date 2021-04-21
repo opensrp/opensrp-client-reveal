@@ -69,6 +69,9 @@ public interface Constants {
     List<String> MACEPA_PROVINCES = Arrays.asList("Western", "Southern", "Lusaka");
 
     String ACTIONS = "actions";
+    String THAILAND_SYNC_INTERVAL = "720";
+
+    int SYNC_BACK_OFF_DELAY = 5000;
 
     interface CONFIGURATION {
         String LOGIN = "login";
@@ -106,6 +109,7 @@ public interface Constants {
         String COMMUNITY_HEALTH_WORKERS = "community_health_workers";
         String CODE = "code";
         String NAME = "name";
+        String SYNC_INTERVAL_IN_MINUTES = "sync_interval_in_minutes";
 
 
         String MDA_CORDINATORS = "mda_coordinators";
@@ -740,6 +744,9 @@ public interface Constants {
         Object SERVER_VERSION = "server_version";
 
         Object GEOJSON = "geojson";
+
+        String DATA_COLLECTION_DATE = "data_collection_date";
+
     }
 
     interface UseContextCode {

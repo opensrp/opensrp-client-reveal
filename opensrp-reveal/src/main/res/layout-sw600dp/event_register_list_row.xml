@@ -77,6 +77,17 @@
         android:textColor="@color/text_black"
         android:textSize="@dimen/event_register_row_title_size" />
 
+    <org.smartregister.view.customcontrols.CustomFontTextView
+        android:id="@+id/data_collection_date"
+        style="@style/CustomFontTextViewStyle.ClientList.Light"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:paddingStart="0dp"
+        android:singleLine="true"
+        android:text=""
+        android:textColor="@color/text_black"
+        android:textSize="@dimen/event_register_row_title_size" />
 
 </LinearLayout>
 
