@@ -12,17 +12,24 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.TestingUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -46,6 +53,7 @@ public class StructureTaskViewHolderTest extends BaseUnitTest {
     private StructureTaskViewHolder viewHolder;
 
     private Context context = RuntimeEnvironment.application;
+    private final Random rand = new Random();
 
     @Before
     public void setUp() {
@@ -83,15 +91,17 @@ public class StructureTaskViewHolderTest extends BaseUnitTest {
     }
 
     @Test
-    public void testSetTaskActionForCompleteBednetWithLastEditted() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd", Locale.getDefault());
+    public void testSetTaskActionForThailandCompleteBednetWithLastEditted() {
+        List<Country> givenList = Arrays.asList(Country.THAILAND, Country.THAILAND_EN);
+        Country thailand = givenList.get(rand.nextInt(givenList.size()));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, thailand);
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
         Date expectedDate = new Date();
         StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
         taskDetails.setBusinessStatus(BusinessStatus.COMPLETE);
         taskDetails.setTaskCode(BEDNET_DISTRIBUTION);
         taskDetails.setLastEdited(expectedDate);
         viewHolder.setTaskAction(taskDetails, registerActionHandler);
-
 
         viewHolder.itemView.findViewById(R.id.task_name);
         ImageView viewEditImageView = viewHolder.itemView.findViewById(R.id.view_edit);
@@ -103,7 +113,33 @@ public class StructureTaskViewHolderTest extends BaseUnitTest {
         assertEquals(View.VISIBLE, lastEditedTextView.getVisibility());
 
         assertEquals(context.getString(R.string.last_edited, dateFormat.format(expectedDate)), lastEditedTextView.getText());
+    }
 
+    @Test
+    public void testSetTaskActionForCompleteBednetWithLastEditted() {
+        List<Country> givenList = Arrays.stream(Country.values())
+                .filter(country -> country != Country.THAILAND && country != Country.THAILAND_EN)
+                .collect(Collectors.toList());
+        Country other = givenList.get(rand.nextInt(givenList.size()));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, other);
+        Date expectedDate = new Date();
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setBusinessStatus(BusinessStatus.COMPLETE);
+        taskDetails.setTaskCode(BEDNET_DISTRIBUTION);
+        taskDetails.setLastEdited(expectedDate);
+        viewHolder.setTaskAction(taskDetails, registerActionHandler);
+
+        viewHolder.itemView.findViewById(R.id.task_name);
+        ImageView viewEditImageView = viewHolder.itemView.findViewById(R.id.view_edit);
+        TextView lastEditedTextView = viewHolder.itemView.findViewById(R.id.last_edited);
+        ImageView viewUndoImageView = viewHolder.itemView.findViewById(R.id.view_undo);
+
+        assertEquals(View.VISIBLE, viewEditImageView.getVisibility());
+        assertEquals(View.VISIBLE, viewUndoImageView.getVisibility());
+        assertEquals(View.VISIBLE, lastEditedTextView.getVisibility());
+
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.getDefault());
+        assertEquals(context.getString(R.string.last_edited, dateFormat.format(expectedDate)), lastEditedTextView.getText());
     }
 
     @Test

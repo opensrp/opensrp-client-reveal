@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -41,6 +42,8 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.shadows.ShadowConnectivityManager;
+import org.robolectric.shadows.ShadowNetworkInfo;
 import org.robolectric.shadows.ShadowProgressDialog;
 import org.robolectric.shadows.ShadowToast;
 import org.smartregister.Context;
@@ -661,6 +664,15 @@ public class ListTasksActivityTest extends BaseUnitTest {
     }
 
     @Test
+    public void testShowProgressDialogWithFormatArgs() {
+        listTasksActivity.showProgressDialog(R.string.saving_title, R.string.family_name_format, "Name");
+        ProgressDialog progressDialog = (ProgressDialog) ShadowProgressDialog.getLatestDialog();
+        assertNotNull(progressDialog);
+        assertTrue(progressDialog.isShowing());
+        assertEquals(listTasksActivity.getString(R.string.saving_title), ShadowApplication.getInstance().getLatestDialog().getTitle());
+    }
+
+    @Test
     public void testHideProgressDialog() {
         listTasksActivity.showProgressDialog(R.string.saving_title, R.string.saving_message);
         ProgressDialog progressDialog = (ProgressDialog) ShadowProgressDialog.getLatestDialog();
@@ -711,54 +723,64 @@ public class ListTasksActivityTest extends BaseUnitTest {
         listTasksActivity = spy(listTasksActivity);
         doNothing().when(listTasksActivity).toggleProgressBarView(true);
         listTasksActivity.onSyncStart();
-        Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
-        assertTrue(snackbar.isShown());
+        assertEquals(listTasksActivity.getString(R.string.sync_started), ShadowToast.getTextOfLatestToast());
     }
 
 
     @Test
-    public void testOnSyncInProgressFetchedDataSnackBarIsStillShown() {
+    public void testOnSyncInProgressFetchedDataToastIsNotShown() {
         init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.fetched);
-        Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
-        assertTrue(snackbar.isShown());
-    }
-
-
-    @Test
-    public void testOnSyncInProgressFetchFailedSnackBarIsDismissed() {
-        init(listTasksActivity);
-        listTasksActivity.onSyncInProgress(FetchStatus.fetchedFailed);
-        Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
-        assertFalse(snackbar.isShown());
-
-
+        assertEquals(0, ShadowToast.shownToastCount());
     }
 
     @Test
-    public void testOnSyncInProgressNothingFetchedSnackBarIsDismissed() {
+    public void testOnConsecutiveSyncCompletedToastIsShownOnce() {
         init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.nothingFetched);
-        Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
-        assertFalse(snackbar.isShown());
+        listTasksActivity.onSyncInProgress(FetchStatus.nothingFetched);
+        assertEquals(1, ShadowToast.shownToastCount());
     }
 
     @Test
-    public void testOnSyncInProgressNoConnectionSnackBarIsDismissed() {
+    public void testOnSyncInProgressFetchFailedToastWithFailedIsShown() {
+        init(listTasksActivity);
+        listTasksActivity.onSyncInProgress(FetchStatus.fetchedFailed);
+        assertEquals(listTasksActivity.getString(R.string.sync_failed), ShadowToast.getTextOfLatestToast());
+    }
+
+    @Test
+    public void testOnSyncInProgressFetchFailedWithNoNetwork() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)listTasksActivity.getSystemService("connectivity");
+        ShadowConnectivityManager shadowConnectivityManager = shadowOf(connectivityManager);
+        NetworkInfo networkInfo =  ShadowNetworkInfo.newInstance(NetworkInfo.DetailedState.DISCONNECTED, ConnectivityManager.TYPE_WIFI, 0, true, NetworkInfo.State.DISCONNECTED);
+        shadowConnectivityManager.setActiveNetworkInfo(networkInfo);
+        init(listTasksActivity);
+        listTasksActivity.onSyncInProgress(FetchStatus.fetchedFailed);
+        assertEquals(listTasksActivity.getString(R.string.sync_failed_no_internet), ShadowToast.getTextOfLatestToast());
+    }
+
+    @Test
+    public void testOnSyncInProgressNothingFetchedSyncCompletedIsShown() {
+        init(listTasksActivity);
+        listTasksActivity.onSyncInProgress(FetchStatus.nothingFetched);
+        assertEquals(listTasksActivity.getString(R.string.sync_complete), ShadowToast.getTextOfLatestToast());
+    }
+
+    @Test
+    public void testOnSyncInProgressNoConnectionCheckConnectionIsShown() {
         init(listTasksActivity);
         listTasksActivity.onSyncInProgress(FetchStatus.noConnection);
-        Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
-        assertFalse(snackbar.isShown());
+        assertEquals(listTasksActivity.getString(R.string.sync_failed_no_internet), ShadowToast.getTextOfLatestToast());
     }
 
     @Test
-    public void testOnSyncCompleteSnackBarIsDismissed() {
+    public void testOnSyncCompleteToastCompleteIsShown() {
         init(listTasksActivity);
         listTasksActivity = spy(listTasksActivity);
         doNothing().when(listTasksActivity).toggleProgressBarView(false);
         listTasksActivity.onSyncComplete(FetchStatus.nothingFetched);
-        Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
-        assertFalse(snackbar.isShown());
+        assertEquals(listTasksActivity.getString(R.string.sync_complete), ShadowToast.getTextOfLatestToast());
     }
 
     @Test
@@ -788,6 +810,20 @@ public class ListTasksActivityTest extends BaseUnitTest {
         Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
         listTasksActivity.onDrawerClosed();
         verify(listTaskPresenter).onDrawerClosed();
+    }
+
+    @Test
+    public void testToggleProgressBarView() {
+        Whitebox.setInternalState(listTasksActivity, "drawerView", drawerView);
+        listTasksActivity.toggleProgressBarView(true);
+        verify(drawerView).toggleProgressBarView(true);
+    }
+
+    @Test
+    public void testSetOperationalArea() {
+        Whitebox.setInternalState(listTasksActivity, "drawerView", drawerView);
+        listTasksActivity.setOperationalArea("");
+        verify(drawerView).setOperationalArea("");
     }
 
     @Test
@@ -1009,14 +1045,6 @@ public class ListTasksActivityTest extends BaseUnitTest {
         listTasksActivity.toggleProgressBarView(true);
         verify(drawerView).toggleProgressBarView(true);
     }
-
-    @Test
-    public void testSetOperationalArea() {
-        Whitebox.setInternalState(listTasksActivity, "drawerView", drawerView);
-        listTasksActivity.setOperationalArea("operational area");
-        verify(drawerView).setOperationalArea("operational area");
-    }
-
 
     @Test
     public void testDisplayEditCDDTaskCompleteDialog(){

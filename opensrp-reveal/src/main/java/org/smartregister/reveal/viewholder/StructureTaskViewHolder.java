@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.apache.commons.lang3.StringUtils;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
@@ -16,6 +17,7 @@ import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.Country;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +28,9 @@ import java.util.Locale;
  */
 public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
 
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd", Locale.getDefault());
+    private final static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd", Locale.getDefault());
+    private final static SimpleDateFormat ddMMyyDateFormat = new SimpleDateFormat("dd/MM/yy", Locale.getDefault());
+
     private Context context;
 
     private TextView nameTextView;
@@ -97,7 +101,7 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
             Date lastEdited = taskDetails.getLastEdited();
             if (lastEdited != null) {
                 lastEditedTextView.setVisibility(View.VISIBLE);
-                lastEditedTextView.setText(context.getString(R.string.last_edited, dateFormat.format(lastEdited)));
+                lastEditedTextView.setText(context.getString(R.string.last_edited, supportedDateFormat().format(lastEdited)));
                 actionTextView.setPadding(0, 0, 0, 0);
             } else {
                 lastEditedTextView.setVisibility(View.GONE);
@@ -109,6 +113,13 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
         }
         setClickHandler(onClickListener, taskDetails, actionTextView);
 
+    }
+
+    private SimpleDateFormat supportedDateFormat(){
+        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN){
+            return ddMMyyDateFormat;
+        }
+        return dateFormat;
     }
 
     private void setClickHandler(View.OnClickListener onClickListener, StructureTaskDetails taskDetails, View view) {
