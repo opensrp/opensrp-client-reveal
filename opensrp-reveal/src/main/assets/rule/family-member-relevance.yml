@@ -28,8 +28,8 @@ actions:
   - "isRelevant = true"
 ---
 name: step1_occupation
-description: age relevance
+description: occupation relevance
 priority: 1
-condition: "step1_age >= 18"
+condition: "step1_dob_unknown.contains('dob_unknown') ? (step1_age >= 18) : (helper.formatDate(step1_dob, 'y') >= 18)"
 actions:
   - "isRelevant = true"
