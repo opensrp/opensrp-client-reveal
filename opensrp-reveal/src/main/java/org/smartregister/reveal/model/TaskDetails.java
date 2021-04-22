@@ -385,7 +385,11 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         this.groupedTaskCodes = stringBuilder.toString();
     }
 
-    public boolean isResidential() {
+    /**
+     * Check if the grouped task details have a completed family registration task in it.
+     * @return true if there's a completed registration, false otherwise
+     */
+    public boolean hasRegisteredFamily() {
         return getFamilyMemberNames() != null && !getFamilyMemberNames().equalsIgnoreCase("non_registered");
     }
 
