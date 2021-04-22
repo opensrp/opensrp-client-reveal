@@ -137,7 +137,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
         queryBuilder.addCondition(String.format(" AND %s.%s != '%s'",
                 tableName, CODE, BEDNET_DISTRIBUTION));
         return String.format(" SELECT %s.* , SUM(CASE WHEN status='%s' THEN 1 ELSE 0 END ) AS %s , COUNT(_id ) AS %s, " +
-                        "GROUP_CONCAT(%s || \"-\" || %s ) AS %s , 'NR' as %s  FROM ( ",
+                        "GROUP_CONCAT(%s || \"-\" || %s ) AS %s , 'non_registered' as %s  FROM ( ",
                 GROUPED_TASKS, COMPLETED.toString(), COMPLETED_TASK_COUNT, TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS, FAMILY_MEMBER_NAMES) + queryBuilder +
                 String.format(" ) AS %s GROUP BY %s ", GROUPED_TASKS, STRUCTURE_ID);
     }
