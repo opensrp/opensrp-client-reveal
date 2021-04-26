@@ -1,11 +1,18 @@
 package org.smartregister.reveal.model;
 
+import com.vijay.jsonwizard.utils.FormUtils;
+
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Location;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.reveal.BaseUnitTest;
@@ -15,12 +22,21 @@ import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.Cache;
 import org.smartregister.util.DateUtil;
+import org.smartregister.util.JsonFormUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
+import static org.smartregister.reveal.util.FamilyConstants.DatabaseKeys.FAMILY_NAME;
 
 /**
  * Created by samuelgithengi on 1/29/20.
@@ -33,6 +49,12 @@ public class FamilyProfileModelTest extends BaseUnitTest {
     private Location location = TestingUtils.getOperationalArea();
 
     private FamilyProfileModel familyProfileModel;
+
+    @Mock
+    public FormUtils formUtils;
+
+    @Captor
+    private ArgumentCaptor<String> formNameCaptor;
 
     private String familyJsonForm = "{\"count\":\"2\",\"encounter_type\":\"Update Family Registration\",\"entity_id\":\"2e1b9bc9-c437-42a6-ac12-3566ca620d3f\",\"relational_id\":\"\",\"metadata\":{\"start\":{\"openmrs_entity_parent\":\"\",\"openmrs_entity\":\"concept\",\"openmrs_data_type\":\"start\",\"openmrs_entity_id\":\"163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"value\":\"2020-01-29 02:47:40\"},\"end\":{\"openmrs_entity_parent\":\"\",\"openmrs_entity\":\"concept\",\"openmrs_data_type\":\"end\",\"openmrs_entity_id\":\"163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"value\":\"2020-01-29 02:47:44\"},\"today\":{\"openmrs_entity_parent\":\"\",\"openmrs_entity\":\"encounter\",\"openmrs_entity_id\":\"encounter_date\",\"value\":\"29-01-2020\"},\"deviceid\":{\"openmrs_entity_parent\":\"\",\"openmrs_entity\":\"concept\",\"openmrs_data_type\":\"deviceid\",\"openmrs_entity_id\":\"163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"value\":\"000000000000000\"},\"subscriberid\":{\"openmrs_entity_parent\":\"\",\"openmrs_entity\":\"concept\",\"openmrs_data_type\":\"subscriberid\",\"openmrs_entity_id\":\"163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"value\":\"310270000000000\"},\"simserial\":{\"openmrs_entity_parent\":\"\",\"openmrs_entity\":\"concept\",\"openmrs_data_type\":\"simserial\",\"openmrs_entity_id\":\"163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"value\":\"89014103211118510720\"},\"phonenumber\":{\"openmrs_entity_parent\":\"\",\"openmrs_entity\":\"concept\",\"openmrs_data_type\":\"phonenumber\",\"openmrs_entity_id\":\"163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"value\":\"15555218135\"},\"encounter_location\":\"f2b5eec1-5cba-4dbe-a019-d6436ee2fa12\",\"look_up\":{\"entity_id\":\"\",\"value\":\"\"}},\"step1\":{\"title\":\"Family details\",\"fields\":[{\"key\":\"fam_name\",\"openmrs_entity_parent\":\"\",\"openmrs_entity\":\"person\",\"openmrs_entity_id\":\"first_name\",\"type\":\"edit_text\",\"hint\":\"First name of Head of Household\",\"edit_type\":\"name\",\"v_required\":{\"value\":\"true\",\"err\":\"Please enter first name of Head of Household\"},\"value\":\"Juka\"},{\"key\":\"old_fam_name\",\"type\":\"hidden\",\"value\":\"Jukap\"},{\"key\":\"house_number\",\"openmrs_entity_parent\":\"\",\"openmrs_entity\":\"person_address\",\"openmrs_entity_id\":\"address2\",\"type\":\"edit_text\",\"hint\":\"House Number\",\"value\":\"\"},{\"key\":\"street\",\"openmrs_entity_parent\":\"\",\"openmrs_entity\":\"person_address\",\"openmrs_entity_id\":\"street\",\"type\":\"edit_text\",\"hint\":\"Street\",\"value\":\"\"},{\"key\":\"landmark\",\"openmrs_entity_parent\":\"\",\"openmrs_entity\":\"person_address\",\"openmrs_entity_id\":\"landmark\",\"type\":\"edit_text\",\"hint\":\"Landmark\",\"value\":\"\"}]},\"current_opensrp_id\":\"19225622_family\",\"invisible_required_fields\":\"[]\"}";
 
@@ -101,5 +123,46 @@ public class FamilyProfileModelTest extends BaseUnitTest {
         assertEquals(location.getId(), eventClient.getEvent().getLocationId());
         assertEquals(14, eventClient.getEvent().getObs().size());
         assertEquals(FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION, eventClient.getEvent().getEventType());
+    }
+
+    @Test
+    public void testGetFormAsJson() throws Exception {
+        JSONObject formObject = new JSONObject(familyJsonForm);
+        when(formUtils.getFormJsonFromRepositoryOrAssets(any(), any())).thenReturn(formObject);
+        Whitebox.setInternalState(familyProfileModel, "formUtils", formUtils);
+        JSONObject resultJson = familyProfileModel.getFormAsJson("json.form/family_register.json", "131", "131");
+
+        verify(formUtils).getFormJsonFromRepositoryOrAssets(any(), formNameCaptor.capture());
+        assertEquals("family_register", formNameCaptor.getValue());
+        assertNotNull(resultJson);
+    }
+
+    @Test
+    public void testGetFormAsJsonWithFamilyMember() throws Exception {
+
+        HashMap<String,String> columns = new HashMap<>();
+        columns.put(LAST_NAME, "random name");
+        CommonPersonObject familyHead = new CommonPersonObject(UUID.randomUUID().toString(), null, null, null);
+        familyHead.setColumnmaps(columns);
+        familyProfileModel.setFamilyHeadPersonObject(familyHead);
+
+        JSONObject formObject = new JSONObject(memberJsonForm);
+        when(formUtils.getFormJsonFromRepositoryOrAssets(any(), any())).thenReturn(formObject);
+        Whitebox.setInternalState(familyProfileModel, "formUtils", formUtils);
+        JSONObject resultJson = familyProfileModel.getFormAsJson("family_member_register", "131", "131");
+
+        verify(formUtils).getFormJsonFromRepositoryOrAssets(any(), formNameCaptor.capture());
+        assertEquals("family_member_register", formNameCaptor.getValue());
+        assertNotNull(resultJson);
+        assertEquals("random name", JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(resultJson), FAMILY_NAME).getString("value"));
+
+    }
+
+    @Test
+    public void testGetFormAsJsonWithNullForm() throws Exception {
+        when(formUtils.getFormJsonFromRepositoryOrAssets(any(), any())).thenReturn(null);
+        Whitebox.setInternalState(familyProfileModel, "formUtils", formUtils);
+        JSONObject resultJson = familyProfileModel.getFormAsJson("null", "131", "131");
+        assertNull(resultJson);
     }
 }

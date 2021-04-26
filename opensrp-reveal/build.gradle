@@ -54,7 +54,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 32
-        versionName "5.3.22"
+        versionName "5.3.24"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -206,7 +206,7 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
     }
 
-    implementation('org.smartregister:opensrp-client-core:4.2.9-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:4.2.11-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'
@@ -233,7 +233,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.14.2.0-SNAPSHOT@aar') {
+    ///Upgrade to latest native forms issue tracked here
+    //https://github.com/OpenSRP/opensrp-client-reveal/issues/1235
+    implementation('org.smartregister:opensrp-client-native-form:1.14.2.2-FORM-CONFIG-RULES-FIX-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'cardview-v7'

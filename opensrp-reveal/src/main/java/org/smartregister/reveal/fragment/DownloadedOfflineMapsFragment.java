@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.DownloadedOfflineMapAdapter;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.DownloadedOfflineMapsContract;
 import org.smartregister.reveal.contract.OfflineMapDownloadCallback;
 import org.smartregister.reveal.model.OfflineMapModel;
@@ -236,7 +237,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
             double percentage = status.getRequiredResourceCount() >= 0
                     ? (100.0 * status.getCompletedResourceCount() / status.getRequiredResourceCount()) :
                     0.0;
-            displayToast(getString(R.string.map_download_progress, percentage));
+            displayToast(RevealApplication.getInstance().getResources().getString(R.string.map_download_progress, percentage));
         }
     }
 

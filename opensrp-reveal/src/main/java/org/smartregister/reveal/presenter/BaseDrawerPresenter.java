@@ -245,7 +245,10 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
             String operationalArea = name.get(name.size() - 1);
             prefsUtil.setCurrentOperationalArea(operationalArea);
-            sharedPreferences.saveDefaultLocalityId(sharedPreferences.fetchRegisteredANM(), prefsUtil.getCurrentOperationalAreaId());
+            final String currentOperationalAreaId = prefsUtil.getCurrentOperationalAreaId();
+            if (StringUtils.isNotBlank(currentOperationalAreaId)) {
+                sharedPreferences.saveDefaultLocalityId(sharedPreferences.fetchRegisteredANM(), currentOperationalAreaId);
+            }
             Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - districtOffset), name.get(name.size() - 1), entireTree);
             if (facility != null) {
                 prefsUtil.setCurrentFacility(facility.second);

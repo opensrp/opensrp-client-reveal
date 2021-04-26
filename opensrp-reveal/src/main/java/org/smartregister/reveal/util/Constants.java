@@ -743,6 +743,9 @@ public interface Constants {
 
         Object GEOJSON = "geojson";
 
+        String DATA_COLLECTION_DATE = "data_collection_date";
+
+
         String STRUCTURE_HEAD_NAME = "structure_head_name";
 
         String COMPOUND_HEAD_NAME = "compound_head_name";

@@ -12,6 +12,7 @@ import androidx.annotation.StringRes;
 
 import org.json.JSONObject;
 import org.smartregister.cursoradapter.RecyclerViewPaginatedAdapter;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.EventRegisterContract;
@@ -22,6 +23,7 @@ import org.smartregister.reveal.presenter.EventRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.EventType;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.DrawerMenuView;
 import org.smartregister.reveal.view.EventRegisterActivity;
@@ -100,6 +102,9 @@ public class EventRegisterFragment extends BaseDrawerRegisterFragment implements
             getPresenter().onFilterTasksClicked();
         });
 
+        if(!Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
+            view.findViewById(R.id.data_collection_date_header).setVisibility(View.GONE);
+        }
     }
 
 
