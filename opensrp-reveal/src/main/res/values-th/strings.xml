@@ -293,5 +293,6 @@
     <string name="view_paot_details">เปลี่ยนคำเป็น “แก้ไข”</string>
     <string name="downloading">กำลังดาวน์โหลด</string>
     <string name="map_download_progress">กำลังดาวน์โหลด: %,.2f %%</string>
+    <string name="sync_started">เริ่มการซิงค์แล้ว</string>
 
 </resources>
