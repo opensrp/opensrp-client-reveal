@@ -44,6 +44,11 @@ public class FileHTTPServerTest extends BaseUnitTest {
     }
 
     @Test
+    public void testIsStarted() {
+        assertTrue(httpServer.isStarted());
+    }
+
+    @Test
     public void testServerReturnsContent() throws Exception {
         String mapboxStyleUrl = context.getString(R.string.localhost_url, FileHTTPServer.PORT);
 
