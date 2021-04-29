@@ -45,7 +45,8 @@ public class FileHTTPServerTest extends BaseUnitTest {
 
     @Test
     public void testIsStarted() {
-        assertTrue(httpServer.isStarted());
+        if (httpServer != null)
+            assertTrue(httpServer.isStarted());
     }
 
     @Test
