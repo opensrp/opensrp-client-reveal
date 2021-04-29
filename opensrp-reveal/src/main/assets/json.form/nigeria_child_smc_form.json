@@ -239,7 +239,7 @@
         "values": [
           "Yes",
           "No - Refused",
-          "No - Other Reason - specify"
+          "No - Other Reason"
         ],
         "keys": [
           "Yes",
@@ -447,6 +447,26 @@
           "step1:referralReasons": {
             "type": "string",
             "ex": "equalTo(., \"Other - specify\")"
+          }
+        }
+      },
+      {
+        "key": "referralQRCode",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "barcode",
+        "barcode_type": "qrcode",
+        "hint": "Referral QR Code",
+        "scanButtonText": "Scan QR Code",
+        "v_required": {
+          "value": "true",
+          "err": "Please scan QR Code"
+        },
+        "relevance": {
+          "step1:referred": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
