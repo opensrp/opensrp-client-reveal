@@ -239,7 +239,7 @@
         "values": [
           "Yes",
           "No - Refused",
-          "No - Other Reason - specify"
+          "No - Other Reason"
         ],
         "keys": [
           "Yes",
