@@ -212,6 +212,8 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
             eventType = Constants.EventType.MDA_DISPENSE;
         } else if (taskDetails.getTaskCode().equals(Intervention.MDA_ADHERENCE)) {
             eventType = Constants.EventType.MDA_ADHERENCE;
+        } else if (taskDetails.getTaskCode().equals(Intervention.MDA_DRUG_RECON)){
+            eventType = Constants.EventType.MDA_DRUG_RECON;
         }
 
         String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
