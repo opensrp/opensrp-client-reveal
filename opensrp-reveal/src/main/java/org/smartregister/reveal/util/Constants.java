@@ -78,6 +78,8 @@ public interface Constants {
     String MDA_ADHERENCE_COMPLETE_COUNT = "mda_adherence_complete_count";
     String MDA_DRUG_RECON_COMPLETE_COUNT = "mda_drug_recon_complete_count";
 
+    int SMC_DISPENSE_MIN_MONTHS = 3;
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";
