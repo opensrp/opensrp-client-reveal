@@ -92,34 +92,6 @@
         }
       },
       {
-        "key": "isPeopleLiving",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Are people living in this non-residential structure?",
-        "options": [
-          {
-            "key": "1",
-            "text": "Yes"
-          },
-          {
-            "key": "0",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": true,
-          "err": "This field is required"
-        },
-        "relevance": {
-          "step1:eligibleRes": {
-            "type": "string",
-            "ex": "equalTo(., \"0\")"
-          }
-        }
-      },
-      {
         "key": "compoundPart",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
