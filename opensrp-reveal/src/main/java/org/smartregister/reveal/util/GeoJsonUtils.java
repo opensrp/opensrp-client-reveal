@@ -217,7 +217,7 @@ public class GeoJsonUtils {
     }
 
     private static void handleFamilyRegDoneInOtherPlan(Map<String, StructureDetails> structureNames, HashMap<String, String> taskProperties, Location structure) {
-        if (structureNames.get(structure.getId()) != null && StringUtils.isNotBlank(structureNames.get(structure.getId()).getStructureName())) {
+        if (structure.getType().equals(Constants.StructureType.RESIDENTIAL) && structureNames.get(structure.getId()) != null && StringUtils.isNotBlank(structureNames.get(structure.getId()).getStructureName())) {
             taskProperties.put(STRUCTURE_NAME, structureNames.get(structure.getId()).getStructureName());
             taskProperties.put(FAMILY_MEMBER_NAMES, structureNames.get(structure.getId()).getFamilyMembersNames());
             taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
