@@ -390,4 +390,15 @@
     <string name="family_information">Family Information</string>
     <string name="cdd_supervisor_checklist">CDD Supervisor checklist</string>
     <string name="hfw_supervisor_checklist">HFW Supervisor checklist</string>
+    <string name="distribution_coverage">Distribution coverage</string>
+    <string name="and_individuals_complete">And Individuals complete</string>
+    <string name="structure_total">Structure: TOTAL</string>
+    <string name="structure_visited">Structure: VISITED</string>
+    <string name="structure_not_visited">Structure: NOT VISITED</string>
+    <string name="structure_confirmed_eligible">Structure: CONFIRMED ELIGIBLE</string>
+    <string name="structure_complete_drug_distribution">Structure: COMPLETE DRUG DISTRIBUTION</string>
+    <string name="structure_partial_drug_distribution">Structure: PARTIAL DRUG DISTRIBUTION</string>
+    <string name="individual_total_number_of_children_eligible_3_to_49_mos">Individual: TOTAL NUMBER OF ELIGIBLE CHILDREN 3-59 MOS</string>
+    <string name="individual_total_treated_3_to_59_mos">Individual: TOTAL TREATED 3-59 MOS</string>
+
 </resources>

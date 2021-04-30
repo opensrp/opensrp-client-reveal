@@ -313,6 +313,7 @@ public interface Constants {
         List<String> NOT_SPRAYED = Arrays.asList(BusinessStatus.NOT_SPRAYED, BusinessStatus.IN_PROGRESS, BusinessStatus.INCOMPLETE);
         List<String> NOT_ELIGIBLE = Arrays.asList(BusinessStatus.NOT_SPRAYABLE, BusinessStatus.NOT_ELIGIBLE);
         List<String> NOT_VISITED = Arrays.asList(BusinessStatus.NOT_VISITED);
+        List<String> MDA_DISPENSE_ELIGIBLE_STATUS = Arrays.asList(BusinessStatus.NOT_VISITED,BusinessStatus.SMC_COMPLETE,BusinessStatus.NOT_DISPENSED);
     }
 
     interface Map {
@@ -689,6 +690,8 @@ public interface Constants {
         String ADMINISTERED_SPAQ = "administered_spaq";
 
         String NUMBER_OF_ADDITIONAL_DOSES = "number_of_additional_doses";
+
+        String JOB_AID = "job_aid";
 
     }
 
