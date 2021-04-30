@@ -1,0 +1,7 @@
+---
+name: step1_checklist_treatment_name_dose
+description: step1_checklist_treatment_name_dose
+priority: 1
+condition: "step1_checklist_child_treated.equals('yes')"
+actions:
+  - "isRelevant = true"
