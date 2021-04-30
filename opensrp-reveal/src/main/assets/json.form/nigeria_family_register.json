@@ -418,6 +418,14 @@
           "value": "true",
           "err": "Please enter a number"
         },
+        "v_min": {
+          "value": "13",
+          "err": "Minimum allowed age is 13"
+        },
+        "v_max": {
+          "value": "150",
+          "err": "Maximum allowed age is 150"
+        },
         "v_required": {
           "value": true,
           "err": "Please enter the age"
