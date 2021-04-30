@@ -176,9 +176,12 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "openmrs_data_type": "text",
-        "type": "edit_text",
-        "hint": "To which compound does this structure belong?",
+        "type": "multi_select_list",
+        "dialogTitle": "Select name of the head of the compound",
+        "buttonText": "+ To which compound does this structure belong?",
+        "searchHint": "Type Name head of the compound",
+        "text_size": "8sp",
+        "maxSelectable": "1",
         "v_required": {
           "value": true,
           "err": "This field is required"
