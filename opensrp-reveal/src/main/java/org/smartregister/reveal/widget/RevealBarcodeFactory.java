@@ -9,12 +9,16 @@ import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.widgets.BarcodeFactory;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Obs;
 import org.smartregister.domain.db.EventClient;
+import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.repository.EventClientRepository;
+import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants;
 
@@ -23,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.json.JsonObject;
 
 import timber.log.Timber;
 
@@ -48,7 +54,7 @@ public class RevealBarcodeFactory extends BarcodeFactory {
                                 Timber.d("Scanned QR Code %s ", barcode.displayValue);
                                 editText.setText(barcode.displayValue);
                                 if(editText.getFloatingLabelText().equals("Referral QR Code Search")){
-                                     searchForChildAndUpdateForm(barcode.displayValue);
+                                     searchForChildAndUpdateForm(barcode.displayValue, context);
                                 }
                             } else
                                 Timber.i("NO RESULT FOR QR CODE");
@@ -56,7 +62,7 @@ public class RevealBarcodeFactory extends BarcodeFactory {
                     });
         }
     }
-    private void searchForChildAndUpdateForm(String qrCode){
+    private void searchForChildAndUpdateForm(String qrCode, Context context){
         String childID = null;
         EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
         List<EventClient> eventClients =  eventClientRepository.fetchEventClientsByEventTypes(Arrays.asList(Constants.EventType.MDA_DISPENSE,Constants.EventType.MDA_ADHERENCE));
@@ -78,10 +84,25 @@ public class RevealBarcodeFactory extends BarcodeFactory {
             CommonRepository commonRepository  = RevealApplication.getInstance().getContext().commonrepository(metadata().familyMemberRegister.tableName);
             CommonPersonObject child = commonRepository.findByBaseEntityId(childID);
             Map<String,String> childDetails = child.getColumnmaps();
-            String firstName = childDetails.get("first_name");
-            String lastName = childDetails.get("last_name");
-            String gender = childDetails.get("gender");
             String dob = childDetails.get("dob");
+
+            RevealJsonFormActivity activity = (RevealJsonFormActivity) context;
+            JSONObject form = activity.getmJSONObject();
+            JSONObject firstNameField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),"childFirstName");
+            JSONObject lastNameField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),"surnameOfChild");
+            JSONObject genderField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),"sex");
+
+            try {
+                firstNameField.put("value",childDetails.get("first_name"));
+                firstNameField.put("read_only",true);
+                lastNameField.put("value",childDetails.get("last_name"));
+                lastNameField.put("read_only",true);
+                String gender = childDetails.get("gender");
+                genderField.put("value",gender.equalsIgnoreCase("male") ? "Male": "Female");
+                genderField.put("read_only",true);
+            } catch (JSONException e) {
+                Timber.d(e);
+            }
 
         }
     }
