@@ -80,7 +80,7 @@
         "openmrs_entity_id": "",
         "type": "barcode",
         "barcode_type": "qrcode",
-        "hint": "Referral QR Code",
+        "hint": "Referral QR Code Search",
         "scanButtonText": "Scan QR Code",
         "v_required": {
           "value": "true",
