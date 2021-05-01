@@ -83,7 +83,6 @@ public class RevealBarcodeFactory extends BarcodeFactory {
             String gender = childDetails.get("gender");
             String dob = childDetails.get("dob");
 
-           Activity activity = (Activity) super.getRootLayout(RevealApplication.getInstance().getContext().applicationContext()).getParent().getParent();
         }
     }
 
