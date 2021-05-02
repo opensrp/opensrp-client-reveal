@@ -2,14 +2,18 @@ package org.smartregister.reveal.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.vision.barcode.Barcode;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.interfaces.JsonApi;
+import com.vijay.jsonwizard.utils.Utils;
 import com.vijay.jsonwizard.widgets.BarcodeFactory;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
@@ -27,8 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.json.JsonObject;
 
 import timber.log.Timber;
 
@@ -84,25 +86,25 @@ public class RevealBarcodeFactory extends BarcodeFactory {
             CommonRepository commonRepository  = RevealApplication.getInstance().getContext().commonrepository(metadata().familyMemberRegister.tableName);
             CommonPersonObject child = commonRepository.findByBaseEntityId(childID);
             Map<String,String> childDetails = child.getColumnmaps();
-            String dob = childDetails.get("dob");
-
+            String firstName = childDetails.get("first_name");
+            String lastName = childDetails.get("last_name");
+            String gender = childDetails.get("gender");
             RevealJsonFormActivity activity = (RevealJsonFormActivity) context;
-            JSONObject form = activity.getmJSONObject();
-            JSONObject firstNameField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),"childFirstName");
-            JSONObject lastNameField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),"surnameOfChild");
-            JSONObject genderField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),"sex");
 
-            try {
-                firstNameField.put("value",childDetails.get("first_name"));
-                firstNameField.put("read_only",true);
-                lastNameField.put("value",childDetails.get("last_name"));
-                lastNameField.put("read_only",true);
-                String gender = childDetails.get("gender");
-                genderField.put("value",gender.equalsIgnoreCase("male") ? "Male": "Female");
-                genderField.put("read_only",true);
-            } catch (JSONException e) {
-                Timber.d(e);
-            }
+            MaterialEditText firstNameTextField = (MaterialEditText) activity.getFormDataView(JsonFormConstants.STEP1 + ":" + "childFirstName");
+            firstNameTextField.setText(firstName);
+            firstNameTextField.setEnabled(false);
+            MaterialEditText lastNameTextField = (MaterialEditText) activity.getFormDataView(JsonFormConstants.STEP1 + ":" + "surnameOfChild");
+            lastNameTextField.setText(lastName);
+            lastNameTextField.setEnabled(false);
+            RadioGroup radioGroup = (RadioGroup) activity.getFormDataView(JsonFormConstants.STEP1 + ":" + "sex");
+            List<RadioButton> radioButtons = Utils.getRadioButtons(radioGroup);
+            radioButtons.stream().forEach(radioButton -> {
+                radioButton.setEnabled(false);
+                if(gender.equalsIgnoreCase(radioButton.getText().toString()))
+                   radioButton.setChecked(true);
+            });
+
 
         }
     }
