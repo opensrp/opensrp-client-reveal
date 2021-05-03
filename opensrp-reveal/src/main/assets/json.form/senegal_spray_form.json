@@ -1057,8 +1057,8 @@
             "text": "Refused"
           },
           {
-            "key": "adultNotPresent",
-            "text": "Adult not present"
+            "key": "noOneHome",
+            "text": "No one home"
           },
           {
             "key": "other",
