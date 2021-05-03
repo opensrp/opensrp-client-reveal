@@ -581,7 +581,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "Male Population",
+        "hint": "Male Population in rooms sprayed",
         "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
