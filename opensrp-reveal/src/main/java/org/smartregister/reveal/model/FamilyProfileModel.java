@@ -106,6 +106,9 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
     public void setPlanIdentifier(String planIdentifier) {
         this.planIdentifier = planIdentifier;
     }
+    public String getStructureId() {
+        return structureId;
+    }
 
     @Override
     public JSONObject getFormAsJson(String formName, String entityId, String currentLocationId) throws Exception {
