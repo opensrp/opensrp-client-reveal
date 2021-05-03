@@ -92,34 +92,6 @@
         }
       },
       {
-        "key": "isPeopleLiving",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Are people living in this non-residential structure?",
-        "options": [
-          {
-            "key": "1",
-            "text": "Yes"
-          },
-          {
-            "key": "0",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": true,
-          "err": "This field is required"
-        },
-        "relevance": {
-          "step1:eligibleRes": {
-            "type": "string",
-            "ex": "equalTo(., \"0\")"
-          }
-        }
-      },
-      {
         "key": "compoundPart",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -205,9 +177,12 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "openmrs_data_type": "text",
-        "type": "edit_text",
-        "hint": "To which compound does this structure belong?",
+        "type": "multi_select_list",
+        "dialogTitle": "Select name of the head of the compound",
+        "buttonText": "+ To which compound does this structure belong?",
+        "searchHint": "Type Name head of the compound",
+        "text_size": "8sp",
+        "maxSelectable": "1",
         "v_required": {
           "value": true,
           "err": "This field is required"
@@ -417,6 +392,14 @@
         "v_numeric_integer": {
           "value": "true",
           "err": "Please enter a number"
+        },
+        "v_min": {
+          "value": "13",
+          "err": "Minimum allowed age is 13"
+        },
+        "v_max": {
+          "value": "150",
+          "err": "Maximum allowed age is 150"
         },
         "v_required": {
           "value": true,

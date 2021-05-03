@@ -174,12 +174,15 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 case EventType.MDA_DISPENSE:
                     taskUtils.generateMDAAdherenceTask(RevealApplication.getInstance().getApplicationContext(),
                             getString(jsonForm, ENTITY_ID), getJSONObject(jsonForm, DETAILS).getString(Properties.LOCATION_ID),JsonFormUtils.getFieldValue(json,JsonForm.ADMINISTERED_SPAQ));
-                    taskUtils.generateMDAStructureDrug(RevealApplication.getInstance().getApplicationContext(),
-                            getJSONObject(jsonForm, DETAILS).getString(Properties.LOCATION_ID), getJSONObject(jsonForm, DETAILS).getString(Properties.LOCATION_ID));
 
                 case BLOOD_SCREENING_EVENT:
                 case EventType.MDA_DRUG_RECON:
+                    saveMemberForm(jsonForm, encounterType, BLOOD_SCREENING);
+                    break;
+
                 case EventType.MDA_ADHERENCE:
+                    taskUtils.generateMDAStructureDrug(RevealApplication.getInstance().getApplicationContext(),
+                            getJSONObject(jsonForm, DETAILS).getString(Properties.LOCATION_ID), getJSONObject(jsonForm, DETAILS).getString(Properties.LOCATION_ID));
                     saveMemberForm(jsonForm, encounterType, BLOOD_SCREENING);
                     break;
 
@@ -209,6 +212,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         JSONArray fields = JsonFormUtils.fields(jsonForm);
         JSONObject metadata = getJSONObject(jsonForm, METADATA);
         Event event = JsonFormUtils.createEvent(fields, metadata, Utils.getFormTag(), entityId, encounterType, bindType);
+        event.setEventDate(new Date());
         JSONObject eventJson = new JSONObject(gson.toJson(event));
         eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
         eventClientRepository.addEvent(entityId, eventJson);

@@ -76,6 +76,7 @@ public interface FamilyConstants {
         String SLEEPS_OUTDOORS = "sleeps_outdoors";
         String PHONE_NUMBER = "phone_number";
         String IS_FAMILY_HEAD = "is_family_head";
+        String COMPOUND_STRUCTURE  = "compound_structure";
     }
 
     interface FormKeys {
@@ -87,6 +88,7 @@ public interface FamilyConstants {
         String AGE_UNKNOWN = "age_unknown";
         String CHILD_STAY_PERM = "child_stay_perm";
         String DOb_UNKOWN_NOTE= "dob_unknown_note";
+        String COMPOUND_STRUCTURE = "compoundStructure";
     }
 
 

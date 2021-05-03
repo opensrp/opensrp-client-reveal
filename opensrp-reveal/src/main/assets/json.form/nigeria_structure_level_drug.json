@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "drug_reconcilliation",
+  "encounter_type": "mda_drug_reconciliation",
   "entity_id": "",
   "metadata": {
     "start": {
@@ -110,6 +110,10 @@
           "value": "true",
           "err": "This field is required"
         },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
         "v_min": {
           "value": "0",
           "err": "Number of children must be greater than or equal to 0!"
@@ -181,6 +185,10 @@
           "value": "true",
           "err": "This field is required"
         },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
         "v_min": {
           "value": "0",
           "err": "Number must be equal or greater than 0"
@@ -221,6 +229,10 @@
         "v_numeric": {
           "value": "true",
           "err": "This field is required"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
         },
         "v_min": {
           "value": "0",
@@ -268,6 +280,10 @@
         "v_numeric": {
           "value": "true",
           "err": "This field is required"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
         },
         "v_min": {
           "value": "0",
