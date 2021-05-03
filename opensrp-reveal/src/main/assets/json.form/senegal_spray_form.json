@@ -879,40 +879,6 @@
         }
       },
       {
-        "key": "sprayed_nets_use",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Total Number of Nets Hanging and in Use",
-        "text_size": "8sp",
-        "is_mandatory": true,
-        "v_required": {
-          "value": true,
-          "err": "Total Number of Nets Hanging and in Use is mandatory"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Total Number of Nets Hanging and in Use must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Total Number of Nets Hanging and in Use must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Total Number of Nets Hanging and in Use must be greater than or equal to 0"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "senegal-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "sprayed_nets_use_validation_err",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -955,40 +921,6 @@
         }
       },
       {
-        "key": "sprayed_pregwomen_uNet",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Number of Pregnant Women Sleeping Under Net",
-        "text_size": "8sp",
-        "is_mandatory": true,
-        "v_required": {
-          "value": true,
-          "err": "Number of Pregnant Women Sleeping Under Net is mandatory"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Number of Pregnant Women Sleeping Under Net must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Number of Pregnant Women Sleeping Under Net must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Number of Pregnant Women Sleeping Under Net must be greater than or equal to 0"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "senegal-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "sprayed_pregwomen_uNet_validation_err",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1001,40 +933,6 @@
         "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "senegal-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "sprayed_u5_uNet",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Number of Children Under 5 Yrs Sleeping Under Net",
-        "text_size": "8sp",
-        "is_mandatory": true,
-        "v_required": {
-          "value": true,
-          "err": "Number of Children Under 5 Yrs Sleeping Under Net is mandatory"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Number of Children Under 5 Yrs Sleeping Under Net must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Number of Children Under 5 Yrs Sleeping Under Net must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Number of Children Under 5 Yrs Sleeping Under Net must be greater than or equal to 0"
-        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -1619,35 +1517,6 @@
             "ex-rules": {
               "rules-file": "senegal-spray-relevance-rules.yml"
             }
-          }
-        }
-      },
-      {
-        "key": "mopup",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Was this part of a formal Mop-Up operation?",
-        "text_size": "8sp",
-        "options": [
-          {
-            "key": "yes",
-            "text": "Yes"
-          },
-          {
-            "key": "no",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
-        "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
           }
         }
       },
