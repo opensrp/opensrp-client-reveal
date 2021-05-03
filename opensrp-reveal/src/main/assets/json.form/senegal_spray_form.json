@@ -370,7 +370,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Head of household gender?",
+        "label": "Gender",
         "text_size": "8sp",
         "options": [
           {
