@@ -25,6 +25,7 @@ import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.FamilyConstants;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,14 +39,23 @@ import static android.app.Activity.RESULT_OK;
 import static org.smartregister.family.util.Utils.metadata;
 
 public class RevealBarcodeFactory extends BarcodeFactory {
+
+    public static final String CHILD_FIRST_NAME = "childFirstName";
+    public static final String SURNAME_OF_CHILD = "surnameOfChild";
+    public static final String SEX = "sex";
+    public static final String LAST_NAME = "last_name";
+    public static final String GENDER = "gender";
+    public static final String REFERRAL_QR_CODE = "referralQRCode";
+    public static final String REFERRAL_QR_CODE_SEARCH = "Referral QR Code Search";
+
     @Override
     protected void launchBarcodeScanner(Activity activity, MaterialEditText editText, String barcodeType) {
+
         super.launchBarcodeScanner(activity, editText, barcodeType);
     }
 
     @Override
     protected void addOnBarCodeResultListeners(Context context, MaterialEditText editText) {
-        System.out.println("Attached to RevealBarcodeFactory#addOnBarCodeResultListeners");
         if (context instanceof JsonApi) {
             JsonApi jsonApi = (JsonApi) context;
             jsonApi.addOnActivityResultListener(JsonFormConstants.BARCODE_CONSTANTS.BARCODE_REQUEST_CODE,
@@ -55,7 +65,7 @@ public class RevealBarcodeFactory extends BarcodeFactory {
                                 Barcode barcode = data.getParcelableExtra(JsonFormConstants.BARCODE_CONSTANTS.BARCODE_KEY);
                                 Timber.d("Scanned QR Code %s ", barcode.displayValue);
                                 editText.setText(barcode.displayValue);
-                                if(editText.getFloatingLabelText().equals("Referral QR Code Search")){
+                                if(editText.getFloatingLabelText().equals(REFERRAL_QR_CODE_SEARCH)){
                                      searchForChildAndUpdateForm(barcode.displayValue, context);
                                 }
                             } else
@@ -70,9 +80,9 @@ public class RevealBarcodeFactory extends BarcodeFactory {
         List<EventClient> eventClients =  eventClientRepository.fetchEventClientsByEventTypes(Arrays.asList(Constants.EventType.MDA_DISPENSE,Constants.EventType.MDA_ADHERENCE));
         List<Event> referralEvents = eventClients.stream()
                                                  .map(eventClient -> eventClient.getEvent())
-                                                 .filter(event -> event.getObs().stream().filter(obs -> obs.getFieldCode().equals("referralQRCode")).findFirst().isPresent()).collect(Collectors.toList());
+                                                 .filter(event -> event.getObs().stream().filter(obs -> obs.getFieldCode().equals(REFERRAL_QR_CODE)).findFirst().isPresent()).collect(Collectors.toList());
         for (Event referral : referralEvents) {
-            Optional<Obs> optional = referral.getObs().stream().filter(obs -> obs.getFieldCode().equals("referralQRCode")).findFirst();
+            Optional<Obs> optional = referral.getObs().stream().filter(obs -> obs.getFieldCode().equals(REFERRAL_QR_CODE)).findFirst();
             if (optional.isPresent()) {
                 Obs storedQRCodeObs = optional.get();
                 if (qrCode.equals(storedQRCodeObs.getValue().toString())) {
@@ -82,30 +92,42 @@ public class RevealBarcodeFactory extends BarcodeFactory {
             }
         }
 
+        RevealJsonFormActivity activity = (RevealJsonFormActivity) context;
+        MaterialEditText firstNameTextField = (MaterialEditText) activity.getFormDataView(JsonFormConstants.STEP1 + ":" + CHILD_FIRST_NAME);
+        MaterialEditText lastNameTextField = (MaterialEditText) activity.getFormDataView(JsonFormConstants.STEP1 + ":" + SURNAME_OF_CHILD);
+        RadioGroup radioGroup = (RadioGroup) activity.getFormDataView(JsonFormConstants.STEP1 + ":" + SEX);
+        List<RadioButton> radioButtons = Utils.getRadioButtons(radioGroup);
+
+
         if(childID != null){
+            
             CommonRepository commonRepository  = RevealApplication.getInstance().getContext().commonrepository(metadata().familyMemberRegister.tableName);
             CommonPersonObject child = commonRepository.findByBaseEntityId(childID);
             Map<String,String> childDetails = child.getColumnmaps();
-            String firstName = childDetails.get("first_name");
-            String lastName = childDetails.get("last_name");
-            String gender = childDetails.get("gender");
-            RevealJsonFormActivity activity = (RevealJsonFormActivity) context;
+            String firstName = childDetails.get(FamilyConstants.FormKeys.FIRST_NAME);
+            String lastName = childDetails.get(LAST_NAME);
+            String gender = childDetails.get(GENDER);
 
-            MaterialEditText firstNameTextField = (MaterialEditText) activity.getFormDataView(JsonFormConstants.STEP1 + ":" + "childFirstName");
             firstNameTextField.setText(firstName);
             firstNameTextField.setEnabled(false);
-            MaterialEditText lastNameTextField = (MaterialEditText) activity.getFormDataView(JsonFormConstants.STEP1 + ":" + "surnameOfChild");
             lastNameTextField.setText(lastName);
             lastNameTextField.setEnabled(false);
-            RadioGroup radioGroup = (RadioGroup) activity.getFormDataView(JsonFormConstants.STEP1 + ":" + "sex");
-            List<RadioButton> radioButtons = Utils.getRadioButtons(radioGroup);
             radioButtons.stream().forEach(radioButton -> {
                 radioButton.setEnabled(false);
                 if(gender.equalsIgnoreCase(radioButton.getText().toString()))
                    radioButton.setChecked(true);
             });
 
-
+        }else {
+            
+            firstNameTextField.setEnabled(true);
+            firstNameTextField.setText("");
+            lastNameTextField.setEnabled(true);
+            lastNameTextField.setText("");
+            radioButtons.stream().forEach(radioButton -> {
+                radioButton.setChecked(false);
+                radioButton.setEnabled(true);
+            });
         }
     }
 
