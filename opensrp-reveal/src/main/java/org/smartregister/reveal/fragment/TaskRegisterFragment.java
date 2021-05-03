@@ -47,6 +47,7 @@ import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.DrawerMenuView;
 import org.smartregister.reveal.view.FilterTasksActivity;
 import org.smartregister.reveal.view.ListTasksActivity;
+import org.smartregister.reveal.view.StructureTasksActivity;
 import org.smartregister.reveal.view.TaskRegisterActivity;
 import org.smartregister.view.activity.BaseRegisterActivity;
 
@@ -380,6 +381,16 @@ public class TaskRegisterFragment extends BaseDrawerRegisterFragment implements 
 
         startActivity(intent);
 
+    }
+
+    @Override
+    public void openTasksScreen(BaseTaskDetails taskDetails) {
+        Intent intent = new Intent(getContext(), StructureTasksActivity.class);
+        intent.putExtra(Properties.LOCATION_UUID, taskDetails.getStructureId());
+        intent.putExtra(Properties.TASK_IDENTIFIER, taskDetails.getTaskId());
+        intent.putExtra(Properties.TASK_BUSINESS_STATUS, taskDetails.getBusinessStatus());
+        intent.putExtra(Properties.TASK_STATUS, taskDetails.getTaskStatus());
+        startActivity(intent);
     }
 
     @Override
