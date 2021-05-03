@@ -277,6 +277,25 @@
         "hint": "What is the name of the village this structure is in?"
       },
       {
+        "key": "location_other",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Specify other village:",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:location_zone": {
+            "type": "string",
+            "ex": "equalTo(., \"other\")"
+          }
+        }
+      },
+      {
         "key": "sprayop_code",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
