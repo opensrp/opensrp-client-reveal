@@ -2,10 +2,8 @@ package org.smartregister.reveal.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 
 import com.google.android.gms.vision.barcode.Barcode;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -14,13 +12,11 @@ import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.utils.Utils;
 import com.vijay.jsonwizard.widgets.BarcodeFactory;
 
-import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Obs;
 import org.smartregister.domain.db.EventClient;
-import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
