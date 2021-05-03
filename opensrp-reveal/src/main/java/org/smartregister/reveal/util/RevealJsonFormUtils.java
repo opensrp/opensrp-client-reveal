@@ -10,6 +10,9 @@ import com.mapbox.geojson.Feature;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.utils.FormUtils;
 
+import net.sqlcipher.Cursor;
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,6 +64,7 @@ import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATIO
 import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.JsonForm.COMPOUND_STRUCTURE;
 import static org.smartregister.reveal.util.Constants.JsonForm.JSON_FORM_FOLDER;
 import static org.smartregister.reveal.util.Constants.JsonForm.YES;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
@@ -476,6 +480,20 @@ public class RevealJsonFormUtils {
                     if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY) && nonEditablefields.contains(key)){
                         field.put(JsonFormConstants.READ_ONLY,true);
                     }
+
+                    if(Country.SENEGAL.equals(BuildConfig.BUILD_COUNTRY) && key.equals(COMPOUND_STRUCTURE)){
+                        populateCompoundStructureOptions(formJSON);
+                        JSONArray options = field.optJSONArray(OPTIONS);
+                        for(int j=0;j < options.length();j++){
+                            JSONObject option = (JSONObject) options.get(j);
+                            JSONArray value = new JSONArray();
+                            value.put(option);
+                            if(option.get(KEY).equals(obs.getValue())){
+                                field.put(VALUE,value);
+                                break;
+                            }
+                        }
+                    }
                 }
                 if (JsonFormConstants.REPEATING_GROUP.equals(field.optString(TYPE))) {
                     generateRepeatingGroupFields(field, event.getObs(), formJSON);
@@ -680,6 +698,38 @@ public class RevealJsonFormUtils {
             field.put(VALUES, options);
         } catch (JSONException e) {
             Timber.e(e);
+        }
+    }
+
+    public void populateCompoundStructureOptions(JSONObject form){
+        SQLiteDatabase database = RevealApplication.getInstance().getRepository().getReadableDatabase();
+        JSONObject option;
+        JSONObject property;
+        JSONArray options = new JSONArray();
+        String query = String.format("SELECT %s,%s FROM %s WHERE %s IS NOT NULL ORDER BY %s DESC",Constants.DatabaseKeys.ID,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.Tables.SPRAYED_STRUCTURES,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.DatabaseKeys.SPRAY_DATE);
+        try(Cursor cursor = database.rawQuery(query,new String[]{})){;
+            while (cursor.moveToNext()) {
+                property = new JSONObject();
+                property.put("presumed-id","err");
+                property.put("confirmed-id","err");
+
+                String structureId = cursor.getString(cursor.getColumnIndex(Constants.DatabaseKeys.ID));
+                String compoundHeadName = cursor.getString(cursor.getColumnIndex(Constants.DatabaseKeys.COMPOUND_HEAD_NAME));
+
+                option = new JSONObject();
+                option.put("key",structureId);
+                option.put("text",compoundHeadName);
+                option.put("property",property);
+                options.put(option);
+            }
+        } catch (Exception e) {
+            Timber.e(e, "Error find Sprayed Structures with compound head names ");
+        }
+        JSONObject compoundStructureField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),JsonForm.COMPOUND_STRUCTURE);
+        try {
+            compoundStructureField.put("options", options);
+        } catch (JSONException e) {
+            Timber.e(e, "Error populating %s Options",JsonForm.COMPOUND_STRUCTURE);
         }
     }
 }
