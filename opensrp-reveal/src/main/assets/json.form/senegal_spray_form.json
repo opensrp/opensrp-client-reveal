@@ -90,6 +90,10 @@
         },
         "options": [
           {
+            "key": "toilet",
+            "text": "Toilet"
+          },
+          {
             "key": "kitchen",
             "text": "Kitchen"
           },
