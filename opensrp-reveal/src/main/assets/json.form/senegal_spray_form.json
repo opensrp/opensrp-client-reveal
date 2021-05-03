@@ -248,18 +248,6 @@
         "text_size": "8sp",
         "options": [
           {
-            "key": "boardingSchool",
-            "text": "Boarding school"
-          },
-          {
-            "key": "wardClinic",
-            "text": "Ward Clinic"
-          },
-          {
-            "key": "lodge",
-            "text": "Lodge"
-          },
-          {
             "key": "toilet",
             "text": "Toilet with roof"
           },
