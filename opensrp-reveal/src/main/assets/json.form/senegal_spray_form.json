@@ -784,7 +784,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "Pregnant Women",
+        "hint": "Pregnant Women in rooms sprayed",
         "is_mandatory": true,
         "text_size": "8sp",
         "v_required": {
