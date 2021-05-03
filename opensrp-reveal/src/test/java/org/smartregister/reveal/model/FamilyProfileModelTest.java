@@ -81,6 +81,7 @@ public class FamilyProfileModelTest extends BaseUnitTest {
         assertNotNull(eventClient.getEvent());
         assertEquals("2e1b9bc9-c437-42a6-ac12-3566ca620d3f", eventClient.getEvent().getBaseEntityId());
         assertEquals(location.getId(), eventClient.getEvent().getLocationId());
+        assertEquals(eventClient.getEvent().getLocationId(), eventClient.getClient().getLocationId());
         assertEquals(8, eventClient.getEvent().getObs().size());
         assertEquals(FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION, eventClient.getEvent().getEventType());
     }
@@ -101,6 +102,7 @@ public class FamilyProfileModelTest extends BaseUnitTest {
         assertNotNull(eventClient.getEvent());
         assertEquals("0dd853ae-be8d-4bfc-956d-2fb91eb687e5", eventClient.getEvent().getBaseEntityId());
         assertEquals(location.getId(), eventClient.getEvent().getLocationId());
+        assertEquals(eventClient.getEvent().getLocationId(), eventClient.getClient().getLocationId());
         assertEquals(14, eventClient.getEvent().getObs().size());
         assertEquals(FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION, eventClient.getEvent().getEventType());
     }
@@ -121,6 +123,7 @@ public class FamilyProfileModelTest extends BaseUnitTest {
         assertNotNull(eventClient.getEvent());
         assertEquals("0dd853ae-be8d-4bfc-956d-2fb91eb687e5", eventClient.getEvent().getBaseEntityId());
         assertEquals(location.getId(), eventClient.getEvent().getLocationId());
+        assertEquals(eventClient.getEvent().getLocationId(), eventClient.getClient().getLocationId());
         assertEquals(14, eventClient.getEvent().getObs().size());
         assertEquals(FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION, eventClient.getEvent().getEventType());
     }
