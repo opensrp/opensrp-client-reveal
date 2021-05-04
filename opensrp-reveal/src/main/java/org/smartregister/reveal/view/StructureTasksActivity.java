@@ -10,10 +10,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.fragment.StructureTasksFragment;
+import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON_FRAGMENT;
+import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 
 public class StructureTasksActivity extends MultiLanguageActivity {
 
@@ -39,12 +41,7 @@ public class StructureTasksActivity extends MultiLanguageActivity {
         toolbar.setTitle(R.string.return_to_register);
         this.setSupportActionBar(toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
     @Override
@@ -57,4 +54,13 @@ public class StructureTasksActivity extends MultiLanguageActivity {
         }
     }
 
+    public void startFamilyRegistration(BaseTaskDetails taskDetails) {
+        Intent intent = new Intent(this, FamilyRegisterActivity.class);
+        intent.putExtra(START_REGISTRATION, true);
+        intent.putExtra(Constants.Properties.LOCATION_UUID, taskDetails.getStructureId());
+        intent.putExtra(Constants.Properties.TASK_IDENTIFIER, taskDetails.getTaskId());
+        intent.putExtra(Constants.Properties.TASK_BUSINESS_STATUS, taskDetails.getBusinessStatus());
+        intent.putExtra(Constants.Properties.TASK_STATUS, taskDetails.getTaskStatus());
+        startActivity(intent);
+    }
 }

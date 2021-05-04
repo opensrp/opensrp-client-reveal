@@ -111,6 +111,10 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     @Override
     public void onLocationValidated() {
         StructureTaskDetails taskDetails = (StructureTaskDetails) getTaskDetails();
+        if (Constants.Intervention.REGISTER_FAMILY.equals(getTaskDetails().getTaskCode())
+                && !Task.TaskStatus.COMPLETED.name().equals(getTaskDetails().getTaskStatus())) {
+            getView().registerFamily(getTaskDetails());
+        }
         if (taskDetails.isEdit() && (Constants.Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode()) || BLOOD_SCREENING.equals(taskDetails.getTaskCode()))) {
             interactor.findLastEvent(taskDetails);
         } else {
