@@ -737,6 +737,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnConsecutiveSyncCompletedToastIsShownOnce() {
         init(listTasksActivity);
+        Whitebox.setInternalState(listTasksActivity, "startedToastShown", true);
         listTasksActivity.onSyncInProgress(FetchStatus.nothingFetched);
         listTasksActivity.onSyncInProgress(FetchStatus.nothingFetched);
         assertEquals(1, ShadowToast.shownToastCount());
