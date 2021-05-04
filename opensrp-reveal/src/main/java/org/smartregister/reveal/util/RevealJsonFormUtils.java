@@ -720,7 +720,7 @@ public class RevealJsonFormUtils {
                 option = new JSONObject();
                 option.put(KEY,structureId);
                 option.put(TEXT,compoundHeadName);
-                option.put("property",property);
+                option.put(JsonFormConstants.MultiSelectUtils.PROPERTY,property);
                 options.put(option);
             }
         } catch (Exception e) {
