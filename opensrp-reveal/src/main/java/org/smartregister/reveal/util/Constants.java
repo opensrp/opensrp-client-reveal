@@ -122,6 +122,8 @@ public interface Constants {
         String WARDS = "wards";
         String COMMUNITY_DRUG_DISTRIBUTORS = "community_drug_distributors";
         String HEALTH_WORKER_SUPERVISORS = "health_worker_supervisors";
+        String VILLAGES = "villages";
+
 
     }
 
@@ -557,6 +559,9 @@ public interface Constants {
         String CDD_SUPERVISION_TASK_COMPLETE = "task_complete";
 
         String COMPOUND_STRUCTURE = "compoundStructure";
+
+        String LOCATION_ZONE = "location_zone";
+
 
     }
 
