@@ -1245,7 +1245,7 @@
           "err": "Pregnant women must be greater than or equal to 0"
         },
         "v_relative_min": {
-          "value": "sprayed_totalfemale",
+          "value": "notsprayed_females",
           "err": "Female population must be greater than 0"
         },
         "relevance": {
