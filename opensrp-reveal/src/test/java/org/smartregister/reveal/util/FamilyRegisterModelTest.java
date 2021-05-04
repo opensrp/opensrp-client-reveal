@@ -95,4 +95,9 @@ public class FamilyRegisterModelTest extends BaseUnitTest {
         assertEquals("family_register", formNameCaptor.getValue());
         assertEquals("test house", JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(resultJson), FAMILY_NAME).getString("value"));
     }
+
+    @Test
+    public void testGetStructure() {
+        assertEquals("struct1", familyRegisterModel.getStructureId());
+    }
 }
