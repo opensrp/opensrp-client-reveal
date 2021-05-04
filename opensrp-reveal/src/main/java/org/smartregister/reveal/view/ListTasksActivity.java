@@ -859,7 +859,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         if (FetchStatus.fetched.equals(fetchStatus)) {
             return;
         }
-        if (completedToastShown) return;
+        if (startedToastShown && completedToastShown) return;
         //To cover against consecutive sync starts firing, turn the flag off with delay
         new Handler().postDelayed(() -> startedToastShown = false, SYNC_BACK_OFF_DELAY);
         boolean isNetworkAvailable = NetworkUtils.isNetworkAvailable();
