@@ -707,7 +707,7 @@ public class RevealJsonFormUtils {
         JSONObject property;
         JSONArray options = new JSONArray();
         String query = String.format("SELECT %s,%s FROM %s WHERE %s IS NOT NULL ORDER BY %s DESC",Constants.DatabaseKeys.ID,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.Tables.SPRAYED_STRUCTURES,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.DatabaseKeys.SPRAY_DATE);
-        try(Cursor cursor = database.rawQuery(query,new String[]{})){;
+        try(Cursor cursor = database.rawQuery(query,new String[]{})){
             while (cursor.moveToNext()) {
                 property = new JSONObject();
                 property.put("presumed-id","err");
