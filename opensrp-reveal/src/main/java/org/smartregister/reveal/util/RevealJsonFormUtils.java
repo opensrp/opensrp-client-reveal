@@ -482,7 +482,7 @@ public class RevealJsonFormUtils {
                     }
 
                     if(Country.SENEGAL.equals(BuildConfig.BUILD_COUNTRY) && key.equals(COMPOUND_STRUCTURE)){
-                        populateCompoundStructureOptions(formJSON);
+                        populateCompoundStructureOptions(formJSON,Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea()));
                         JSONArray options = field.optJSONArray(OPTIONS);
                         for(int j=0;j < options.length();j++){
                             JSONObject option = (JSONObject) options.get(j);
@@ -701,13 +701,14 @@ public class RevealJsonFormUtils {
         }
     }
 
-    public void populateCompoundStructureOptions(JSONObject form){
+    public void populateCompoundStructureOptions(JSONObject form, Location currentOperationalArea){
         SQLiteDatabase database = RevealApplication.getInstance().getRepository().getReadableDatabase();
         JSONObject option;
         JSONObject property;
         JSONArray options = new JSONArray();
-        String query = String.format("SELECT %s,%s FROM %s WHERE %s IS NOT NULL ORDER BY %s DESC",Constants.DatabaseKeys.ID,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.Tables.SPRAYED_STRUCTURES,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.DatabaseKeys.SPRAY_DATE);
-        try(Cursor cursor = database.rawQuery(query,new String[]{})){
+        String locationId  = currentOperationalArea.getId();
+        String query = String.format("SELECT %s,%s FROM %s WHERE %s IS NOT NULL AND %s IN (SELECT %s FROM %s WHERE %s = ? ) ORDER BY %s DESC",Constants.DatabaseKeys.ID,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.Tables.SPRAYED_STRUCTURES,Constants.DatabaseKeys.COMPOUND_HEAD_NAME,Constants.DatabaseKeys.BASE_ENTITY_ID,Constants.DatabaseKeys.ID_,Constants.DatabaseKeys.STRUCTURES_TABLE,Constants.DatabaseKeys.PARENT_ID,Constants.DatabaseKeys.SPRAY_DATE);
+        try(Cursor cursor = database.rawQuery(query,new String[]{locationId})){
             while (cursor.moveToNext()) {
                 property = new JSONObject();
                 property.put("presumed-id","err");
