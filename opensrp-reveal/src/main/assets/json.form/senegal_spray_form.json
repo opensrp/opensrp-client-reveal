@@ -409,6 +409,39 @@
         }
       },
       {
+        "key": "structure_num",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Structure Identification Number",
+        "text_size": "8sp",
+        "v_numeric": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_min_length": {
+          "value": "8",
+          "err": "Must be 8 digits long."
+        },
+        "v_max_length": {
+          "value": "8",
+          "err": "Must be 8 digits long."
+        },
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "structure_sprayed",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
