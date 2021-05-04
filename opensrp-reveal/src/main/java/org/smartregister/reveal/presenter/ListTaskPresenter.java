@@ -555,7 +555,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
 
             if(JsonForm.SPRAY_FORM_SENEGAL.equals(formName)){
-                jsonFormUtils.populateCompoundStructureOptions(formJson);
+                jsonFormUtils.populateCompoundStructureOptions(formJson, org.smartregister.reveal.util.Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()));
             }
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.VILLAGES,fields.get(JsonForm.LOCATION_ZONE),prefsUtil.getCurrentFacility());
         } else if (JsonForm.SPRAY_FORM_REFAPP.equals(formName)) {
