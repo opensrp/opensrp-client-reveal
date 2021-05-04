@@ -718,8 +718,8 @@ public class RevealJsonFormUtils {
                 String compoundHeadName = cursor.getString(cursor.getColumnIndex(Constants.DatabaseKeys.COMPOUND_HEAD_NAME));
 
                 option = new JSONObject();
-                option.put("key",structureId);
-                option.put("text",compoundHeadName);
+                option.put(KEY,structureId);
+                option.put(TEXT,compoundHeadName);
                 option.put("property",property);
                 options.put(option);
             }
@@ -728,7 +728,7 @@ public class RevealJsonFormUtils {
         }
         JSONObject compoundStructureField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),JsonForm.COMPOUND_STRUCTURE);
         try {
-            compoundStructureField.put("options", options);
+            compoundStructureField.put(OPTIONS, options);
         } catch (JSONException e) {
             Timber.e(e, "Error populating %s Options",JsonForm.COMPOUND_STRUCTURE);
         }
