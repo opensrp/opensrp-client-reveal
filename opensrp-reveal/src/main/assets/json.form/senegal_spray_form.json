@@ -335,9 +335,10 @@
           "err": "This field is required"
         },
         "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -424,9 +425,10 @@
           "err": "Required field"
         },
         "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -460,6 +462,39 @@
         }
       },
       {
+        "key": "structure_num",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Structure Identification Number",
+        "text_size": "8sp",
+        "v_numeric": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_min_length": {
+          "value": "8",
+          "err": "Must be 8 digits long."
+        },
+        "v_max_length": {
+          "value": "8",
+          "err": "Must be 8 digits long."
+        },
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "rooms_eligible",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -486,9 +521,10 @@
           "err": "Number of eligible rooms must be greater than or equal to 0"
         },
         "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"yes\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -625,9 +661,10 @@
           "err": "Male population must be greater than 0"
         },
         "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"yes\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -666,9 +703,10 @@
           "err": "Female population must be greater than 0"
         },
         "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"yes\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -794,44 +832,6 @@
         }
       },
       {
-        "key": "sprayed_pregwomen",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Pregnant Women in rooms sprayed",
-        "is_mandatory": true,
-        "text_size": "8sp",
-        "v_required": {
-          "value": true,
-          "err": "Pregnant Women is mandatory"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Pregnant Women must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Pregnant Women must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Pregnant Women must be greater than or equal to 0"
-        },
-        "v_relative_max": {
-          "value": "sprayed_females",
-          "err": "Pregnant Women must be less than female population"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "senegal-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "sprayed_childrenU5",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -877,6 +877,44 @@
         "toaster_type": "problem",
         "v_required": {
           "value": "true"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sprayed_pregwomen",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Pregnant Women in rooms sprayed",
+        "is_mandatory": true,
+        "text_size": "8sp",
+        "v_required": {
+          "value": true,
+          "err": "Pregnant Women is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Pregnant Women must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Pregnant Women must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Pregnant Women must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "sprayed_females",
+          "err": "Pregnant Women must be less than female population"
         },
         "relevance": {
           "rules-engine": {
@@ -1203,9 +1241,10 @@
           "err": "Male population must be greater than 0"
         },
         "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"no\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -1239,9 +1278,10 @@
           "err": "Female population must be greater than 0"
         },
         "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"no\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -1266,43 +1306,10 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "You can not enter a population of 0 for a sprayed structure",
+        "text": "You can not enter a population of 0 for a not sprayed structure",
         "text_color": "#CF0800",
         "toaster_type": "problem",
         "text_size": "8sp",
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "senegal-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "notsprayed_pregwomen",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "text_size": "8sp",
-        "hint": "Pregnant Women in rooms not sprayed",
-        "v_numeric": {
-          "value": "true",
-          "err": "Pregnant Women must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Pregnant Women must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Pregnant Women must be greater than or equal to 0"
-        },
-        "v_relative_max": {
-          "value": "notsprayed_females",
-          "err": "Pregnant Women must be less than female population"
-        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -1352,6 +1359,39 @@
         "toaster_type": "problem",
         "v_required": {
           "value": "true"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "notsprayed_pregwomen",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "text_size": "8sp",
+        "hint": "Pregnant Women in rooms not sprayed",
+        "v_numeric": {
+          "value": "true",
+          "err": "Pregnant Women must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Pregnant Women must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Pregnant Women must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "notsprayed_females",
+          "err": "Pregnant Women must be less than female population"
         },
         "relevance": {
           "rules-engine": {
