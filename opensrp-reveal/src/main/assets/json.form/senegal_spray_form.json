@@ -335,9 +335,10 @@
           "err": "This field is required"
         },
         "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -424,6 +425,36 @@
           "err": "Required field"
         },
         "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "structure_sprayed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Were any rooms in this structure sprayed?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "yes",
+            "text": "Yes"
+          },
+          {
+            "key": "no",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
           "step1:eligibility": {
             "type": "string",
             "ex": "equalTo(., \"eligible\")"
@@ -464,35 +495,6 @@
         }
       },
       {
-        "key": "structure_sprayed",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Were any rooms in this structure sprayed?",
-        "text_size": "8sp",
-        "options": [
-          {
-            "key": "yes",
-            "text": "Yes"
-          },
-          {
-            "key": "no",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
-        "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
-          }
-        }
-      },
-      {
         "key": "rooms_eligible",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -519,9 +521,10 @@
           "err": "Number of eligible rooms must be greater than or equal to 0"
         },
         "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"yes\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -658,9 +661,10 @@
           "err": "Male population must be greater than 0"
         },
         "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"yes\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -699,9 +703,10 @@
           "err": "Female population must be greater than 0"
         },
         "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"yes\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -1236,9 +1241,10 @@
           "err": "Male population must be greater than 0"
         },
         "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"no\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -1272,9 +1278,10 @@
           "err": "Female population must be greater than 0"
         },
         "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"no\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -1299,7 +1306,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "You can not enter a population of 0 for a sprayed structure",
+        "text": "You can not enter a population of 0 for a not sprayed structure",
         "text_color": "#CF0800",
         "toaster_type": "problem",
         "text_size": "8sp",
