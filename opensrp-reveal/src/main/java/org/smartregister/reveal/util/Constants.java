@@ -283,6 +283,7 @@ public interface Constants {
         String STRUCTURE_TABLE = "structure";
         String EC_EVENTS_TABLE = "ec_events";
         String EC_EVENTS_SEARCH_TABLE = "ec_events_search";
+        String SPRAYED_STRUCTURES = "sprayed_structures";
     }
 
     interface BusinessStatus {
@@ -560,6 +561,8 @@ public interface Constants {
         String LOCATION_ZONE = "location_zone";
 
 
+        String COMPOUND_STRUCTURE = "compoundStructure";
+
     }
 
     interface DateFormat {
@@ -750,6 +753,15 @@ public interface Constants {
         Object GEOJSON = "geojson";
 
         String DATA_COLLECTION_DATE = "data_collection_date";
+
+
+        String STRUCTURE_HEAD_NAME = "structure_head_name";
+
+        String COMPOUND_HEAD_NAME = "compound_head_name";
+
+        String COMPOUND_STRUCTURE = "compound_structure";
+
+        String SPRAY_DATE = "spray_date";
 
     }
 
