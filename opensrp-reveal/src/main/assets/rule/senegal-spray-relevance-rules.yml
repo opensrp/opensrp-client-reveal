@@ -338,3 +338,10 @@ priority: 1
 condition: "step1_structure_sprayed.equals('no') && !step1_notreseidential_eligible.equals('toilet')"
 actions:
   - "isRelevant = true"
+---
+name: step1_notsprayedrooms_eligible
+description: step1_notsprayedrooms_eligible
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && !step1_notreseidential_eligible.equals('toilet')"
+actions:
+  - "isRelevant = true"

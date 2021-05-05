@@ -1205,9 +1205,10 @@
           "err": "Must be greater than or equal to 0"
         },
         "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"no\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },
