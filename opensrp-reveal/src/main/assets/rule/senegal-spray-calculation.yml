@@ -47,3 +47,11 @@ priority: 1
 condition: "true"
 actions:
   - "calculation = step1_genderHoH=='female' ? 1:0"
+---
+name: step1_rooms_not_sprayed
+description: step1_rooms_not_sprayed
+priority: 1
+condition: "true"
+actions:
+  - "calculation = Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) - Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0))"
+

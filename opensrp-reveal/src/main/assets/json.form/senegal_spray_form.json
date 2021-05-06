@@ -567,37 +567,101 @@
         }
       },
       {
-        "key": "partiallysprayed_reason",
+        "key": "rooms_not_sprayed",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Main reason why some ELIGIBLE rooms in this structure were not sprayed?",
-        "text_size": "8sp",
-        "options": [
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Number of rooms not sprayed",
+        "read_only": true,
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-calculation.yml"
+            }
+          }
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "partiallysprayed_reasons",
+        "type": "repeating_group",
+        "reference_edit_text": "step1:rooms_not_sprayed",
+        "reference_edit_text_hint": "Confirmed # rooms not sprayed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please confirm number of rooms not sprayed"
+        },
+        "value": [
           {
-            "key": "refused",
-            "text": "Refused"
+            "key": "partiallysprayed_reason",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "",
+            "type": "native_radio",
+            "hint": "Main reason some ELIGIBLE rooms in this structure were not sprayed",
+            "label": "Main reason why some ELIGIBLE rooms in this structure were not sprayed?",
+            "text_size": "8sp",
+            "v_required": {
+              "value": true,
+              "err": "Please select reason"
+            },
+            "options": [
+              {
+                "key": "refused",
+                "text": "Refused"
+              },
+              {
+                "key": "locked",
+                "text": "Locked"
+              },
+              {
+                "key": "sick",
+                "text": "Sick"
+              },
+              {
+                "key": "foodStorage",
+                "text": "Food Storage"
+              },
+              {
+                "key": "dontWantToClear",
+                "text": "Didn't want to clear"
+              },
+              {
+                "key": "other",
+                "text": "Other"
+              }
+            ]
           },
           {
-            "key": "locked",
-            "text": "Locked"
-          },
-          {
-            "key": "sick",
-            "text": "Sick"
-          },
-          {
-            "key": "foodStorage",
-            "text": "Food Storage"
-          },
-          {
-            "key": "dontWantToClear",
-            "text": "Didn't want to clear"
-          },
-          {
-            "key": "other",
-            "text": "Other"
+            "key": "partially_sprayed_reason_other",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "",
+            "type": "edit_text",
+            "hint": "Specify other reason:",
+            "text_size": "8sp",
+            "v_required": {
+              "value": "true",
+              "err": "Required field"
+            },
+            "relevance": {
+              "step1:partiallysprayed_reason": {
+                "type": "string",
+                "ex": "equalTo(., \"other\")"
+              }
+            }
           }
         ],
         "relevance": {
