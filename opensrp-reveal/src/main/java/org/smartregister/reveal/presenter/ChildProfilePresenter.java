@@ -36,6 +36,11 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
     private ChildProfileContract.Model model;
 
     private TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
+    private RevealApplication revealApplication;
+
+    public ChildProfilePresenter() {
+        revealApplication = RevealApplication.getInstance();
+    }
 
     public ChildProfilePresenter(ChildProfileContract.View view) {
         this.viewWeakReference = new WeakReference<>(view);
@@ -294,6 +299,7 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
                     // save and clientM
                     .saveEvent()
                     .clientProcessForm();
+            revealApplication.setSynced(false);
 
             return null;
         };
@@ -341,6 +347,7 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
                     // save and client
                     .saveEvent()
                     .clientProcessForm();
+            revealApplication.setSynced(false);
 
             return null;
         };

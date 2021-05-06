@@ -56,6 +56,11 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
     private PlanDefinitionSearchRepository planDefinitionSearchRepository = RevealApplication.getInstance().getPlanDefinitionSearchRepository();
     private TaskUtils taskUtils = TaskUtils.getInstance();
     private TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
+    private RevealApplication revealApplication;
+
+    public ChildRegisterFragmentPresenter() {
+        revealApplication = RevealApplication.getInstance();
+    }
 
     @Override
     public void search(@Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText) {
@@ -198,6 +203,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
             @Override
             public void onResult(Void aVoid) {
                 ChildRegisterFragmentContract.View view = getView();
+                revealApplication.setSynced(false);
                 if (view != null) {
                     view.reloadFromSource();
                     view.setLoadingState(false);
@@ -266,6 +272,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
             @Override
             public void onResult(Void aVoid) {
                 ChildRegisterFragmentContract.View view = getView();
+                revealApplication.setSynced(false);
                 if (view != null) {
                     view.reloadFromSource();
                     view.setLoadingState(false);

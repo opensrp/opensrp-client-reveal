@@ -240,6 +240,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     public void reloadFromSource() {
         loadPresenter().search(filterAndSearch, searchTextView.getText().toString());
         loadPresenter().fetchReportStats();
+        drawerView.checkSynced();
     }
 
     @Override
