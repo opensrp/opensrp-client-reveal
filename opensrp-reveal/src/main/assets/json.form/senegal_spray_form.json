@@ -274,7 +274,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "spinner",
-        "hint": "What is the name of the village this structure is in?"
+        "hint": "What is the name of the village this structure is in?",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
       },
       {
         "key": "location_other",
