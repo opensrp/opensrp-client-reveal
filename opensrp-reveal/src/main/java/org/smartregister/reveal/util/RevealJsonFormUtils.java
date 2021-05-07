@@ -726,11 +726,11 @@ public class RevealJsonFormUtils {
         } catch (Exception e) {
             Timber.e(e, "Error find Sprayed Structures with compound head names ");
         }
-        JSONObject compoundStructureField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),JsonForm.COMPOUND_STRUCTURE);
+        JSONObject compoundStructureField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),COMPOUND_STRUCTURE);
         try {
             compoundStructureField.put(OPTIONS, options);
         } catch (JSONException e) {
-            Timber.e(e, "Error populating %s Options",JsonForm.COMPOUND_STRUCTURE);
+            Timber.e(e, "Error populating %s Options",COMPOUND_STRUCTURE);
         }
     }
 }
