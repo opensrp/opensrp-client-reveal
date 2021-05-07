@@ -30,7 +30,7 @@ actions:
 name: step1_partiallysprayed_reasons
 description: step1_partiallysprayed_reasons
 priority: 1
-condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) < Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)))"
+condition: "step1_eligibility.equals('eligible') && step1_structure_sprayed.equals('yes') && (Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) < Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)))"
 actions:
   - "isRelevant = true"
 ---
