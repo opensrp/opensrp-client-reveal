@@ -274,7 +274,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "spinner",
-        "hint": "What is the name of the village this structure is in?"
+        "hint": "What is the name of the village this structure is in?",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
       },
       {
         "key": "location_other",
@@ -593,15 +597,17 @@
       {
         "key": "partiallysprayed_reasons",
         "type": "repeating_group",
-        "reference_edit_text": "step1:rooms_not_sprayed",
         "reference_edit_text_hint": "Confirmed # rooms not sprayed",
+        "repeating_group_label": "Room Reason",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "is_mandatory": true,
-        "v_required": {
-          "value": true,
-          "err": "Please confirm number of rooms not sprayed"
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
         },
         "value": [
           {
@@ -610,11 +616,10 @@
             "openmrs_entity": "",
             "openmrs_entity_id": "",
             "type": "native_radio",
-            "hint": "Main reason some ELIGIBLE rooms in this structure were not sprayed",
             "label": "Main reason why some ELIGIBLE rooms in this structure were not sprayed?",
             "text_size": "8sp",
             "v_required": {
-              "value": true,
+              "value": "true",
               "err": "Please select reason"
             },
             "options": [
@@ -663,14 +668,7 @@
               }
             }
           }
-        ],
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "senegal-spray-relevance-rules.yml"
-            }
-          }
-        }
+        ]
       },
       {
         "key": "rooms_sprayed_hint",
