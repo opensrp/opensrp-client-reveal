@@ -190,7 +190,7 @@ public class RevealJsonFormUtils {
                                           Integer structureVersion) throws JSONException {
 
         JSONObject formJson = new JSONObject(formString);
-        formJson.put(ENTITY_ID, entityId);
+        formJson.put(ENTITY_ID, StringUtils.isBlank(entityId) ? JSONObject.NULL : entityId);
         JSONObject formData = new JSONObject();
         formData.put(Properties.TASK_IDENTIFIER, taskIdentifier);
         formData.put(Properties.TASK_BUSINESS_STATUS, taskBusinessStatus);
