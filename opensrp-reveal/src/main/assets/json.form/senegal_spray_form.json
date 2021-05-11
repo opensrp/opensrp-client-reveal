@@ -575,21 +575,12 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
+        "type": "hidden",
         "hint": "Number of rooms not sprayed",
-        "read_only": true,
         "calculation": {
           "rules-engine": {
             "ex-rules": {
               "rules-file": "senegal-spray-calculation.yml"
-            }
-          }
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
