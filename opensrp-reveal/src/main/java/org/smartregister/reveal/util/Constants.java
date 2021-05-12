@@ -563,6 +563,10 @@ public interface Constants {
 
         String COMPOUND_STRUCTURE = "compoundStructure";
 
+        String ROOMS_SPRAYED = "rooms_sprayed";
+
+        String ROOMS_ELIGIBLE = "rooms_eligible";
+
     }
 
     interface DateFormat {
