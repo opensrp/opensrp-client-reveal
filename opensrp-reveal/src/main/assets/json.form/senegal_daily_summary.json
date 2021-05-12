@@ -101,7 +101,7 @@
         }
       },
       {
-        "key": "team_leader",
+        "key": "teamLeader",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
