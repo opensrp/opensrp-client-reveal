@@ -291,7 +291,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "How many sachets were lost or damaged?",
+        "hint": "How many sachets/bottles were lost or damaged?",
         "text_size": "7sp",
         "is_mandatory": true,
         "v_required": {
