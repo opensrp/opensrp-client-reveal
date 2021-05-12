@@ -353,7 +353,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "A total of {bottles_accounted} sachets are unaccounted for.",
+        "text": "A total of {bottles_accounted} bottles / sachets are unaccounted for.",
         "text_color": "#CF0800",
         "toaster_type": "info",
         "text_size": "8sp",
