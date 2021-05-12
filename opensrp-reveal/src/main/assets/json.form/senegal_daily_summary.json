@@ -69,8 +69,25 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Name of location",
+        "type": "edit_text",
+        "edit_type": "name",
+        "hint": "Please write the name of the Zone/Location",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "spray_areas",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "multi_select_list",
+        "buttonText": "Select the SA(s) that this spray operator worked in today",
+        "dialogTitle": "Select the SA(s) that this spray operator worked in today",
+        "searchHint": "Type Spray Area Name",
+        "source": "true",
+        "repositoryClass":"org.smartregister.reveal.model.SprayAreaMultiSelectRepository",
         "v_required": {
           "value": "true",
           "err": "Required field"
