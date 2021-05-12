@@ -243,7 +243,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "How many EMPTY sachets were RETURNED by the SOP at the end of the day?",
+        "hint": "How many EMPTY bottles/sachets were RETURNED by the SOP at the end of the day?",
         "text_size": "7sp",
         "is_mandatory": true,
         "v_required": {
