@@ -408,7 +408,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Select a reason for the unaccounted sachets",
+        "label": "Select a reason for the unaccounted bottles/sachets",
         "text_size": "8sp",
         "options": [
           {
@@ -442,7 +442,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please write the reason for the unaccounted sachets",
+        "hint": "Please write the reason for the unaccounted bottles/sachets",
         "text_size": "8sp",
         "v_required": {
           "value": "true",
