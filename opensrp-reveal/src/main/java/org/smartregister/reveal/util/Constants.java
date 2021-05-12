@@ -563,6 +563,10 @@ public interface Constants {
         String LOCATION_ZONE = "location_zone";
 
 
+        String ROOMS_SPRAYED = "rooms_sprayed";
+
+        String ROOMS_ELIGIBLE = "rooms_eligible";
+
     }
 
     interface DateFormat {
