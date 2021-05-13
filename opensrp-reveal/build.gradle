@@ -22,7 +22,9 @@ allprojects {
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
         maven {
             def githubProperties = new Properties()
-            githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
+            if (rootProject.file("github.properties").exists()) {
+                githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
+            }
 
             name = "GitHubPackages"
             /*  Configure path to the library hosted on GitHub Package Registry
