@@ -33,3 +33,4 @@ jacoco.exec
 release/
 *google-services.json
 ~
+/github.properties
