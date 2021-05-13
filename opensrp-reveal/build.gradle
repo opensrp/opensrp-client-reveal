@@ -235,7 +235,7 @@ dependencies {
         exclude group: 'com.ibm.fhir', module:'fhir-model'
     }
 
-    testImplementation 'com.ibm.fhir:fhir-model:4.2.3'
+    testImplementation 'com.ibm.fhir:fhir-model:4.7.0'
     implementation('org.smartregister:opensrp-client-configurable-views:1.1.5-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
