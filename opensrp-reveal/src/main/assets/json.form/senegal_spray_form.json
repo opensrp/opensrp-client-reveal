@@ -353,6 +353,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Please enter the name of the head of the compound",
+        "edit_type": "name",
         "text_size": "8sp",
         "v_required": {
           "value": "true",
