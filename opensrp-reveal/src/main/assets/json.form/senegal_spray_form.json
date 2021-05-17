@@ -400,6 +400,11 @@
         "type": "edit_text",
         "hint": "Enter the name of the head of this structure",
         "text_size": "8sp",
+        "edit_type": "name",
+        "v_regex": {
+          "value": "[A-Za-z\\s\.\-]*",
+          "err": "Please enter a valid name"
+        },
         "v_required": {
           "value": "true",
           "err": "Required field"
