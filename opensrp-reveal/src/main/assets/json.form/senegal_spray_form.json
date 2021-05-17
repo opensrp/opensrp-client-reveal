@@ -353,10 +353,15 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Please enter the name of the head of the compound",
+        "edit_type": "name",
         "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "v_regex": {
+          "value": "[A-Za-z\\s\.\-]*",
+          "err": "Please enter a valid name"
         },
         "relevance": {
           "step1:compoundheadstructure": {

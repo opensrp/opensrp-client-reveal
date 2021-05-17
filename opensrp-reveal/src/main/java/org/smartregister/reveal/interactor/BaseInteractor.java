@@ -227,6 +227,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     JSONArray values  = new JSONArray();
                     values.put(value.get(KEY));
                     obs.put(VALUES,values);
+                    obs.put("fieldCode",COMPOUND_STRUCTURE);
                     break;
                 }
 
