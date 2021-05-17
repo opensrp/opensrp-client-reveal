@@ -630,7 +630,7 @@
             "openmrs_entity": "",
             "openmrs_entity_id": "",
             "type": "native_radio",
-            "label": "Main reason why some ELIGIBLE rooms in this structure were not sprayed?",
+            "label": "Reason why this eligible room was not sprayed",
             "text_size": "8sp",
             "v_required": {
               "value": "true",
