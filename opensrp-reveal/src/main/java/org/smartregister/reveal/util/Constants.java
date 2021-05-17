@@ -567,6 +567,9 @@ public interface Constants {
 
         String ROOMS_ELIGIBLE = "rooms_eligible";
 
+        String COLLECTION_DATE = "collection_date";
+
+
     }
 
     interface DateFormat {
