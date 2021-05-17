@@ -359,6 +359,10 @@
           "value": "true",
           "err": "Required field"
         },
+        "v_regex": {
+          "value": "[A-Za-z\\s\.\-]*",
+          "err": "Please enter a valid name"
+        },
         "relevance": {
           "step1:compoundheadstructure": {
             "type": "string",
