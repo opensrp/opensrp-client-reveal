@@ -226,6 +226,14 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Please type the reason",
+        "v_max_length": {
+          "value": "110",
+          "err": "Not more than 110 characters."
+        },
+        "v_regex": {
+          "value": "[A-Za-z\\s\.\-]*",
+          "err": "Please enter a valid reason, no numbers allowed"
+        },
         "text_size": "8sp",
         "v_required": {
           "value": "true",
