@@ -287,6 +287,11 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Specify other village:",
+        "edit_type": "name",
+        "v_regex": {
+          "value": "[A-Za-z\\s\.\-]*",
+          "err": "Please enter a valid name"
+        },
         "text_size": "8sp",
         "v_required": {
           "value": "true",
