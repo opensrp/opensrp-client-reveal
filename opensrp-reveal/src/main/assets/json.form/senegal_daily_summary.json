@@ -72,6 +72,10 @@
         "type": "edit_text",
         "edit_type": "name",
         "hint": "Please write the name of the Zone/Location",
+        "v_regex": {
+          "value": "[A-Za-z\\s\.\-]*",
+          "err": "Please enter a valid name"
+        },
         "v_required": {
           "value": "true",
           "err": "Required field"
