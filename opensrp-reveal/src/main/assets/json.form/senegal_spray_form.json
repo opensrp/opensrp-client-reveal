@@ -579,7 +579,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "Number of eligible rooms must be greater than or equal to 0"
+          "err": "Number of eligible rooms must be greater than or equal to 1"
         },
         "v_relative_max": {
           "value": "rooms_eligible",
