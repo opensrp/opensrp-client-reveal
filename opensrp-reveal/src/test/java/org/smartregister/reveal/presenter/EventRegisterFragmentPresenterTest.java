@@ -11,9 +11,12 @@ import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.contract.EventRegisterContract;
 import org.smartregister.reveal.interactor.EventRegisterFragmentInteractor;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.EventsRegister;
+import org.smartregister.reveal.util.Country;
 
 import java.util.Collections;
 import java.util.Set;
@@ -68,7 +71,10 @@ public class EventRegisterFragmentPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(presenter, "visibleColumns", visibleColumns);
         presenter.initializeQueries(mainCondition);
         verify(view).initializeAdapter(eq(visibleColumns));
-        String[] columns = ArrayUtils.addFirst(presenter.mainColumns(EventsRegister.TABLE_NAME), "ec_events.id as _id");
+        String[] baseColumns = ArrayUtils.addFirst(presenter.mainColumns(EventsRegister.TABLE_NAME), "ec_events.id as _id");
+        String[] columns = BuildConfig.BUILD_COUNTRY.equals(Country.KENYA) ?
+                ArrayUtils.add(baseColumns, EventsRegister.TABLE_NAME + "." + Constants.DatabaseKeys.DATA_COLLECTION_DATE)
+                : baseColumns;
         verify(view).initializeQueryParams(EventsRegister.TABLE_NAME, "SELECT COUNT(*) FROM ec_events WHERE " + mainCondition + " ", String.format("Select %s FROM %s WHERE %s ", StringUtils.join(columns, " , "), EventsRegister.TABLE_NAME, mainCondition));
         verify(view).countExecute();
         verify(view).filterandSortInInitializeQueries();
