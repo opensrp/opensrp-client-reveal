@@ -145,12 +145,6 @@ priority: 1
 condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && step1_new_sachet.equals('yes')"
 actions:
   - "isRelevant = true"
-
-
-
-
-
-
 ---
 name: step1_notsprayed_totalpop_toaster_error
 description: step1_notsprayed_totalpop_toaster_error
