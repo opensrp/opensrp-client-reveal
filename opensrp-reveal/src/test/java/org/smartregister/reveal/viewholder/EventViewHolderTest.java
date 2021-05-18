@@ -115,6 +115,7 @@ public class EventViewHolderTest extends BaseUnitTest {
         assertNotNull(registerViewHolder.sopTextView);
         assertNotNull(registerViewHolder.householdTextView);
         assertNotNull(registerViewHolder.statusTextView);
+        assertNotNull(registerViewHolder.dataCollectionDateTextView);
     }
 
     @Test
@@ -181,4 +182,12 @@ public class EventViewHolderTest extends BaseUnitTest {
         assertFalse(viewHolder.isFooterViewHolder(viewHolder.createViewHolder(null)));
     }
 
+    @Test
+    public void testGetViewShouldPopulateDateCollectionDateForCDDSupervision(){
+        smartRegisterClient.getColumnmaps().put(DatabaseKeys.DATA_COLLECTION_DATE,"12-03-2021");
+        smartRegisterClient.getColumnmaps().put(DatabaseKeys.EVENT_TYPE,EventType.CDD_SUPERVISOR_DAILY_SUMMARY);
+        registerViewHolder = viewHolder.createViewHolder(null);
+        viewHolder.getView(null,smartRegisterClient,registerViewHolder);
+        assertEquals("12-03-2021",registerViewHolder.dataCollectionDateTextView.getText());
+    }
 }

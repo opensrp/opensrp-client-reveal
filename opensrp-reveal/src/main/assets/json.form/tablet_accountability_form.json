@@ -65,24 +65,24 @@
         }
       },
       {
-        "key": "cdd_name",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Name of CDD",
-        "v_required": {
-          "value": "true",
-          "err": "This field is required."
-        }
-      },
-      {
         "key": "health_worker_supervisor",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "spinner",
         "hint": "Name of CDD Supervisor",
+        "v_required": {
+          "value": "true",
+          "err": "This field is required."
+        }
+      },
+      {
+        "key": "cdd_name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of CDD",
         "v_required": {
           "value": "true",
           "err": "This field is required."

@@ -14,8 +14,12 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+<<<<<<< HEAD
 import org.smartregister.domain.Location;
 import org.smartregister.repository.StructureRepository;
+=======
+import org.powermock.reflect.Whitebox;
+>>>>>>> b2fe526fc7296e64f0d05e563724905ffd2e5ead
 import org.smartregister.domain.Obs;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -291,6 +295,35 @@ public class UtilsTest {
 
         assertEquals("[[[[100.5244829,13.8576014],[100.5242194,13.8435594],[100.5151606,13.8435594],[100.5123746,13.8519458],[100.5244829,13.8576014]]]]",actualCoords.toString());
 
+    }
+
+    @Test
+    public void testGetSyncIntervalDefaultForThailand() throws Exception {
+        RevealApplication revealApplication = initRevealApplicationMock();
+
+        when(revealApplication.getServerConfigs()).thenReturn(new HashMap<>());
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        assertEquals(Utils.getSyncInterval(), 720);
+
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND_EN);
+        assertEquals(Utils.getSyncInterval(), 720);
+    }
+
+    @Test
+    public void testGetSyncIntervalDefaultForOthers() throws Exception {
+        RevealApplication revealApplication = initRevealApplicationMock();
+        when(revealApplication.getServerConfigs()).thenReturn(new HashMap<>());
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        assertEquals(Utils.getSyncInterval(), 480);
+    }
+
+    @Test
+    public void testGetSyncIntervalFromGlobalConfig() throws Exception {
+        RevealApplication revealApplication = initRevealApplicationMock();
+        Map<String, Object> globalConfigs= new HashMap<>();
+        globalConfigs.put(Constants.CONFIGURATION.SYNC_INTERVAL_IN_MINUTES, "80");
+        when(revealApplication.getServerConfigs()).thenReturn(globalConfigs);
+        assertEquals(Utils.getSyncInterval(), 80);
     }
 
     @Test

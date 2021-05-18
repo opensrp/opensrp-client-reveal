@@ -48,8 +48,8 @@ public class DownloadedOfflineMapViewHolder extends BaseOfflineMapViewHolder {
     }
 
     public void displayDownloading() {
-        tvMapStatusLabel.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.black));
-        displayStatus(R.string.downloading);
+        tvMapStatusLabel.setVisibility(View.GONE);
+        tvDownloadingLabel.setText(R.string.downloading);
     }
 
     private void displayStatus(@StringRes int resId) {

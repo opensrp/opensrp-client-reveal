@@ -1,10 +1,15 @@
 package org.smartregister.reveal.model;
 
+import com.vijay.jsonwizard.constants.JsonFormConstants;
+import com.vijay.jsonwizard.utils.FormUtils;
+
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.model.BaseFamilyRegisterModel;
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.JsonFormUtils;
@@ -20,11 +25,12 @@ import static org.smartregister.util.JsonFormUtils.VALUE;
  */
 public class FamilyRegisterModel extends BaseFamilyRegisterModel {
 
-    private String structureId;
+    private final String structureId;
     private final String taskId;
     private final String taskBusinessStatus;
     private final String taskStatus;
     private final String structureName;
+    private final FormUtils formUtils = new FormUtils();
 
 
     public FamilyRegisterModel(String structureId, String taskId, String taskBusinessStatus, String taskStatus, String structureName) {
@@ -56,7 +62,8 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
 
     @Override
     public JSONObject getFormAsJson(String formName, String entityId, String currentLocationId) throws Exception {
-        JSONObject form = super.getFormAsJson(formName, entityId, currentLocationId);
+        String formattedFormName = formName.replace(Constants.JsonForm.JSON_FORM_FOLDER, "").replace(JsonFormConstants.JSON_FILE_EXTENSION, "");
+        JSONObject form = formUtils.getFormJsonFromRepositoryOrAssets(RevealApplication.getInstance().getApplicationContext(), formattedFormName);
         JSONObject familyNameFieldJSONObject = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), FAMILY_NAME);
         if (familyNameFieldJSONObject != null) {
             familyNameFieldJSONObject.put(VALUE, this.structureName);

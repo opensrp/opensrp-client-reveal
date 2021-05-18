@@ -1,5 +1,7 @@
 package org.smartregister.reveal.model;
 
+import com.vijay.jsonwizard.constants.JsonFormConstants;
+
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.family.domain.FamilyEventClient;
@@ -7,9 +9,9 @@ import org.smartregister.family.model.BaseFamilyProfileModel;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.util.FormUtils;
 
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
@@ -24,6 +26,9 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
     private FamilyEventClient eventClient;
 
     private CommonPersonObject familyHeadPersonObject;
+
+    private com.vijay.jsonwizard.utils.FormUtils formUtils = new com.vijay.jsonwizard.utils.FormUtils();
+
 
     public FamilyProfileModel(String familyName) {
         super(familyName);
@@ -60,7 +65,9 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
         String planIdentifier = PreferencesUtil.getInstance().getCurrentPlanId();
         eventClient.getEvent().addDetails(Constants.Properties.PLAN_IDENTIFIER, planIdentifier);
         eventClient.getEvent().addDetails(Constants.Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
-        eventClient.getEvent().setLocationId(org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea()).getId());
+        String locationId = org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea()).getId();
+        eventClient.getClient().setLocationId(locationId);
+        eventClient.getEvent().setLocationId(locationId);
     }
 
     public void setStructureId(String structureId) {
@@ -70,8 +77,8 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
 
     @Override
     public JSONObject getFormAsJson(String formName, String entityId, String currentLocationId) throws Exception {
-
-        JSONObject form = FormUtils.getInstance(Utils.context().applicationContext()).getFormJson(formName);
+        String formattedFormName = formName.replace(Constants.JsonForm.JSON_FORM_FOLDER, "").replace(JsonFormConstants.JSON_FILE_EXTENSION, "");
+        JSONObject form = formUtils.getFormJsonFromRepositoryOrAssets(RevealApplication.getInstance().getApplicationContext(), formattedFormName);
         if (form == null) {
             return null;
         }

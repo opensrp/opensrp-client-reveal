@@ -1,8 +1,14 @@
 package org.smartregister.reveal.util;
 
+import com.vijay.jsonwizard.utils.FormUtils;
+
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
@@ -12,16 +18,21 @@ import org.smartregister.domain.Task;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.model.FamilyRegisterModel;
+import org.smartregister.util.JsonFormUtils;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.PLAN_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.FamilyConstants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 
 /**
@@ -32,12 +43,18 @@ public class FamilyRegisterModelTest extends BaseUnitTest {
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
 
+    @Mock
+    public FormUtils formUtils;
+
+    @Captor
+    private ArgumentCaptor<String> formNameCaptor;
+
     private FamilyRegisterModel familyRegisterModel;
 
     @Before
     public void setUp() {
         familyRegisterModel = new FamilyRegisterModel("struct1", "task1", COMPLETE,
-                Task.TaskStatus.READY.name(), "test house" );
+                Task.TaskStatus.READY.name(), "test house");
     }
 
     @Test
@@ -65,5 +82,22 @@ public class FamilyRegisterModelTest extends BaseUnitTest {
         assertEquals(Task.TaskStatus.READY.name(), actualEvent.getDetails().get(TASK_STATUS));
         assertEquals(expectedPlanId, actualEvent.getDetails().get(PLAN_IDENTIFIER));
 
+    }
+
+    @Test
+    public void testGetFormAsJson() throws Exception {
+        JSONObject formObject = new JSONObject(TestingUtils.familyRegJSON);
+        when(formUtils.getFormJsonFromRepositoryOrAssets(any(), any())).thenReturn(formObject);
+        Whitebox.setInternalState(familyRegisterModel, "formUtils", formUtils);
+        JSONObject resultJson = familyRegisterModel.getFormAsJson("json.form/family_register.json", "131", "131");
+
+        verify(formUtils).getFormJsonFromRepositoryOrAssets(any(), formNameCaptor.capture());
+        assertEquals("family_register", formNameCaptor.getValue());
+        assertEquals("test house", JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(resultJson), FAMILY_NAME).getString("value"));
+    }
+
+    @Test
+    public void testGetStructure() {
+        assertEquals("struct1", familyRegisterModel.getStructureId());
     }
 }

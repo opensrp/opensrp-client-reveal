@@ -85,6 +85,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_XXX;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
+import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
 import static org.smartregister.reveal.util.Constants.Intervention.CDD_SUPERVISION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
@@ -320,7 +321,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private void onFeatureSelectedByNormalClick(Feature feature) {
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
-            if (isFocusInvestigation()) {
+            if (isFocusInvestigation() && getPropertyValue(feature, TYPE).equals(Constants.StructureType.RESIDENTIAL)) {
                 listTaskInteractor.fetchFamilyDetails(selectedFeature.id()); // check if family registered in other plan
             } else {
                 listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));

@@ -2,6 +2,8 @@ package org.smartregister.reveal.util;
 
 import android.content.Context;
 
+import androidx.core.util.Pair;
+
 import com.mapbox.geojson.Feature;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
@@ -30,16 +32,25 @@ import org.smartregister.util.JsonFormUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -83,6 +94,61 @@ import static org.smartregister.reveal.util.Utils.getPropertyValue;
  * Created by Vincent Karuri on 25/04/2019
  */
 public class RevealJsonFormUtilsTest extends BaseUnitTest {
+    private final static String BASIC_EMPTY_FORM = (
+            "{\"count\": \"1\", \"step1\": {\"fields\": []}}");
+    private final static String BASIC_CHECKBOX_FORM = (
+            "{\"count\": \"1\",\"form_version\": \"0.0.1\",\"step1\": {\"fields\": [" +
+                    "      {" +
+                    "        \"key\": \"testMicrosResult\"," +
+                    "        \"openmrs_entity_parent\": \"\"," +
+                    "        \"openmrs_entity\": \"\"," +
+                    "        \"openmrs_entity_id\": \"\"," +
+                    "        \"type\": \"check_box\"," +
+                    "        \"label\": \"Microscopy Result\"," +
+                    "        \"combine_checkbox_option_values\": \"true\"," +
+                    "        \"options\": [" +
+                    "          {" +
+                    "            \"key\": \"Negative\"," +
+                    "            \"text\": \"Negative\"" +
+                    "          }," +
+                    "          {" +
+                    "            \"key\": \"PositiveFalciparum\"," +
+                    "            \"text\": \"Positive - Falciparum\"" +
+                    "          }," +
+                    "          {" +
+                    "            \"key\": \"PositiveVivax\"," +
+                    "            \"text\": \"Positive - Vivax\"" +
+                    "          }," +
+                    "          {" +
+                    "            \"key\": \"PositiveMalariae\"," +
+                    "            \"text\": \"Positive - Malariae\"" +
+                    "          }," +
+                    "          {" +
+                    "            \"key\": \"PositiveOvalae\"," +
+                    "            \"text\": \"Positive - Ovalae\"" +
+                    "          }," +
+                    "          {" +
+                    "            \"key\": \"PositiveKnowelsi\"," +
+                    "            \"text\": \"Positive - Knowelsi\"" +
+                    "          }," +
+                    "          {" +
+                    "            \"key\": \"Fg\"," +
+                    "            \"text\": \"Fg\"" +
+                    "          }" +
+                    "        ]," +
+                    "        \"exclusive\": [" +
+                    "          \"Negative\"" +
+                    "        ]," +
+                    "        \"relevance\": {" +
+                    "          \"step1:testType\": {" +
+                    "            \"type\": \"string\"," +
+                    "            \"ex\": \"equalTo(., \\\"Microscopy\\\")\"" +
+                    "          }" +
+                    "        }" +
+                    "      }" +
+                    "    ]" +
+                    "  }" +
+                    "}");
 
     private RevealJsonFormUtils revealJsonFormUtils;
 
@@ -102,7 +168,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGetFormNameShouldReturnThailandLarvalDippingFormForLarvalDippingEvent() {
+    public void testGetFormNameCountryZambiaShouldReturnLarvalDippingFormForLarvalDippingEvent() {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         assertEquals(JsonForm.LARVAL_DIPPING_FORM, revealJsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, null));
@@ -111,11 +177,14 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
 
     @Test
     public void testGetFormNameShouldReturnThailandLarvalDippingFormForLarvalDippingIntervention() {
-        assertEquals(revealJsonFormUtils.getFormName(null, LARVAL_DIPPING), JsonForm.LARVAL_DIPPING_FORM);
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND_EN);
+        assertEquals(JsonForm.THAILAND_EN_LARVAL_DIPPING_FORM, revealJsonFormUtils.getFormName(null, LARVAL_DIPPING));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
-    public void testGetFormNameShouldReturnThailandMosquitoCollectionFormForLarvalDippingEvent() {
+    public void testGetFormNameCountryZambiaShouldReturnMosquitoCollectionFormForLarvalDippingEvent() {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         assertEquals(JsonForm.MOSQUITO_COLLECTION_FORM, revealJsonFormUtils.getFormName(MOSQUITO_COLLECTION_EVENT, null));
@@ -123,20 +192,31 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGetFormNameShouldReturnThailandMosquitoCollectionFormForLarvalDippingIntervention() {
-        assertEquals(revealJsonFormUtils.getFormName(null, MOSQUITO_COLLECTION), JsonForm.MOSQUITO_COLLECTION_FORM);
+    public void testGetFormNameShouldReturnMosquitoCollectionFormForMosquitoCollectionIntervention() {
+        List<Country> excludedCountries = Arrays.asList(Country.ZAMBIA, Country.NAMIBIA, Country.BOTSWANA, Country.KENYA, Country.SENEGAL);
+        Collections.shuffle(excludedCountries);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, excludedCountries.get(0));
+        assertEquals(JsonForm.MOSQUITO_COLLECTION_FORM, revealJsonFormUtils.getFormName(null, MOSQUITO_COLLECTION));
     }
 
     @Test
     public void testGetFormNameShouldReturnPAOTForm() {
-        assertEquals(JsonForm.PAOT_FORM, revealJsonFormUtils.getFormName(null, Constants.EventType.PAOT_EVENT));
+        List<Country> countryList = Arrays.asList(Country.values());
+        List<Country> excludedCountries = new ArrayList<>(countryList.size());
+        for (Country country : countryList) {
+            if (country.equals(Country.THAILAND) || country.equals(Country.REFAPP)) continue;
+            excludedCountries.add(country);
+        }
+        Collections.shuffle(excludedCountries);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, excludedCountries.get(0));
+        assertEquals(JsonForm.PAOT_FORM, revealJsonFormUtils.getFormName(null, PAOT));
     }
 
     @Test
-    public void testGetFormNameShouldReturnThailandPAOTForm() {
+    public void testGetFormNameCountryThailandShouldReturnThailandPAOTForm() {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
-        assertEquals(JsonForm.THAILAND_PAOT_FORM, revealJsonFormUtils.getFormName(null, Constants.EventType.PAOT_EVENT));
+        assertEquals(JsonForm.THAILAND_PAOT_FORM, revealJsonFormUtils.getFormName(null, PAOT));
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
@@ -162,7 +242,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testgetFormJSON() throws JSONException  {
+    public void testGetFormJSON() throws JSONException {
         StructureTaskDetails task = new StructureTaskDetails("d12202fb-d347-4d7a-8859-fb370304c34c");
         task.setBusinessStatus("Not Visited");
         task.setTaskEntity("c72310fd-9c60-403e-a6f8-e38bf5d6359b");
@@ -547,7 +627,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGetSEnegalSprayForm() {
+    public void testGetSenegalSprayForm() {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
         String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, null);
@@ -639,7 +719,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGetTabletAccountalbilityForm() {
+    public void testGetTabletAccountabilityForm() {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.SENEGAL);
         String actualFormName = revealJsonFormUtils.getFormName(TABLET_ACCOUNTABILITY_EVENT, null);
@@ -655,12 +735,13 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         assertEquals(JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM,actualFormName);
     }
 
-   @Test
+    @Test
     public void testGetCDDSupervisionFormFromTaskCode(){
         Whitebox.setInternalState(BuildConfig.class,BuildConfig.BUILD_COUNTRY,Country.KENYA);
         String actualFormName = revealJsonFormUtils.getFormName(null,CDD_SUPERVISION);
         assertEquals(JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM,actualFormName);
     }
+
     @Test
     public void testPopulateCDDSupervisionFormWithServerOptions() throws JSONException {
         JSONObject formJSON = new JSONObject(AssetHandler.readFileFromAssetsFolder(JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM, context));
@@ -672,6 +753,121 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         verify(revealJsonFormUtils).populateServerOptions(serverConfigs,Constants.CONFIGURATION.HEALTH_WORKER_SUPERVISORS,fieldsMap.get(JsonForm.HEALTH_WORKER_SUPERVISOR),"emuhaya");
         verify(revealJsonFormUtils).populateServerOptions(serverConfigs,Constants.CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS,fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),"emuhaya");
 
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private Map<String, Object> getCheckBoxSampleResultValuesFrom(JSONObject jsonObject, int index) throws JSONException {
+        JSONArray firstField = jsonObject.getJSONObject(JsonFormConstants.STEP1)
+                .getJSONArray(JsonFormConstants.FIELDS)
+                .getJSONObject(index)
+                .getJSONArray(JsonFormConstants.OPTIONS_FIELD_NAME);
+        Map<String, Object> keyAndTextMap = new HashMap<>(firstField.length());
+        for (int i = 0; i < firstField.length(); i++) {
+            JSONObject option = firstField.getJSONObject(i);
+            keyAndTextMap.put(option.getString(JsonFormConstants.KEY), option.getString(TEXT));
+        }
+        return keyAndTextMap;
+    }
+
+    @Test
+    public void testPopulateFormFieldCheckBox() throws JSONException {
+        final int sampledIndex = 0;
+        JSONObject formJSON = new JSONObject(BASIC_CHECKBOX_FORM);
+        org.smartregister.domain.Event basicEvent = mock(org.smartregister.domain.Event.class);
+        Obs obs1 = spy(Obs.class);
+        Map<String, Object> choices = getCheckBoxSampleResultValuesFrom(formJSON, sampledIndex);
+        obs1.setValues(new ArrayList<>(choices.values()));
+        when(basicEvent.findObs(isNull(), eq(false), any())).thenReturn(obs1);
+
+        revealJsonFormUtils.populateForm(basicEvent, formJSON);
+        verify(basicEvent).findObs(isNull(), eq(false), any());
+        JSONObject sampledField = JsonFormUtils.fields(formJSON).getJSONObject(sampledIndex);
+        assertTrue(sampledField.has(JsonFormConstants.VALUE));
+        assertThat(sampledField.getJSONArray(JsonFormConstants.VALUE).toString(),
+                is(equalTo(new JSONArray(choices.keySet()).toString())));
+    }
+
+    private org.smartregister.domain.Event eventFor(Obs obs){
+        org.smartregister.domain.Event event = mock(org.smartregister.domain.Event.class);
+        when(event.findObs(isNull(), eq(false), any())).thenReturn(obs);
+        return event;
+    }
+
+    @Test
+    public void testPopulateFormNonEditableKenyaSetsFieldReadOnly() throws JSONException {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.KENYA);
+        Obs obs = new Obs();
+        obs.setValues(new ArrayList<>());
+        org.smartregister.domain.Event event = eventFor(obs);
+
+        final String testKey = "field_testing_key";
+        JSONObject fieldJsonObject = mock(JSONObject.class);
+        when(fieldJsonObject.getString(eq(JsonFormConstants.KEY))).thenReturn(testKey);
+
+        JSONObject formJSON = new JSONObject(BASIC_EMPTY_FORM);
+        JsonFormUtils.fields(formJSON)
+                .put(fieldJsonObject);
+
+        Set<String> nonEditables = spy(new HashSet<>());
+        when(nonEditables.contains(eq(testKey))).thenReturn(true);
+        Whitebox.setInternalState(revealJsonFormUtils, "nonEditablefields", nonEditables);
+
+        revealJsonFormUtils.populateForm(event, formJSON);
+        verify(fieldJsonObject).put(eq(JsonFormConstants.READ_ONLY), eq(true));
+    }
+
+    @Test
+    public void testPopulateFormNonEditableNamibia() throws JSONException {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
+        Obs obs = new Obs();
+        obs.setValue(JsonForm.YES);
+        org.smartregister.domain.Event event = eventFor(obs);
+
+        JSONObject fieldJsonObject = mock(JSONObject.class);
+        final String testKey = "namibia_test_key";
+        final String typeTest = "type_test";
+        when(fieldJsonObject.getString(eq(JsonFormConstants.KEY))).thenReturn(testKey);
+        when(fieldJsonObject.optString(eq(JsonFormConstants.TYPE))).thenReturn(typeTest);
+
+        JSONObject formJson = new JSONObject(BASIC_EMPTY_FORM);
+        JsonFormUtils.fields(formJson)
+                .put(fieldJsonObject);
+        Set<String> nonEditableFields = spy(new HashSet<>());
+        when(nonEditableFields.contains(eq(testKey))).thenReturn(true);
+        Whitebox.setInternalState(revealJsonFormUtils, "nonEditablefields", nonEditableFields);
+
+        revealJsonFormUtils.populateForm(event, formJson);
+        verify(fieldJsonObject).put(eq(JsonFormConstants.VALUE), any());
+        verify(fieldJsonObject).put(eq(JsonFormConstants.READ_ONLY), eq(true));
+        verify(fieldJsonObject).remove(eq(JsonFormConstants.RELEVANCE));
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private JSONArray exampleSettingsConfigJSONArray(final String filterKey) throws JSONException {
+        JSONArray options = new JSONArray();
+        options.put(new JSONObject());
+        JSONObject keyJSONObjectOptions = new JSONObject();
+        keyJSONObjectOptions.put(filterKey, options);
+        JSONArray testServerConfigJSONArray = mock(JSONArray.class);
+        when(testServerConfigJSONArray.optJSONObject(eq(0))).thenReturn(keyJSONObjectOptions);
+        return testServerConfigJSONArray;
+    }
+
+    @Test
+    public void testPopulateServerOptions() throws JSONException {
+        final String fakeSettingsConfigKey = "dummy_key";
+        final String fakeFilterKey = "dummy_filter_key";
+        Map<String, Object> testsServerConfig = spy(new HashMap<>());
+        JSONArray testServerConfigJSONArray = exampleSettingsConfigJSONArray(fakeFilterKey);
+        testsServerConfig.put(fakeSettingsConfigKey, testServerConfigJSONArray);
+
+        JSONObject testField = mock(JSONObject.class);
+        when(testsServerConfig.get(eq(fakeSettingsConfigKey))).thenReturn(testServerConfigJSONArray);
+
+        Pair<JSONArray, JSONArray> keyValuePaired= revealJsonFormUtils.populateServerOptions(testsServerConfig, fakeSettingsConfigKey, testField, fakeFilterKey);
+        assertNotNull(keyValuePaired);
+        verify(testField).put(eq(JsonFormConstants.KEYS), any(JSONArray.class));
+        verify(testField).put(eq(JsonFormConstants.VALUES), any(JSONArray.class));
     }
 }
 

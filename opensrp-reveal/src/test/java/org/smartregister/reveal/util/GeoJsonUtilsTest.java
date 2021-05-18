@@ -818,6 +818,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
                 .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
 
         Location structure = gson.fromJson(locationJSon, Location.class);
+        structure.setType(Constants.StructureType.RESIDENTIAL);
         LocationProperty locationProperty = new LocationProperty();
         locationProperty.setUid("uniquiid");
         locationProperty.setVersion(1);
