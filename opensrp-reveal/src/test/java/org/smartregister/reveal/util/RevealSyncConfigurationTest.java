@@ -9,7 +9,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.EnvironmentManager;
 import org.smartregister.SyncFilter;
+import org.smartregister.domain.Environment;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BaseUnitTest;
@@ -23,6 +25,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
@@ -37,13 +41,19 @@ public class RevealSyncConfigurationTest extends BaseUnitTest {
     private LocationRepository locationRepository;
 
     @Mock
+    private EnvironmentManager environmentManager;
+
+    @Mock
+    private Environment mockEnvironment;
+
+    @Mock
     private AllSharedPreferences allSharedPreferences;
 
     private RevealSyncConfiguration syncConfiguration;
 
     @Before
     public void setUp() {
-        syncConfiguration = new RevealSyncConfiguration(locationRepository, allSharedPreferences);
+        syncConfiguration = new RevealSyncConfiguration(environmentManager, locationRepository, allSharedPreferences);
     }
 
     @Test
@@ -74,6 +84,13 @@ public class RevealSyncConfigurationTest extends BaseUnitTest {
         when(locationRepository.getAllLocationIds()).thenReturn(Collections.singletonList("122132"));
         assertEquals("122132", syncConfiguration.getSyncFilterValue());
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testGetSettingsSyncFilterValue() {
+        when(allSharedPreferences.fetchRegisteredANM()).thenReturn("122132");
+        when(allSharedPreferences.fetchDefaultTeamId(anyString())).thenReturn("122132");
+        assertEquals("122132", syncConfiguration.getSettingsSyncFilterValue());
     }
 
     @Test
@@ -143,11 +160,15 @@ public class RevealSyncConfigurationTest extends BaseUnitTest {
 
     @Test
     public void testGetOauthClientId() {
+        when(environmentManager.getEnvironment(any())).thenReturn(mockEnvironment);
+        when(mockEnvironment.getId()).thenReturn(BuildConfig.OAUTH_CLIENT_ID);
         assertEquals(BuildConfig.OAUTH_CLIENT_ID, syncConfiguration.getOauthClientId());
     }
 
     @Test
     public void testGetOauthClientSecret() {
+        when(environmentManager.getEnvironment(any())).thenReturn(mockEnvironment);
+        when(mockEnvironment.getSecret()).thenReturn(BuildConfig.OAUTH_CLIENT_SECRET);
         assertEquals(BuildConfig.OAUTH_CLIENT_SECRET, syncConfiguration.getOauthClientSecret());
     }
 

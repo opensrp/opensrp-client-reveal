@@ -1,13 +1,18 @@
 package org.smartregister.reveal.view;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,11 +26,15 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseDrawerContract;
+import org.smartregister.reveal.util.Country;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -53,6 +62,9 @@ public class DrawerMenuViewTest extends BaseUnitTest {
 
     @Mock
     private TextView operationalAreaTextView;
+
+    @Mock
+    private TextView p2pSyncTextView;
 
     @Mock
     private BaseDrawerContract.Presenter presenter;
@@ -109,6 +121,43 @@ public class DrawerMenuViewTest extends BaseUnitTest {
         drawerMenuView.setOperationalArea("Akros_1");
         verify(operationalAreaTextView).setText(stringArgumentCaptor.capture());
         assertEquals("Akros_1", stringArgumentCaptor.getValue());
+    }
+
+
+    @Test
+    public void testInitializeDrawerLayoutForZambiaAndSenegal() throws PackageManager.NameNotFoundException {
+        drawerMenuView = spy(drawerMenuView);
+        doReturn(mockActivity).when(activity).getActivity();
+        NavigationView navView = mock(NavigationView.class);
+        View headView = mock(View.class);
+        DrawerLayout drawerLayout = mock(DrawerLayout.class);
+        PackageManager packageManager = mock(PackageManager.class);
+        when(packageManager.getPackageInfo(anyString(), anyInt())).thenReturn(mock(PackageInfo.class));
+        when(mockActivity.findViewById(R.id.drawer_layout)).thenReturn(drawerLayout);
+        when(mockActivity.findViewById(R.id.nav_view)).thenReturn(navView);
+        when(mockActivity.getPackageManager()).thenReturn(packageManager);
+        when(mockActivity.getPackageName()).thenReturn("");
+        when(navView.getHeaderView(0)).thenReturn(headView);
+        when(headView.getViewTreeObserver()).thenReturn(mock(ViewTreeObserver.class));
+        when(headView.findViewById(R.id.btn_navMenu_p2pSyncBtn)).thenReturn(p2pSyncTextView);
+        when(headView.findViewById(R.id.btn_navMenu_offline_maps)).thenReturn(planTextView);
+        when(headView.findViewById(R.id.sync_button)).thenReturn(planTextView);
+        when(headView.findViewById(R.id.logout_button)).thenReturn(planTextView);
+        when(headView.findViewById(R.id.plan_selector)).thenReturn(planTextView);
+        when(headView.findViewById(R.id.operational_area_selector)).thenReturn(planTextView);
+        when(headView.findViewById(R.id.application_updated)).thenReturn(planTextView);
+        when(headView.findViewById(R.id.application_version)).thenReturn(planTextView);
+        when(headView.findViewById(R.id.btn_navMenu_summaryForms)).thenReturn(planTextView);
+        when(headView.findViewById(R.id.operator_label)).thenReturn(planTextView);
+        when(headView.findViewById(R.id.facility_label)).thenReturn(planTextView);
+        when(headView.findViewById(R.id.district_label)).thenReturn(planTextView);
+        when(headView.findViewById(R.id.btn_navMenu_filled_forms)).thenReturn(planTextView);
+
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        drawerMenuView.initializeDrawerLayout();
+        verify(p2pSyncTextView).setVisibility(View.VISIBLE);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test

@@ -17,6 +17,15 @@ These instructions will get you a copy of the project up and running on your loc
 ### Steps to set up
 [OpenSRP android client app build](https://smartregister.atlassian.net/wiki/spaces/Documentation/pages/6619236/OpenSRP+App+Build)
 
+### Setting up local.properties
+Add at least one environment in your properties file using the below format
+
+> oauth.client.{env}.id="{client_id_value}"
+>
+> oauth.client.{env}.secret="{client_secret_value}"
+>
+> oauth.client.{env}.url="{environment_url}"
+
 ### Running the tests
 
 [Android client unit tests](https://smartregister.atlassian.net/wiki/spaces/Documentation/pages/65570428/OpenSRP+Client)

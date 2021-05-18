@@ -7,6 +7,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
+import org.smartregister.EnvironmentManager;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.family.FamilyLibrary;
 import org.smartregister.receiver.ValidateAssignmentReceiver;
@@ -31,7 +32,7 @@ public class TestRevealApplication extends RevealApplication {
         mInstance = this;
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
-        CoreLibrary.init(context, new RevealSyncConfiguration());
+        CoreLibrary.init(context, new RevealSyncConfiguration(new EnvironmentManager(BuildConfig.ENV_ARRAY)));
         ConfigurableViewsLibrary.init(context);
 
         FamilyLibrary.init(context, getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);

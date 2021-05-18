@@ -71,7 +71,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 34
-        versionName "5.3.26"
+        versionName "5.4.0"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -122,13 +122,31 @@ android {
                 project.logger.error("oauth.client.secret variable is not set in your local.properties")
             }
 
-
+            if (properties != null) {
+                def envsArray = "[ "
+                properties.toSorted().findAll {
+                    return it.key.toString().contains("oauth.client") && it.key.toString().tokenize(".").size() > 3
+                }.groupBy {
+                    return it.key.toString().contains("secret")
+                }[true].each {
+                    def env = it.key.toString().tokenize(".")[2]
+                    envsArray += """${getJavaMap([env   : "$env",
+                                                  'client.id'    : properties["oauth.client." + env + ".id"],
+                                                  'client.secret' : properties["oauth.client." + env + ".secret"],
+                                                  url: properties["oauth.client." + env + ".url"]
+                    ])},"""
+                }
+                envsArray = envsArray.substring(0, envsArray.length() - 1)
+                envsArray += "]"
+                buildConfigField "String", "ENV_ARRAY", "\"${envsArray}\""
+            }
         } else {
             println("local.properties does not exist")
             buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
             buildConfigField "String", "DG_CONNECT_ID", "\"sample_key\""
             buildConfigField "String", "OAUTH_CLIENT_ID", "\"sample_client_id\""
             buildConfigField "String", "OAUTH_CLIENT_SECRET", "\"sample_client_secret\""
+            buildConfigField "String", "ENV_ARRAY", '"[]"'
         }
     }
     dexOptions {
@@ -201,6 +219,13 @@ android {
 
 }
 
+private static String getJavaMap(apiUrlMap) {
+    def hashMap = "{ "
+    apiUrlMap.each { k, v -> hashMap += "\\\"${k}\\\":" + "\\\"${v.toString().replace("\"", '')}\\\"" + "," }
+    hashMap = hashMap.substring(0, hashMap.length() - 1)
+    return hashMap + "}"
+}
+
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
     maxHeapSize = "4g"
@@ -224,6 +249,7 @@ dependencies {
     }
 
     implementation('org.smartregister:opensrp-client-core:4.3.3-SNAPSHOT@aar') {
+
         transitive = true
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'
