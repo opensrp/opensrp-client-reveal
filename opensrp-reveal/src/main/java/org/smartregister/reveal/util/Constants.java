@@ -570,6 +570,9 @@ public interface Constants {
         String COLLECTION_DATE = "collection_date";
 
 
+        String LOCATION_OTHER = "location_other";
+
+
     }
 
     interface DateFormat {

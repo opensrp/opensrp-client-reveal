@@ -4,7 +4,6 @@ import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.util.Country;
-import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
 import org.smartregister.reveal.widget.RevealEditTextFactory;
 import org.smartregister.reveal.widget.RevealLabelFactory;
