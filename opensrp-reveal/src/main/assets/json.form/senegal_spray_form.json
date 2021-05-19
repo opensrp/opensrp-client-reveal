@@ -1184,7 +1184,7 @@
           }
         ],
         "v_required": {
-          "value": "false",
+          "value": "true",
           "err": "Required field"
         },
         "relevance": {
@@ -1249,7 +1249,7 @@
         "hint": "Specify other reason:",
         "text_size": "8sp",
         "v_required": {
-          "value": "false",
+          "value": "true",
           "err": "Required field"
         },
         "relevance": {
