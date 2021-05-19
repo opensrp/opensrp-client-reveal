@@ -15,6 +15,8 @@ import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
@@ -30,6 +32,7 @@ import org.smartregister.reveal.model.StructureDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
+import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.GeoJSON;
@@ -38,8 +41,10 @@ import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.IndicatorUtils;
 import org.smartregister.reveal.util.InteractorUtils;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,7 +114,7 @@ public class ListTaskInteractor extends BaseInteractor {
     private StructureRepository structureRepository;
     private TaskRepository taskRepository;
     private RevealApplication revealApplication;
-
+    private List<TaskDetails> taskDetails;
     public ListTaskInteractor(ListTaskContract.Presenter presenter) {
         super(presenter);
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(SPRAYED_STRUCTURES);
@@ -117,6 +122,7 @@ public class ListTaskInteractor extends BaseInteractor {
         taskRepository = RevealApplication.getInstance().getTaskRepository();
         interactorUtils = new InteractorUtils(taskRepository, eventClientRepository, clientProcessor);
         revealApplication = RevealApplication.getInstance();
+        taskDetails = new ArrayList<>();
     }
 
     public void fetchInterventionDetails(String interventionType, String featureId, boolean isForForm) {
@@ -399,6 +405,12 @@ public class ListTaskInteractor extends BaseInteractor {
         } catch (Exception e) {
             Timber.e(e);
         }
+        LocationRepository locationRepository = RevealApplication.getInstance().getLocationRepository();
+        Location currentOperationalArea = locationRepository.getLocationByName(PreferencesUtil.getInstance().getCurrentOperationalArea());
+        if(currentOperationalArea != null) {
+            Map<String, Set<Task>> tasks = taskRepository.getTasksByPlanAndGroup(PreferencesUtil.getInstance().getCurrentPlanId(), currentOperationalArea.getId());
+            this.setTaskDetails(IndicatorUtils.processTaskDetails(tasks));
+        }
 
         appExecutors.mainThread().execute(new Runnable() {
             @Override
@@ -539,6 +551,14 @@ public class ListTaskInteractor extends BaseInteractor {
                 ((ListTaskPresenter) presenterCallBack).onCDDTaskCompleteStatusEdited(businessStatus);
             }
         });
+    }
+
+    public List<TaskDetails> getTaskDetails() {
+        return taskDetails;
+    }
+
+    public void setTaskDetails(List<TaskDetails> taskDetails) {
+        this.taskDetails = taskDetails;
     }
 
 }
