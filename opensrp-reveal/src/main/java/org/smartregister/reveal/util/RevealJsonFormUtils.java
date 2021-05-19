@@ -66,6 +66,9 @@ import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.JsonForm.COMPOUND_STRUCTURE;
 import static org.smartregister.reveal.util.Constants.JsonForm.JSON_FORM_FOLDER;
+import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_OTHER;
+import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_ZONE;
+import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_OPERATOR_CODE;
 import static org.smartregister.reveal.util.Constants.JsonForm.YES;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MACEPA_PROVINCES;
@@ -481,19 +484,26 @@ public class RevealJsonFormUtils {
                         field.put(JsonFormConstants.READ_ONLY,true);
                     }
 
-                    if(Country.SENEGAL.equals(BuildConfig.BUILD_COUNTRY) && key.equals(COMPOUND_STRUCTURE)){
-                        populateCompoundStructureOptions(formJSON,Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea()));
-                        JSONArray options = field.optJSONArray(OPTIONS);
-                        for(int j=0;j < options.length();j++){
-                            JSONObject option = (JSONObject) options.get(j);
-                            JSONArray value = new JSONArray();
-                            value.put(option);
-                            if(option.get(KEY).equals(obs.getValue())){
-                                field.put(VALUE,value);
-                                break;
+                    if(Country.SENEGAL.equals(BuildConfig.BUILD_COUNTRY)){
+                        if(key.equals(COMPOUND_STRUCTURE)){
+                            populateCompoundStructureOptions(formJSON,Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea()));
+                            JSONArray options = field.optJSONArray(OPTIONS);
+                            for(int j=0;j < options.length();j++){
+                                JSONObject option = (JSONObject) options.get(j);
+                                JSONArray value = new JSONArray();
+                                value.put(option);
+                                if(option.get(KEY).equals(obs.getValue())){
+                                    field.put(VALUE,value);
+                                    break;
+                                }
                             }
                         }
+
+                        if(key.equals(LOCATION_ZONE) || key.equals(SPRAY_OPERATOR_CODE) || key.equals(LOCATION_OTHER)){
+                            field.put(JsonFormConstants.READ_ONLY,true);
+                        }
                     }
+
                 }
                 if (JsonFormConstants.REPEATING_GROUP.equals(field.optString(TYPE))) {
                     generateRepeatingGroupFields(field, event.getObs(), formJSON);
