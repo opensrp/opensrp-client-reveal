@@ -770,8 +770,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 break;
             }
         }
-
         listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
+        new IndicatorsCalculatorTask(listTaskView.getActivity(),listTaskInteractor.getTaskDetails()).execute();
     }
 
     @Override
