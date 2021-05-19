@@ -297,7 +297,7 @@
         "hint": "Specify other village:",
         "edit_type": "name",
         "v_regex": {
-          "value": "[A-Za-z\\s\.\-]*",
+          "value": "^(?![0-9\\s_-]*$)[a-zA-Z0-9\\s_-]+$",
           "err": "Please enter a valid name"
         },
         "text_size": "8sp",
