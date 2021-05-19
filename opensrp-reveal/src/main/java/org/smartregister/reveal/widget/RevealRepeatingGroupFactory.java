@@ -16,11 +16,17 @@ public class RevealRepeatingGroupFactory extends RepeatingGroupFactory {
 
     public static final String CONFIRMED_ROOMS_NOT_SPRAYED = "Confirmed # rooms not sprayed";
     public static final String CONFIRMED_ROOMS_NOT_SPRAYED_ERROR = "Please correct number of rooms not sprayed ";
+    public static final String PLEASE_ENTER_A_VALUE_ERROR_MESSAGE = "Please enter a value";
 
     @Override
     protected void addOnDoneAction(TextView textView) {
         if(Country.SENEGAL.equals(BuildConfig.BUILD_COUNTRY)){
-            Integer reasonsCount = Integer.parseInt(textView.getText().toString());
+            String inputText = textView.getText().toString();
+            if(inputText.isEmpty()){
+                textView.setError(PLEASE_ENTER_A_VALUE_ERROR_MESSAGE);
+                return;
+            }
+            Integer reasonsCount = Integer.parseInt(inputText);
             if(CONFIRMED_ROOMS_NOT_SPRAYED.equals(textView.getHint().toString())){
                 RevealJsonFormActivity activity = (RevealJsonFormActivity) textView.getContext();
                 TextView roomSprayedTextView = (TextView) activity.getFormDataView(  STEP1 + ":" + ROOMS_SPRAYED);
