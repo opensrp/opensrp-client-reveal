@@ -2,7 +2,7 @@
 name: step1_eligibility
 description: step1_eligibility
 priority: 1
-condition: "!(step1_nonresidential_type.equals('noStructure') || step1_nonresidential_type.equals('notHabitable'))"
+condition: "!(step1_nonresidential_type.equals('noStructure') || step1_nonresidential_type.equals('notHabitable')|| step1_nonresidential_type.equals('other') || step1_nonresidential_type.equals('clinic') || step1_nonresidential_type.equals('hospital') || step1_nonresidential_type.equals('office') || step1_nonresidential_type.equals('shop') || step1_nonresidential_type.equals('lodge') || step1_nonresidential_type.equals('school') ||  step1_nonresidential_type.equals('foodStorage') || step1_nonresidential_type.equals('animalShelter') || step1_nonresidential_type.equals('kitchen'))"
 actions:
   - "isRelevant = true"
 ---
