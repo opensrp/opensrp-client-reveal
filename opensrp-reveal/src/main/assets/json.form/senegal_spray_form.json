@@ -734,7 +734,7 @@
         },
         "v_relative_min": {
           "value": "sprayed_totalmale",
-          "err": "Male population must be greater than 0"
+          "err": "You can not enter 0 Male population when head of household gender is Male"
         },
         "relevance": {
           "rules-engine": {
@@ -776,7 +776,7 @@
         },
         "v_relative_min": {
           "value": "sprayed_totalfemale",
-          "err": "Female population must be greater than 0"
+          "err": "You can not enter 0 Female population when head of household gender is Female"
         },
         "relevance": {
           "rules-engine": {
@@ -1112,10 +1112,6 @@
         "v_max": {
           "value": "20",
           "err": "Male population must be less than 20"
-        },
-        "v_relative_min": {
-          "value": "sprayed_totalmale",
-          "err": "Male population must be greater than 0"
         },
         "relevance": {
           "rules-engine": {
