@@ -734,7 +734,7 @@
         },
         "v_relative_min": {
           "value": "sprayed_totalmale",
-          "err": "Male population must be greater than 0"
+          "err": "You can not enter 0 Male population when head of household gender is Male"
         },
         "relevance": {
           "rules-engine": {
@@ -1115,7 +1115,7 @@
         },
         "v_relative_min": {
           "value": "sprayed_totalmale",
-          "err": "You can not enter 0 Male population when head of household gender is Male"
+          "err": "Male population must be greater than or equal to 0"
         },
         "relevance": {
           "rules-engine": {
