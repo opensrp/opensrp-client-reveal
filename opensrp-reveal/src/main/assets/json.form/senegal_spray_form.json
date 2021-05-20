@@ -399,9 +399,10 @@
           "err": "Required field"
         },
         "relevance": {
-          "step1:compoundheadstructure": {
-            "type": "string",
-            "ex": "equalTo(., \"No\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
           }
         }
       },

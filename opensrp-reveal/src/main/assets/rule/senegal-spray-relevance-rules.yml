@@ -2,7 +2,7 @@
 name: step1_eligibility
 description: step1_eligibility
 priority: 1
-condition: "!(step1_nonresidential_type.equals('noStructure') || step1_nonresidential_type.equals('notHabitable'))"
+condition: "!(step1_nonresidential_type.equals('noStructure') || step1_nonresidential_type.equals('notHabitable')|| step1_nonresidential_type.equals('other') || step1_nonresidential_type.equals('clinic') || step1_nonresidential_type.equals('hospital') || step1_nonresidential_type.equals('office') || step1_nonresidential_type.equals('shop') || step1_nonresidential_type.equals('lodge') || step1_nonresidential_type.equals('school') ||  step1_nonresidential_type.equals('foodStorage') || step1_nonresidential_type.equals('animalShelter') || step1_nonresidential_type.equals('kitchen'))"
 actions:
   - "isRelevant = true"
 ---
@@ -338,5 +338,12 @@ name: step1_rooms_not_sprayed
 description: step1_rooms_not_sprayed
 priority: 1
 condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) < Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_compoundStructure
+description: step1_compoundStructure
+priority: 1
+condition: "step1_eligibility.equals('eligible') && step1_compoundheadstructure.equals('No')"
 actions:
   - "isRelevant = true"
