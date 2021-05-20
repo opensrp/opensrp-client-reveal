@@ -17,6 +17,8 @@ public class RevealRepeatingGroupFactory extends RepeatingGroupFactory {
     public static final String CONFIRMED_ROOMS_NOT_SPRAYED = "Confirmed # rooms not sprayed";
     public static final String CONFIRMED_ROOMS_NOT_SPRAYED_ERROR = "Please correct number of rooms not sprayed ";
     public static final String PLEASE_ENTER_A_VALUE_ERROR_MESSAGE = "Please enter a value";
+    public static final String NUMBER_OF_INSECTICIDE_SACHETS_MIXED = "Number of insecticide sachets mixed";
+    public static final String NUMBER_OF_INSECTICIDE_SACHETS_VALIDATION_ERR_MESSAGE = "number of insecticide sachets must be greater than 0";
 
     @Override
     protected void addOnDoneAction(TextView textView) {
@@ -26,18 +28,24 @@ public class RevealRepeatingGroupFactory extends RepeatingGroupFactory {
                 textView.setError(PLEASE_ENTER_A_VALUE_ERROR_MESSAGE);
                 return;
             }
-            Integer reasonsCount = Integer.parseInt(inputText);
+            RevealJsonFormActivity activity = (RevealJsonFormActivity) textView.getContext();
+            Integer reasonsOrSachetCount = Integer.parseInt(inputText);
             if(CONFIRMED_ROOMS_NOT_SPRAYED.equals(textView.getHint().toString())){
-                RevealJsonFormActivity activity = (RevealJsonFormActivity) textView.getContext();
                 TextView roomSprayedTextView = (TextView) activity.getFormDataView(  STEP1 + ":" + ROOMS_SPRAYED);
                 Integer roomsSprayedCount = Integer.parseInt(roomSprayedTextView.getText().toString());
                 TextView roomsEligibleTextView = (TextView) activity.getFormDataView(STEP1 + ":" + ROOMS_ELIGIBLE);
                 Integer roomsEligible = Integer.parseInt(roomsEligibleTextView.getText().toString());
-                if (reasonsCount != (roomsEligible - roomsSprayedCount)){
+                if (reasonsOrSachetCount != (roomsEligible - roomsSprayedCount)){
                     textView.setError(CONFIRMED_ROOMS_NOT_SPRAYED_ERROR);
                     return;
                 }
+            } else if(NUMBER_OF_INSECTICIDE_SACHETS_MIXED.equals(textView.getHint().toString())) {
+                if(reasonsOrSachetCount  < 1) {
+                    textView.setError(NUMBER_OF_INSECTICIDE_SACHETS_VALIDATION_ERR_MESSAGE);
+                    return;
+                }
             }
+
         }
         super.addOnDoneAction(textView);
     }
