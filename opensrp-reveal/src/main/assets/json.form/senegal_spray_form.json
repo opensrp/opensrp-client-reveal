@@ -231,7 +231,7 @@
           "err": "Not more than 110 characters."
         },
         "v_regex": {
-          "value": "[A-Za-z\\s\.\-]*",
+          "value": "[A-Za-z\\s]*",
           "err": "Please enter a valid reason, no numbers allowed"
         },
         "text_size": "8sp",
@@ -373,7 +373,7 @@
           "err": "Required field"
         },
         "v_regex": {
-          "value": "[A-Za-z\\s\.\-]*",
+          "value": "[A-Za-z\\s]*",
           "err": "Please enter a valid name"
         },
         "relevance": {
@@ -416,7 +416,7 @@
         "text_size": "8sp",
         "edit_type": "name",
         "v_regex": {
-          "value": "[A-Za-z\\s\.\-]*",
+          "value": "[A-Za-z\\s]*",
           "err": "Please enter a valid name"
         },
         "v_required": {
@@ -1204,10 +1204,6 @@
         "edit_type": "number",
         "hint": "Male Population in rooms not sprayed",
         "text_size": "8sp",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
         "v_numeric": {
           "value": "true",
           "err": "Male population must be a number"
@@ -1233,6 +1229,27 @@
         }
       },
       {
+        "key": "notsprayed_male_toaster_error",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "Male Population in rooms not sprayed is required",
+        "text_color": "#CF0800",
+        "toaster_type": "problem",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "notsprayed_females",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1241,10 +1258,6 @@
         "edit_type": "number",
         "hint": "Female Population in rooms not sprayed",
         "text_size": "8sp",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
         "v_numeric": {
           "value": "true",
           "err": "Female population must be a number"
@@ -1270,6 +1283,27 @@
         }
       },
       {
+        "key": "notsprayed_female_toaster_error",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "Female Population in rooms not sprayed is required",
+        "text_color": "#CF0800",
+        "toaster_type": "problem",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "notsprayed_totalpop",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1284,25 +1318,7 @@
           }
         }
       },
-      {
-        "key": "notsprayed_totalpop_toaster_error",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "toaster_notes",
-        "text": "You can not enter a population of 0 for a not sprayed structure",
-        "text_color": "#CF0800",
-        "toaster_type": "problem",
-        "text_size": "8sp",
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "senegal-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
+       {
         "key": "notsprayed_childrenU5",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1311,10 +1327,6 @@
         "edit_type": "number",
         "hint": "Children <5 years in rooms not sprayed",
         "text_size": "8sp",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
         "v_numeric": {
           "value": "true",
           "err": "Children <5 years must be a number"
@@ -1326,6 +1338,27 @@
         "v_min": {
           "value": "0",
           "err": "Children <5 years must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "notsprayed_children_toaster_error",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "Female Population in rooms not sprayed is required",
+        "text_color": "#CF0800",
+        "toaster_type": "problem",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true"
         },
         "relevance": {
           "rules-engine": {
@@ -1365,10 +1398,6 @@
         "edit_type": "number",
         "text_size": "8sp",
         "hint": "Pregnant Women in rooms not sprayed",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
         "v_numeric": {
           "value": "true",
           "err": "Pregnant Women must be a number"
@@ -1394,6 +1423,27 @@
         }
       },
       {
+        "key": "notsprayed_pregwomen_toaster_error",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "Female Population in rooms not sprayed is required",
+        "text_color": "#CF0800",
+        "toaster_type": "problem",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "new_sachet",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1401,6 +1451,10 @@
         "type": "native_radio",
         "label": "Was a new insecticide sachet mixed at this structure?",
         "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
         "options": [
           {
             "key": "yes",
