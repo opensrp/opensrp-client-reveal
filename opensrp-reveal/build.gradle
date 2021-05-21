@@ -74,7 +74,7 @@ android {
         applicationId "org.smartregister.reveal"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 32
+        versionCode 34
         versionName "6.0.0-RC3"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
