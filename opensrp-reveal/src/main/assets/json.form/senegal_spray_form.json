@@ -658,6 +658,10 @@
           "value": "1",
           "err": "Number of eligible rooms must be greater than or equal to 1"
         },
+        "v_max": {
+          "value": "99",
+          "err": "Cannot be greater than 99"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -840,8 +844,8 @@
           "err": "Male population must be greater than or equal to 0"
         },
         "v_max": {
-          "value": "20",
-          "err": "Male population must be less than 20"
+          "value": "99",
+          "err": "Male population must be less than 99"
         },
         "v_relative_min": {
           "value": "sprayed_totalmale",
@@ -882,8 +886,8 @@
           "err": "Female population must be greater than or equal to 0"
         },
         "v_max": {
-          "value": "20",
-          "err": "Female population must be less than 20"
+          "value": "99",
+          "err": "Female population must be less than 99"
         },
         "v_relative_min": {
           "value": "sprayed_totalfemale",
@@ -1217,8 +1221,8 @@
           "err": "Male population must be greater than or equal to 0"
         },
         "v_max": {
-          "value": "20",
-          "err": "Male population must be less than 20"
+          "value": "99",
+          "err": "Male population must be less than 99"
         },
         "relevance": {
           "rules-engine": {
@@ -1271,8 +1275,8 @@
           "err": "Female population must be greater than or equal to 0"
         },
         "v_max": {
-          "value": "20",
-          "err": "Female population must be less than 20"
+          "value": "99",
+          "err": "Female population must be less than 99"
         },
         "relevance": {
           "rules-engine": {
@@ -1532,6 +1536,10 @@
         "v_min": {
           "value": "0",
           "err": "Must be greater than or equal to 0"
+        },
+        "v_max": {
+          "value": "99",
+          "err": "Cannot be greater than 99"
         },
         "relevance": {
           "rules-engine": {
