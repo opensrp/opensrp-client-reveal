@@ -523,6 +523,116 @@
         }
       },
       {
+        "key": "notsprayed_reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why was this structure not sprayed?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "sick",
+            "text": "Sick"
+          },
+          {
+            "key": "locked",
+            "text": "Locked"
+          },
+          {
+            "key": "funeral",
+            "text": "Funeral"
+          },
+          {
+            "key": "refused",
+            "text": "Refused"
+          },
+          {
+            "key": "noOneHome",
+            "text": "No one home"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:structure_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"no\")"
+          }
+        }
+      },
+      {
+        "key": "refused_reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why did they refuse IRS?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "notSafe",
+            "text": "Not safe"
+          },
+          {
+            "key": "fearOfChemical",
+            "text": "Fear of chemical"
+          },
+          {
+            "key": "notWorthInconvinience",
+            "text": "Not worth the inconvenience"
+          },
+          {
+            "key": "makesBugsAppear",
+            "text": "Makes bugs appear"
+          },
+          {
+            "key": "religiousObjection",
+            "text": "Religious objection"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "other_refused_reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Specify other reason:",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:refused_reason": {
+            "type": "string",
+            "ex": "equalTo(., \"other\")"
+          }
+        }
+      },
+      {
         "key": "rooms_eligible",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1347,116 +1457,6 @@
             }
           }
         ]
-      },
-      {
-        "key": "notsprayed_reason",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Why was this structure not sprayed?",
-        "text_size": "8sp",
-        "options": [
-          {
-            "key": "sick",
-            "text": "Sick"
-          },
-          {
-            "key": "locked",
-            "text": "Locked"
-          },
-          {
-            "key": "funeral",
-            "text": "Funeral"
-          },
-          {
-            "key": "refused",
-            "text": "Refused"
-          },
-          {
-            "key": "noOneHome",
-            "text": "No one home"
-          },
-          {
-            "key": "other",
-            "text": "Other"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
-        "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"no\")"
-          }
-        }
-      },
-      {
-        "key": "refused_reason",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Why did they refuse IRS?",
-        "text_size": "8sp",
-        "options": [
-          {
-            "key": "notSafe",
-            "text": "Not safe"
-          },
-          {
-            "key": "fearOfChemical",
-            "text": "Fear of chemical"
-          },
-          {
-            "key": "notWorthInconvinience",
-            "text": "Not worth the inconvenience"
-          },
-          {
-            "key": "makesBugsAppear",
-            "text": "Makes bugs appear"
-          },
-          {
-            "key": "religiousObjection",
-            "text": "Religious objection"
-          },
-          {
-            "key": "other",
-            "text": "Other"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "senegal-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "other_refused_reason",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Specify other reason:",
-        "text_size": "8sp",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
-        "relevance": {
-          "step1:refused_reason": {
-            "type": "string",
-            "ex": "equalTo(., \"other\")"
-          }
-        }
       },
       {
         "key": "notsprayedrooms_eligible",
