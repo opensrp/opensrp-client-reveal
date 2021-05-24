@@ -2,6 +2,7 @@ package org.smartregister.reveal.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -104,7 +105,7 @@ public class RevealBarcodeFactory extends BarcodeFactory {
                     }
                     referralReasons  =  referralReasonsObs.getValue().toString();
                     if(referralReasons.startsWith(OTHER)){
-                        otherReason = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("otherReason")).findFirst().get().toString();
+                        otherReason = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("otherReason")).findFirst().get().getValue().toString();
                     }
                     referredHF = referredHFObs.getValue().toString();
                     break;
@@ -117,7 +118,7 @@ public class RevealBarcodeFactory extends BarcodeFactory {
         MaterialEditText lastNameTextField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + SURNAME_OF_CHILD);
         RadioGroup radioGroup = (RadioGroup) activity.getFormDataView(STEP1 + ":" + SEX);
         List<RadioButton> radioButtons = Utils.getRadioButtons(radioGroup);
-        MaterialEditText referralDateField = (MaterialEditText) activity.getFormDataView("step1" + ":" + "dateOfReferral");
+        MaterialEditText referralDateField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + "dateOfReferral");
         MaterialEditText healthFacilityField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + "health_facility");
         MaterialEditText otherReferralReasonField  = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + "otherRefferalReason");
         MaterialSpinner referralReasonSpinner = (MaterialSpinner) activity.getFormDataView(STEP1 + ":" + "referralReason");
@@ -126,7 +127,7 @@ public class RevealBarcodeFactory extends BarcodeFactory {
         for(int i=0;i < OPTION_COUNT ;i++){
             String option = referralReasonSpinner.getItemAtPosition(i).toString();
             if(option.equals(referralReasons)){
-                referralReasonSpinner.setSelection(i);
+                referralReasonSpinner.setSelection(i + 1);
                 referralReasonSpinner.setEnabled(false);
                 if(option.startsWith(OTHER)){
                     otherReferralReasonField.setText(otherReason);

@@ -329,7 +329,7 @@
         "relevance": {
           "step1:referralReason": {
             "type": "string",
-            "ex": "equalTo(., \"Other - specify\")"
+            "ex": "equalTo(., \"Other Reason - specify\")"
           }
         }
       },
