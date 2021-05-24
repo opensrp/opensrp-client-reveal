@@ -225,6 +225,13 @@
         }
       },
       {
+        "key": "approx_age",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden"
+      },
+      {
         "key": "dateOfReferral",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -294,7 +301,8 @@
           "Severe allergy",
           "Adverse reaction/side effect of SPAQ today",
           "Adverse reaction/side effect of SPAQ previous cycle",
-          "Other - specify"
+          "Child vomited twice",
+          "Other Reason - specify"
         ],
         "keys": [
           "Severe sickness",
@@ -302,7 +310,8 @@
           "Severe allergy",
           "Adverse reaction/side effect of SPAQ today",
           "Adverse reaction/side effect of SPAQ previous cycle",
-          "Other - specify"
+          "Child vomited twice",
+          "Other Reason - specify"
         ]
       },
       {
@@ -343,7 +352,7 @@
         }
       },
       {
-        "key": "health_facility",
+        "key": "health_facility_visited",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "",

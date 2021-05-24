@@ -8,10 +8,12 @@ import android.widget.RadioGroup;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
+import com.vijay.jsonwizard.customviews.MaterialSpinner;
 import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.utils.Utils;
 import com.vijay.jsonwizard.widgets.BarcodeFactory;
 
+import org.joda.time.DateTime;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Event;
@@ -33,6 +35,7 @@ import timber.log.Timber;
 
 import static android.app.Activity.RESULT_OK;
 import static org.smartregister.family.util.Utils.metadata;
+import static org.smartregister.util.JsonFormUtils.STEP1;
 
 public class RevealBarcodeFactory extends BarcodeFactory {
 
@@ -43,6 +46,7 @@ public class RevealBarcodeFactory extends BarcodeFactory {
     public static final String GENDER = "gender";
     public static final String REFERRAL_QR_CODE = "referralQRCode";
     public static final String REFERRAL_QR_CODE_SEARCH = "Referral QR Code Search";
+    public static final String OTHER = "Other";
 
     @Override
     protected void launchBarcodeScanner(Activity activity, MaterialEditText editText, String barcodeType) {
@@ -72,37 +76,92 @@ public class RevealBarcodeFactory extends BarcodeFactory {
     }
     private void searchForChildAndUpdateForm(String qrCode, Context context){
         String childID = null;
+        DateTime referralDate = null;
+        String referredHF = null;
+        String referralReasons = null;
+        String otherReason = null;
         EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
         List<EventClient> eventClients =  eventClientRepository.fetchEventClientsByEventTypes(Arrays.asList(Constants.EventType.MDA_DISPENSE,Constants.EventType.MDA_ADHERENCE));
         List<Event> referralEvents = eventClients.stream()
                                                  .map(eventClient -> eventClient.getEvent())
-                                                 .filter(event -> event.getObs().stream().filter(obs -> obs.getFieldCode().equals(REFERRAL_QR_CODE)).findFirst().isPresent()).collect(Collectors.toList());
+                                                 .filter(event -> (event.getObs().stream().filter(obs -> obs.getFieldCode().equals(REFERRAL_QR_CODE)).findFirst().isPresent() && event.getDateVoided() == null)).collect(Collectors.toList());
         for (Event referral : referralEvents) {
             Optional<Obs> optional = referral.getObs().stream().filter(obs -> obs.getFieldCode().equals(REFERRAL_QR_CODE)).findFirst();
             if (optional.isPresent()) {
                 Obs storedQRCodeObs = optional.get();
                 if (qrCode.equals(storedQRCodeObs.getValue().toString())) {
                     childID = referral.getBaseEntityId();
+                    referralDate = referral.getEventDate();
+                    Obs referralReasonsObs;
+                    Obs referredHFObs;
+                    if(referral.getEventType().equals(Constants.EventType.MDA_ADHERENCE)){
+                        referredHFObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("child_referred_hf ")).findFirst().get();
+                        referralReasonsObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("referralReason")).findFirst().get();
+                    } else {
+                        referredHFObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("referredHf")).findFirst().get();
+                        referralReasonsObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("referralReasons")).findFirst().get();
+                    }
+                    referralReasons  =  referralReasonsObs.getValue().toString();
+                    if(referralReasons.startsWith(OTHER)){
+                        otherReason = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("otherReason")).findFirst().get().toString();
+                    }
+                    referredHF = referredHFObs.getValue().toString();
                     break;
                 }
             }
         }
 
         RevealJsonFormActivity activity = (RevealJsonFormActivity) context;
-        MaterialEditText firstNameTextField = (MaterialEditText) activity.getFormDataView(JsonFormConstants.STEP1 + ":" + CHILD_FIRST_NAME);
-        MaterialEditText lastNameTextField = (MaterialEditText) activity.getFormDataView(JsonFormConstants.STEP1 + ":" + SURNAME_OF_CHILD);
-        RadioGroup radioGroup = (RadioGroup) activity.getFormDataView(JsonFormConstants.STEP1 + ":" + SEX);
+        MaterialEditText firstNameTextField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + CHILD_FIRST_NAME);
+        MaterialEditText lastNameTextField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + SURNAME_OF_CHILD);
+        RadioGroup radioGroup = (RadioGroup) activity.getFormDataView(STEP1 + ":" + SEX);
         List<RadioButton> radioButtons = Utils.getRadioButtons(radioGroup);
+        MaterialEditText referralDateField = (MaterialEditText) activity.getFormDataView("step1" + ":" + "dateOfReferral");
+        MaterialEditText healthFacilityField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + "health_facility");
+        MaterialEditText otherRefferalReasonField  = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + "otherRefferalReason");
+        MaterialSpinner referralReasonSpinner = (MaterialSpinner) activity.getFormDataView(STEP1 + ":" + "referralReason");
+
+
+        Integer optionsCount =  5;
+        for(int i=0;i < optionsCount ;i++){
+            String option = referralReasonSpinner.getItemAtPosition(i).toString();
+            if(option.equals(referralReasons)){
+                referralReasonSpinner.setSelection(i);
+                referralReasonSpinner.setEnabled(false);
+                if(option.startsWith(OTHER)){
+                    otherRefferalReasonField.setText(otherReason);
+                    otherRefferalReasonField.setEnabled(false);
+                }
+                break;
+            }
+        }
+
+
+        RadioGroup birthDateUnknownRadiogroup = (RadioGroup) activity.getFormDataView(STEP1 + ":" + "birthdate_unknown");
+        List<RadioButton> birthDateUnknowRadioButtons = Utils.getRadioButtons(birthDateUnknownRadiogroup);
+        birthDateUnknowRadioButtons.stream().forEach(radioButton -> {
+            radioButton.setEnabled(false);
+            if("Yes".equals(radioButton.getText().toString()))
+                radioButton.setChecked(true);
+
+        });
+     MaterialEditText birthDateField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + "dob");
+
+
 
 
         if(childID != null){
-            
+            referralDateField.setText(referralDate.toString());
+            referralDateField.setEnabled(false);
+            healthFacilityField.setText(referredHF);
+            healthFacilityField.setEnabled(false);
             CommonRepository commonRepository  = RevealApplication.getInstance().getContext().commonrepository(metadata().familyMemberRegister.tableName);
             CommonPersonObject child = commonRepository.findByBaseEntityId(childID);
             Map<String,String> childDetails = child.getColumnmaps();
             String firstName = childDetails.get(FamilyConstants.FormKeys.FIRST_NAME);
             String lastName = childDetails.get(LAST_NAME);
             String gender = childDetails.get(GENDER);
+            String dob = childDetails.get("dob");
 
             firstNameTextField.setText(firstName);
             firstNameTextField.setEnabled(false);
@@ -113,15 +172,27 @@ public class RevealBarcodeFactory extends BarcodeFactory {
                 if(gender.equalsIgnoreCase(radioButton.getText().toString()))
                    radioButton.setChecked(true);
             });
-
+            birthDateField.setText(dob);
+            birthDateField.setEnabled(false);
         }else {
-            
+            referralDateField.setText("");
+            referralDateField.setEnabled(true);
+            healthFacilityField.setText("");
+            healthFacilityField.setEnabled(true);
+            birthDateField.setText("");
+            birthDateField.setEnabled(true);
             firstNameTextField.setEnabled(true);
             firstNameTextField.setText("");
             lastNameTextField.setEnabled(true);
             lastNameTextField.setText("");
+            otherRefferalReasonField.setText("");
+            otherRefferalReasonField.setEnabled(true);
             radioButtons.stream().forEach(radioButton -> {
                 radioButton.setChecked(false);
+                radioButton.setEnabled(true);
+            });
+            birthDateUnknowRadioButtons.stream().forEach(radioButton -> {
+                radioButton.setEnabled(true);
                 radioButton.setEnabled(true);
             });
         }
