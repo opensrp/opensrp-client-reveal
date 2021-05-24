@@ -129,10 +129,6 @@ public class RevealBarcodeFactory extends BarcodeFactory {
             if(option.equals(referralReasons)){
                 referralReasonSpinner.setSelection(i + 1);
                 referralReasonSpinner.setEnabled(false);
-                if(option.startsWith(OTHER)){
-                    otherReferralReasonField.setText(otherReason);
-                    otherReferralReasonField.setEnabled(false);
-                }
                 break;
             }
         }
@@ -175,6 +171,10 @@ public class RevealBarcodeFactory extends BarcodeFactory {
             });
             birthDateField.setText(dob);
             birthDateField.setEnabled(false);
+            if(referralReasons.startsWith(OTHER)){
+                otherReferralReasonField.setText(otherReason);
+                otherReferralReasonField.setEnabled(false);
+            }
         }else {
             referralDateField.setText("");
             referralDateField.setEnabled(true);
