@@ -48,6 +48,17 @@ public class RevealBarcodeFactory extends BarcodeFactory {
     public static final String REFERRAL_QR_CODE_SEARCH = "Referral QR Code Search";
     public static final String OTHER = "Other";
     public static final Integer OPTION_COUNT = 7;
+    public static final String CHILD_REFERRED_HF = "child_referred_hf";
+    public static final String REFERRAL_REASON = "referralReason";
+    public static final String REFERRED_HF = "referredHf";
+    public static final String REFERRAL_REASONS = "referralReasons";
+    public static final String OTHER_REASON = "otherReason";
+    public static final String DATE_OF_REFERRAL = "dateOfReferral";
+    public static final String HEALTH_FACILITY = "health_facility";
+    public static final String OTHER_REFFERAL_REASON = "otherRefferalReason";
+    public static final String REFERRAL_REASON1 = "referralReason";
+    public static final String BIRTHDATE_UNKNOWN = "birthdate_unknown";
+    public static final String DOB = "dob";
 
     @Override
     protected void launchBarcodeScanner(Activity activity, MaterialEditText editText, String barcodeType) {
@@ -96,15 +107,15 @@ public class RevealBarcodeFactory extends BarcodeFactory {
                     Obs referralReasonsObs;
                     Obs referredHFObs;
                     if(referral.getEventType().equals(Constants.EventType.MDA_ADHERENCE)){
-                        referredHFObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("child_referred_hf")).findFirst().get();
-                        referralReasonsObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("referralReason")).findFirst().get();
+                        referredHFObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals(CHILD_REFERRED_HF)).findFirst().get();
+                        referralReasonsObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals(REFERRAL_REASON)).findFirst().get();
                     } else {
-                        referredHFObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("referredHf")).findFirst().get();
-                        referralReasonsObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("referralReasons")).findFirst().get();
+                        referredHFObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals(REFERRED_HF)).findFirst().get();
+                        referralReasonsObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals(REFERRAL_REASONS)).findFirst().get();
                     }
                     referralReasons  =  referralReasonsObs.getValue().toString();
                     if(referralReasons.startsWith(OTHER)){
-                        otherReason = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("otherReason")).findFirst().get().getValue().toString();
+                        otherReason = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals(OTHER_REASON)).findFirst().get().getValue().toString();
                     }
                     referredHF = referredHFObs.getValue().toString();
                     break;
@@ -117,10 +128,10 @@ public class RevealBarcodeFactory extends BarcodeFactory {
         MaterialEditText lastNameTextField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + SURNAME_OF_CHILD);
         RadioGroup radioGroup = (RadioGroup) activity.getFormDataView(STEP1 + ":" + SEX);
         List<RadioButton> radioButtons = Utils.getRadioButtons(radioGroup);
-        MaterialEditText referralDateField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + "dateOfReferral");
-        MaterialEditText healthFacilityField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + "health_facility");
-        MaterialEditText otherReferralReasonField  = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + "otherRefferalReason");
-        MaterialSpinner referralReasonSpinner = (MaterialSpinner) activity.getFormDataView(STEP1 + ":" + "referralReason");
+        MaterialEditText referralDateField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + DATE_OF_REFERRAL);
+        MaterialEditText healthFacilityField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + HEALTH_FACILITY);
+        MaterialEditText otherReferralReasonField  = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + OTHER_REFFERAL_REASON);
+        MaterialSpinner referralReasonSpinner = (MaterialSpinner) activity.getFormDataView(STEP1 + ":" + REFERRAL_REASON1);
 
 
         for(int i=0;i < OPTION_COUNT ;i++){
@@ -133,7 +144,7 @@ public class RevealBarcodeFactory extends BarcodeFactory {
         }
 
 
-        RadioGroup birthDateUnknownRadioGroup = (RadioGroup) activity.getFormDataView(STEP1 + ":" + "birthdate_unknown");
+        RadioGroup birthDateUnknownRadioGroup = (RadioGroup) activity.getFormDataView(STEP1 + ":" + BIRTHDATE_UNKNOWN);
         List<RadioButton> birthDateUnknownRadioButtons = Utils.getRadioButtons(birthDateUnknownRadioGroup);
         birthDateUnknownRadioButtons.stream().forEach(radioButton -> {
             radioButton.setEnabled(false);
@@ -141,7 +152,7 @@ public class RevealBarcodeFactory extends BarcodeFactory {
                 radioButton.setChecked(true);
 
         });
-     MaterialEditText birthDateField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + "dob");
+     MaterialEditText birthDateField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + DOB);
 
 
 
@@ -157,7 +168,7 @@ public class RevealBarcodeFactory extends BarcodeFactory {
             String firstName = childDetails.get(FamilyConstants.FormKeys.FIRST_NAME);
             String lastName = childDetails.get(LAST_NAME);
             String gender = childDetails.get(GENDER);
-            String dob = childDetails.get("dob");
+            String dob = childDetails.get(DOB);
 
             firstNameTextField.setText(firstName);
             firstNameTextField.setEnabled(false);
