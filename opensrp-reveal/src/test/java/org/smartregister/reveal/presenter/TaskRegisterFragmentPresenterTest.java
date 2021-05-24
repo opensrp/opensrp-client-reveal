@@ -461,6 +461,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     public void testOnLocationValidatedStartsFamilyForm() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
         taskDetails.setTaskCode(Intervention.REGISTER_FAMILY);
+        taskDetails.setTaskStatus(Task.TaskStatus.READY.name());
         presenter.setTaskDetails(taskDetails);
         presenter.onLocationValidated();
         verify(view).registerFamily(taskDetails);
