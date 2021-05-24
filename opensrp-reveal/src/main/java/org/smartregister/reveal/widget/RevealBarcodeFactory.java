@@ -47,6 +47,7 @@ public class RevealBarcodeFactory extends BarcodeFactory {
     public static final String REFERRAL_QR_CODE = "referralQRCode";
     public static final String REFERRAL_QR_CODE_SEARCH = "Referral QR Code Search";
     public static final String OTHER = "Other";
+    public static final Integer OPTION_COUNT = 7;
 
     @Override
     protected void launchBarcodeScanner(Activity activity, MaterialEditText editText, String barcodeType) {
@@ -118,28 +119,27 @@ public class RevealBarcodeFactory extends BarcodeFactory {
         List<RadioButton> radioButtons = Utils.getRadioButtons(radioGroup);
         MaterialEditText referralDateField = (MaterialEditText) activity.getFormDataView("step1" + ":" + "dateOfReferral");
         MaterialEditText healthFacilityField = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + "health_facility");
-        MaterialEditText otherRefferalReasonField  = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + "otherRefferalReason");
+        MaterialEditText otherReferralReasonField  = (MaterialEditText) activity.getFormDataView(STEP1 + ":" + "otherRefferalReason");
         MaterialSpinner referralReasonSpinner = (MaterialSpinner) activity.getFormDataView(STEP1 + ":" + "referralReason");
 
 
-        Integer optionsCount =  5;
-        for(int i=0;i < optionsCount ;i++){
+        for(int i=0;i < OPTION_COUNT ;i++){
             String option = referralReasonSpinner.getItemAtPosition(i).toString();
             if(option.equals(referralReasons)){
                 referralReasonSpinner.setSelection(i);
                 referralReasonSpinner.setEnabled(false);
                 if(option.startsWith(OTHER)){
-                    otherRefferalReasonField.setText(otherReason);
-                    otherRefferalReasonField.setEnabled(false);
+                    otherReferralReasonField.setText(otherReason);
+                    otherReferralReasonField.setEnabled(false);
                 }
                 break;
             }
         }
 
 
-        RadioGroup birthDateUnknownRadiogroup = (RadioGroup) activity.getFormDataView(STEP1 + ":" + "birthdate_unknown");
-        List<RadioButton> birthDateUnknowRadioButtons = Utils.getRadioButtons(birthDateUnknownRadiogroup);
-        birthDateUnknowRadioButtons.stream().forEach(radioButton -> {
+        RadioGroup birthDateUnknownRadioGroup = (RadioGroup) activity.getFormDataView(STEP1 + ":" + "birthdate_unknown");
+        List<RadioButton> birthDateUnknownRadioButtons = Utils.getRadioButtons(birthDateUnknownRadioGroup);
+        birthDateUnknownRadioButtons.stream().forEach(radioButton -> {
             radioButton.setEnabled(false);
             if("Yes".equals(radioButton.getText().toString()))
                 radioButton.setChecked(true);
@@ -185,13 +185,13 @@ public class RevealBarcodeFactory extends BarcodeFactory {
             firstNameTextField.setText("");
             lastNameTextField.setEnabled(true);
             lastNameTextField.setText("");
-            otherRefferalReasonField.setText("");
-            otherRefferalReasonField.setEnabled(true);
+            otherReferralReasonField.setText("");
+            otherReferralReasonField.setEnabled(true);
             radioButtons.stream().forEach(radioButton -> {
                 radioButton.setChecked(false);
                 radioButton.setEnabled(true);
             });
-            birthDateUnknowRadioButtons.stream().forEach(radioButton -> {
+            birthDateUnknownRadioButtons.stream().forEach(radioButton -> {
                 radioButton.setEnabled(true);
                 radioButton.setEnabled(true);
             });
