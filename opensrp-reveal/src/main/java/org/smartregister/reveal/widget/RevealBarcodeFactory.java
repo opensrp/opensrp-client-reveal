@@ -95,7 +95,7 @@ public class RevealBarcodeFactory extends BarcodeFactory {
                     Obs referralReasonsObs;
                     Obs referredHFObs;
                     if(referral.getEventType().equals(Constants.EventType.MDA_ADHERENCE)){
-                        referredHFObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("child_referred_hf ")).findFirst().get();
+                        referredHFObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("child_referred_hf")).findFirst().get();
                         referralReasonsObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("referralReason")).findFirst().get();
                     } else {
                         referredHFObs = referral.getObs().stream().filter(obs -> obs.getFormSubmissionField().equals("referredHf")).findFirst().get();
