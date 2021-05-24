@@ -2,7 +2,6 @@ package org.smartregister.reveal.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
