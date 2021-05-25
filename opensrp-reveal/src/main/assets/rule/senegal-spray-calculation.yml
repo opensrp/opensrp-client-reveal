@@ -55,3 +55,12 @@ condition: "true"
 actions:
   - "calculation = Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) - Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0))"
 
+---
+name: step1_notsprayed_totalpop
+description: step1_notsprayed_totalpop
+priority: 1
+condition: "true"
+actions:
+  - "calculation = Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0))"
+
+
