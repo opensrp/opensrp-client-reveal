@@ -25,14 +25,147 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="4dp">
-
-
-            <org.smartregister.reporting.view.TableView
-                android:id="@+id/tableView"
+            <!--NOTE: this is a temporary solution,until we can be able to extend the opensrp TableView, we do the following-->
+            <TableLayout
+                android:id="@+id/tempTableView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                app:headerTextStyle="bold" />
+                android:layout_height="match_parent">
+                <TableRow android:background="@color/alert_complete_green" android:padding="5dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="@string/indicator" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="@string/value" />
+                </TableRow>
+                <TableRow android:background="@color/white" android:padding="5dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="@string/structure_total"
+                        android:textStyle="normal"/>
+                    <TextView
+                        android:id="@+id/total_structures_cell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="0"
+                        android:textStyle="normal"/>
+                </TableRow>
+                <TableRow android:background="@color/white" android:padding="5dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="@string/structure_visited"
+                        android:textStyle="normal"/>
+                    <TextView
+                        android:id="@+id/structures_visited_cell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="0"
+                        android:textStyle="normal"/>
+                </TableRow>
+                <TableRow android:background="@color/white" android:padding="5dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="@string/structure_not_visited"
+                        android:textStyle="normal"/>
+                    <TextView
+                        android:id="@+id/structures_not_visited_cell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="0"
+                        android:textStyle="normal"/>
+                </TableRow>
+                <TableRow android:background="@color/white" android:padding="5dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="@string/structure_confirmed_eligible"
+                        android:textStyle="normal"/>
+                    <TextView
+                        android:id="@+id/structure_confirmed_eligible_cell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="0"
+                        android:textStyle="normal"/>
+                </TableRow>
+                <TableRow android:background="@color/white" android:padding="5dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="@string/structure_complete_drug_distribution"
+                        android:textStyle="normal"/>
+                    <TextView
+                        android:id="@+id/structure_complete_drug_distribution_cell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="0"
+                        android:textStyle="normal"/>
+                </TableRow>
+                <TableRow android:background="@color/white" android:padding="5dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="@string/structure_partial_drug_distribution"
+                        android:textStyle="normal"/>
+                    <TextView
+                        android:id="@+id/structure_partial_drug_distribution_cell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="0"
+                        android:textStyle="normal"/>
+                </TableRow>
+                <TableRow android:background="@color/white" android:padding="5dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="@string/individual_total_number_of_children_eligible_3_to_49_mos"
+                        android:textStyle="normal"/>
+                    <TextView
+                        android:id="@+id/individual_total_number_of_children_eligible_3_to_49_mos_cell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="0"
+                        android:textStyle="normal"/>
+                </TableRow>
+                <TableRow android:background="@color/white" android:padding="5dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        android:text="@string/individual_total_treated_3_to_59_mos"
+                        android:textStyle="normal"/>
+                    <TextView
+                        android:id="@+id/individual_total_treated_3_to_59_mos_cell"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="0"
+                        android:textStyle="normal"/>
+                </TableRow>
+
+
+            </TableLayout>
+
 
         </ScrollView>
 
