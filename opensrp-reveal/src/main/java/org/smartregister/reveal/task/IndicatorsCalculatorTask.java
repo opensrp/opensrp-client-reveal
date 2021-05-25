@@ -3,13 +3,14 @@ package org.smartregister.reveal.task;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Setting;
 import org.smartregister.reporting.view.ProgressIndicatorView;
-import org.smartregister.reporting.view.TableView;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -36,7 +37,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     private ProgressIndicatorView progressIndicator3;
     protected Activity activity;
     private List<TaskDetails> tasks;
-    private TableView tableView;
+    private TableLayout tableView;
 
     public IndicatorsCalculatorTask(Activity context, List<TaskDetails> tasks) {
         this.activity = context;
@@ -49,7 +50,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
         progressIndicator = activity.findViewById(R.id.progressIndicatorView);
         progressIndicator2 = activity.findViewById(R.id.progressIndicatorView2);
         progressIndicator3 = activity.findViewById(R.id.progressIndicatorView3);
-        tableView = activity.findViewById(R.id.tableView);
+        tableView = activity.findViewById(R.id.tempTableView);
 
     }
 
@@ -151,9 +152,16 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             progressIndicator3.setTitle(this.activity.getString(R.string.n_percent,individualsComplete));
 
         }
-
-        tableView.setTableData(Arrays.asList(new String[]{this.activity.getString(R.string.indicator), this.activity.getString(R.string.value)}), indicatorDetails.getSprayIndicatorList());
-
+        
+        
+        populateTableView(Arrays.asList(R.id.total_structures_cell,
+                                        R.id.structures_visited_cell,
+                                        R.id.structures_not_visited_cell,
+                                        R.id.structure_confirmed_eligible_cell,
+                                        R.id.structure_complete_drug_distribution_cell,
+                                        R.id.structure_partial_drug_distribution_cell,
+                                        R.id.individual_total_number_of_children_eligible_3_to_49_mos_cell,
+                                        R.id.individual_total_number_of_children_eligible_3_to_49_mos_cell),indicatorDetails.getSprayIndicatorList());
         //Show or hide depending on plan
 
         ((View) progressIndicator.getParent()).setVisibility(Utils.getInterventionLabel() == R.string.irs || Country.NIGERIA == BuildConfig.BUILD_COUNTRY ? View.VISIBLE : View.GONE);
@@ -163,4 +171,10 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     }
 
 
+    private void populateTableView(List<Integer> cellResourceIdentifiers,List<String> sprayIndicatorList){
+        for(Integer resourceId : cellResourceIdentifiers){
+            TextView textView = tableView.findViewById(resourceId);
+            textView.setText(sprayIndicatorList.get(cellResourceIdentifiers.indexOf(resourceId) * 2 + 1));
+        }
+    }
 }
