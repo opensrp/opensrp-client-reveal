@@ -47,6 +47,8 @@ import static org.smartregister.family.util.DBConstants.KEY.VILLAGE_TOWN;
 import static org.smartregister.reveal.util.FamilyConstants.FormKeys.AGE_UNKNOWN;
 import static org.smartregister.reveal.util.FamilyConstants.FormKeys.CHILD_STAY_PERM;
 import static org.smartregister.reveal.util.FamilyConstants.FormKeys.DOb_UNKOWN_NOTE;
+import static org.smartregister.reveal.util.FamilyConstants.FormKeys.SAME_AS_FAM_NAME;
+import static org.smartregister.reveal.util.FamilyConstants.FormKeys.SURNAME;
 
 /**
  * Created by samuelgithengi on 5/24/19.
@@ -232,6 +234,10 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                     childStayPermField.put(TYPE,HIDDEN);
                     JSONObject firstNameField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), FIRST_NAME);
                     firstNameField.put(HINT,"First name of Head of Household");
+                    JSONObject sameAsFamNameField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),SAME_AS_FAM_NAME);
+                    sameAsFamNameField.put(TYPE,HIDDEN);
+                    JSONObject surnameField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),SURNAME);
+                    surnameField.put(HINT,"Surname");
                 }
                 return form;
             }
