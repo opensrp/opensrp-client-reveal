@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+
 import androidx.annotation.VisibleForTesting;
 
 import com.google.gson.Gson;
@@ -21,12 +22,12 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
+import org.smartregister.domain.Client;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
-import org.smartregister.domain.Task;
-import org.smartregister.domain.Client;
-import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.Obs;
+import org.smartregister.domain.Task;
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;

@@ -352,7 +352,7 @@
         "key": "referredHf",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
-        "openmrs_entity_id": "",
+        "openmrs_entity_id": "referredHf",
         "openmrs_data_type": "text",
         "type": "tree",
         "hint": "What HF was child referred to?",
