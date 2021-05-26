@@ -224,6 +224,10 @@
           "value": "[A-Za-z\\s\\.\\-]*",
           "err": "Please enter a valid surname, not a number"
         }
+      },
+      {
+        "key": "old_fam_name",
+        "type": "hidden"
       }
     ]
   }
