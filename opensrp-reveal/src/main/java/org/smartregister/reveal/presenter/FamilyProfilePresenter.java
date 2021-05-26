@@ -11,6 +11,7 @@ import org.smartregister.AllConstants;
 import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
 import org.smartregister.family.domain.FamilyEventClient;
@@ -169,7 +170,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                     if (!eventClient.getClient().getFirstName().equals(oldSurname)) {  //family name was changed
                         getInteractor().updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), oldSurname);
                         getView().updateFamilyName(eventClient.getClient().getFirstName());
-                        return;
+                        break;
                     }
                 }
             }

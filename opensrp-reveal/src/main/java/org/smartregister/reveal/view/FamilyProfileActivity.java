@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.vijay.jsonwizard.domain.Form;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.AllConstants;
 import org.smartregister.domain.Task;
@@ -184,6 +185,15 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
                     }
                 }catch (Exception e){
                     Timber.e(e);
+                }
+            }
+            String oldFamilyName = JsonFormUtils.getFieldValue(jsonForm.toString(), "family_name");
+            JSONObject oldFamilyNameField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(jsonForm),FamilyConstants.DatabaseKeys.OLD_FAMILY_NAME);
+            if(oldFamilyNameField != null){
+                try {
+                    oldFamilyNameField.put(VALUE,oldFamilyName);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }
