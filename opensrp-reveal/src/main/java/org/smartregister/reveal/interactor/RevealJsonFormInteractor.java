@@ -8,11 +8,13 @@ import org.smartregister.reveal.widget.GeoWidgetFactory;
 import org.smartregister.reveal.widget.RevealEditTextFactory;
 import org.smartregister.reveal.widget.RevealLabelFactory;
 import org.smartregister.reveal.widget.RevealRadioButtonFactory;
+import org.smartregister.reveal.widget.RevealRepeatingGroupFactory;
 import org.smartregister.reveal.widget.RevealToasterNotesFactory;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.EDIT_TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.LABEL;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.NATIVE_RADIO_BUTTON;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.REPEATING_GROUP;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TOASTER_NOTES;
 
 /**
@@ -43,6 +45,10 @@ public class RevealJsonFormInteractor extends JsonFormInteractor {
         map.put(NATIVE_RADIO_BUTTON, new RevealRadioButtonFactory());
         map.put(LABEL, new RevealLabelFactory());
         map.put(TOASTER_NOTES, new RevealToasterNotesFactory());
+
+        if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
+            map.put(REPEATING_GROUP, new RevealRepeatingGroupFactory());
+        }
 
     }
 

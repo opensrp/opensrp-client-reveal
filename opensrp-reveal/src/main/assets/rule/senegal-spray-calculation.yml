@@ -25,7 +25,7 @@ description: Task business status
 priority: 1
 condition: "true"
 actions:
-  - "calculation = (helper.ifNull(step1_eligibility,'null') == 'notEligible') ? 'Not Eligible' : (helper.ifNull(step1_structure_sprayed,'null') == 'no') ? 'Not Sprayed' : (Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) > 0 && Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) >= Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0))) ? 'Complete' : 'Not Visited'"
+  - "calculation = (step1_eligibility.equals('notEligible')  || step1_nonresidential_type.equals('other') || step1_nonresidential_type.equals('notHabitable') || step1_nonresidential_type.equals('noStructure') || step1_nonresidential_type.equals('clinic') || step1_nonresidential_type.equals('hospital') || step1_nonresidential_type.equals('office') || step1_nonresidential_type.equals('shop') ||  step1_nonresidential_type.equals('lodge') || step1_nonresidential_type.equals('school') || step1_nonresidential_type.equals('foodStorage') || step1_nonresidential_type.equals('animalShelter') || step1_nonresidential_type.equals('kitchen') ) ? 'Not Eligible' : (step1_structure_sprayed.equals('no')) ? 'Not Sprayed' : ((step1_eligibility.equals('eligible') && step1_nonresidential_type.equals('toilet')) ||(Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) > 0 && Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) >= Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)))||(step1_eligibility.equals('eligible') && step1_nonresidential_type.equals('foodStorage'))) ? 'Complete' : 'Not Visited'"
 ---
 name: step1_business_status_toaster
 description: step1_business_status_toaster
@@ -47,3 +47,20 @@ priority: 1
 condition: "true"
 actions:
   - "calculation = step1_genderHoH=='female' ? 1:0"
+---
+name: step1_rooms_not_sprayed
+description: step1_rooms_not_sprayed
+priority: 1
+condition: "true"
+actions:
+  - "calculation = Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) - Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0))"
+
+---
+name: step1_notsprayed_totalpop
+description: step1_notsprayed_totalpop
+priority: 1
+condition: "true"
+actions:
+  - "calculation = Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0))"
+
+

@@ -2,7 +2,7 @@
 name: step1_eligibility
 description: step1_eligibility
 priority: 1
-condition: "!(step1_nonresidential_type.equals('noStructure') || step1_nonresidential_type.equals('notHabitable'))"
+condition: "!(step1_nonresidential_type.equals('noStructure') || step1_nonresidential_type.equals('notHabitable')|| step1_nonresidential_type.equals('other') || step1_nonresidential_type.equals('clinic') || step1_nonresidential_type.equals('hospital') || step1_nonresidential_type.equals('office') || step1_nonresidential_type.equals('shop') || step1_nonresidential_type.equals('lodge') || step1_nonresidential_type.equals('school') ||  step1_nonresidential_type.equals('foodStorage') || step1_nonresidential_type.equals('animalShelter') || step1_nonresidential_type.equals('kitchen'))"
 actions:
   - "isRelevant = true"
 ---
@@ -16,28 +16,28 @@ actions:
 name: step1_notreseidential_eligible
 description: step1_notreseidential_eligible
 priority: 1
-condition: "step1_structure_type.equals('nonResidential') && step1_eligibility.equals('eligible')"
+condition: "step1_structure_type.equals('nonResidential') && step1_eligibility.equals('eligible') && !step1_nonresidential_type.equals('toilet')"
 actions:
   - "isRelevant = true"
 ---
 name: step1_rooms_sprayed
 description: step1_rooms_sprayed
 priority: 1
-condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible')"
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && !step1_nonresidential_type.equals('toilet')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_partiallysprayed_reason
-description: step1_partiallysprayed_reason
+name: step1_partiallysprayed_reasons
+description: step1_partiallysprayed_reasons
 priority: 1
-condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) < Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)))"
+condition: "step1_eligibility.equals('eligible') && step1_structure_sprayed.equals('yes') && (Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) < Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)))"
 actions:
   - "isRelevant = true"
 ---
 name: step1_sprayed_totalpop_toaster_error
 description: step1_sprayed_totalpop_toaster_error
 priority: 1
-condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && step1_sprayed_males != null && step1_sprayed_females != null && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) == 0)"
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && step1_sprayed_males != null && step1_sprayed_females != null && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) == 0) && !step1_nonresidential_type.equals('toilet')"
 actions:
   - "isRelevant = true"
 ---
@@ -86,7 +86,7 @@ actions:
 name: step1_sprayed_childrenU5_validation_err
 description: step1_sprayed_childrenU5_validation_err
 priority: 1
-condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0))) > 0 && (step1_sprayed_childrenU5 > (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0))) || step1_sprayed_childrenU5 > (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) - Integer.valueOf(helper.ifNull(step1_sprayed_pregwomen,0))))"
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0))) > 0 && (step1_sprayed_childrenU5 >= (Integer.valueOf(helper.ifNull(step1_sprayed_totalpop,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_totalpop,0)) - Integer.valueOf(helper.ifNull(step1_notsprayed_childrenU5,0)) - Integer.valueOf(helper.ifNull(step1_sprayed_pregwomen,0)) - Integer.valueOf(helper.ifNull(step1_notsprayed_pregwomen,0))))"
 actions:
   - "isRelevant = true"
 ---
@@ -145,31 +145,25 @@ priority: 1
 condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && step1_new_sachet.equals('yes')"
 actions:
   - "isRelevant = true"
-
-
-
-
-
-
 ---
 name: step1_notsprayed_totalpop_toaster_error
 description: step1_notsprayed_totalpop_toaster_error
 priority: 1
-condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && step1_notsprayed_males != null && step1_notsprayed_females != null && (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0)) == 0)"
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && step1_notsprayed_males != null && step1_notsprayed_females != null && (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0)) == 0) && !step1_nonresidential_type.equals('toilet')"
 actions:
   - "isRelevant = true"
 ---
 name: step1_notsprayed_pregwomen
 description: step1_notsprayed_pregwomen
 priority: 1
-condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_notsprayed_females,0)) > 0"
+condition: "(step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') || ((step1_structure_sprayed.equals('yes') && (Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) < Integer.valueOf(helper.ifNull(step1_rooms_eligible,0))))) ) && Integer.valueOf(helper.ifNull(step1_notsprayed_females,0)) > 0"
 actions:
   - "isRelevant = true"
 ---
 name: step1_notsprayed_childrenU5
 description: step1_notsprayed_childrenU5
 priority: 1
-condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0))) > 0"
+condition: "(step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') || ((step1_structure_sprayed.equals('yes') && (Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) < Integer.valueOf(helper.ifNull(step1_rooms_eligible,0))))) ) && (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0))) > 0"
 actions:
   - "isRelevant = true"
 ---
@@ -190,7 +184,7 @@ actions:
 name: step1_notsprayed_childrenU5_validation_err
 description: step1_notsprayed_childrenU5_validation_err
 priority: 1
-condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0))) > 0 && (Integer.valueOf(helper.ifNull(step1_notsprayed_childrenU5,0)) > (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0))) || Integer.valueOf(helper.ifNull(step1_notsprayed_childrenU5,0)) > (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0)) - Integer.valueOf(helper.ifNull(step1_notsprayed_pregwomen,0))))"
+condition: "(step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') || (Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) < Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)))) && (Integer.valueOf(helper.ifNull(step1_notsprayed_childrenU5,0)) >= (Integer.valueOf(helper.ifNull(step1_sprayed_totalpop,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_totalpop,0)) - Integer.valueOf(helper.ifNull(step1_sprayed_childrenU5,0)) - Integer.valueOf(helper.ifNull(step1_sprayed_pregwomen,0)) - Integer.valueOf(helper.ifNull(step1_notsprayed_pregwomen,0))))"
 actions:
   - "isRelevant = true"
 ---
@@ -253,7 +247,7 @@ actions:
 name: step1_refused_reason
 description: step1_refused_reason
 priority: 1
-condition: "step1_notsprayed_reason.equals('refused') && ( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
+condition: "step1_notsprayed_reason.equals('refused')"
 actions:
   - "isRelevant = true"
 ---
@@ -278,9 +272,80 @@ condition: "step1_sbc.equals('Yes') && step1_about_malaria.equals('Yes') && ( st
 actions:
   - "isRelevant = true"
 ---
-name: step1_partiallysprayed_reason
-description: step1_partiallysprayed_reason
+name: step1_compoundheadstructure
+description: step1_compoundheadstructure
 priority: 1
-condition: "Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) > Integer.valueOf(helper.ifNull(step1_rooms_eligible,0))"
+condition: "step1_eligibility.equals('eligible') && !step1_nonresidential_type.equals('toilet')"
 actions:
   - "isRelevant = true"
+---
+name: step1_genderHoH
+description: step1_genderHoH
+priority: 1
+condition: "step1_eligibility.equals('eligible') && !step1_nonresidential_type.equals('toilet')"
+actions:
+  - "isRelevant = true"
+
+---
+name: step1_rooms_eligible
+description: step1_rooms_eligible
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && !step1_nonresidential_type.equals('toilet')"
+actions:
+  - "isRelevant = true"
+
+---
+name: step1_sprayed_males
+description: step1_sprayed_males
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && !step1_nonresidential_type.equals('toilet')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_females
+description: step1_sprayed_females
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && !step1_nonresidential_type.equals('toilet')"
+actions:
+  - "isRelevant = true"
+
+
+---
+name: step1_notsprayed_males
+description: step1_notsprayed_males
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && !step1_nonresidential_type.equals('toilet') || (step1_structure_sprayed.equals('yes') && (Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) < Integer.valueOf(helper.ifNull(step1_rooms_eligible,0))))"
+actions:
+  - "isRelevant = true"
+
+---
+name: step1_notsprayed_females
+description: step1_notsprayed_females
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && !step1_nonresidential_type.equals('toilet') || (step1_structure_sprayed.equals('yes') && (Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) < Integer.valueOf(helper.ifNull(step1_rooms_eligible,0))))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notsprayedrooms_eligible
+description: step1_notsprayedrooms_eligible
+priority: 1
+condition: "step1_structure_sprayed.equals('no') && !step1_nonresidential_type.equals('toilet')"
+actions:
+  - "isRelevant = true"
+
+---
+name: step1_rooms_not_sprayed
+description: step1_rooms_not_sprayed
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) < Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_compoundStructure
+description: step1_compoundStructure
+priority: 1
+condition: "step1_eligibility.equals('eligible') && step1_compoundheadstructure.equals('No')"
+actions:
+  - "isRelevant = true"
+
+

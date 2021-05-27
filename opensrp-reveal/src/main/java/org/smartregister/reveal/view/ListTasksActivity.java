@@ -284,6 +284,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         if(BuildConfig.SELECT_JURISDICTION) {
             findViewById(R.id.btn_add_structure).setVisibility(View.GONE);
         }
+        if(Country.SENEGAL.equals(BuildConfig.BUILD_COUNTRY)){
+            sprayCardView.findViewById(R.id.btn_undo_spray).setVisibility(View.GONE);
+        }
     }
 
     @Override
