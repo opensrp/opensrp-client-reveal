@@ -693,6 +693,8 @@ public interface Constants {
 
         String JOB_AID = "job_aid";
 
+        String LAST_INTERACTED_WITH = "last_interacted_with";
+
     }
 
     interface UseContextCode {

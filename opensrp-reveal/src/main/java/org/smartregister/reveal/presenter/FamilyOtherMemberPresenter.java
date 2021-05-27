@@ -3,6 +3,9 @@ package org.smartregister.reveal.presenter;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
@@ -61,6 +64,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
     private FamilyOtherMemberProfileContract.Interactor otherMemberInteractor;
     private org.smartregister.family.contract.FamilyProfileContract.Interactor profileInteractor;
     private FamilyProfileContract.Model profileModel;
+    LocalBroadcastManager localBroadcastManager ;
 
     public FamilyOtherMemberPresenter(FamilyOtherMemberProfileContract.View view, Model model,
                                       String viewConfigurationIdentifier, String familyBaseEntityId, String baseEntityId,
@@ -76,6 +80,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
         } catch (Exception e) {
             Timber.e("error starting FamilyJsonFormUtils");
         }
+        localBroadcastManager = LocalBroadcastManager.getInstance(this.getView().getContext().getApplicationContext());
     }
 
 
@@ -139,7 +144,10 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
             refreshProfileView();
 
             getView().refreshList();
-
+            Intent localIntent = new Intent(".UpdateFamilyName");
+            localIntent.putExtra("newFamilyName",familyEventClient.getClient().getLastName());
+            localIntent.putExtra("baseEntityId",familyEventClient.getClient().getBaseEntityId());
+            localBroadcastManager.sendBroadcast(localIntent);
         }
         RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
 
