@@ -45,6 +45,7 @@
                         android:layout_weight="2"
                         android:width="0dp"
                         android:text="@string/value"
+                        android:gravity="center"
                         android:textAllCaps="true"
                         android:textColor="@color/white"/>
                 </TableRow>
