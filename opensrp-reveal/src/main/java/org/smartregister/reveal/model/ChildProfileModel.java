@@ -11,12 +11,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.CoreLibrary;
 import org.smartregister.dao.AbstractDao;
+import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.Task;
+import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ChildProfileContract;
 import org.smartregister.reveal.dao.EventDao;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.NativeFormProcessor;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.QueryComposer;
 import org.smartregister.util.Utils;
@@ -28,11 +32,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import timber.log.Timber;
+
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 
 public class ChildProfileModel extends AbstractDao implements ChildProfileContract.Model {
 
     private EventDao eventDao;
+    private PreferencesUtil prefsUtil;
 
     @Nullable
     @Override
@@ -142,8 +149,17 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         JSONObject processedForm = getEventDao().getLastEvent(baseEntityID, Constants.EventType.MDA_DISPENSE);
 
         if (processedForm != null) {
-            Map<String, Object> values = processor.getFormResults(processedForm);
-            processor.populateValues(values);
+            try {
+                if (eventIsWithinPlan(processedForm)) {
+                    Map<String, Object> values = processor.getFormResults(processedForm);
+                    processor.populateValues(values);
+                }
+            } catch (Exception exception) {
+                Timber.e(exception);
+
+                Map<String, Object> values = processor.getFormResults(processedForm);
+                processor.populateValues(values);
+            }
         }
 
         return jsonObject;
@@ -154,6 +170,22 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
             eventDao = EventDao.getInstance();
 
         return eventDao;
+    }
+
+    public PreferencesUtil getPrefsUtil() {
+        if (prefsUtil == null)
+            prefsUtil = PreferencesUtil.getInstance();
+
+        return prefsUtil;
+    }
+
+    public boolean eventIsWithinPlan(JSONObject processedForm) throws JSONException, ParseException {
+        PlanDefinitionRepository planDefinitionRepository = RevealApplication.getInstance().getPlanDefinitionRepository();
+        PlanDefinition planDefinition = planDefinitionRepository.findPlanDefinitionById(getPrefsUtil().getCurrentPlanId());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        Date eventDate = sdf.parse(processedForm.getString("eventDate").substring(0, 10));
+        return planDefinition.getEffectivePeriod().getStart().toDate().getTime() <= eventDate.getTime();
     }
 
     private String convertToFormsDate(Object _value) throws ParseException {
@@ -183,8 +215,17 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         JSONObject processedForm = getEventDao().getLastEvent(baseEntityID, Constants.EventType.MDA_ADVERSE_DRUG_REACTION);
 
         if (processedForm != null) {
-            Map<String, Object> values = processor.getFormResults(processedForm);
-            processor.populateValues(values);
+            try {
+                if (eventIsWithinPlan(processedForm)) {
+                    Map<String, Object> values = processor.getFormResults(processedForm);
+                    processor.populateValues(values);
+                }
+            } catch (Exception exception) {
+                Timber.e(exception);
+
+                Map<String, Object> values = processor.getFormResults(processedForm);
+                processor.populateValues(values);
+            }
         }
 
         return jsonObject;
