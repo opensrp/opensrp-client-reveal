@@ -1,6 +1,12 @@
 package org.smartregister.reveal.presenter;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -11,7 +17,6 @@ import org.smartregister.AllConstants;
 import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
-import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
 import org.smartregister.family.domain.FamilyEventClient;
@@ -53,6 +58,8 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     private FamilyOtherMemberProfileContract.Interactor otherMemberInteractor;
 
+    private BroadcastReceiver broadcastReceiver;
+    private LocalBroadcastManager localBroadcastManager;
 
     public FamilyProfilePresenter(FamilyProfileContract.View view, FamilyProfileContract.Model model, String familyBaseEntityId, String familyHead, String primaryCaregiver, String familyName) {
         super(view, model, familyBaseEntityId, familyHead, primaryCaregiver, familyName);
@@ -68,6 +75,15 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
             Timber.e(e, "error Initializing FamilyJsonFormUtils ");
         }
         otherMemberInteractor = new RevealFamilyOtherMemberInteractor();
+        FamilyProfilePresenter that = this;
+        broadcastReceiver  = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                that.familyName = intent.getStringExtra("newFamilyName");
+            }
+        };
+      localBroadcastManager = LocalBroadcastManager.getInstance(getView().getContext().getApplicationContext());
+      localBroadcastManager.registerReceiver(broadcastReceiver, new IntentFilter(".UpdateFamilyName"));
     }
 
     @Override
