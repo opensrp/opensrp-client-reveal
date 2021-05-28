@@ -194,7 +194,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
             }
           }
         }
@@ -227,7 +227,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
             }
           }
         }
@@ -293,7 +293,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-calculation.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-calculationn.yml"
             }
           }
         }
@@ -310,7 +310,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-calculation.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-calculation.yml"
             }
           }
         }
@@ -343,7 +343,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
             }
           }
         }
@@ -376,7 +376,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
             }
           }
         }
@@ -409,7 +409,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
             }
           }
         }
@@ -442,7 +442,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
             }
           }
         }
@@ -456,7 +456,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-calculation.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
             }
           }
         }
@@ -473,7 +473,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-calculation.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-calculation.yml"
             }
           }
         }
@@ -520,7 +520,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-summary-relevance-rules.yml"
             }
           }
         }
@@ -541,7 +541,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-summary-relevance-rules.yml"
             }
           }
         }
@@ -600,7 +600,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-summary-relevance-rules.yml"
             }
           }
         }
@@ -614,7 +614,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-calculation.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-calculation.yml"
             }
           }
         }
@@ -760,7 +760,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "cdd-supervisor-daily-summary-calculation.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-calculation.yml"
             }
           }
         }
