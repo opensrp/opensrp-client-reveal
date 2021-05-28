@@ -105,7 +105,7 @@
         "key": "child_referred_hf",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
-        "openmrs_entity_id": "",
+        "openmrs_entity_id": "child_referred_hf",
         "openmrs_data_type": "text",
         "type": "tree",
         "hint": "What Health Facility was child referred to?",

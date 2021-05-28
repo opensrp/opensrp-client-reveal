@@ -264,48 +264,7 @@
         }
       },
       {
-        "key": "same_as_fam_name",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "check_box",
-        "label": "",
-        "options": [
-          {
-            "key": "same_as_fam_name",
-            "text": "Same as compound head surname",
-            "text_size": "18px",
-            "value": "true"
-          }
-        ]
-      },
-      {
-        "key": "surname",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Surname of head of structure",
-        "edit_type": "name",
-        "text_size": "8sp",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the surname"
-        },
-        "v_regex": {
-          "value": "[A-Za-z\\s\\.\\-]*",
-          "err": "Please enter a valid surname, not a number"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "nigeria-family-register-relevance.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "surname_calculation",
+        "key": "head_surname_calculation",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
         "openmrs_entity_id": "last_name",

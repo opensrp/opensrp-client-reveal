@@ -1,6 +1,12 @@
 package org.smartregister.reveal.presenter;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -52,6 +58,8 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     private FamilyOtherMemberProfileContract.Interactor otherMemberInteractor;
 
+    private BroadcastReceiver broadcastReceiver;
+    private LocalBroadcastManager localBroadcastManager;
 
     public FamilyProfilePresenter(FamilyProfileContract.View view, FamilyProfileContract.Model model, String familyBaseEntityId, String familyHead, String primaryCaregiver, String familyName) {
         super(view, model, familyBaseEntityId, familyHead, primaryCaregiver, familyName);
@@ -67,6 +75,15 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
             Timber.e(e, "error Initializing FamilyJsonFormUtils ");
         }
         otherMemberInteractor = new RevealFamilyOtherMemberInteractor();
+        FamilyProfilePresenter that = this;
+        broadcastReceiver  = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                that.familyName = intent.getStringExtra("newFamilyName");
+            }
+        };
+      localBroadcastManager = LocalBroadcastManager.getInstance(getView().getContext().getApplicationContext());
+      localBroadcastManager.registerReceiver(broadcastReceiver, new IntentFilter(".UpdateFamilyName"));
     }
 
     @Override
@@ -169,7 +186,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                     if (!eventClient.getClient().getFirstName().equals(oldSurname)) {  //family name was changed
                         getInteractor().updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), oldSurname);
                         getView().updateFamilyName(eventClient.getClient().getFirstName());
-                        return;
+                        break;
                     }
                 }
             }

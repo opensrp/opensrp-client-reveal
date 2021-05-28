@@ -11,6 +11,8 @@ import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.domain.Location;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.model.BaseFamilyRegisterModel;
+import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants;
@@ -89,11 +91,22 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
 
     public static void populateCompoundStructureOptions(JSONObject form){
         SQLiteDatabase database = RevealApplication.getInstance().getRepository().getReadableDatabase();
+        Location operationalArea = RevealApplication.getInstance().getContext().getLocationRepository().getLocationByName(PreferencesUtil.getInstance().getCurrentOperationalArea());
         JSONObject property;
         JSONObject option;
         JSONArray options = new JSONArray();
-        String query = String.format("SELECT %s,%s,%s FROM %s WHERE %s IS NULL", Constants.DatabaseKeys.STRUCTURE_ID, Constants.DatabaseKeys.FIRST_NAME, Constants.DatabaseKeys.LAST_NAME, FamilyConstants.TABLE_NAME.FAMILY, FamilyConstants.DatabaseKeys.COMPOUND_STRUCTURE);
-        try (Cursor cursor = database.rawQuery(query, new String[]{})){
+        String query = String.format("SELECT %s,%s,%s FROM %s WHERE %s IS NULL AND %s IN (SELECT %s FROM %s WHERE %s = ? ) ORDER BY %s DESC",
+                                Constants.DatabaseKeys.STRUCTURE_ID,
+                                Constants.DatabaseKeys.FIRST_NAME,
+                                Constants.DatabaseKeys.LAST_NAME,
+                                FamilyConstants.TABLE_NAME.FAMILY,
+                                FamilyConstants.DatabaseKeys.COMPOUND_STRUCTURE,
+                                Constants.DatabaseKeys.STRUCTURE_ID,
+                                Constants.DatabaseKeys.ID,
+                                Constants.DatabaseKeys.STRUCTURES_TABLE,
+                                Constants.DatabaseKeys.PARENT_ID,
+                                Constants.DatabaseKeys.LAST_INTERACTED_WITH);
+        try (Cursor cursor = database.rawQuery(query, new String[]{operationalArea.getId()})){
             while (cursor.moveToNext()) {
 
                 property = new JSONObject();
