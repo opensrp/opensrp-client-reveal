@@ -70,10 +70,12 @@ public interface ChildRegisterFragmentContract {
         @WorkerThread
         JSONObject getRegistrationForm(Context context) throws JSONException;
 
+        @WorkerThread
         Task getCurrentTask(Context context, String baseEntityID);
 
         String getCurrentLocationID();
 
+        @WorkerThread
         Map<String, Integer> getReportCounts();
     }
 

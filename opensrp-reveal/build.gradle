@@ -71,7 +71,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 30
         versionCode 34
-        versionName "5.3.26"
+        versionName "5.3.29"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -223,7 +223,7 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
     }
 
-    implementation('org.smartregister:opensrp-client-core:4.3.3-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:4.3.6-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'
