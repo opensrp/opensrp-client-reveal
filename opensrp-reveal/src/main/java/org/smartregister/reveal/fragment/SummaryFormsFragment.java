@@ -88,7 +88,7 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
         btnVerificationForm = view.findViewById(R.id.summary_verification_form);
         btnTabletAccountabilityForm = view.findViewById(R.id.summary_tablet_accountability_form);
 
-        if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
+        if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY) || Country.RWANDA.equals(BuildConfig.BUILD_COUNTRY)){
             btnDailySummary.setVisibility(View.GONE);
             view.findViewById(R.id.separator1).setVisibility(View.GONE);
             btnTeamLeaderDos.setVisibility(View.GONE);
@@ -110,9 +110,7 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
     }
 
     private void setClickListeners() {
-        if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
             btnTabletAccountabilityForm.setOnClickListener(this);
-        } else {
             btnDailySummary.setOnClickListener(this);
             btnTeamLeaderDos.setOnClickListener(this);
             btnCbSprayArea.setOnClickListener(this);
@@ -120,8 +118,6 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
             btnMobilization.setOnClickListener(this);
             btnIrsFieldOfficer.setOnClickListener(this);
             btnVerificationForm.setOnClickListener(this);
-        }
-
     }
 
     @Override
@@ -227,7 +223,11 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
                 }
                 break;
             case R.id.summary_tablet_accountability_form:
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.TABLET_ACCOUNTABILITY_FORM);
+                if(BuildConfig.BUILD_COUNTRY == Country.KENYA){
+                    presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.TABLET_ACCOUNTABILITY_FORM);
+                } else if (BuildConfig.BUILD_COUNTRY == Country.RWANDA){
+                    presenter.showBasicForm(Constants.JsonForm.TABLET_ACCOUNTABILITY_FORM_RWANDA);
+                }
             default:
                 break;
         }

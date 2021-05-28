@@ -386,7 +386,11 @@ public class RevealJsonFormUtils {
                 formName = JsonForm.VERIFICATION_FORM_SENEGAL;
             }
         } else if (Constants.EventType.TABLET_ACCOUNTABILITY_EVENT.equals(encounterType)){
-            formName = JsonForm.TABLET_ACCOUNTABILITY_FORM;
+            if(Country.RWANDA.equals(BuildConfig.BUILD_COUNTRY)){
+                 formName = JsonForm.TABLET_ACCOUNTABILITY_FORM_RWANDA;
+            } else if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
+                formName = JsonForm.TABLET_ACCOUNTABILITY_FORM;
+            }
         }else if(Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY.equals(encounterType) || Intervention.CDD_SUPERVISION.equals(taskCode)){
             return JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM;
         }

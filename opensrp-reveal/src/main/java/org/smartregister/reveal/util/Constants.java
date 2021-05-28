@@ -508,6 +508,8 @@ public interface Constants {
 
         String TABLET_ACCOUNTABILITY_FORM = "json.form/tablet_accountability_form.json";
 
+        String TABLET_ACCOUNTABILITY_FORM_RWANDA = "json.form/rwanda_tablet_accountability_form.json";
+
         String SPRAY_OPERATOR_CODE = "sprayop_code";
 
         String DATA_COLLECTOR = "datacollector";
