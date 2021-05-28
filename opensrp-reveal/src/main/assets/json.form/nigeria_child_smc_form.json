@@ -451,6 +451,26 @@
         }
       },
       {
+        "key": "referralQRCode",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "barcode",
+        "barcode_type": "qrcode",
+        "hint": "Referral QR Code",
+        "scanButtonText": "Scan QR Code",
+        "v_required": {
+          "value": "true",
+          "err": "Please scan QR Code"
+        },
+        "relevance": {
+          "step1:referred": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
         "key": "business_status",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

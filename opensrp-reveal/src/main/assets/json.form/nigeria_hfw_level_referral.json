@@ -51,6 +51,49 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "qr_code_present",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Does patient have QR code to scan",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "1",
+            "text": "Yes"
+          },
+          {
+            "key": "0",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "referralQRCode",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "barcode",
+        "barcode_type": "qrcode",
+        "hint": "Referral QR Code Search",
+        "scanButtonText": "Scan QR Code",
+        "v_required": {
+          "value": "true",
+          "err": "Please scan QR Code"
+        },
+        "relevance": {
+          "step1:qr_code_present": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
         "key": "childFirstName",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -182,6 +225,13 @@
         }
       },
       {
+        "key": "approx_age",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden"
+      },
+      {
         "key": "dateOfReferral",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -251,7 +301,8 @@
           "Severe allergy",
           "Adverse reaction/side effect of SPAQ today",
           "Adverse reaction/side effect of SPAQ previous cycle",
-          "Other - specify"
+          "Child vomited twice",
+          "Other Reason - specify"
         ],
         "keys": [
           "Severe sickness",
@@ -259,7 +310,8 @@
           "Severe allergy",
           "Adverse reaction/side effect of SPAQ today",
           "Adverse reaction/side effect of SPAQ previous cycle",
-          "Other - specify"
+          "Child vomited twice",
+          "Other Reason - specify"
         ]
       },
       {
@@ -277,7 +329,7 @@
         "relevance": {
           "step1:referralReason": {
             "type": "string",
-            "ex": "equalTo(., \"Other - specify\")"
+            "ex": "equalTo(., \"Other Reason - specify\")"
           }
         }
       },
@@ -300,7 +352,7 @@
         }
       },
       {
-        "key": "health_facility",
+        "key": "health_facility_visited",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "",
