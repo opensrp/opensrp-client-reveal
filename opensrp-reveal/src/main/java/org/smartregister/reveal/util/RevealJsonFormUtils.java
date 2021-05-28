@@ -393,6 +393,8 @@ public class RevealJsonFormUtils {
             }
         }else if(Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY.equals(encounterType) || Intervention.CDD_SUPERVISION.equals(taskCode)){
             return JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM;
+        } else if(Constants.EventType.CELL_COORDINATOR_DAILY_SUMMARY.equals(encounterType) || Intervention.CELL_COORDINATION.equals(taskCode)){
+            return  JsonForm.RWANDA_CELL_COORDINATOR_DAILY_SUMMARY_FORM;
         }
         return formName;
     }
@@ -665,7 +667,11 @@ public class RevealJsonFormUtils {
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS, fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),
                         PreferencesUtil.getInstance().getCurrentOperationalArea());
-            default:
+            case JsonForm.RWANDA_CELL_COORDINATOR_DAILY_SUMMARY_FORM:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                                     CONFIGURATION.MDA_CORDINATORS,fieldsMap.get(JsonForm.CELL_COORDINATOR),PreferencesUtil.getInstance().getCurrentOperationalArea());
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        CONFIGURATION.VILLAGES,fieldsMap.get(JsonForm.VILLAGE),PreferencesUtil.getInstance().getCurrentOperationalArea());
                 break;
         }
     }

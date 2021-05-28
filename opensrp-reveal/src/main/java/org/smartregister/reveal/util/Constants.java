@@ -122,6 +122,8 @@ public interface Constants {
         String WARDS = "wards";
         String COMMUNITY_DRUG_DISTRIBUTORS = "community_drug_distributors";
         String HEALTH_WORKER_SUPERVISORS = "health_worker_supervisors";
+        String VILLAGES = "villages";
+
 
     }
 
@@ -229,6 +231,9 @@ public interface Constants {
                 PAOT, IRS, IRS_VERIFICATION);
 
         String CDD_SUPERVISION = "CDD Supervision";
+
+        String CELL_COORDINATION = "Cell Coordination";
+
     }
 
 
@@ -268,6 +273,9 @@ public interface Constants {
 
         List<String> SUMMARY_EVENT_TYPES = Arrays.asList(DAILY_SUMMARY_EVENT, IRS_FIELD_OFFICER_EVENT,
                 IRS_SA_DECISION_EVENT, MOBILIZATION_EVENT, TEAM_LEADER_DOS_EVENT, VERIFICATION_EVENT,TABLET_ACCOUNTABILITY_EVENT);
+
+        String CELL_COORDINATOR_DAILY_SUMMARY = "cell_coordinator_daily_summary";
+
     }
 
     interface Tables {
@@ -436,6 +444,8 @@ public interface Constants {
 
         String CDD_SUPERVISOR_DAILY_SUMMARY_FORM = "json.form/community_drug_distributor_supervisor_daily_summary_form.json";
 
+        String RWANDA_CELL_COORDINATOR_DAILY_SUMMARY_FORM = "rwanda_cell_coordinator_daily_summary_form.json";
+
         String JSON_FORM_FOLDER = "json.form/";
 
         String LOCATION_COMPONENT_ACTIVE = "my_location_active";
@@ -556,6 +566,10 @@ public interface Constants {
         String HEALTH_WORKER_SUPERVISOR = "health_worker_supervisor";
 
         String CDD_SUPERVISION_TASK_COMPLETE = "task_complete";
+
+        String CELL_COORDINATOR = "cell_coordinator";
+
+        String VILLAGE = "village";
 
     }
 

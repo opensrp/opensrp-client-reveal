@@ -1,0 +1,36 @@
+---
+name: step1_treated_male_1_to_4
+description: step1_treated_male_1_to_4
+priority: 1
+condition: "!step1_ntd_treated.equals('SCH')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_treated_female_1_to_4
+description: step1_treated_female_1_to_4
+priority: 1
+condition: "!step1_ntd_treated.equals('SCH')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_received_number
+description: step1_received_number
+priority: 1
+condition: "!step1_received_when.equals('None')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sch_drug_validation_err
+description: step1_sch_drug_validation_err
+priority: 1
+condition: "step1_ntd_treated.equals('SCH') && (step1_drugs.equals('ALB') || step1_drugs.equals('MBZ'))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sth_drug_validation_err
+description: step1_sth_drug_validation_err
+priority: 1
+condition: "step1_ntd_treated.equals('STH') && step1_drugs.equals('PZQ')"
+actions:
+  - "isRelevant = true"
+
