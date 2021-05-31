@@ -479,6 +479,32 @@
         }
       },
       {
+        "key": "adverse",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Number of Serious Adverse Reaction cases reported",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        }
+      },
+      {
         "key": "drugs",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -497,20 +523,24 @@
           {
             "key": "MBZ",
             "text": "MBZ"
+          },
+          {
+            "key": "VITA",
+            "text": "Vitamin A"
           }
         ],
         "v_required": {
           "value": true,
-          "err": "Select Drug that was treated"
+          "err": "Select Drug that was used for  treatment"
         }
       },
       {
-        "key": "sch_drug_validation_err",
+        "key": "pzq_drug_validation_err",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "Only PZQ drug is used for SCH NTD you selected earlier",
+        "text": "The drug selected does not match the treatment provided",
         "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
@@ -526,12 +556,33 @@
         }
       },
       {
-        "key": "sth_drug_validation_err",
+        "key": "alb_meb_drug_validation_err",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "Only ALB or MBZ drug is used for this NTD you selected earlier",
+        "text": "The drug selected does not match the treatment provided",
+        "text_size": "8sp",
+        "text_color": "#CF0800",
+        "toaster_type": "problem",
+        "v_required": {
+          "value": "true"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "rwanda-cell-coordinator-summary-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "vita_drug_validation_err",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "The drug selected does not match the treatment provided",
         "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
@@ -661,32 +712,6 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Total damaged",
-        "is_mandatory": true,
-        "v_required": {
-          "value": true,
-          "err": "This field is mandatory"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "This field must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "This field must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "This field must be greater than or equal to 0"
-        }
-      },
-      {
-        "key": "adverse",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Number of Serious Adverse Reaction cases reported",
         "is_mandatory": true,
         "v_required": {
           "value": true,
