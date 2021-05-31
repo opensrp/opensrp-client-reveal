@@ -566,7 +566,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "Number of VitA Returnedd",
+        "hint": "Number of VitA Returned",
         "is_mandatory": true,
         "v_required": {
           "value": true,
