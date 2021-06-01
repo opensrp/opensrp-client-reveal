@@ -256,8 +256,15 @@
         "v_min": {
           "value": "0",
           "err": "This field must be greater than or equal to 0"
+        },
+        "relevance": {
+        "rules-engine": {
+          "ex-rules": {
+            "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
+          }
         }
-      },
+      }
+     },
       {
         "key": "treated_male_above_15",
         "openmrs_entity_parent": "",
@@ -282,6 +289,13 @@
         "v_min": {
           "value": "0",
           "err": "This field must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -521,8 +535,8 @@
             "text": "ALB"
           },
           {
-            "key": "MBZ",
-            "text": "MBZ"
+            "key": "MEB",
+            "text": "MEB"
           },
           {
             "key": "VITA",

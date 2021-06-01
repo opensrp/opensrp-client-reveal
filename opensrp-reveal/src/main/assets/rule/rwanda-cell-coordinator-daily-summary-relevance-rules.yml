@@ -81,7 +81,7 @@ actions:
 name: step1_vita_drug_validation_err
 description: step1_vita_drug_validation_err
 priority: 1
-condition: "step1_ntd_treated.equals('VITA') && (step1_drugs.equals('PZQ') ||  step1_drugs.equals('MEB') ||  step1_drugs.equals('ALB'))"
+condition: "step1_ntd_treated.equals('Vitamin A') && (step1_drugs.equals('PZQ') ||  step1_drugs.equals('MEB') ||  step1_drugs.equals('ALB'))"
 actions:
   - "isRelevant = true"
 
