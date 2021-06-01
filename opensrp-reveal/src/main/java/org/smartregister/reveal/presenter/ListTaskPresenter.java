@@ -381,7 +381,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         selectedFeatureInterventionType = code;
         if (INACTIVE.name().equals(status)) {
             listTaskView.displayToast(R.string.structure_is_inactive);
-        } if (isKenyaMDALite()) {
+        } if (isKenyaMDALite() || isRwandaMDALite()) {
             listTaskView.displayEditCDDTaskCompleteDialog();
         } else if (NOT_VISITED.equals(businessStatus) || !feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayMarkStructureInactiveDialog();
