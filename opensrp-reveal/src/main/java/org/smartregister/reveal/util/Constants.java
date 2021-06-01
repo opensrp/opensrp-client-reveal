@@ -446,7 +446,7 @@ public interface Constants {
 
         String CDD_SUPERVISOR_DAILY_SUMMARY_FORM = "json.form/community_drug_distributor_supervisor_daily_summary_form.json";
 
-        String RWANDA_CELL_COORDINATOR_DAILY_SUMMARY_FORM = "rwanda_cell_coordinator_daily_summary_form.json";
+        String RWANDA_CELL_COORDINATOR_DAILY_SUMMARY_FORM = "json.form/rwanda_cell_coordinator_daily_summary_form.json";
 
         String JSON_FORM_FOLDER = "json.form/";
 
