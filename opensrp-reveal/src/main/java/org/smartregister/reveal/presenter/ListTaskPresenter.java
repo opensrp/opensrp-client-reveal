@@ -568,7 +568,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             jsonFormUtils.populateFormWithServerOptions(formName, formJson);
         } else if(isZambiaIRSLite()) {
             jsonFormUtils.populateFormWithServerOptions(formName, formJson);
-        }else if(isKenyaMDALite() || isKenyaMDALite()){
+        }else if(isKenyaMDALite() || isRwandaMDALite()){
             jsonFormUtils.populateFormWithServerOptions(formName, formJson);
         }
         listTaskView.startJsonForm(formJson);
@@ -625,7 +625,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
         }
         listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
-       if(!isKenyaMDALite()){
+       if(!isKenyaMDALite() && !isRwandaMDALite()){
            listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
        }
     }

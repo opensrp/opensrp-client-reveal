@@ -41,6 +41,7 @@ import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
 import static org.smartregister.reveal.util.Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY;
+import static org.smartregister.reveal.util.Constants.EventType.CELL_COORDINATOR_DAILY_SUMMARY;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
@@ -117,7 +118,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 }
 
                 String eventType = event.getEventType();
-                if (eventType.equals(SPRAY_EVENT) || eventType.equals(IRS_LITE_VERIFICATION) || CDD_SUPERVISOR_DAILY_SUMMARY.equals(eventType)) {
+                if (eventType.equals(SPRAY_EVENT) || eventType.equals(IRS_LITE_VERIFICATION) || CDD_SUPERVISOR_DAILY_SUMMARY.equals(eventType) || CELL_COORDINATOR_DAILY_SUMMARY.equals(eventType)) {
                     operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.STRUCTURE_TYPE);
                 } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT) || eventType.equals(LARVAL_DIPPING_EVENT)
                         || eventType.equals(BEDNET_DISTRIBUTION_EVENT) ||

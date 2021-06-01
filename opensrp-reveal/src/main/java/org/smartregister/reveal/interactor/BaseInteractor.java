@@ -83,11 +83,13 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.CDD_SUPERVISOR_DAILY_SUMMARY;
+import static org.smartregister.reveal.util.Constants.EventType.CELL_COORDINATOR_DAILY_SUMMARY;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.CDD_SUPERVISION;
+import static org.smartregister.reveal.util.Constants.Intervention.CELL_COORDINATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -242,8 +244,10 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 interventionType = Intervention.IRS_VERIFICATION;
             } else if (encounterType.equals(EventType.DAILY_SUMMARY_EVENT)) {
                 jsonForm.put(ENTITY_ID, UUID.randomUUID().toString());
-            }else if (CDD_SUPERVISOR_DAILY_SUMMARY.equals(encounterType)){
+            } else if (CDD_SUPERVISOR_DAILY_SUMMARY.equals(encounterType)){
                 interventionType = CDD_SUPERVISION;
+            } else if(CELL_COORDINATOR_DAILY_SUMMARY.equals(encounterType)){
+                interventionType = CELL_COORDINATION;
             }
         } catch (JSONException e) {
             Timber.e(e);
