@@ -339,7 +339,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
-                String satelliteStyle = BuildConfig.SELECT_JURISDICTION ? getString(R.string.reveal_select_jurisdiction_style) : getString(R.string.reveal_satellite_style);
+                String satelliteStyle = BuildConfig. SELECT_JURISDICTION ? getString(R.string.reveal_select_jurisdiction_style) : getString(R.string.reveal_satellite_style);
                 Style.Builder builder = new Style.Builder().fromUri(satelliteStyle);
                 mapboxMap.setStyle(builder, new Style.OnStyleLoaded() {
                     @Override
@@ -432,7 +432,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void positionMyLocationAndLayerSwitcher() {
         FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
         if (getBuildCountry() != Country.ZAMBIA && getBuildCountry() != Country.NAMIBIA
-                && getBuildCountry() != Country.SENEGAL) {
+                && getBuildCountry() != Country.SENEGAL && getBuildCountry() != Country.RWANDA) {
             positionMyLocationAndLayerSwitcher(myLocationButtonParams, myLocationButtonParams.topMargin);
         } else {
             int progressHeight = getResources().getDimensionPixelSize(R.dimen.progress_height);

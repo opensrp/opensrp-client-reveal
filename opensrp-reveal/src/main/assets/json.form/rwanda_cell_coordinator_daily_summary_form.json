@@ -293,7 +293,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "rwanda-cell-coordinator-daily-summary-calculationn.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-calculation.yml"
             }
           }
         }
@@ -456,7 +456,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-calculation.yml"
             }
           }
         }
@@ -550,7 +550,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "rwanda-cell-coordinator-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
             }
           }
         }
@@ -571,7 +571,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "rwanda-cell-coordinator-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
             }
           }
         }
@@ -592,7 +592,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "rwanda-cell-coordinator-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
             }
           }
         }
@@ -651,7 +651,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "rwanda-cell-coordinator-summary-relevance-rules.yml"
+              "rules-file": "rwanda-cell-coordinator-daily-summary-relevance-rules.yml"
             }
           }
         }

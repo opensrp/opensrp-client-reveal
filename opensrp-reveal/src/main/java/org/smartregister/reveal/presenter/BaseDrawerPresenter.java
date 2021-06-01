@@ -38,12 +38,14 @@ import timber.log.Timber;
 
 import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
 import static org.smartregister.reveal.util.Constants.Tags.CANTON;
+import static org.smartregister.reveal.util.Constants.Tags.CELL;
 import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
 import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
 import static org.smartregister.reveal.util.Constants.Tags.REGION;
+import static org.smartregister.reveal.util.Constants.Tags.SECTOR;
 import static org.smartregister.reveal.util.Constants.Tags.SUB_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.VILLAGE;
 import static org.smartregister.reveal.util.Constants.Tags.ZONE;
@@ -165,7 +167,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     private void populateLocationsFromPreferences() {
         view.setDistrict(prefsUtil.getCurrentDistrict());
-        if(org.smartregister.reveal.util.Utils.isZambiaIRSLite() || org.smartregister.reveal.util.Utils.isKenyaMDALite()) {
+        if(org.smartregister.reveal.util.Utils.isZambiaIRSLite() || org.smartregister.reveal.util.Utils.isKenyaMDALite() || org.smartregister.reveal.util.Utils.isRwandaMDALite() ) {
             view.setFacility(prefsUtil.getCurrentDistrict(), "");
         } else {
             view.setFacility(prefsUtil.getCurrentFacility(), prefsUtil.getCurrentFacilityLevel());
@@ -201,6 +203,9 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(HEALTH_CENTER);
         operationalAreaLevels.add(VILLAGE);
         operationalAreaLevels.add(ZONE);
+        operationalAreaLevels.add(SECTOR);
+        operationalAreaLevels.add(CELL);
+
 
         List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
 

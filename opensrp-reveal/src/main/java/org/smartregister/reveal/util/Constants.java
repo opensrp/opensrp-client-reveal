@@ -149,6 +149,8 @@ public interface Constants {
         String VILLAGE = "Village";
         String OPERATIONAL_AREA = "Operational Area";
         String ZONE = "Zones";
+        String SECTOR = "Sector";
+        String CELL = "Cell";
     }
 
     interface Properties {
@@ -593,6 +595,7 @@ public interface Constants {
         String SENEGAL_EC_CLIENT_FIELDS = "ec_client_fields_senegal.json";
         String REFAPP_EC_CLIENT_FIELDS = "ec_client_fields_refapp.json";
         String KENYA_EC_CLIENT_FIELDS = "ec_client_fields_kenya.json";
+        String RWANDA_EC_CLIENT_FIELDS = "ec_client_fields_rwanda.json";
     }
 
 
