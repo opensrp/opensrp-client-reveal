@@ -41,3 +41,14 @@ priority: 1
 condition: "true"
 actions:
  - "calculation = [ 'total_female' : step1_total_female ]"
+
+---
+name: step1_total_males_and_females
+description: step1_total_males_and_females
+priority: 1
+condition: "true"
+actions:
+ - "calculation = Integer.valueOf(helper.ifNull(step1_total_female,0)) + Integer.valueOf(helper.ifNull(step1_total_males,0))"
+
+
+
