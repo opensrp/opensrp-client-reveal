@@ -652,13 +652,22 @@ public class RevealJsonFormUtils {
                 break;
 
             case JsonForm.TABLET_ACCOUNTABILITY_FORM:
-                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        CONFIGURATION.HEALTH_WORKER_SUPERVISORS, fieldsMap.get(JsonForm.HEALTH_WORKER_SUPERVISOR),
-                        PreferencesUtil.getInstance().getCurrentOperationalArea());
-                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS, fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),
-                        PreferencesUtil.getInstance().getCurrentOperationalArea());
-                populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.WARDS, fieldsMap.get(JsonForm.LOCATION), PreferencesUtil.getInstance().getCurrentOperationalArea());
+                if(BuildConfig.BUILD_COUNTRY == Country.KENYA){
+                    populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                            CONFIGURATION.HEALTH_WORKER_SUPERVISORS, fieldsMap.get(JsonForm.HEALTH_WORKER_SUPERVISOR),
+                            PreferencesUtil.getInstance().getCurrentOperationalArea());
+                    populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                            CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS, fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),
+                            PreferencesUtil.getInstance().getCurrentOperationalArea());
+                    populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.WARDS, fieldsMap.get(JsonForm.LOCATION), PreferencesUtil.getInstance().getCurrentOperationalArea());
+                } else if(BuildConfig.BUILD_COUNTRY == Country.RWANDA) {
+                    populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                            CONFIGURATION.MDA_CORDINATORS, fieldsMap.get(JsonForm.CELL_COORDINATOR),
+                            PreferencesUtil.getInstance().getCurrentDistrict());
+                    populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.WARDS, fieldsMap.get(JsonForm.LOCATION), PreferencesUtil.getInstance().getCurrentDistrict());
+                    populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                            CONFIGURATION.VILLAGES,fieldsMap.get(JsonForm.VILLAGE),PreferencesUtil.getInstance().getCurrentDistrict());
+                }
                 break;
             case JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
@@ -667,11 +676,12 @@ public class RevealJsonFormUtils {
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         CONFIGURATION.COMMUNITY_DRUG_DISTRIBUTORS, fieldsMap.get(JsonForm.COMMUNITY_DRUG_DISTRIBUTOR_NAME),
                         PreferencesUtil.getInstance().getCurrentOperationalArea());
+                break;
             case JsonForm.RWANDA_CELL_COORDINATOR_DAILY_SUMMARY_FORM:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                                     CONFIGURATION.MDA_CORDINATORS,fieldsMap.get(JsonForm.CELL_COORDINATOR),PreferencesUtil.getInstance().getCurrentOperationalArea());
+                                     CONFIGURATION.MDA_CORDINATORS,fieldsMap.get(JsonForm.CELL_COORDINATOR),PreferencesUtil.getInstance().getCurrentDistrict());
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        CONFIGURATION.VILLAGES,fieldsMap.get(JsonForm.VILLAGE),PreferencesUtil.getInstance().getCurrentOperationalArea());
+                        CONFIGURATION.VILLAGES,fieldsMap.get(JsonForm.VILLAGE),PreferencesUtil.getInstance().getCurrentDistrict());
                 break;
         }
     }

@@ -57,7 +57,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "spinner",
-        "hint": "Select the Location ( ward )",
+        "hint": "Select the Location ( cell )",
         "text_size": "8sp",
         "v_required": {
           "value": "true",
@@ -65,24 +65,24 @@
         }
       },
       {
-        "key": "health_worker_supervisor",
+        "key": "cell_coordinator",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "spinner",
-        "hint": "Name of CDD Supervisor",
+        "hint": "Name of Cell Coordinator",
         "v_required": {
           "value": "true",
           "err": "This field is required."
         }
       },
       {
-        "key": "cdd_name",
+        "key": "village",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "spinner",
-        "hint": "Name of CDD",
+        "hint": "Name of Village",
         "v_required": {
           "value": "true",
           "err": "This field is required."
