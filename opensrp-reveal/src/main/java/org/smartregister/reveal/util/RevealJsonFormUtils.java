@@ -662,8 +662,7 @@ public class RevealJsonFormUtils {
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.WARDS, fieldsMap.get(JsonForm.LOCATION), PreferencesUtil.getInstance().getCurrentOperationalArea());
                 break;
             case JsonForm.TABLET_ACCOUNTABILITY_FORM_RWANDA:
-            case JsonForm.RWANDA_CELL_COORDINATOR_DAILY_SUMMARY_FORM:
-                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                     populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         CONFIGURATION.MDA_CORDINATORS, fieldsMap.get(JsonForm.CELL_COORDINATOR),
                         PreferencesUtil.getInstance().getCurrentDistrict());
                 populateUserAssignedLocations(formJSON, JsonForm.LOCATION, Arrays.asList(CELL));
