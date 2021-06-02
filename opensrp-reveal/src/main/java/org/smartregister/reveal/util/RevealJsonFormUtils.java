@@ -19,6 +19,8 @@ import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Obs;
 import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.repository.LocationRepository;
+import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
@@ -69,6 +71,7 @@ import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.Tags.CELL;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
@@ -84,6 +87,7 @@ public class RevealJsonFormUtils {
 
     private Set<String> nonEditablefields;
     private LocationHelper locationHelper = LocationHelper.getInstance();
+    private StructureRepository structureRepository = RevealApplication.getInstance().getStructureRepository();
 
     public RevealJsonFormUtils() {
         nonEditablefields = new HashSet<>(Arrays.asList(JsonForm.HOUSEHOLD_ACCESSIBLE,
@@ -662,12 +666,7 @@ public class RevealJsonFormUtils {
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.WARDS, fieldsMap.get(JsonForm.LOCATION), PreferencesUtil.getInstance().getCurrentOperationalArea());
                 break;
             case JsonForm.TABLET_ACCOUNTABILITY_FORM_RWANDA:
-                     populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        CONFIGURATION.MDA_CORDINATORS, fieldsMap.get(JsonForm.CELL_COORDINATOR),
-                        PreferencesUtil.getInstance().getCurrentDistrict());
-                populateUserAssignedLocations(formJSON, JsonForm.LOCATION, Arrays.asList(CELL));
-                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        CONFIGURATION.VILLAGES,fieldsMap.get(JsonForm.VILLAGE),PreferencesUtil.getInstance().getCurrentDistrict());
+                populateChildLocations(formJSON, JsonForm.VILLAGE,PreferencesUtil.getInstance().getCurrentOperationalAreaId());
                 break;
             case JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
@@ -687,6 +686,23 @@ public class RevealJsonFormUtils {
             return;
         }
         defaultLocationHierarchy.stream().forEach(options::put);
+        JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJSON), fieldKey);
+
+        try {
+            field.put(KEYS, options);
+            field.put(VALUES, options);
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
+    }
+
+    private void populateChildLocations(JSONObject formJSON, String fieldKey, String parentLocationId) {
+        List<Location> childLocations = structureRepository.getLocationsByParentId(parentLocationId);
+        JSONArray options = new JSONArray();
+        if (childLocations == null) {
+            return;
+        }
+        childLocations.stream().map(location -> location.getProperties().getName()).forEach(options::put);
         JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJSON), fieldKey);
 
         try {
