@@ -679,6 +679,20 @@
         }
       },
       {
+        "key": "total_tablet_less_administered_max",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "rwanda-cell-coordinator-daily-summary-calculation.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "adminstered",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -736,6 +750,10 @@
         "v_min": {
           "value": "0",
           "err": "This field must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "total_tablet_less_administered_max",
+          "err": "You selected Initial balance, therefore  the total damaged must be less than or equal initial tablets received minus administered"
         }
       },
       {

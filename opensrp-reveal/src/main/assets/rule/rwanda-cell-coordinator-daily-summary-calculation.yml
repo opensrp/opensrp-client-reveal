@@ -50,5 +50,11 @@ condition: "true"
 actions:
  - "calculation = Integer.valueOf(helper.ifNull(step1_total_female,0)) + Integer.valueOf(helper.ifNull(step1_total_males,0))"
 
-
+---
+name: step1_total_tablet_less_administered_max
+description: step1_total_tablet_less_administered_max
+priority: 1
+condition: "true"
+actions:
+ - "calculation = (step1_received_when.equals('Initial balance') ? (Integer.valueOf(helper.ifNull(step1_received_number,0)) - Integer.valueOf(helper.ifNull(step1_adminstered,0))) : 999999999)"
 
