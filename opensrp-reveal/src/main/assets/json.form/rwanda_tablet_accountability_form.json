@@ -52,31 +52,6 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "location",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Select the Location ( cell )",
-        "text_size": "8sp",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
-      },
-      {
-        "key": "cell_coordinator",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Name of Cell Coordinator",
-        "v_required": {
-          "value": "true",
-          "err": "This field is required."
-        }
-      },
-      {
         "key": "village",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
