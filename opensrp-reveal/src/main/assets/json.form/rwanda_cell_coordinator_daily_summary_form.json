@@ -483,6 +483,62 @@
         }
       },
       {
+        "key": "sum_treated_6_to_11_mos",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "rwanda-cell-coordinator-daily-summary-calculation.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sum_treated_1_to_4",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "rwanda-cell-coordinator-daily-summary-calculation.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sum_treated_above_15",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "rwanda-cell-coordinator-daily-summary-calculation.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sum_treated_5_to_14",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "rwanda-cell-coordinator-daily-summary-calculation.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "adverse",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

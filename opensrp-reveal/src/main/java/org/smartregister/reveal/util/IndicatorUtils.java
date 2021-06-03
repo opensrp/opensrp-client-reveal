@@ -193,14 +193,48 @@ public class IndicatorUtils {
 
     public static IndicatorDetails processRwandaIndicators(List<TaskDetails> tasks){
         IndicatorDetails indicatorDetails = new IndicatorDetails();
+        Integer value = 0;
        Set<String> taskIdentifiers = tasks.stream()
                                           .filter(taskDetails -> taskDetails.getTaskCode().equals("Cell Coordination") && (taskDetails.getBusinessStatus().equals("In Progress") || taskDetails.getBusinessStatus().equals("Complete")))
                                           .map(taskDetails -> taskDetails.getTaskId())
                                           .collect(Collectors.toSet());
         EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+
         List<Event> dataCaptured = eventClientRepository.getEventsByTaskIds(taskIdentifiers);
-        Integer value  = dataCaptured.stream().map(event -> event.getObs()).map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("health_education_above_16")).findFirst().get()).map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
+        value  = dataCaptured.stream().map(event -> event.getObs())
+                                              .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("health_education_5_to_15")).findFirst().get())
+                                              .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setHealthEducatedChildren5To15(value);
+
+        value = dataCaptured.stream().map(event -> event.getObs())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("health_education_above_16")).findFirst().get())
+                .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
+        indicatorDetails.setHealthEducatedChildrenAbove16(value);
+
+        value = dataCaptured.stream().map(event -> event.getObs())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("sum_treated_6_to_11_mos")).findFirst().get())
+                .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
+        indicatorDetails.setVitaminTreatedChildren6To11Months(value);
+
+        value = dataCaptured.stream().map(event -> event.getObs())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("sum_treated_1_to_4")).findFirst().get())
+                .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
+        indicatorDetails.setVitaminTreatedChildren12To59Months(value);
+        indicatorDetails.setAlbMebTreatedChildren12To59Months(value);
+
+        value = dataCaptured.stream().map(event -> event.getObs())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("sum_treated_5_to_14")).findFirst().get())
+                .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
+        indicatorDetails.setAlbMebTreatedChildren5To15Years(value);
+        indicatorDetails.setPzqTreatedChildren5To15Years(value);
+
+        value = dataCaptured.stream().map(event -> event.getObs())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("sum_treated_above_15")).findFirst().get())
+                .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
+        indicatorDetails.setAlbMebTreatedChildrenAbove16Years(value);
+        indicatorDetails.setAlbMebTreatedChildrenAbove16Years(value);
+
+
         return indicatorDetails;
     }
 
