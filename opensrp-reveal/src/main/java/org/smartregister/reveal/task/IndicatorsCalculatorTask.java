@@ -76,6 +76,9 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             indicatorDetails = IndicatorUtils.getNamibiaIndicators(operationalArea.getId(), prefsUtil.getCurrentPlanId(), sqLiteDatabase);
             indicatorDetails.setTarget(calculateTarget());
             indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateNamibiaSprayIndicators(this.activity, indicatorDetails));
+        } else if(BuildConfig.BUILD_COUNTRY == Country.RWANDA){
+            indicatorDetails  = IndicatorUtils.processRwandaIndicators(this.tasks);
+            indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateRwandaIndicators(this.activity,indicatorDetails));
         }
         return indicatorDetails;
 
@@ -147,7 +150,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
 
         //Show or hide depending on plan
 
-        ((View) progressIndicator.getParent()).setVisibility(Utils.getInterventionLabel() == R.string.irs ? View.VISIBLE : View.GONE);
+        ((View) progressIndicator.getParent()).setVisibility(Utils.getInterventionLabel() == R.string.irs || BuildConfig.BUILD_COUNTRY == Country.RWANDA ? View.VISIBLE : View.GONE);
 
         if (activity instanceof ListTasksActivity)
             ((ListTasksActivity) activity).positionMyLocationAndLayerSwitcher();

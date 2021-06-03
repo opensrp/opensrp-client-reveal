@@ -6,8 +6,11 @@ import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.database.SQLiteException;
 
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.IndicatorDetails;
 import org.smartregister.reveal.model.TaskDetails;
 
@@ -16,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import timber.log.Timber;
 
@@ -185,5 +189,51 @@ public class IndicatorUtils {
             Timber.e(e);
         }
         return indicatorDetails;
+    }
+
+    public static IndicatorDetails processRwandaIndicators(List<TaskDetails> tasks){
+        IndicatorDetails indicatorDetails = new IndicatorDetails();
+       Set<String> taskIdentifiers = tasks.stream()
+                                          .filter(taskDetails -> taskDetails.getTaskCode().equals("Cell Coordination") && (taskDetails.getBusinessStatus().equals("In Progress") || taskDetails.getBusinessStatus().equals("Complete")))
+                                          .map(taskDetails -> taskDetails.getTaskId())
+                                          .collect(Collectors.toSet());
+        EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+        List<Event> dataCaptured = eventClientRepository.getEventsByTaskIds(taskIdentifiers);
+        Integer value  = dataCaptured.stream().map(event -> event.getObs()).map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("health_education_above_16")).findFirst().get()).map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
+        indicatorDetails.setHealthEducatedChildren5To15(value);
+        return indicatorDetails;
+    }
+
+    public static List<String> populateRwandaIndicators(Context context, IndicatorDetails indicatorDetails){
+        List<String> indicators = new ArrayList<>();
+
+        indicators.add("Health education ages 5-15 years");
+        indicators.add(String.valueOf(indicatorDetails.getHealthEducatedChildren5To15()));
+
+        indicators.add("Health education 16 years and above");
+        indicators.add(String.valueOf(indicatorDetails.getHealthEducatedChildrenAbove16()));
+
+        indicators.add("Vitamin A total 6-11 month");
+        indicators.add(String.valueOf(indicatorDetails.getVitaminTreatedChildren6To11Months()));
+
+        indicators.add("Vitamin A total 12-59 months");
+        indicators.add(String.valueOf(indicatorDetails.getVitaminTreatedChildren12To59Months()));
+
+        indicators.add("ALB/MEB total 12-59 months");
+        indicators.add(String.valueOf(indicatorDetails.getAlbMebTreatedChildren12To59Months()));
+
+        indicators.add("ALB/MEB total 5-15 years");
+        indicators.add(String.valueOf(indicatorDetails.getAlbMebTreatedChildren5To15Years()));
+
+        indicators.add("ALB/MEB total 16 years and above");
+        indicators.add(String.valueOf(indicatorDetails.getAlbMebTreatedChildrenAbove16Years()));
+
+        indicators.add("PZQ total 5-15 years");
+        indicators.add(String.valueOf(indicatorDetails.getPzqTreatedChildren5To15Years()));
+
+        indicators.add("PZQ total 16 years and above");
+        indicators.add(String.valueOf(indicatorDetails.getPzqTreatedChildrenAbove16Years()));
+
+        return  indicators;
     }
 }
