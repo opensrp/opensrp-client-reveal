@@ -23,10 +23,22 @@ import java.util.stream.Collectors;
 
 import timber.log.Timber;
 
+import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
+import static org.smartregister.reveal.util.Constants.Intervention.CELL_COORDINATION;
+import static org.smartregister.reveal.util.Constants.JsonForm.HEALTH_EDUCATION_5_TO_15;
+import static org.smartregister.reveal.util.Constants.JsonForm.HEALTH_EDUCATION_ABOVE_16;
+import static org.smartregister.reveal.util.Constants.JsonForm.SUM_TREATED_1_TO_4;
+import static org.smartregister.reveal.util.Constants.JsonForm.SUM_TREATED_5_TO_14;
+import static org.smartregister.reveal.util.Constants.JsonForm.SUM_TREATED_6_TO_11_MOS;
+import static org.smartregister.reveal.util.Constants.JsonForm.SUM_TREATED_ABOVE_15;
+
 /**
  * Created by ndegwamartin on 2019-09-27.
  */
 public class IndicatorUtils {
+
+
 
     /**
      * Process task details from map of tasks (key : structureId)
@@ -195,41 +207,41 @@ public class IndicatorUtils {
         IndicatorDetails indicatorDetails = new IndicatorDetails();
         Integer value = 0;
        Set<String> taskIdentifiers = tasks.stream()
-                                          .filter(taskDetails -> taskDetails.getTaskCode().equals("Cell Coordination") && (taskDetails.getBusinessStatus().equals("In Progress") || taskDetails.getBusinessStatus().equals("Complete")))
+                                          .filter(taskDetails -> taskDetails.getTaskCode().equals(CELL_COORDINATION) && (taskDetails.getBusinessStatus().equals(IN_PROGRESS) || taskDetails.getBusinessStatus().equals(COMPLETE)))
                                           .map(taskDetails -> taskDetails.getTaskId())
                                           .collect(Collectors.toSet());
         EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
 
         List<Event> dataCaptured = eventClientRepository.getEventsByTaskIds(taskIdentifiers);
         value  = dataCaptured.stream().map(event -> event.getObs())
-                                              .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("health_education_5_to_15")).findFirst().get())
+                                              .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(HEALTH_EDUCATION_5_TO_15)).findFirst().get())
                                               .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setHealthEducatedChildren5To15(value);
 
         value = dataCaptured.stream().map(event -> event.getObs())
-                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("health_education_above_16")).findFirst().get())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(HEALTH_EDUCATION_ABOVE_16)).findFirst().get())
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setHealthEducatedChildrenAbove16(value);
 
         value = dataCaptured.stream().map(event -> event.getObs())
-                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("sum_treated_6_to_11_mos")).findFirst().get())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_6_TO_11_MOS)).findFirst().get())
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setVitaminTreatedChildren6To11Months(value);
 
         value = dataCaptured.stream().map(event -> event.getObs())
-                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("sum_treated_1_to_4")).findFirst().get())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_1_TO_4)).findFirst().get())
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setVitaminTreatedChildren12To59Months(value);
         indicatorDetails.setAlbMebTreatedChildren12To59Months(value);
 
         value = dataCaptured.stream().map(event -> event.getObs())
-                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("sum_treated_5_to_14")).findFirst().get())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_5_TO_14)).findFirst().get())
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setAlbMebTreatedChildren5To15Years(value);
         indicatorDetails.setPzqTreatedChildren5To15Years(value);
 
         value = dataCaptured.stream().map(event -> event.getObs())
-                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals("sum_treated_above_15")).findFirst().get())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_ABOVE_15)).findFirst().get())
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setAlbMebTreatedChildrenAbove16Years(value);
         indicatorDetails.setAlbMebTreatedChildrenAbove16Years(value);
@@ -241,31 +253,31 @@ public class IndicatorUtils {
     public static List<String> populateRwandaIndicators(Context context, IndicatorDetails indicatorDetails){
         List<String> indicators = new ArrayList<>();
 
-        indicators.add("Health education ages 5-15 years");
+        indicators.add(context.getResources().getString(R.string.health_education_ages_5_to_15_years));
         indicators.add(String.valueOf(indicatorDetails.getHealthEducatedChildren5To15()));
 
-        indicators.add("Health education 16 years and above");
+        indicators.add(context.getResources().getString(R.string.health_education_16_years_and_above));
         indicators.add(String.valueOf(indicatorDetails.getHealthEducatedChildrenAbove16()));
 
-        indicators.add("Vitamin A total 6-11 month");
+        indicators.add(context.getResources().getString(R.string.vitamina_total_6_to_11_months));
         indicators.add(String.valueOf(indicatorDetails.getVitaminTreatedChildren6To11Months()));
 
-        indicators.add("Vitamin A total 12-59 months");
+        indicators.add(context.getResources().getString(R.string.vitamina_total_12_to_59_months));
         indicators.add(String.valueOf(indicatorDetails.getVitaminTreatedChildren12To59Months()));
 
-        indicators.add("ALB/MEB total 12-59 months");
+        indicators.add(context.getResources().getString(R.string.alb_meb_total_12_to_59_months));
         indicators.add(String.valueOf(indicatorDetails.getAlbMebTreatedChildren12To59Months()));
 
-        indicators.add("ALB/MEB total 5-15 years");
+        indicators.add(context.getResources().getString(R.string.alb_meb_total_5_to_15_years));
         indicators.add(String.valueOf(indicatorDetails.getAlbMebTreatedChildren5To15Years()));
 
-        indicators.add("ALB/MEB total 16 years and above");
+        indicators.add(context.getResources().getString(R.string.alb_meb_total_16_years_and_above));
         indicators.add(String.valueOf(indicatorDetails.getAlbMebTreatedChildrenAbove16Years()));
 
-        indicators.add("PZQ total 5-15 years");
+        indicators.add(context.getResources().getString(R.string.pzq_total_5_to_15_years));
         indicators.add(String.valueOf(indicatorDetails.getPzqTreatedChildren5To15Years()));
 
-        indicators.add("PZQ total 16 years and above");
+        indicators.add(context.getResources().getString(R.string.pzq_total_16_years_and_above));
         indicators.add(String.valueOf(indicatorDetails.getPzqTreatedChildrenAbove16Years()));
 
         return  indicators;

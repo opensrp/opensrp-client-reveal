@@ -573,6 +573,18 @@ public interface Constants {
 
         String VILLAGE = "village";
 
+        String HEALTH_EDUCATION_5_TO_15 = "health_education_5_to_15";
+
+        String HEALTH_EDUCATION_ABOVE_16 = "health_education_above_16";
+
+        String SUM_TREATED_6_TO_11_MOS = "sum_treated_6_to_11_mos";
+
+        String SUM_TREATED_1_TO_4 = "sum_treated_1_to_4";
+
+        String SUM_TREATED_5_TO_14 = "sum_treated_5_to_14";
+
+        String SUM_TREATED_ABOVE_15 = "sum_treated_above_15";
+
     }
 
     interface DateFormat {
