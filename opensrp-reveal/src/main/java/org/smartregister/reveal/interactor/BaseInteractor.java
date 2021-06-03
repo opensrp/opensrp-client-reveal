@@ -49,6 +49,7 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.StructureType;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
@@ -260,8 +261,13 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             public void run() {
                 try {
                     if(finalEncounterType.equals(EventType.TABLET_ACCOUNTABILITY_EVENT)){
-                        String locationName = JsonFormUtils.getFieldValue(jsonForm.toString(),JsonForm.LOCATION);
-                        jsonForm.put(ENTITY_ID, getStructureIdByName(locationName));
+                        String locationName = null;
+                        if(BuildConfig.BUILD_COUNTRY == Country.KENYA){
+                            locationName = JsonFormUtils.getFieldValue(jsonForm.toString(),JsonForm.LOCATION);
+                        } else if(BuildConfig.BUILD_COUNTRY == Country.RWANDA){
+                            locationName = JsonFormUtils.getFieldValue(jsonForm.toString(),JsonForm.VILLAGE);
+                        }
+                        jsonForm.put(ENTITY_ID,getStructureIdByName(locationName));
                     }
                     org.smartregister.domain.Event event = saveEvent(jsonForm, finalEncounterType, STRUCTURE);
                     clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
