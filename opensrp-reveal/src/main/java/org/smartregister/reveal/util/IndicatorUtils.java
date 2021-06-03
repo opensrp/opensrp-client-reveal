@@ -232,28 +232,24 @@ public class IndicatorUtils {
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setVitaminTreatedChildren6To11Months(value);
 
-        //first filter by on treated vitaminA
         value = dataCaptured.stream().map(event -> event.getObs())
                 .filter(obs -> obs.stream().filter(val -> val.getFieldCode().equals(NTD_TREATED) && val.getValue().equals(VITAMIN_A)).findAny().isPresent())
                 .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_1_TO_4)).findFirst().get())
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setVitaminTreatedChildren12To59Months(value);
 
-        //filter by treated equal ALB/MEB:
         value = dataCaptured.stream().map(event -> event.getObs())
                 .filter(obs -> obs.stream().filter(val -> val.getFieldCode().equals(NTD_TREATED) && val.getValue().equals(ALB_MEB)).findAny().isPresent())
                 .map(obs -> obs.stream().filter(obsValue -> (obsValue.getFieldCode().equals(SUM_TREATED_1_TO_4))).findFirst().get())
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setAlbMebTreatedChildren12To59Months(value);
 
-        //first filter alb_meb
         value = dataCaptured.stream().map(event -> event.getObs())
                 .filter(obs -> obs.stream().filter(val -> val.getFieldCode().equals(NTD_TREATED) && val.getValue().equals(ALB_MEB)).findAny().isPresent())
                 .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_5_TO_14)).findFirst().get())
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setAlbMebTreatedChildren5To15Years(value);
 
-        //first filter by pzq
         value = dataCaptured.stream().map(event -> event.getObs())
                 .filter(obs -> obs.stream().filter(val -> val.getFieldCode().equals(NTD_TREATED) && val.getValue().equals(PZQ)).findAny().isPresent())
                 .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_5_TO_14)).findFirst().get())
