@@ -442,8 +442,8 @@
     <string name="confirm_edit_cdd_task_complete_status">Please confirm that the task is complete</string>
     <string name="data_collection_date">Data Collected</string>
     <string name="cancel_no">Cancel</string>
-    <string name="health_education_ages_5_to_15_years">Health education ages 5-15 years</string>
-    <string name="health_education_16_years_and_above">Health education 16 years and above</string>
+    <string name="health_education_ages_5_to_15_years">Health education ages 5-15 yrs</string>
+    <string name="health_education_16_years_and_above">Health education 16 yrs above</string>
     <string name="vitamina_total_6_to_11_months">Vitamin A total 6-11 month</string>
     <string name="vitamina_total_12_to_59_months">Vitamin A total 12-59 months</string>
     <string name="alb_meb_total_12_to_59_months">ALB/MEB total 12-59 months</string>
