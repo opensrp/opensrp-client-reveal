@@ -144,6 +144,10 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             progressIndicator2.setTitle(this.activity.getString(R.string.n_percent, coverage));
 
             progressIndicator.setVisibility(View.GONE);
+        } else if(BuildConfig.BUILD_COUNTRY == Country.RWANDA){
+            progressIndicator.setVisibility(View.GONE);
+            progressIndicator2.setVisibility(View.GONE);
+            progressIndicator3.setVisibility(View.GONE);
         }
 
         tableView.setTableData(Arrays.asList(new String[]{this.activity.getString(R.string.indicator), this.activity.getString(R.string.value)}), indicatorDetails.getSprayIndicatorList());
