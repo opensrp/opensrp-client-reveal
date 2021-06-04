@@ -179,6 +179,13 @@
             "creates_case": [
               "ec_events"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "cell_coordinator_daily_summary",
+            "creates_case": [
+              "ec_events"
+            ]
           }
         ]
       }

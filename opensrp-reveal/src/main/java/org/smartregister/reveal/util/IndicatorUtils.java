@@ -228,6 +228,7 @@ public class IndicatorUtils {
         indicatorDetails.setHealthEducatedChildrenAbove16(value);
 
         value = dataCaptured.stream().map(event -> event.getObs())
+                .filter(obs -> obs.stream().filter(val -> val.getFieldCode().equals(NTD_TREATED) && val.getValue().equals(VITAMIN_A)).findAny().isPresent())
                 .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_6_TO_11_MOS)).findFirst().get())
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setVitaminTreatedChildren6To11Months(value);

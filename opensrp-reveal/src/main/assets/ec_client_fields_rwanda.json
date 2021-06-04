@@ -743,7 +743,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "cdd_name"
+            "concept": "cell_coordinator"
           }
         },
         {

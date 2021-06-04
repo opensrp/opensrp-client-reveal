@@ -64,6 +64,13 @@
         }
       },
       {
+        "key": "cell_coordinator",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden"
+      },
+      {
         "key": "drug_distributed",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

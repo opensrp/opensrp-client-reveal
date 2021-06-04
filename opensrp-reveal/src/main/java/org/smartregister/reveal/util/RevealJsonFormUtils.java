@@ -19,7 +19,6 @@ import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Obs;
 import org.smartregister.location.helper.LocationHelper;
-import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
@@ -63,6 +62,7 @@ import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATIO
 import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.JsonForm.CELL_COORDINATOR;
 import static org.smartregister.reveal.util.Constants.JsonForm.JSON_FORM_FOLDER;
 import static org.smartregister.reveal.util.Constants.JsonForm.YES;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
@@ -71,8 +71,6 @@ import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
-import static org.smartregister.reveal.util.Constants.STRUCTURE;
-import static org.smartregister.reveal.util.Constants.Tags.CELL;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.ZONE;
@@ -667,6 +665,10 @@ public class RevealJsonFormUtils {
                 break;
             case JsonForm.TABLET_ACCOUNTABILITY_FORM_RWANDA:
                 populateChildLocations(formJSON, JsonForm.VILLAGE,PreferencesUtil.getInstance().getCurrentOperationalAreaId());
+                setDefaultValue(formJSON,CELL_COORDINATOR,RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
+                break;
+            case JsonForm.RWANDA_CELL_COORDINATOR_DAILY_SUMMARY_FORM:
+                setDefaultValue(formJSON,CELL_COORDINATOR, RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
                 break;
             case JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
@@ -711,5 +713,15 @@ public class RevealJsonFormUtils {
         } catch (JSONException e) {
             Timber.e(e);
         }
+    }
+
+    private void setDefaultValue(JSONObject formJSON,String fieldKey,String defaultValue){
+        JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJSON),fieldKey);
+        try {
+            field.put(VALUE,defaultValue);
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
+
     }
 }
