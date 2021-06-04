@@ -566,11 +566,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DATA_COLLECTORS, jsonFormUtils.getFields(formJson).get(JsonForm.DATA_COLLECTOR), prefsUtil.getCurrentDistrict());
         } else if (cardDetails instanceof SprayCardDetails && isZambiaIRSLite()) {
             jsonFormUtils.populateForm(event, formJson);
-            jsonFormUtils.populateFormWithServerOptions(formName, formJson);
+            jsonFormUtils.populateFormWithServerOptions(formName, formJson,null);
         } else if(isZambiaIRSLite()) {
-            jsonFormUtils.populateFormWithServerOptions(formName, formJson);
+            jsonFormUtils.populateFormWithServerOptions(formName, formJson,null);
         }else if(isKenyaMDALite() || isRwandaMDALite()){
-            jsonFormUtils.populateFormWithServerOptions(formName, formJson);
+            jsonFormUtils.populateFormWithServerOptions(formName, formJson,feature);
         }
         listTaskView.startJsonForm(formJson);
     }

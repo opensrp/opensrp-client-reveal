@@ -91,7 +91,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
 
     private String mainSelect(String tableName, String mainCondition) {
         SmartRegisterQueryBuilder queryBUilder = new SmartRegisterQueryBuilder();
-        if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
+        if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY) || Country.RWANDA.equals(BuildConfig.BUILD_COUNTRY)) {
             List<String> mainColumns =  new ArrayList<>(Arrays.asList(mainColumns(tableName)));
             mainColumns.add(tableName + "." + DatabaseKeys.DATA_COLLECTION_DATE);
             queryBUilder.selectInitiateMainTable(tableName, mainColumns.toArray(new String[mainColumns.size()]));
@@ -141,7 +141,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
         } else {
             JSONObject formJSON = view.getJsonFormUtils().getFormJSON(view.getContext(), formName, null, null);
             view.getJsonFormUtils().populateForm(event, formJSON);
-            view.getJsonFormUtils().populateFormWithServerOptions(formName, formJSON);
+            view.getJsonFormUtils().populateFormWithServerOptions(formName, formJSON,null);
             try {
                 formJSON.put(ENTITY_ID, event.getBaseEntityId());
                 formJSON.put(DETAILS, new JSONObject(event.getDetails()));

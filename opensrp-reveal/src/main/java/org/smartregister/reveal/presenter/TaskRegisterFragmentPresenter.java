@@ -417,7 +417,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             } else {
                 JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, getTaskDetails(), getStructure());
                 getView().getJsonFormUtils().populateForm(event, formJSON);
-                getView().getJsonFormUtils().populateFormWithServerOptions(formName,formJSON);
+                getView().getJsonFormUtils().populateFormWithServerOptions(formName,formJSON,null);
                 getView().startForm(formJSON);
             }
         }

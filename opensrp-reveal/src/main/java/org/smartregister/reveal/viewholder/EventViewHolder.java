@@ -35,6 +35,7 @@ import java.util.Map;
 public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.RegisterViewHolder> {
 
     public static final String CDD_SUPERVISOR_DAILY_SUMMARY = "Cdd Supervisor Daily Summary";
+    public static final String CELL_COORDINATOR_DAILY_SUMMARY = "Cell Coordinator Daily Summary";
     private final Context context;
     private final View.OnClickListener registerClickListener;
     private final View.OnClickListener paginationClickListener;
@@ -53,7 +54,7 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
         registerViewHolder.eventDateTextView.setText(eventDate.toString("dd-M-YYYY"));
         String eventType = Utils.getValue(pc.getColumnmaps(), DatabaseKeys.EVENT_TYPE, true);
 
-        if(CDD_SUPERVISOR_DAILY_SUMMARY.equals(eventType)){
+        if(CDD_SUPERVISOR_DAILY_SUMMARY.equals(eventType) || CELL_COORDINATOR_DAILY_SUMMARY.equals(eventType)){
             String dataCollectionDate = Utils.getValue(pc.getColumnmaps(),DatabaseKeys.DATA_COLLECTION_DATE,false);
             registerViewHolder.dataCollectionDateTextView.setText(dataCollectionDate);
         }
@@ -152,7 +153,7 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
             statusTextView = itemView.findViewById(R.id.status);
             dataCollectionDateTextView = itemView.findViewById(R.id.data_collection_date);
 
-            if(!Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
+            if(!Country.KENYA.equals(BuildConfig.BUILD_COUNTRY) && !Country.RWANDA.equals(BuildConfig.BUILD_COUNTRY)){
                 dataCollectionDateTextView.setVisibility(View.GONE);
             }
         }

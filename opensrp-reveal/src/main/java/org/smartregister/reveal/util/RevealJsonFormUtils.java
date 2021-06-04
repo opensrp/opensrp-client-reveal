@@ -73,7 +73,9 @@ import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_G
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
+import static org.smartregister.reveal.util.Constants.Tags.VILLAGE;
 import static org.smartregister.reveal.util.Constants.Tags.ZONE;
+import static org.smartregister.reveal.util.Utils.evictCache;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 import static org.smartregister.reveal.util.Utils.isZambiaIRSLite;
 
@@ -561,7 +563,7 @@ public class RevealJsonFormUtils {
         return fieldsMap;
     }
 
-    public void populateFormWithServerOptions(String formName, JSONObject formJSON) {
+    public void populateFormWithServerOptions(String formName, JSONObject formJSON,Feature feature) {
 
             Map<String, JSONObject> fieldsMap = getFields(formJSON);
         switch (formName) {
@@ -669,6 +671,7 @@ public class RevealJsonFormUtils {
                 break;
             case JsonForm.RWANDA_CELL_COORDINATOR_DAILY_SUMMARY_FORM:
                 setDefaultValue(formJSON,CELL_COORDINATOR, RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
+                setDefaultValue(formJSON,JsonForm.VILLAGE,structureRepository.getLocationById(feature.id()).getProperties().getName());
                 break;
             case JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
@@ -680,6 +683,7 @@ public class RevealJsonFormUtils {
                 break;
         }
     }
+
 
     private void populateUserAssignedLocations(JSONObject formJSON, String fieldKey, List<String> allowedTags) {
         JSONArray options = new JSONArray();
