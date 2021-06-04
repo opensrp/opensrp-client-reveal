@@ -55,8 +55,10 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
             String planIdentifier = PreferencesUtil.getInstance().getCurrentPlanId();
             eventClient.getEvent().addDetails(Properties.PLAN_IDENTIFIER, planIdentifier);
             Location operationalArea = org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
-            if (operationalArea != null)
+            if (operationalArea != null) {
                 eventClient.getEvent().setLocationId(operationalArea.getId());
+                eventClient.getClient().setLocationId(operationalArea.getId());
+            }
         }
         return eventClientList;
     }
