@@ -58,6 +58,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
     public void setUp() {
         View view = LayoutInflater.from(context).inflate(R.layout.task_register_row, null);
         viewHolder = new TaskRegisterViewHolder(view);
+        when(cardDetails.getStatusColor()).thenReturn(null);
     }
 
     @Test
