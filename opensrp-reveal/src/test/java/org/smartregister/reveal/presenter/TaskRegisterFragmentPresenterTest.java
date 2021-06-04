@@ -25,7 +25,6 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
-import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
