@@ -310,6 +310,23 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     }
 
     @Test
+    public void testOnTaskSelectedForMultipleCompletedTasks() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setTaskCount(3);
+        taskDetails.setCompleteTaskCount(1);
+        presenter.onTaskSelected(taskDetails, true);
+        verify(view).openTasksScreen(taskDetails);
+    }
+
+    @Test
+    public void testTaskDetailsPendingCount() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setTaskCount(3);
+        taskDetails.setCompleteTaskCount(1);
+        assertEquals(2, taskDetails.getPendingTasksCount());
+    }
+
+    @Test
     public void testOnTaskSelectedShouldLaunchForm() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
         taskDetails.setTaskStatus(Task.TaskStatus.READY.name());
