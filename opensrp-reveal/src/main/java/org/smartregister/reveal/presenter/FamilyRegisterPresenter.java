@@ -52,12 +52,4 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter impleme
             }
         }
     }
-
-    private FamilyRegisterModel getModel() {
-        return (FamilyRegisterModel) model;
-    }
-
-    private FamilyRegisterContract.Interactor getInteractor() {
-        return (FamilyRegisterContract.Interactor) interactor;
-    }
 }
