@@ -73,7 +73,6 @@ import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
-import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 
 /**
  * Created by samuelgithengi on 1/27/20.
