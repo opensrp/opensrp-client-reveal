@@ -43,6 +43,7 @@ import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
 import org.smartregister.reveal.view.FamilyRegisterActivity;
 import org.smartregister.reveal.view.FilterTasksActivity;
+import org.smartregister.reveal.view.StructureTasksActivity;
 import org.smartregister.reveal.view.TaskRegisterActivity;
 
 import java.util.ArrayList;
@@ -474,6 +475,19 @@ public class TaskRegisterFragmentTest extends BaseUnitTest {
         verify(fragment).displayResetTaskInfoDialog(taskDetailsArgumentCaptor.capture());
         assertEquals(taskDetails.getTaskId(), taskDetailsArgumentCaptor.getValue().getTaskId());
         assertFalse(alertDialog.isShowing());
+    }
+
+    @Test
+    public void testOpenTasksScreen() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        fragment.openTasksScreen(taskDetails);
+        Intent intent = shadowOf(activity).getNextStartedActivity();
+        assertEquals(StructureTasksActivity.class, shadowOf(intent).getIntentClass());
+        assertEquals(taskDetails.getStructureId(), intent.getStringExtra(Constants.Properties.LOCATION_UUID));
+        assertEquals(taskDetails.getTaskId(), intent.getStringExtra(Constants.Properties.TASK_IDENTIFIER));
+        assertEquals(taskDetails.getBusinessStatus(), intent.getStringExtra(Constants.Properties.TASK_BUSINESS_STATUS));
+        assertEquals(taskDetails.getTaskStatus(), intent.getStringExtra(Constants.Properties.TASK_STATUS));
+
     }
 
 }

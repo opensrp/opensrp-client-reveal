@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.SyncEntity;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
@@ -145,4 +146,21 @@ public class TaskUtilsTests extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testSyncEntityString() {
+        String result = Utils.getSyncEntityString(SyncEntity.EVENTS);
+        assertEquals("Events", result);
+
+        result = Utils.getSyncEntityString(SyncEntity.TASKS);
+        assertEquals("Tasks", result);
+
+        result = Utils.getSyncEntityString(SyncEntity.LOCATIONS);
+        assertEquals("Locations", result);
+
+        result = Utils.getSyncEntityString(SyncEntity.PLANS);
+        assertEquals("Plans", result);
+
+        result = Utils.getSyncEntityString(SyncEntity.STRUCTURES);
+        assertEquals("Structures", result);
+    }
 }
