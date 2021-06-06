@@ -455,7 +455,7 @@ public class RevealJsonFormUtils {
         if (event == null)
             return;
         JSONArray fields = JsonFormUtils.fields(formJSON);
-        for (int i = 0; i < fields.length(); i++) {
+            for (int i = 0; i < fields.length(); i++) {
             try {
                 JSONObject field = fields.getJSONObject(i);
                 String key = field.getString(KEY);
@@ -484,7 +484,7 @@ public class RevealJsonFormUtils {
                             field.remove(JsonFormConstants.RELEVANCE);
                         }
                     }
-                    if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY) && nonEditablefields.contains(key)){
+                    if((Country.KENYA.equals(BuildConfig.BUILD_COUNTRY) || Country.RWANDA.equals(BuildConfig.BUILD_COUNTRY)) && nonEditablefields.contains(key)){
                         field.put(JsonFormConstants.READ_ONLY,true);
                     }
                 }
@@ -671,7 +671,8 @@ public class RevealJsonFormUtils {
                 break;
             case JsonForm.RWANDA_CELL_COORDINATOR_DAILY_SUMMARY_FORM:
                 setDefaultValue(formJSON,CELL_COORDINATOR, RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
-                setDefaultValue(formJSON,JsonForm.VILLAGE,structureRepository.getLocationById(feature.id()).getProperties().getName());
+                if(feature != null)
+                    setDefaultValue(formJSON,JsonForm.VILLAGE,structureRepository.getLocationById(feature.id()).getProperties().getName());
                 break;
             case JsonForm.CDD_SUPERVISOR_DAILY_SUMMARY_FORM:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
