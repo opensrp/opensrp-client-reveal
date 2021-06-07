@@ -52,18 +52,6 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "zone",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Name of location",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
-      },
-      {
         "key": "sprayop_code",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
