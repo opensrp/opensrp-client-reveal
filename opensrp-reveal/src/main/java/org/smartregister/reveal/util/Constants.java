@@ -555,6 +555,21 @@ public interface Constants {
 
         String CDD_SUPERVISION_TASK_COMPLETE = "task_complete";
 
+        String COMPOUND_STRUCTURE = "compoundStructure";
+
+        String LOCATION_ZONE = "location_zone";
+
+
+        String ROOMS_SPRAYED = "rooms_sprayed";
+
+        String ROOMS_ELIGIBLE = "rooms_eligible";
+
+        String COLLECTION_DATE = "collection_date";
+
+
+        String LOCATION_OTHER = "location_other";
+
+
     }
 
     interface DateFormat {
