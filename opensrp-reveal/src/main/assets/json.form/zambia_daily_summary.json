@@ -98,6 +98,30 @@
         }
       },
       {
+        "key": "district_manager",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "District Manager name",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "supervisor",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of Coordinator/Decision Maker/Supervisor",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
         "key": "sprayop_code",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

@@ -591,6 +591,12 @@ public class RevealJsonFormUtils {
                             dataCollector);
                 }
 
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                            CONFIGURATION.DISTRICT_MANAGERS, fieldsMap.get(JsonForm.DISTRICT_MANAGER),
+                            PreferencesUtil.getInstance().getCurrentDistrict());
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                            CONFIGURATION.SUPERVISORS, fieldsMap.get(JsonForm.SUPERVISOR),
+                            PreferencesUtil.getInstance().getCurrentDistrict());
                 if (isZambiaIRSLite()) {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA));
                 } else if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
