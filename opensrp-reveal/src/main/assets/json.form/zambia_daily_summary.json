@@ -122,6 +122,18 @@
         }
       },
       {
+        "key": "teamLeader",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of Team Leader who conducted observation",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
         "key": "sprayop_code",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
