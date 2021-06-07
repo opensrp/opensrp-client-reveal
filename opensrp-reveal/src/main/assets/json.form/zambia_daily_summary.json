@@ -52,6 +52,36 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "collection_date",
+        "type": "date_picker",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "What is the date that this data collection happened?",
+        "max_date": "today",
+        "v_required": {
+          "value": true,
+          "err": "Please specify the date data collection was done"
+        }
+      },
+      {
+        "key": "zone",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "name",
+        "hint": "Please write the name of the Zone/Location",
+        "v_regex": {
+          "value": "[A-Za-z\\s\.\-]*",
+          "err": "Please enter a valid name"
+        },
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
         "key": "sprayop_code",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
