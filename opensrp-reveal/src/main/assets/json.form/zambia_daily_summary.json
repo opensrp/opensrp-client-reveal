@@ -82,6 +82,22 @@
         }
       },
       {
+        "key": "spray_areas",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "multi_select_list",
+        "buttonText": "Select the SA(s) that this spray operator worked in today",
+        "dialogTitle": "Select the SA(s) that this spray operator worked in today",
+        "searchHint": "Type Spray Area Name",
+        "source": "true",
+        "repositoryClass":"org.smartregister.reveal.model.SprayAreaMultiSelectRepository",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
         "key": "sprayop_code",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
