@@ -104,15 +104,18 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
             btnVerificationForm.setVisibility(View.GONE);
             view.findViewById(R.id.separator7).setVisibility(View.GONE);
             view.findViewById(R.id.separator8).setVisibility(View.GONE);
+        } else if(BuildConfig.BUILD_COUNTRY  == Country.ZAMBIA){
+            btnCbSprayArea.setVisibility(View.GONE);
+            view.findViewById(R.id.separator3).setVisibility(View.GONE);
+            btnVerificationForm.setVisibility(View.GONE);
+            view.findViewById(R.id.separator7).setVisibility(View.GONE);
         }
 
         setClickListeners();
     }
 
     private void setClickListeners() {
-        if(Country.KENYA.equals(BuildConfig.BUILD_COUNTRY)){
             btnTabletAccountabilityForm.setOnClickListener(this);
-        } else {
             btnDailySummary.setOnClickListener(this);
             btnTeamLeaderDos.setOnClickListener(this);
             btnCbSprayArea.setOnClickListener(this);
@@ -120,8 +123,6 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
             btnMobilization.setOnClickListener(this);
             btnIrsFieldOfficer.setOnClickListener(this);
             btnVerificationForm.setOnClickListener(this);
-        }
-
     }
 
     @Override
