@@ -397,7 +397,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "Please make sure the SUPs know where they can find all remaining structures that were missed.",
+        "text": "Please make sure the SOPs know where they can find all remaining structures that were missed.",
         "text_color": "#CF0800",
         "toaster_type": "info",
         "text_size": "8sp",

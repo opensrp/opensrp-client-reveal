@@ -44,7 +44,7 @@ actions:
 name: step1_selectnotfound
 description: step1_selectnotfound
 priority: 1
-condition: "Integer.valueOf(step1_spray_effectiveness) < 90 && step1_reason_noteffective != null && step1_reason_noteffective.equals('low_foundcoverage')"
+condition: "step1_reason_noteffective.equals('lowCoverage')"
 actions:
   - "isRelevant = true"
 ---
