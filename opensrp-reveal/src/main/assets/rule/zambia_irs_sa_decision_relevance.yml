@@ -16,7 +16,7 @@ actions:
 name: step1_reasonnotsprayed
 description: step1_reasonnotsprayed
 priority: 1
-condition: "Integer.valueOf(step1_spray_effectiveness) < 90"
+condition: "step1_reason_noteffective.equals('lowSuccess')"
 actions:
   - "isRelevant = true"
 ---
