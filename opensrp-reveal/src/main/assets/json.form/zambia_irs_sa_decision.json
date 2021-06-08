@@ -59,6 +59,10 @@
         "type": "edit_text",
         "hint": "Please write the name of the Village for this Spray Area",
         "text_size": "7sp",
+        "v_regex": {
+          "value": "^(?![0-9\\s_-]*$)[a-zA-Z0-9\\s_-]+$",
+          "err": "Please enter a valid name"
+        },
         "v_required": {
           "value": "true",
           "err": "Required field"
