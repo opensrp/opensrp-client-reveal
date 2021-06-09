@@ -153,13 +153,19 @@
         "type": "spinner",
         "hint": "What is the reason(s) for referral?",
         "values": [
-         "Severe sickness / fever",
-          "Severe allergy or adverse reaction",
+          "Severe sickness",
+          "Fever",
+          "Severe allergy",
+          "Adverse reaction/side effect of SPAQ today",
+          "Adverse reaction/side effect of SPAQ previous cycle",
           "Other Reason"
         ],
         "keys": [
-          "Severe sickness / fever",
-          "Severe allergy or adverse reaction",
+          "Severe sickness",
+          "Fever",
+          "Severe allergy",
+          "Adverse reaction/side effect of SPAQ today",
+          "Adverse reaction/side effect of SPAQ previous cycle",
           "Other Reason"
         ],
         "relevance": {

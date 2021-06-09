@@ -302,7 +302,7 @@
           "Adverse reaction/side effect of SPAQ today",
           "Adverse reaction/side effect of SPAQ previous cycle",
           "Child vomited twice",
-          "Other Reason - specify"
+          "Other Reason"
         ],
         "keys": [
           "Severe sickness",
@@ -311,7 +311,7 @@
           "Adverse reaction/side effect of SPAQ today",
           "Adverse reaction/side effect of SPAQ previous cycle",
           "Child vomited twice",
-          "Other Reason - specify"
+          "Other Reason"
         ]
       },
       {
@@ -329,7 +329,7 @@
         "relevance": {
           "step1:referralReason": {
             "type": "string",
-            "ex": "equalTo(., \"Other Reason - specify\")"
+            "ex": "equalTo(., \"Other Reason\")"
           }
         }
       },
