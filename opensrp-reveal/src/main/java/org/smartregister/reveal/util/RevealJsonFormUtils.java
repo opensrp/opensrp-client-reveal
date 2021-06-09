@@ -610,10 +610,10 @@ public class RevealJsonFormUtils {
             case JsonForm.TEAM_LEADER_DOS_SENEGAL:
 
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        Constants.CONFIGURATION.DATA_COLLECTORS, fieldsMap.get(JsonForm.DATA_COLLECTOR),
+                        CONFIGURATION.TEAM_LEADERS, fieldsMap.get(JsonForm.TEAM_LEADER),
                         PreferencesUtil.getInstance().getCurrentDistrict());
 
-                dataCollector = JsonFormUtils.getString(fieldsMap.get(JsonForm.DATA_COLLECTOR), VALUE);
+                dataCollector = RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM();
                 if (StringUtils.isNotBlank(dataCollector)) {
                     populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                             CONFIGURATION.SPRAY_OPERATORS, fieldsMap.get(JsonForm.SPRAY_OPERATOR_CODE),

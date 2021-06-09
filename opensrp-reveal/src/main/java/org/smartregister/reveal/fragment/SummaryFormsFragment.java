@@ -109,6 +109,8 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
             view.findViewById(R.id.separator3).setVisibility(View.GONE);
             btnVerificationForm.setVisibility(View.GONE);
             view.findViewById(R.id.separator7).setVisibility(View.GONE);
+            btnTabletAccountabilityForm.setVisibility(View.GONE);
+            view.findViewById(R.id.separator8).setVisibility(View.GONE);
         }
 
         setClickListeners();
