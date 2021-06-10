@@ -209,7 +209,7 @@
         }
       },
       {
-        "key": "treated_male_5_to_14",
+        "key": "treated_male_5_to_15",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -242,7 +242,7 @@
       }
      },
       {
-        "key": "treated_male_above_15",
+        "key": "treated_male_above_16",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -372,7 +372,7 @@
         }
       },
       {
-        "key": "treated_female_5_to_14",
+        "key": "treated_female_5_to_15",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -405,7 +405,7 @@
         }
       },
       {
-        "key": "treated_female_above_15",
+        "key": "treated_female_above_16",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -511,7 +511,7 @@
         }
       },
       {
-        "key": "sum_treated_above_15",
+        "key": "sum_treated_above_16",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -525,7 +525,7 @@
         }
       },
       {
-        "key": "sum_treated_5_to_14",
+        "key": "sum_treated_5_to_15",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",

@@ -29,9 +29,9 @@ import static org.smartregister.reveal.util.Constants.Intervention.CELL_COORDINA
 import static org.smartregister.reveal.util.Constants.JsonForm.HEALTH_EDUCATION_5_TO_15;
 import static org.smartregister.reveal.util.Constants.JsonForm.HEALTH_EDUCATION_ABOVE_16;
 import static org.smartregister.reveal.util.Constants.JsonForm.SUM_TREATED_1_TO_4;
-import static org.smartregister.reveal.util.Constants.JsonForm.SUM_TREATED_5_TO_14;
+import static org.smartregister.reveal.util.Constants.JsonForm.SUM_TREATED_5_TO_15;
 import static org.smartregister.reveal.util.Constants.JsonForm.SUM_TREATED_6_TO_11_MOS;
-import static org.smartregister.reveal.util.Constants.JsonForm.SUM_TREATED_ABOVE_15;
+import static org.smartregister.reveal.util.Constants.JsonForm.SUM_TREATED_ABOVE_16;
 
 /**
  * Created by ndegwamartin on 2019-09-27.
@@ -247,25 +247,25 @@ public class IndicatorUtils {
 
         value = dataCaptured.stream().map(event -> event.getObs())
                 .filter(obs -> obs.stream().filter(val -> val.getFieldCode().equals(NTD_TREATED) && val.getValue().equals(ALB_MEB)).findAny().isPresent())
-                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_5_TO_14)).findFirst().get())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_5_TO_15)).findFirst().get())
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setAlbMebTreatedChildren5To15Years(value);
 
         value = dataCaptured.stream().map(event -> event.getObs())
                 .filter(obs -> obs.stream().filter(val -> val.getFieldCode().equals(NTD_TREATED) && val.getValue().equals(PZQ)).findAny().isPresent())
-                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_5_TO_14)).findFirst().get())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_5_TO_15)).findFirst().get())
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setPzqTreatedChildren5To15Years(value);
 
         value = dataCaptured.stream().map(event -> event.getObs())
                 .filter(obs -> obs.stream().filter(val -> val.getValue().equals(ALB_MEB)).findAny().isPresent())
-                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_ABOVE_15)).findFirst().get())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_ABOVE_16)).findFirst().get())
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setAlbMebTreatedChildrenAbove16Years(value);
 
         value = dataCaptured.stream().map(event -> event.getObs())
                 .filter(obs -> obs.stream().filter(val -> val.getValue().equals(PZQ)).findAny().isPresent())
-                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_ABOVE_15)).findFirst().get())
+                .map(obs -> obs.stream().filter(obsValue -> obsValue.getFieldCode().equals(SUM_TREATED_ABOVE_16)).findFirst().get())
                 .map(obs -> obs.getValue()).mapToInt(val -> Integer.parseInt(val.toString())).sum();
         indicatorDetails.setPzqTreatedChildrenAbove16Years(value);
 

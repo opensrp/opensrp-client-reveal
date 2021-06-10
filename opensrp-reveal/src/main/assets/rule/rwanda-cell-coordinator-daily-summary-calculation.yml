@@ -4,14 +4,14 @@ description: Total Males Treated
 priority: 1
 condition: "true"
 actions:
- - "calculation = Integer.valueOf(helper.ifNull(step1_treated_male_6_to_11_mos,0)) + Integer.valueOf(helper.ifNull(step1_treated_male_1_to_4,0))+ Integer.valueOf(helper.ifNull(step1_treated_male_5_to_14,0)) + Integer.valueOf(helper.ifNull(step1_treated_male_above_15,0))"
+ - "calculation = Integer.valueOf(helper.ifNull(step1_treated_male_6_to_11_mos,0)) + Integer.valueOf(helper.ifNull(step1_treated_male_1_to_4,0))+ Integer.valueOf(helper.ifNull(step1_treated_male_5_to_15,0)) + Integer.valueOf(helper.ifNull(step1_treated_male_above_16,0))"
 ---
 name: step1_total_female
 description: Total Females Treated
 priority: 1
 condition: "true"
 actions:
- - "calculation = Integer.valueOf(helper.ifNull(step1_treated_female_6_to_11_mos,0)) +  Integer.valueOf(helper.ifNull(step1_treated_female_1_to_4,0))  +  Integer.valueOf(helper.ifNull(step1_treated_female_5_to_14,0))  + Integer.valueOf(helper.ifNull(step1_treated_female_above_15,0))"
+ - "calculation = Integer.valueOf(helper.ifNull(step1_treated_female_6_to_11_mos,0)) +  Integer.valueOf(helper.ifNull(step1_treated_female_1_to_4,0))  +  Integer.valueOf(helper.ifNull(step1_treated_female_5_to_15,0))  + Integer.valueOf(helper.ifNull(step1_treated_female_above_16,0))"
 ---
 name: step1_business_status
 description: Business status calculation
@@ -74,16 +74,16 @@ actions:
  - "calculation = Integer.valueOf(helper.ifNull(step1_treated_male_1_to_4,0)) + Integer.valueOf(helper.ifNull(step1_treated_female_1_to_4,0))"
 
 ---
-name: step1_sum_treated_above_15
-description: step1_sum_treated_above_15
+name: step1_sum_treated_above_16
+description: step1_sum_treated_above_16
 priority: 1
 condition: "true"
 actions:
- - "calculation = Integer.valueOf(helper.ifNull(step1_treated_male_above_15,0)) + Integer.valueOf(helper.ifNull(step1_treated_female_above_15,0))"
+ - "calculation = Integer.valueOf(helper.ifNull(step1_treated_male_above_16,0)) + Integer.valueOf(helper.ifNull(step1_treated_female_above_16,0))"
 ---
-name: step1_sum_treated_5_to_14
-description: step1_sum_treated_5_to_14
+name: step1_sum_treated_5_to_15
+description: step1_sum_treated_5_to_15
 priority: 1
 condition: "true"
 actions:
- - "calculation = Integer.valueOf(helper.ifNull(step1_treated_male_5_to_14,0)) + Integer.valueOf(helper.ifNull(step1_treated_female_5_to_14,0))"
+ - "calculation = Integer.valueOf(helper.ifNull(step1_treated_male_5_to_15,0)) + Integer.valueOf(helper.ifNull(step1_treated_female_5_to_15,0))"

@@ -13,15 +13,15 @@ condition: "!step1_ntd_treated.equals('PZQ')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_treated_male_5_to_14
-description: step1_treated_male_5_to_14
+name: step1_treated_male_5_to_15
+description: step1_treated_male_5_to_15
 priority: 1
 condition: "!step1_ntd_treated.equals('Vitamin A')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_treated_male_above_15
-description: step1_treated_male_above_15
+name: step1_treated_male_above_16
+description: step1_treated_male_above_16
 priority: 1
 condition: "!step1_ntd_treated.equals('Vitamin A')"
 actions:
@@ -42,16 +42,16 @@ actions:
   - "isRelevant = true"
 
 ---
-name: step1_treated_female_5_to_14
-description: step1_treated_female_5_to_14
+name: step1_treated_female_5_to_15
+description: step1_treated_female_5_to_15
 priority: 1
 condition: "!step1_ntd_treated.equals('Vitamin A')"
 actions:
   - "isRelevant = true"
 
 ---
-name: step1_treated_female_above_15
-description: step1_treated_female_above_15
+name: step1_treated_female_above_16
+description: step1_treated_female_above_16
 priority: 1
 condition: "!step1_ntd_treated.equals('Vitamin A')"
 actions:

@@ -581,9 +581,9 @@ public interface Constants {
 
         String SUM_TREATED_1_TO_4 = "sum_treated_1_to_4";
 
-        String SUM_TREATED_5_TO_14 = "sum_treated_5_to_14";
+        String SUM_TREATED_5_TO_15 = "sum_treated_5_to_15";
 
-        String SUM_TREATED_ABOVE_15 = "sum_treated_above_15";
+        String SUM_TREATED_ABOVE_16 = "sum_treated_above_16";
 
     }
 
