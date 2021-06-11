@@ -94,6 +94,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -479,7 +480,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
         listTasksActivity.setGeoJsonSource(featureCollection, mock(Feature.class), true);
         verify(geoJsonSource).setGeoJson(featureCollection);
         verify(mMapboxMap).setCameraPosition(cameraPositionArgumentCaptor.capture());
-        verify(kujakuMapView).addLayer(boundaryLayerArgumentCaptor.capture());
+        verify(kujakuMapView, atLeastOnce()).addLayer(boundaryLayerArgumentCaptor.capture());
         verify(revealMapHelper).addIndexCaseLayers(mMapboxMap, listTasksActivity, featureCollection);
         assertEquals(28.821878, cameraPositionArgumentCaptor.getValue().target.getLongitude(), 0);
         assertEquals(-10.203831, cameraPositionArgumentCaptor.getValue().target.getLatitude(), 0);
@@ -737,6 +738,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnConsecutiveSyncCompletedToastIsShownOnce() {
         init(listTasksActivity);
+        Whitebox.setInternalState(listTasksActivity, "startedToastShown", true);
         listTasksActivity.onSyncInProgress(FetchStatus.nothingFetched);
         listTasksActivity.onSyncInProgress(FetchStatus.nothingFetched);
         assertEquals(1, ShadowToast.shownToastCount());

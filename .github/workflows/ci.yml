@@ -32,6 +32,8 @@ jobs:
         run: ./gradlew :opensrp-reveal:jacocoTestReport  coveralls --stacktrace
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+          GPR_USER: ${{ github.actor }}
+          GPR_API_KEY: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate Javadoc with Gradle
         run: ./gradlew javadoc
