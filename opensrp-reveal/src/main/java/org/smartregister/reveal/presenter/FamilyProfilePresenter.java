@@ -8,19 +8,24 @@ import android.content.IntentFilter;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.google.gson.Gson;
+
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.AllConstants;
+import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
 import org.smartregister.family.domain.FamilyEventClient;
+import org.smartregister.family.interactor.FamilyProfileInteractor;
 import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -37,6 +42,8 @@ import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
+
+import java.lang.reflect.Type;
 
 import timber.log.Timber;
 
@@ -76,10 +83,18 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         }
         otherMemberInteractor = new RevealFamilyOtherMemberInteractor();
         FamilyProfilePresenter that = this;
+        FamilyProfileContract.Interactor interactor = getInteractor();
         broadcastReceiver  = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                that.familyName = intent.getStringExtra("newFamilyName");
+                String oldFamilyName = intent.getStringExtra("oldFamilyName");
+                String newFamilyName = intent.getStringExtra("newFamilyName");
+                Gson gson = new Gson();
+                org.smartregister.clientandeventmodel.Event event = gson.fromJson(intent.getStringExtra("event"), org.smartregister.clientandeventmodel.Event.class);
+                Client client = gson.fromJson(intent.getStringExtra("client"), Client.class);
+                if(!oldFamilyName.equalsIgnoreCase(newFamilyName))
+                     interactor.updateFamilyMemberName(client,event,oldFamilyName);
+                that.familyName = newFamilyName;
             }
         };
       localBroadcastManager = LocalBroadcastManager.getInstance(getView().getContext().getApplicationContext());

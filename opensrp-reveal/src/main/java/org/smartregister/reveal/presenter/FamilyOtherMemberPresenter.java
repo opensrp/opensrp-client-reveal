@@ -2,10 +2,13 @@ package org.smartregister.reveal.presenter;
 
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.gson.Gson;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
@@ -15,8 +18,11 @@ import org.joda.time.Years;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.clientandeventmodel.Client;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.family.contract.FamilyOtherMemberContract.Model;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.interactor.FamilyProfileInteractor;
@@ -44,6 +50,7 @@ import java.util.Date;
 
 import timber.log.Timber;
 
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TYPE_FIELD;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
 
@@ -146,7 +153,29 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
             getView().refreshList();
             Intent localIntent = new Intent(".UpdateFamilyName");
             localIntent.putExtra("newFamilyName",familyEventClient.getClient().getLastName());
-            localIntent.putExtra("baseEntityId",familyEventClient.getClient().getBaseEntityId());
+            Event event = familyEventClient.getEvent();
+            String oldFamilyName = event.getObs().stream().filter(obs -> obs.getFieldCode().equals(FamilyConstants.DatabaseKeys.OLD_FAMILY_NAME)).map(obs -> obs.getValue().toString()).findFirst().get();
+            localIntent.putExtra("oldFamilyName",oldFamilyName);
+            Gson gson = new Gson();
+
+            Client client = familyEventClient.getClient();
+            EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+            JSONObject familyClient = eventClientRepository.getClientByBaseEntityId(familyBaseEntityId);
+            String eventJson  = gson.toJson(familyEventClient.getEvent());
+            try {
+                familyClient.put("firstName",familyEventClient.getClient().getLastName());
+                eventClientRepository.addorUpdateClient(familyBaseEntityId,familyClient);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            CommonRepository commonRepository = RevealApplication.getInstance().getContext().commonrepository(FamilyConstants.TABLE_NAME.FAMILY);
+            CommonPersonObject familyRegistration = commonRepository.findByBaseEntityId(familyBaseEntityId);
+            ContentValues values = new ContentValues();
+            values.put("first_name",familyEventClient.getClient().getLastName());
+            commonRepository.updateColumn(FamilyConstants.TABLE_NAME.FAMILY,values,familyRegistration.getCaseId());
+            String clientJson = familyClient.toString();
+            localIntent.putExtra("event",eventJson);
+            localIntent.putExtra("client",clientJson);
             localBroadcastManager.sendBroadcast(localIntent);
         }
         RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
