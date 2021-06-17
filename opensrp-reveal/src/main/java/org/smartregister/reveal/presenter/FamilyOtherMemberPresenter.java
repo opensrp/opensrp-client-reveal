@@ -46,6 +46,7 @@ import org.smartregister.reveal.util.TaskUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 
 import timber.log.Timber;
 
@@ -156,33 +157,34 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
             getView().hideProgressDialog();
 
             refreshProfileView();
-
-            getView().refreshList();
-            Intent localIntent = new Intent(UPDATE_FAMILY_NAME);
-            localIntent.putExtra(NEW_FAMILY_NAME,familyEventClient.getClient().getLastName());
             Event event = familyEventClient.getEvent();
-            String oldFamilyName = event.getObs().stream().filter(obs -> obs.getFieldCode().equals(FamilyConstants.DatabaseKeys.OLD_FAMILY_NAME)).map(obs -> obs.getValue().toString()).findFirst().get();
-            localIntent.putExtra(OLD_FAMILY_NAME,oldFamilyName);
-            Gson gson = new Gson();
-
-            EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
-            JSONObject familyClient = eventClientRepository.getClientByBaseEntityId(familyBaseEntityId);
-            String eventJson  = gson.toJson(familyEventClient.getEvent());
-            try {
-                familyClient.put(FIRST_NAME,familyEventClient.getClient().getLastName());
-                eventClientRepository.addorUpdateClient(familyBaseEntityId,familyClient);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            Optional<String> isHeadOfHouseHoldForm = event.getObs().stream().filter(obs -> obs.getFieldCode().equals(FamilyConstants.DatabaseKeys.OLD_FAMILY_NAME)).map(obs -> obs.getValue().toString()).findFirst();
+            if(isHeadOfHouseHoldForm.isPresent()){
+                getView().refreshList();
+                Intent localIntent = new Intent(UPDATE_FAMILY_NAME);
+                localIntent.putExtra(NEW_FAMILY_NAME,familyEventClient.getClient().getLastName());
+                String oldFamilyName = isHeadOfHouseHoldForm.get();
+                localIntent.putExtra(OLD_FAMILY_NAME,oldFamilyName);
+                Gson gson = new Gson();
+                EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+                JSONObject familyClient = eventClientRepository.getClientByBaseEntityId(familyBaseEntityId);
+                String eventJson  = gson.toJson(familyEventClient.getEvent());
+                try {
+                    familyClient.put(FIRST_NAME,familyEventClient.getClient().getLastName());
+                    eventClientRepository.addorUpdateClient(familyBaseEntityId,familyClient);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                CommonRepository commonRepository = RevealApplication.getInstance().getContext().commonrepository(FamilyConstants.TABLE_NAME.FAMILY);
+                CommonPersonObject familyRegistration = commonRepository.findByBaseEntityId(familyBaseEntityId);
+                ContentValues values = new ContentValues();
+                values.put(Constants.DatabaseKeys.FIRST_NAME,familyEventClient.getClient().getLastName());
+                commonRepository.updateColumn(FamilyConstants.TABLE_NAME.FAMILY,values,familyRegistration.getCaseId());
+                String clientJson = familyClient.toString();
+                localIntent.putExtra(EVENT,eventJson);
+                localIntent.putExtra(CLIENT,clientJson);
+                localBroadcastManager.sendBroadcast(localIntent);
             }
-            CommonRepository commonRepository = RevealApplication.getInstance().getContext().commonrepository(FamilyConstants.TABLE_NAME.FAMILY);
-            CommonPersonObject familyRegistration = commonRepository.findByBaseEntityId(familyBaseEntityId);
-            ContentValues values = new ContentValues();
-            values.put(Constants.DatabaseKeys.FIRST_NAME,familyEventClient.getClient().getLastName());
-            commonRepository.updateColumn(FamilyConstants.TABLE_NAME.FAMILY,values,familyRegistration.getCaseId());
-            String clientJson = familyClient.toString();
-            localIntent.putExtra(EVENT,eventJson);
-            localIntent.putExtra(CLIENT,clientJson);
-            localBroadcastManager.sendBroadcast(localIntent);
         }
         RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
 
