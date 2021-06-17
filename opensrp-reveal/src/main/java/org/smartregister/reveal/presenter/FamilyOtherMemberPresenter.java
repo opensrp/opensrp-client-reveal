@@ -157,6 +157,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
             getView().hideProgressDialog();
 
             refreshProfileView();
+
             Event event = familyEventClient.getEvent();
             Optional<String> isHeadOfHouseHoldForm = event.getObs().stream().filter(obs -> obs.getFieldCode().equals(FamilyConstants.DatabaseKeys.OLD_FAMILY_NAME)).map(obs -> obs.getValue().toString()).findFirst();
             if(isHeadOfHouseHoldForm.isPresent()){
