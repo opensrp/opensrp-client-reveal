@@ -406,7 +406,7 @@
           "Severe allergy",
           "Adverse reaction/side effect of SPAQ today",
           "Adverse reaction/side effect of SPAQ previous cycle",
-          "Other - specify"
+          "Other Reason"
         ],
         "keys": [
           "Severe sickness",
@@ -414,7 +414,7 @@
           "Severe allergy",
           "Adverse reaction/side effect of SPAQ today",
           "Adverse reaction/side effect of SPAQ previous cycle",
-          "Other - specify"
+          "Other Reason"
         ],
         "v_required": {
           "value": true,
@@ -446,7 +446,7 @@
         "relevance": {
           "step1:referralReasons": {
             "type": "string",
-            "ex": "equalTo(., \"Other - specify\")"
+            "ex": "equalTo(., \"Other Reason\")"
           }
         }
       },

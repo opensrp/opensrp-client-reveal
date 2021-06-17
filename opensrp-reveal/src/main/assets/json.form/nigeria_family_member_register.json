@@ -412,6 +412,10 @@
         "openmrs_entity_id": "",
         "type": "hidden",
         "value": "Family Registered"
+      },
+      {
+        "key": "old_fam_name",
+        "type": "hidden"
       }
     ]
   }

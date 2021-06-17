@@ -8,12 +8,15 @@ import android.content.IntentFilter;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.google.gson.Gson;
+
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.AllConstants;
+import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -49,6 +52,11 @@ import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_ME
  * Created by samuelgithengi on 4/10/19.
  */
 public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implements FamilyProfileContract.Presenter, FamilyOtherMemberProfileContract.BasePresenter {
+    public static final String UPDATE_FAMILY_NAME = ".UpdateFamilyName";
+    public static final String EVENT = "event";
+    public static final String CLIENT = "client";
+    public static final String OLD_FAMILY_NAME = "oldFamilyName";
+    public static final String NEW_FAMILY_NAME = "newFamilyName";
     private AppExecutors appExecutors;
     private SQLiteDatabase database;
     private String structureId;
@@ -60,7 +68,6 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     private BroadcastReceiver broadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
-
     public FamilyProfilePresenter(FamilyProfileContract.View view, FamilyProfileContract.Model model, String familyBaseEntityId, String familyHead, String primaryCaregiver, String familyName) {
         super(view, model, familyBaseEntityId, familyHead, primaryCaregiver, familyName);
         appExecutors = RevealApplication.getInstance().getAppExecutors();
@@ -76,14 +83,22 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         }
         otherMemberInteractor = new RevealFamilyOtherMemberInteractor();
         FamilyProfilePresenter that = this;
+        FamilyProfileContract.Interactor interactor = getInteractor();
         broadcastReceiver  = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                that.familyName = intent.getStringExtra("newFamilyName");
+                String oldFamilyName = intent.getStringExtra(OLD_FAMILY_NAME);
+                String newFamilyName = intent.getStringExtra(NEW_FAMILY_NAME);
+                Gson gson = new Gson();
+                org.smartregister.clientandeventmodel.Event event = gson.fromJson(intent.getStringExtra(EVENT), org.smartregister.clientandeventmodel.Event.class);
+                Client client = gson.fromJson(intent.getStringExtra(CLIENT), Client.class);
+                if(!oldFamilyName.equalsIgnoreCase(newFamilyName))
+                     interactor.updateFamilyMemberName(client,event,oldFamilyName);
+                that.familyName = newFamilyName;
             }
         };
       localBroadcastManager = LocalBroadcastManager.getInstance(getView().getContext().getApplicationContext());
-      localBroadcastManager.registerReceiver(broadcastReceiver, new IntentFilter(".UpdateFamilyName"));
+      localBroadcastManager.registerReceiver(broadcastReceiver, new IntentFilter(UPDATE_FAMILY_NAME));
     }
 
     @Override
