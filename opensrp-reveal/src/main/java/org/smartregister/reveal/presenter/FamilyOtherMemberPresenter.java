@@ -18,7 +18,6 @@ import org.joda.time.Years;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -50,7 +49,6 @@ import java.util.Date;
 
 import timber.log.Timber;
 
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TYPE_FIELD;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
 
@@ -61,6 +59,15 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
         implements FamilyOtherMemberProfileContract.Presenter, FamilyProfileContract.InteractorCallBack {
 
 
+    public static final String OLD_FAMILY_NAME = "oldFamilyName";
+    public static final String NEW_FAMILY_NAME = "newFamilyName";
+    public static final String UPDATE_FAMILY_NAME = ".UpdateFamilyName";
+    public static final String EVENT = "event";
+    public static final String CLIENT = "client";
+    public static final String DATE_VOIDED = "dateVoided";
+    public static final String EVENTS = "events";
+    public static final String BIRTH_DATE = "birthdate";
+    public static final String FIRST_NAME = "firstName";
     private CommonPersonObjectClient client;
 
     private FamilyJsonFormUtils familyJsonFormUtils;
@@ -151,19 +158,18 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
             refreshProfileView();
 
             getView().refreshList();
-            Intent localIntent = new Intent(".UpdateFamilyName");
-            localIntent.putExtra("newFamilyName",familyEventClient.getClient().getLastName());
+            Intent localIntent = new Intent(UPDATE_FAMILY_NAME);
+            localIntent.putExtra(NEW_FAMILY_NAME,familyEventClient.getClient().getLastName());
             Event event = familyEventClient.getEvent();
             String oldFamilyName = event.getObs().stream().filter(obs -> obs.getFieldCode().equals(FamilyConstants.DatabaseKeys.OLD_FAMILY_NAME)).map(obs -> obs.getValue().toString()).findFirst().get();
-            localIntent.putExtra("oldFamilyName",oldFamilyName);
+            localIntent.putExtra(OLD_FAMILY_NAME,oldFamilyName);
             Gson gson = new Gson();
 
-            Client client = familyEventClient.getClient();
             EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
             JSONObject familyClient = eventClientRepository.getClientByBaseEntityId(familyBaseEntityId);
             String eventJson  = gson.toJson(familyEventClient.getEvent());
             try {
-                familyClient.put("firstName",familyEventClient.getClient().getLastName());
+                familyClient.put(FIRST_NAME,familyEventClient.getClient().getLastName());
                 eventClientRepository.addorUpdateClient(familyBaseEntityId,familyClient);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -171,11 +177,11 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
             CommonRepository commonRepository = RevealApplication.getInstance().getContext().commonrepository(FamilyConstants.TABLE_NAME.FAMILY);
             CommonPersonObject familyRegistration = commonRepository.findByBaseEntityId(familyBaseEntityId);
             ContentValues values = new ContentValues();
-            values.put("first_name",familyEventClient.getClient().getLastName());
+            values.put(Constants.DatabaseKeys.FIRST_NAME,familyEventClient.getClient().getLastName());
             commonRepository.updateColumn(FamilyConstants.TABLE_NAME.FAMILY,values,familyRegistration.getCaseId());
             String clientJson = familyClient.toString();
-            localIntent.putExtra("event",eventJson);
-            localIntent.putExtra("client",clientJson);
+            localIntent.putExtra(EVENT,eventJson);
+            localIntent.putExtra(CLIENT,clientJson);
             localBroadcastManager.sendBroadcast(localIntent);
         }
         RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
@@ -236,7 +242,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
         Date updateBirthDate = familyEventClient.getClient().getBirthdate();
         int updateAge = Years.yearsBetween(new DateTime(updateBirthDate.getTime()), DateTime.now()).getYears();
         int updateMonths = Months.monthsBetween(new DateTime(updateBirthDate.getTime()), DateTime.now()).getMonths();
-        Date previouslyEnteredBirthDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse((String) familyEventClientOriginal.get("birthdate"));
+        Date previouslyEnteredBirthDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse((String) familyEventClientOriginal.get(BIRTH_DATE));
         int previouslyEnteredAge = Years.yearsBetween(new DateTime(previouslyEnteredBirthDate.getTime()), DateTime.now()).getYears();
         int previouslyEnteredMonths = Months.monthsBetween(new DateTime(previouslyEnteredBirthDate.getTime()), DateTime.now()).getMonths();
 
@@ -246,7 +252,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
                     taskRepository.cancelTasksForEntity(familyEventClient.getClient().getBaseEntityId());
                     taskRepository.archiveTasksForEntity(familyEventClient.getClient().getBaseEntityId());
                     JSONObject eventsByBaseEntityId = eventClientRepository.getEventsByBaseEntityId(familyEventClient.getClient().getBaseEntityId());
-                    JSONArray events = eventsByBaseEntityId.optJSONArray("events");
+                    JSONArray events = eventsByBaseEntityId.optJSONArray(EVENTS);
                     DateTime now = new DateTime();
                     if (events != null) {
                         for (int i = 0; i < events.length(); i++) {
@@ -254,7 +260,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
                                 JSONObject event = events.getJSONObject(i);
                                 String eventType = event.getString(EVENT_TYPE_FIELD);
                                 if (!(eventType.equals(FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION) || eventType.equals(FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION))) {
-                                    event.put("dateVoided", now);
+                                    event.put(DATE_VOIDED, now);
                                     event.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
                                 }
 
