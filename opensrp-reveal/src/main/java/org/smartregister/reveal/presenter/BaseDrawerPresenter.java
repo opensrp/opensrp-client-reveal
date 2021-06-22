@@ -381,9 +381,21 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     }
 
     private void unlockDrawerLayout() {
-        if (isPlanAndOperationalAreaSelected()) {
-            view.unlockNavigationDrawer();
-        }
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (isPlanAndOperationalAreaSelected()) {
+                    RevealApplication.getInstance().getAppExecutors().mainThread().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.unlockNavigationDrawer();
+                        }
+                    });
+                }
+            }
+        };
+        RevealApplication.getInstance().getAppExecutors().diskIO().execute(runnable);
 
     }
 
@@ -432,9 +444,9 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     public boolean isPlanAndOperationalAreaSelected() {
         String planId = prefsUtil.getCurrentPlanId();
         String operationalArea = prefsUtil.getCurrentOperationalArea();
+        org.smartregister.domain.Location currentOperationalAreaLocation = org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
 
-        return StringUtils.isNotBlank(planId) && StringUtils.isNotBlank(operationalArea);
-
+        return StringUtils.isNotBlank(planId) && StringUtils.isNotBlank(operationalArea) && currentOperationalAreaLocation != null;
     }
 
     @Override

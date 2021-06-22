@@ -353,9 +353,20 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
 
     public void closeDrawerLayout() {
-        if (presenter.isPlanAndOperationalAreaSelected()) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        }
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (presenter.isPlanAndOperationalAreaSelected()) {
+                    RevealApplication.getInstance().getAppExecutors().mainThread().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
+                        }
+                    });
+                }
+            }
+        };
+        RevealApplication.getInstance().getAppExecutors().diskIO().execute(runnable);
     }
 
 
