@@ -594,7 +594,7 @@
         "relevance": {
           "step1:isRdtResult": {
             "type": "string",
-            "ex": "equalTo(., \"no\")"
+            "ex": "equalTo(., \"yes\")"
           }
         }
       },
@@ -632,7 +632,7 @@
         "relevance": {
           "step1:isRdtResult": {
             "type": "string",
-            "ex": "equalTo(., \"yes\")"
+            "ex": "equalTo(., \"no\")"
           }
         }
       },
