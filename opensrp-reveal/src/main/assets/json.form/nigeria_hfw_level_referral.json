@@ -590,6 +590,12 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "step1:isRdtResult": {
+            "type": "string",
+            "ex": "equalTo(., \"no\")"
+          }
         }
       },
       {
@@ -624,9 +630,9 @@
           "err": "Required field"
         },
         "relevance": {
-          "step1:isChildWasTestedForMalaria": {
+          "step1:isRdtResult": {
             "type": "string",
-            "ex": "equalTo(., \"no\")"
+            "ex": "equalTo(., \"yes\")"
           }
         }
       },
