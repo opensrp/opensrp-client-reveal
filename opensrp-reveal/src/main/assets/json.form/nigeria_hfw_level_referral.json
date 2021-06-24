@@ -493,29 +493,6 @@
         }
       },
       {
-        "key": "isChildHaveFever",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Does child have fever?",
-        "text_size": "8sp",
-        "options": [
-          {
-            "key": "yes",
-            "text": "Yes"
-          },
-          {
-            "key": "no",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
-      },
-      {
         "key": "isChildWasTestedForMalaria",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -613,6 +590,12 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "step1:isRdtResult": {
+            "type": "string",
+            "ex": "equalTo(., \"yes\")"
+          }
         }
       },
       {
@@ -645,6 +628,12 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "step1:isRdtResult": {
+            "type": "string",
+            "ex": "equalTo(., \"no\")"
+          }
         }
       },
       {
