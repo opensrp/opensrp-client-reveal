@@ -22,11 +22,13 @@ import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.FetchStatus;
 import org.smartregister.family.contract.FamilyOtherMemberContract.Model;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.interactor.FamilyProfileInteractor;
 import org.smartregister.family.presenter.BaseFamilyOtherMemberProfileActivityPresenter;
 import org.smartregister.family.util.DBConstants;
+import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.TaskRepository;
@@ -154,14 +156,9 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
     @Override
     public void onRegistrationSaved(boolean isEditMode, boolean isSaved, FamilyEventClient familyEventClient) {
         if (isEditMode) {
-            getView().hideProgressDialog();
-
-            refreshProfileView();
-
             Event event = familyEventClient.getEvent();
             Optional<String> isHeadOfHouseHoldForm = event.getObs().stream().filter(obs -> obs.getFieldCode().equals(FamilyConstants.DatabaseKeys.OLD_FAMILY_NAME)).map(obs -> obs.getValue().toString()).findFirst();
             if(isHeadOfHouseHoldForm.isPresent()){
-                getView().refreshList();
                 Intent localIntent = new Intent(UPDATE_FAMILY_NAME);
                 localIntent.putExtra(NEW_FAMILY_NAME,familyEventClient.getClient().getLastName());
                 String oldFamilyName = isHeadOfHouseHoldForm.get();
@@ -186,6 +183,9 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
                 localIntent.putExtra(CLIENT,clientJson);
                 localBroadcastManager.sendBroadcast(localIntent);
             }
+            getView().hideProgressDialog();
+            refreshProfileView();
+            getView().refreshList();
         }
         RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
 

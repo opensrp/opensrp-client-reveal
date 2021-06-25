@@ -21,6 +21,7 @@ import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Event;
+import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.Task;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
@@ -66,6 +67,8 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     private FamilyOtherMemberProfileContract.Interactor otherMemberInteractor;
 
+    private Boolean skipUpdate = false;
+
     private BroadcastReceiver broadcastReceiver;
     private LocalBroadcastManager localBroadcastManager;
     public FamilyProfilePresenter(FamilyProfileContract.View view, FamilyProfileContract.Model model, String familyBaseEntityId, String familyHead, String primaryCaregiver, String familyName) {
@@ -93,6 +96,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                 org.smartregister.clientandeventmodel.Event event = gson.fromJson(intent.getStringExtra(EVENT), org.smartregister.clientandeventmodel.Event.class);
                 Client client = gson.fromJson(intent.getStringExtra(CLIENT), Client.class);
                 if(!oldFamilyName.equalsIgnoreCase(newFamilyName))
+                     skipUpdate  = true;
                      interactor.updateFamilyMemberName(client,event,oldFamilyName);
                 that.familyName = newFamilyName;
             }
@@ -220,7 +224,8 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     @Override
     public void onMembersUpdated() {
-        onTasksGenerated();
+        if(!skipUpdate)
+          onTasksGenerated();
     }
 
     @Override
