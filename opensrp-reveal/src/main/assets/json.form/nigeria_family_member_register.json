@@ -415,6 +415,9 @@
       },
       {
         "key": "old_fam_name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
         "type": "hidden"
       }
     ]
