@@ -20,6 +20,7 @@ buildscript {
 
 allprojects {
     repositories {
+        maven { url "https://raw.github.com/opensrp/opensrp-client-reveal/rvl-custom-mvn-repo" }
         maven { url 'https://maven.google.com' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
         maven {
@@ -237,9 +238,11 @@ dependencies {
         exclude group: 'com.github.ybq', module: 'Android-SpinKit'
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.android.gms', module: 'play-services-vision'
+        exclude group: 'com.ibm.fhir', module: 'fhir-model'
+        exclude group: 'com.github.stephenc.jcip', module: 'jcip-annotations'
     }
 
-    testImplementation 'com.ibm.fhir:fhir-model:4.7.0'
+    implementation 'com.ibm.fhir:fhir-model:4.2.3'
     implementation('org.smartregister:opensrp-client-configurable-views:1.1.5-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
