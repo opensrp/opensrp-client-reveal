@@ -23,7 +23,6 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -324,7 +323,7 @@ public class UtilsTest {
         when(mockDefinition.getActions()).thenReturn(actions);
         when(action.getCode()).thenReturn(BCC);
         when(action.getDefinitionUri()).thenReturn("BCC.json");
-        String result = Utils.getDefinitionUri(mockDefinition, Constants.Intervention.BCC);
+        String result = Utils.getDefinitionUri(mockDefinition, BCC);
         assertEquals("BCC", result);
     }
 
