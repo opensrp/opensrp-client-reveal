@@ -242,7 +242,7 @@ dependencies {
         exclude group: 'com.github.stephenc.jcip', module: 'jcip-annotations'
     }
 
-    implementation 'com.ibm.fhir:fhir-model:4.2.3'
+    jarJar 'com.ibm.fhir:fhir-model:4.2.3'
     implementation('org.smartregister:opensrp-client-configurable-views:1.1.5-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
@@ -355,4 +355,11 @@ task javadoc(type: Javadoc) {
     source = files([mainSrc])
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     classpath += configurations.compile
+}
+
+
+jarJar {
+
+    // Dependencies and related JarJar rules
+    remove = ['fhir-model-4.2.3.jar': 'com.ibm.fhir.model.visitor.CopyingVisitor*']
 }
