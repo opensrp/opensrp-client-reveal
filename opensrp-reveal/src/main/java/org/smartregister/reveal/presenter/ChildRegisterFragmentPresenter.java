@@ -24,7 +24,7 @@ import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildModel;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.NativeFormProcessor;
+import org.smartregister.reveal.util.NativeFormProcessorFactory;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.util.AppExecutors;
@@ -32,6 +32,7 @@ import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.GenericInteractor;
+import org.smartregister.util.NativeFormProcessor;
 import org.smartregister.util.PropertiesConverter;
 import org.smartregister.view.ListContract;
 import org.smartregister.view.presenter.ListPresenter;
@@ -153,10 +154,10 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
         Callable<Void> callable = () -> {
 
 
-            NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonString);
+            NativeFormProcessor processor = NativeFormProcessorFactory.createInstance(jsonString);
 
-            Location operationalArea = processor.getCurrentOperationalArea();
-            Location selectedSchool = processor.getCurrentSelectedStructure();
+            Location operationalArea = NativeFormProcessorFactory.getCurrentOperationalArea();
+            Location selectedSchool = NativeFormProcessorFactory.getCurrentSelectedStructure();
             String entityId = UUID.randomUUID().toString();
             String ageString = processor.getFieldValue("sactaAge").split("y")[0];
 
@@ -231,7 +232,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
             String entityId = new JSONObject(jsonString).getString(Constants.Properties.BASE_ENTITY_ID);
 
             // update metadata
-            NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonString)
+            NativeFormProcessor processor = NativeFormProcessorFactory.createInstance(jsonString)
                     .withBindType(Constants.EventType.MDA_DISPENSE)
                     .withEncounterType(Constants.EventType.MDA_DISPENSE)
                     .withEntityId(entityId);
@@ -255,7 +256,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
             taskRepository.addOrUpdate(task);
 
             // save event details
-            Location operationalArea = processor.getCurrentOperationalArea();
+            Location operationalArea = NativeFormProcessorFactory.getCurrentOperationalArea();
             processor
                     .tagLocationData(operationalArea)
                     .tagTaskDetails(task)

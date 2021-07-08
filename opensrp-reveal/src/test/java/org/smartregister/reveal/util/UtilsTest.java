@@ -14,12 +14,9 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-<<<<<<< HEAD
 import org.smartregister.domain.Location;
 import org.smartregister.repository.StructureRepository;
-=======
 import org.powermock.reflect.Whitebox;
->>>>>>> b2fe526fc7296e64f0d05e563724905ffd2e5ead
 import org.smartregister.domain.Obs;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;

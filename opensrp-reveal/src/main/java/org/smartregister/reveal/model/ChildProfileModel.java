@@ -19,9 +19,10 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ChildProfileContract;
 import org.smartregister.reveal.dao.EventDao;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.NativeFormProcessor;
+import org.smartregister.reveal.util.NativeFormProcessorFactory;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.JsonFormUtils;
+import org.smartregister.util.NativeFormProcessor;
 import org.smartregister.util.QueryComposer;
 import org.smartregister.util.Utils;
 
@@ -122,7 +123,7 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         values.put("sactaClass", getFormValue(clientJson.getJSONObject("attributes"), "grade_class"));
 
 
-        NativeFormProcessor.createInstance(jsonObject)
+        NativeFormProcessorFactory.createInstance(jsonObject)
                 .populateValues(values);
 
         String noID = getFormValue(clientJson.getJSONObject("attributes"), "has_no_id").toString();
@@ -145,7 +146,7 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         JSONObject jsonObject = new JSONObject(jsonForm);
         jsonObject.put(Constants.Properties.BASE_ENTITY_ID, baseEntityID);
 
-        NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
+        NativeFormProcessor processor = NativeFormProcessorFactory.createInstance(jsonObject);
         JSONObject processedForm = getEventDao().getLastEvent(baseEntityID, Constants.EventType.MDA_DISPENSE);
 
         if (processedForm != null) {
@@ -211,7 +212,7 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         JSONObject jsonObject = new JSONObject(jsonForm);
         jsonObject.put(Constants.Properties.BASE_ENTITY_ID, baseEntityID);
 
-        NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
+        NativeFormProcessor processor = NativeFormProcessorFactory.createInstance(jsonObject);
         JSONObject processedForm = getEventDao().getLastEvent(baseEntityID, Constants.EventType.MDA_ADVERSE_DRUG_REACTION);
 
         if (processedForm != null) {
