@@ -1,6 +1,7 @@
 package org.smartregister.reveal.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,6 +25,9 @@ import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
@@ -247,6 +251,40 @@ public class DrawerMenuViewTest extends BaseUnitTest {
 
         verify(mDrawerLayout).openDrawer(GravityCompat.START);
         verify(mDrawerLayout).setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+    }
+
+    @Test
+    public void testOpenOfflineMapsView(){
+        drawerMenuView = spy(drawerMenuView);
+        when(drawerMenuView.getContext()).thenReturn(mockActivity);
+        drawerMenuView.openOfflineMapsView();
+        ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
+        verify(mockActivity).startActivity(intentArgumentCaptor.capture());
+        assertThat(intentArgumentCaptor.getValue().getComponent().getClassName(), is(equalTo(OfflineMapsActivity.class.getName())));
+    }
+
+    @Test
+    public void testClickOtherFormsActivity(){
+        View view = mock(View.class);
+        drawerMenuView = spy(drawerMenuView);
+        when(view.getId()).thenReturn(R.id.btn_navMenu_summaryForms);
+        when(drawerMenuView.getContext()).thenReturn(mockActivity);
+        drawerMenuView.onClick(view);
+        ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
+        verify(mockActivity).startActivity(intentArgumentCaptor.capture());
+        assertThat(intentArgumentCaptor.getValue().getComponent().getClassName(), is(equalTo(SummaryFormsActivity.class.getName())));
+    }
+
+    @Test
+    public void testClickP2PSync(){
+        View view = mock(View.class);
+        drawerMenuView = spy(drawerMenuView);
+        when(view.getId()).thenReturn(R.id.btn_navMenu_p2pSyncBtn);
+        when(drawerMenuView.getContext()).thenReturn(mockActivity);
+        drawerMenuView.onClick(view);
+        ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
+        verify(mockActivity).startActivity(intentArgumentCaptor.capture());
+        assertThat(intentArgumentCaptor.getValue().getComponent().getClassName(), is(equalTo(LocationPickerActivity.class.getName())));
     }
 
 }
