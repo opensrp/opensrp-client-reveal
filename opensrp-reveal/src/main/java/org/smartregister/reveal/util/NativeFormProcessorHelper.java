@@ -11,7 +11,7 @@ import org.smartregister.util.NativeFormProcessor;
 /**
  * Factory class to generate native forms processor
  */
-public class NativeFormProcessorFactory {
+public class NativeFormProcessorHelper {
 
     public static NativeFormProcessor createInstance(String jsonString) throws JSONException {
         return NativeFormProcessor.createInstance(jsonString, FamilyLibrary.getInstance().getDatabaseVersion(), RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext()));

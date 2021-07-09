@@ -6,14 +6,14 @@ import org.mockito.Mockito;
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
 import org.smartregister.domain.Location;
-import org.smartregister.reveal.util.NativeFormProcessorFactory;
+import org.smartregister.reveal.util.NativeFormProcessorHelper;
 import org.smartregister.sync.ClientProcessorForJava;
 import org.smartregister.sync.helper.ECSyncHelper;
 import org.smartregister.util.NativeFormProcessor;
 
 import java.util.Date;
 
-@Implements(NativeFormProcessorFactory.class)
+@Implements(NativeFormProcessorHelper.class)
 public class NativeFormProcessorShadowHelper {
 
     private static NativeFormProcessor processorSpy;

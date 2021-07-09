@@ -19,7 +19,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ChildProfileContract;
 import org.smartregister.reveal.dao.EventDao;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.NativeFormProcessorFactory;
+import org.smartregister.reveal.util.NativeFormProcessorHelper;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.NativeFormProcessor;
@@ -123,7 +123,7 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         values.put("sactaClass", getFormValue(clientJson.getJSONObject("attributes"), "grade_class"));
 
 
-        NativeFormProcessorFactory.createInstance(jsonObject)
+        NativeFormProcessorHelper.createInstance(jsonObject)
                 .populateValues(values);
 
         String noID = getFormValue(clientJson.getJSONObject("attributes"), "has_no_id").toString();
@@ -146,7 +146,7 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         JSONObject jsonObject = new JSONObject(jsonForm);
         jsonObject.put(Constants.Properties.BASE_ENTITY_ID, baseEntityID);
 
-        NativeFormProcessor processor = NativeFormProcessorFactory.createInstance(jsonObject);
+        NativeFormProcessor processor = NativeFormProcessorHelper.createInstance(jsonObject);
         JSONObject processedForm = getEventDao().getLastEvent(baseEntityID, Constants.EventType.MDA_DISPENSE);
 
         if (processedForm != null) {
@@ -212,7 +212,7 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         JSONObject jsonObject = new JSONObject(jsonForm);
         jsonObject.put(Constants.Properties.BASE_ENTITY_ID, baseEntityID);
 
-        NativeFormProcessor processor = NativeFormProcessorFactory.createInstance(jsonObject);
+        NativeFormProcessor processor = NativeFormProcessorHelper.createInstance(jsonObject);
         JSONObject processedForm = getEventDao().getLastEvent(baseEntityID, Constants.EventType.MDA_ADVERSE_DRUG_REACTION);
 
         if (processedForm != null) {

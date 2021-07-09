@@ -17,7 +17,7 @@ import org.smartregister.reveal.contract.ChildProfileContract;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildProfileModel;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.NativeFormProcessorFactory;
+import org.smartregister.reveal.util.NativeFormProcessorHelper;
 import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
 import org.smartregister.util.NativeFormProcessor;
@@ -212,8 +212,8 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
 
         Callable<Void> callable = () -> {
 
-            NativeFormProcessor processor = NativeFormProcessorFactory.createInstance(jsonObject);
-            Location operationalArea = NativeFormProcessorFactory.getCurrentOperationalArea();
+            NativeFormProcessor processor = NativeFormProcessorHelper.createInstance(jsonObject);
+            Location operationalArea = NativeFormProcessorHelper.getCurrentOperationalArea();
             String entityId = jsonObject.getString(Constants.Properties.BASE_ENTITY_ID);
 
             // update metadata
@@ -266,7 +266,7 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
             String entityId = new JSONObject(jsonString).getString(Constants.Properties.BASE_ENTITY_ID);
 
             // update metadata
-            NativeFormProcessor processor = NativeFormProcessorFactory.createInstance(jsonString)
+            NativeFormProcessor processor = NativeFormProcessorHelper.createInstance(jsonString)
                     .withBindType(Constants.EventType.MDA_DISPENSE)
                     .withEncounterType(Constants.EventType.MDA_DISPENSE)
                     .withEntityId(entityId);
@@ -290,7 +290,7 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
             taskRepository.addOrUpdate(task);
 
             // save event details
-            Location operationalArea = NativeFormProcessorFactory.getCurrentOperationalArea();
+            Location operationalArea = NativeFormProcessorHelper.getCurrentOperationalArea();
             processor
                     .tagLocationData(operationalArea)
                     .tagTaskDetails(task)
@@ -333,8 +333,8 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
             String entityId = jsonObject.getString(Constants.Properties.BASE_ENTITY_ID);
 
             // save event details
-            NativeFormProcessor processor = NativeFormProcessorFactory.createInstance(jsonObject);
-            Location operationalArea = NativeFormProcessorFactory.getCurrentOperationalArea();
+            NativeFormProcessor processor = NativeFormProcessorHelper.createInstance(jsonObject);
+            Location operationalArea = NativeFormProcessorHelper.getCurrentOperationalArea();
 
             // update metadata
             processor
