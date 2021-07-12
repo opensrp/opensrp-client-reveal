@@ -116,20 +116,36 @@
             "level": "1",
             "nodes": [
               {
-                "name": "MPHC Shinaka",
-                "key": "mphc_shinaka"
+                "name": "Wanka PHC",
+                "key": "wanka_phc"
               },
               {
-                "name": "Giyawa",
-                "key": "giyawa"
+                "name": "GH Shagari",
+                "key": "gh_shagari"
               },
               {
-                "name": "Balakozo",
-                "key": "balakozo"
+                "name": "Sage PHC",
+                "key": "sage_phc"
               },
               {
-                "name": "Takakume",
-                "key": "takakume"
+                "name": "Kajiji PHC",
+                "key": "kajiji_phc"
+              },
+              {
+                "name": "Kesoje PHC",
+                "key": "kesoje_phc"
+              },
+              {
+                "name": "Asarara PHC",
+                "key": "asarara_phc"
+              },
+              {
+                "name": "Agur dispensary",
+                "key": "agur_dispensary"
+              },
+              {
+                "name": "Duggar dispensary",
+                "key": "duggar_dispensary"
               }
             ]
           }
