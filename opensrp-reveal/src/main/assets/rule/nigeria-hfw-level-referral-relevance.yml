@@ -5,3 +5,23 @@ priority: 1
 condition: "step1_checklist_child_treated.equals('yes')"
 actions:
   - "isRelevant = true"
+
+---
+name: step1_isChildNegativeRDT
+description: step1_isChildNegativeRDT
+priority: 1
+condition: "step1_isChildWasTestedForMalaria.equals('yes') && step1_isRdtResult.equals('no')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_isChildWithConfirmedMalaria
+description: step1_isChildWithConfirmedMalaria
+priority: 1
+condition: "step1_isChildWasTestedForMalaria.equals('yes') && step1_isRdtResult.equals('yes')"
+actions:
+  - "isRelevant = true"
+
+
+
+
+

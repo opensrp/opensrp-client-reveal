@@ -536,6 +536,12 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "step1:isChildWasTestedForMalaria": {
+            "type": "string",
+            "ex": "equalTo(., \"yes\")"
+          }
         }
       },
       {
@@ -592,9 +598,10 @@
           "err": "Required field"
         },
         "relevance": {
-          "step1:isRdtResult": {
-            "type": "string",
-            "ex": "equalTo(., \"yes\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-hfw-level-referral-relevance.yml"
+            }
           }
         }
       },
@@ -630,9 +637,10 @@
           "err": "Required field"
         },
         "relevance": {
-          "step1:isRdtResult": {
-            "type": "string",
-            "ex": "equalTo(., \"no\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "nigeria-hfw-level-referral-relevance.yml"
+            }
           }
         }
       },
