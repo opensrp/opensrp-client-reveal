@@ -129,17 +129,19 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                 }
             }
 
-            //update the client documents
-            eventClientRepository.batchInsertClients(familyMembers);
-            //generate the events for updating the members surname
-            eventClientRepository.batchInsertEvents(updateSurnameEvents, 0);
+            if(familyMembers.length() > 0){
+                //update the client documents
+                eventClientRepository.batchInsertClients(familyMembers);
+                //generate the events for updating the members surname
+                eventClientRepository.batchInsertEvents(updateSurnameEvents, 0);
 
-            //Client Process
-            clientProcessor.processClient(eventClientRepository.fetchEventClients(formSubmissionIds), true);
+                //Client Process
+                clientProcessor.processClient(eventClientRepository.fetchEventClients(formSubmissionIds), true);
 
-            appExecutors.mainThread().execute(() -> {
-                presenter.onMembersUpdated();
-            });
+                appExecutors.mainThread().execute(() -> {
+                    presenter.onMembersUpdated();
+                });
+            }
         });
     }
 

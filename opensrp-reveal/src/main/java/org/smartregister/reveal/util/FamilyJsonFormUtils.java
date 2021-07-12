@@ -238,6 +238,8 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                     sameAsFamNameField.put(TYPE,HIDDEN);
                     JSONObject surnameField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form),SURNAME);
                     surnameField.put(HINT,"Surname");
+                    JSONObject oldFamNameField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), DatabaseKeys.OLD_FAMILY_NAME);
+                    oldFamNameField.put(VALUE,JsonFormUtils.getFieldValue(form.toString(),SURNAME));
                 }
                 return form;
             }
@@ -364,13 +366,16 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
             sameAsFamName = getFieldJSONObject(jsonArray, FormKeys.SAME_AS_FAM_NAME);
             lookupField = getFieldJSONObject(jsonArray, FormKeys.SURNAME);
         }
-        JSONObject sameOptions = sameAsFamName.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
-        if (familyName.equals(lookupName)) {
-            sameOptions.put(VALUE, true);
-            lookupField.put(VALUE, "");
-        } else {
-            sameOptions.put(VALUE, false);
-            lookupField.put(VALUE, lookupName);
+
+        if(sameAsFamName!= null){
+            JSONObject sameOptions = sameAsFamName.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
+            if (familyName.equals(lookupName)) {
+                sameOptions.put(VALUE, true);
+                lookupField.put(VALUE, "");
+            } else {
+                sameOptions.put(VALUE, false);
+                lookupField.put(VALUE, lookupName);
+            }
         }
     }
 
