@@ -90,7 +90,7 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
         int visitedNotAdministered = getTotal("select count(*) cnt from ec_child where DATE(dob) >= DATE('now','-18 years') and is_closed = 0 and location = '" + getCurrentLocationID() + "' " +
                 "and ec_child.base_entity_id in (select t.for from task  t where t.code = '" + Constants.Intervention.MDA_DISPENSE + "' and t.business_status like '%" + Constants.BusinessStatus.VISITED_DRUG_NOT_ADMINISTERED + "%') ");
 
-        result.put(Constants.ChildRegister.MMA_COVERAGE, registeredChildren == 0 ? 0 : Math.round(((administeredDrugs * 100) / registeredChildren)));
+        result.put(Constants.ChildRegister.MMA_COVERAGE, registeredChildren == 0 ? 0 : (int) Math.round(((administeredDrugs * 100.0) / registeredChildren)));
         result.put(Constants.ChildRegister.MMA_TARGET_REMAINING, (int) Math.round(((registeredChildren * 0.9) - administeredDrugs)));
         result.put(Constants.ChildRegister.MMA_CHILDREN_REGISTERED, registeredChildren);
         result.put(Constants.ChildRegister.MMA_VISITED_AND_ADMINISTERED, administeredDrugs);
