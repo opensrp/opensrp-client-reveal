@@ -471,6 +471,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     }
 
     private List<TaskDetails> getActiveTasks() {
-        return isTasksFiltered && filteredTasks != null ? filteredTasks : tasks;
+        List<TaskDetails> activeTasks = isTasksFiltered && filteredTasks != null ? filteredTasks : tasks;
+        return activeTasks != null ? activeTasks : new ArrayList<>();
     }
 }
