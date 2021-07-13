@@ -884,6 +884,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     public void searchTasks(String searchPhrase) {
+        if (getFeatureCollection() == null) return;
         if (searchPhrase.isEmpty()) {
             searchFeatureCollection = null;
             listTaskView.setGeoJsonSource(filterFeatureCollection == null ? getFeatureCollection() : FeatureCollection.fromFeatures(filterFeatureCollection), operationalArea, false);

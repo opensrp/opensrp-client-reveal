@@ -421,6 +421,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     @Override
     public void updateSyncStatusDisplay(boolean synced) {
         Activity activity = view.getContext();
+        if (activity == null) return;
         NavigationView navigationView = activity.findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         syncLabel = headerView.findViewById(R.id.sync_label);
