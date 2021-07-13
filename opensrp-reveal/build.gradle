@@ -71,7 +71,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 30
         versionCode 34
-        versionName "5.3.29"
+        versionName "5.3.30"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
