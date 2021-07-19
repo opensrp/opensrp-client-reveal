@@ -418,6 +418,12 @@ public class ListTaskPresenterTest extends BaseUnitTest {
     }
 
     @Test
+    public void testSearchTasksWithUnInitializedFeatureCollection() {
+        listTaskPresenter.searchTasks("");
+        verify(listTaskView, never()).setGeoJsonSource(FeatureCollection.fromFeatures(new Feature[]{feature}), null, false);
+    }
+
+    @Test
     public void testSearchTasks() throws JSONException {
         com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
         feature1.setIdentifier("id1");
