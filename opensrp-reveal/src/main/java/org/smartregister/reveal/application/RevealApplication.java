@@ -108,6 +108,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     private boolean synced;
 
+    private boolean mapboxHttpInterceptorAdded;
+
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
     }
@@ -430,6 +432,14 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     public void setSynced(boolean synced) {
         this.synced = synced;
+    }
+
+    public boolean isMapboxHttpInterceptorAdded() {
+        return mapboxHttpInterceptorAdded;
+    }
+
+    public void setMapboxHttpInterceptorAdded(boolean mapboxHttpInterceptorAdded) {
+        this.mapboxHttpInterceptorAdded = mapboxHttpInterceptorAdded;
     }
 
     @Override

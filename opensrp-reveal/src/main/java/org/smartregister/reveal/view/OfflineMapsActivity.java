@@ -9,11 +9,13 @@ import androidx.core.util.Pair;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.mapbox.mapboxsdk.module.http.HttpRequestUtil;
 import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.OfflineMapDownloadCallback;
 import org.smartregister.reveal.fragment.AvailableOfflineMapsFragment;
 import org.smartregister.reveal.fragment.DownloadedOfflineMapsFragment;
@@ -24,6 +26,9 @@ import org.smartregister.view.activity.MultiLanguageActivity;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
 import timber.log.Timber;
 
 public class OfflineMapsActivity extends MultiLanguageActivity implements OfflineMapDownloadCallback {
@@ -40,6 +45,8 @@ public class OfflineMapsActivity extends MultiLanguageActivity implements Offlin
 
     private OfflineManager offlineManager;
 
+    private RevealApplication revealApplication;
+
     public static  final int AVAILABLE_OFFLINE_MAPS_FRAGMENT_INDEX = 0;
     public static  final int DOWNLOADED_OFFLINE_MAPS_FRAGMENT_INDEX = 1;
 
@@ -49,11 +56,15 @@ public class OfflineMapsActivity extends MultiLanguageActivity implements Offlin
 
         setContentView(R.layout.activity_offline_maps);
 
+        setMapboxHttpInterceptor();
+
         setUpToolbar();
 
         setupViews();
 
         offlineManager = initOfflineManager();
+
+        revealApplication = RevealApplication.getInstance();
 
         getOfflineDownloadedRegions(false);
     }
@@ -140,5 +151,23 @@ public class OfflineMapsActivity extends MultiLanguageActivity implements Offlin
         List<String> regionNames = offlineRegionInfo != null ? offlineRegionInfo.first : null;
         availableOfflineMapsFragment.setOfflineDownloadedMapNames(regionNames);
 
+    }
+
+    private void setMapboxHttpInterceptor() {
+        if (revealApplication.isMapboxHttpInterceptorAdded()) {
+            return;
+        }
+        Interceptor interceptor = chain -> {
+            Response response =  chain.proceed(chain.request());
+            return response.newBuilder()
+                    .header("Cache-Control", "public, max-age=86400")
+                    .build();
+        };
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .build();
+
+        HttpRequestUtil.setOkHttpClient(okHttpClient);
+        revealApplication.setMapboxHttpInterceptorAdded(true);
     }
 }
