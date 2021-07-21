@@ -56,6 +56,8 @@ public class OfflineMapsActivity extends MultiLanguageActivity implements Offlin
 
         setContentView(R.layout.activity_offline_maps);
 
+        revealApplication = RevealApplication.getInstance();
+
         setMapboxHttpInterceptor();
 
         setUpToolbar();
