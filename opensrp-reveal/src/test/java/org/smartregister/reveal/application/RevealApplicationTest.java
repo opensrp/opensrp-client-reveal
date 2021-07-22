@@ -92,6 +92,35 @@ public class RevealApplicationTest extends BaseUnitTest {
     }
 
     @Test
+    public void testGetFamilyMetaDataForZambia() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        FamilyMetadata actualMetaData = revealApplication.getMetadata();
+        assertNotNull(actualMetaData);
+        assertEquals("opensrp_id", actualMetaData.uniqueIdentifierKey);
+        assertEquals("ec_family", actualMetaData.familyRegister.tableName);
+        assertEquals("Family_Registration", actualMetaData.familyRegister.registerEventType);
+        assertEquals("family_register", actualMetaData.familyRegister.config);
+        assertEquals("family_head", actualMetaData.familyRegister.familyHeadRelationKey);
+    }
+
+    @Test
+    public void testGetFamilyMetaDataForRefApp() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        FamilyMetadata actualMetaData = revealApplication.getMetadata();
+        assertNotNull(actualMetaData);
+        assertEquals("opensrp_id", actualMetaData.uniqueIdentifierKey);
+        assertEquals("ec_family", actualMetaData.familyRegister.tableName);
+        assertEquals("Family_Registration", actualMetaData.familyRegister.registerEventType);
+        assertEquals("family_register", actualMetaData.familyRegister.config);
+        assertEquals("family_head", actualMetaData.familyRegister.familyHeadRelationKey);
+    }
+
+    @Test
+    public void testGetAppExecutorsReturnsNonNull(){
+        assertNotNull(revealApplication.getAppExecutors());
+    }
+
+    @Test
     public void testOnUserAssignmentRevokedShouldClearOAsAndPlan() {
         Whitebox.setInternalState(PreferencesUtil.class, "instance", preferencesUtil);
         String planId = UUID.randomUUID().toString();
