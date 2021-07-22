@@ -15,6 +15,7 @@ import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -23,6 +24,11 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.android.controller.ActivityController;
+import org.robolectric.shadows.ShadowApplication;
+import org.robolectric.shadows.ShadowChoreographer;
+import org.robolectric.shadows.ShadowLooper;
+import org.robolectric.util.Scheduler;
 import org.smartregister.domain.Location;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BaseUnitTest;
@@ -30,6 +36,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
+import com.vijay.jsonwizard.utils.AppExecutors;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.TestingUtils;
@@ -42,6 +49,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 
@@ -89,6 +97,14 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
 
     private Location location = TestingUtils.getOperationalArea();
 
+    @Before
+    public void setUp(){
+        ShadowApplication.getInstance().getForegroundThreadScheduler()
+                .setIdleState(Scheduler.IdleState.PAUSED);
+        ShadowChoreographer.setPostFrameCallbackDelay(100);
+        ShadowChoreographer.setPostCallbackDelay(100);
+    }
+
 
     private void setUpFormActivity(String formName) {
         String json = AssetHandler.readFileFromAssetsFolder(formName, context);
@@ -98,11 +114,19 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
     private void setUpFormActivityWithJson(String json) {
         Intent intent = new Intent();
         intent.putExtra("json", json);
-        jsonFormActivity = Robolectric.buildActivity(RevealJsonFormActivity.class, intent).create().resume().get();
+        ActivityController<RevealJsonFormActivity> jsonFormActivityController = Robolectric.buildActivity(RevealJsonFormActivity.class, intent);
+        jsonFormActivity = jsonFormActivityController.get();
+        Executor executor = runnable -> runnable.run();
+        Whitebox.setInternalState(jsonFormActivity, "appExecutors", new AppExecutors(executor, executor, executor));
+        jsonFormActivityController
+                .create()
+                .resume();
+        ShadowLooper.getShadowMainLooper().runUiThreadTasks();
         formFragment = RevealJsonFormFragment.getFormFragment("step1");
         jsonFormActivity.getSupportFragmentManager().beginTransaction()
                 .add(formFragment, null)
                 .commitNow();
+        ShadowLooper.getShadowMainLooper().runUiThreadTasks();
         presenter = formFragment.getPresenter();
         when(imageButton.getDrawable()).thenReturn(context.getDrawable(R.drawable.ic_cross_hair_blue));
         when(mapView.findViewById(R.id.ib_mapview_focusOnMyLocationIcon)).thenReturn(imageButton);
