@@ -2,6 +2,8 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.ImageButton;
 
 import androidx.appcompat.app.AlertDialog;
@@ -11,11 +13,11 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.rengwuxian.materialedittext.validation.METValidator;
+import com.vijay.jsonwizard.utils.AppExecutors;
 import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -25,10 +27,6 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
-import org.robolectric.shadows.ShadowApplication;
-import org.robolectric.shadows.ShadowChoreographer;
-import org.robolectric.shadows.ShadowLooper;
-import org.robolectric.util.Scheduler;
 import org.smartregister.domain.Location;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BaseUnitTest;
@@ -36,7 +34,6 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
-import com.vijay.jsonwizard.utils.AppExecutors;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.TestingUtils;
@@ -97,15 +94,6 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
 
     private Location location = TestingUtils.getOperationalArea();
 
-    @Before
-    public void setUp(){
-        ShadowApplication.getInstance().getForegroundThreadScheduler()
-                .setIdleState(Scheduler.IdleState.PAUSED);
-        ShadowChoreographer.setPostFrameCallbackDelay(100);
-        ShadowChoreographer.setPostCallbackDelay(100);
-    }
-
-
     private void setUpFormActivity(String formName) {
         String json = AssetHandler.readFileFromAssetsFolder(formName, context);
         setUpFormActivityWithJson(json);
@@ -114,19 +102,18 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
     private void setUpFormActivityWithJson(String json) {
         Intent intent = new Intent();
         intent.putExtra("json", json);
-        ActivityController<RevealJsonFormActivity> jsonFormActivityController = Robolectric.buildActivity(RevealJsonFormActivity.class, intent);
-        jsonFormActivity = jsonFormActivityController.get();
-        Executor executor = runnable -> runnable.run();
+        ActivityController<RevealJsonFormActivity> activityController = Robolectric.buildActivity(RevealJsonFormActivity.class, intent);
+        jsonFormActivity = activityController.get();
+        Executor executor = runnable -> new Handler(Looper.getMainLooper()).post(runnable);
         Whitebox.setInternalState(jsonFormActivity, "appExecutors", new AppExecutors(executor, executor, executor));
-        jsonFormActivityController
-                .create()
-                .resume();
-        ShadowLooper.getShadowMainLooper().runUiThreadTasks();
+        activityController.create().resume();
         formFragment = RevealJsonFormFragment.getFormFragment("step1");
-        jsonFormActivity.getSupportFragmentManager().beginTransaction()
-                .add(formFragment, null)
+        jsonFormActivity
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .add(org.smartregister.reveal.R.id.container, formFragment, null)
                 .commitNow();
-        ShadowLooper.getShadowMainLooper().runUiThreadTasks();
+        activityController.visible();
         presenter = formFragment.getPresenter();
         when(imageButton.getDrawable()).thenReturn(context.getDrawable(R.drawable.ic_cross_hair_blue));
         when(mapView.findViewById(R.id.ib_mapview_focusOnMyLocationIcon)).thenReturn(imageButton);
