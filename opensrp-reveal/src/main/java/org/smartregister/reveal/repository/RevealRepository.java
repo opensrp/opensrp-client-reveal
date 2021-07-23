@@ -146,6 +146,9 @@ public class RevealRepository extends Repository {
                 case 14:
                     upgradeToVersion14(db);
                     break;
+                case 15:
+                    upgradeToVersion15();
+                    break;
                 default:
                     break;
             }
@@ -307,6 +310,14 @@ public class RevealRepository extends Repository {
         db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s like ?  OR %s not like ?", CLIENT_TABLE, client_column.syncStatus, client_column.json, client_column.json), new String[]{BaseRepository.TYPE_Unsynced, "%serverVersion\":0%", "%serverVersion%"});
         db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s IS NULL OR %s = 0 ", TASK_TABLE, DatabaseKeys.TASK_SYNC_STATUS, DatabaseKeys.SERVER_VERSION, DatabaseKeys.SERVER_VERSION), new String[]{BaseRepository.TYPE_Created});
         db.execSQL(String.format("UPDATE %s set %s = ? WHERE %s like ?  OR %s not like ?", STRUCTURE_TABLE, DatabaseKeys.TASK_SYNC_STATUS, DatabaseKeys.GEOJSON, DatabaseKeys.GEOJSON), new String[]{BaseRepository.TYPE_Created, "%serverVersion\":0%", "%serverVersion%"});
+    }
+
+    private void upgradeToVersion15() {
+        // Part of the fix for https://github.com/opensrp/opensrp-client-reveal/issues/1469
+        MbtilesRepository dbHelper = new MbtilesRepository(RevealApplication.getInstance().getApplicationContext());
+
+        android.database.sqlite.SQLiteDatabase writableDb = dbHelper.getWritableDatabase();
+        writableDb.rawQuery("UPDATE tiles SET must_revalidate = 0 WHERE must_revalidate = 1", new String[]{});
     }
 
     private void clientProcessEvents(List<String> eventTypes) {
