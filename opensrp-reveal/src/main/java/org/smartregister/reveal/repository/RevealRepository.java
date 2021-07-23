@@ -314,10 +314,12 @@ public class RevealRepository extends Repository {
 
     private void upgradeToVersion15() {
         // Part of the fix for https://github.com/opensrp/opensrp-client-reveal/issues/1469
-        MbtilesRepository dbHelper = new MbtilesRepository(RevealApplication.getInstance().getApplicationContext());
+        MbtilesRepository mbtilesRepository = new MbtilesRepository(RevealApplication.getInstance().getApplicationContext());
 
-        android.database.sqlite.SQLiteDatabase writableDb = dbHelper.getWritableDatabase();
-        writableDb.rawQuery("UPDATE tiles SET must_revalidate = 0 WHERE must_revalidate = 1", new String[]{});
+        if (Utils.tableExists(mbtilesRepository.getReadableDatabase(),"tiles")) {
+            android.database.sqlite.SQLiteDatabase writableDb = mbtilesRepository.getWritableDatabase();
+            writableDb.rawQuery("UPDATE tiles SET must_revalidate = 0 WHERE must_revalidate = 1", new String[]{});
+        }
     }
 
     private void clientProcessEvents(List<String> eventTypes) {
