@@ -9,6 +9,7 @@ import androidx.core.util.Pair;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.common.net.HttpHeaders;
 import com.mapbox.mapboxsdk.module.http.HttpRequestUtil;
 import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
@@ -65,8 +66,6 @@ public class OfflineMapsActivity extends MultiLanguageActivity implements Offlin
         setupViews();
 
         offlineManager = initOfflineManager();
-
-        revealApplication = RevealApplication.getInstance();
 
         getOfflineDownloadedRegions(false);
     }
@@ -162,7 +161,7 @@ public class OfflineMapsActivity extends MultiLanguageActivity implements Offlin
         Interceptor interceptor = chain -> {
             Response response =  chain.proceed(chain.request());
             return response.newBuilder()
-                    .header("Cache-Control", "public, max-age=86400")
+                    .header(HttpHeaders.CACHE_CONTROL, "public, max-age=86400")
                     .build();
         };
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
