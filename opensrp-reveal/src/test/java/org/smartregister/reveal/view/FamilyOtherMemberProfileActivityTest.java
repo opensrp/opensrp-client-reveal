@@ -7,7 +7,6 @@ import android.view.MenuItem;
 
 import androidx.viewpager.widget.PagerAdapter;
 
-import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
@@ -23,6 +22,7 @@ import org.robolectric.fakes.RoboMenu;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.Context;
+import org.smartregister.family.activity.NoLocaleFamilyWizardFormActivity;
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.family.contract.FamilyOtherMemberProfileFragmentContract;
 import org.smartregister.family.util.Constants;
@@ -189,7 +189,7 @@ public class FamilyOtherMemberProfileActivityTest extends BaseUnitTest {
         ShadowActivity shadowActivity = shadowOf(activity);
         Intent intentResult = shadowActivity.getNextStartedActivityForResult().intent;
         assertNotNull(intentResult);
-        assertEquals(JsonWizardFormActivity.class, shadowOf(intentResult).getIntentClass());
+        assertEquals(NoLocaleFamilyWizardFormActivity.class, shadowOf(intentResult).getIntentClass());
         assertEquals(json, intentResult.getStringExtra(Constants.JSON_FORM_EXTRA.JSON));
         Form form = (Form) intentResult.getSerializableExtra(JsonFormConstants.JSON_FORM_KEY.FORM);
         assertEquals(R.color.family_actionbar, form.getActionBarBackground());

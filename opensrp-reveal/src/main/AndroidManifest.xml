@@ -33,9 +33,9 @@
             android:name="io.fabric.ApiKey"
             android:value="3f94f9c3caeff331b3a2bd8c2182b663ad6a955a" />
 
-            <meta-data
-                android:name="firebase_performance_logcat_enabled"
-                android:value="true" />
+        <meta-data
+            android:name="firebase_performance_logcat_enabled"
+            android:value="true" />
 
 
         <activity
@@ -77,7 +77,9 @@
                 android:value=".view.FamilyRegisterActivity" />
         </activity>
         <activity android:name="org.smartregister.family.activity.FamilyWizardFormActivity" />
+        <activity android:name="org.smartregister.family.activity.NoLocaleFamilyWizardFormActivity" />
         <activity android:name="com.vijay.jsonwizard.activities.JsonWizardFormActivity" />
+        <activity android:name="com.vijay.jsonwizard.activities.NoLocaleFormConfigurationJsonWizardFormActivity" />
         <activity
             android:name=".view.FamilyOtherMemberProfileActivity"
             android:parentActivityName=".view.FamilyProfileActivity"
