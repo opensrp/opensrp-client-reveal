@@ -161,7 +161,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
                                         R.id.structure_complete_drug_distribution_cell,
                                         R.id.structure_partial_drug_distribution_cell,
                                         R.id.individual_total_number_of_children_eligible_3_to_49_mos_cell,
-                                        R.id.individual_total_number_of_children_eligible_3_to_49_mos_cell),indicatorDetails.getSprayIndicatorList());
+                                        R.id.individual_total_treated_3_to_59_mos_cell),indicatorDetails.getSprayIndicatorList());
         //Show or hide depending on plan
 
         ((View) progressIndicator.getParent()).setVisibility(Utils.getInterventionLabel() == R.string.irs || Country.NIGERIA == BuildConfig.BUILD_COUNTRY ? View.VISIBLE : View.GONE);
