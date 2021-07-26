@@ -1,5 +1,7 @@
 package org.smartregister.reveal.interactor;
 
+import android.content.ContentValues;
+
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
@@ -30,6 +32,7 @@ import org.smartregister.reveal.model.StructureDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
+import org.smartregister.reveal.repository.MbtilesRepository;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.GeoJSON;
@@ -537,6 +540,31 @@ public class ListTaskInteractor extends BaseInteractor {
             @Override
             public void run() {
                 ((ListTaskPresenter) presenterCallBack).onCDDTaskCompleteStatusEdited(businessStatus);
+            }
+        });
+    }
+
+    public void updateMbTilesMustRevalidate() {
+        MbtilesRepository mbtilesRepository = new MbtilesRepository(RevealApplication.getInstance().getApplicationContext());
+
+        appExecutors.diskIO().execute(() -> {
+
+            try {
+                if (Utils.tableExists(mbtilesRepository.getReadableDatabase(), "tiles")) {
+                    android.database.sqlite.SQLiteDatabase writableDb = null;
+                    try {
+                        writableDb = mbtilesRepository.getWritableDatabase();
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put("must_revalidate", 0);
+                        writableDb.update("tiles", contentValues, "must_revalidate = ?", new String[]{"1"});
+                    } finally {
+                        if (writableDb != null) {
+                            writableDb.close();
+                        }
+                    }
+                }
+            } finally {
+                mbtilesRepository.close();
             }
         });
     }

@@ -569,11 +569,22 @@ public class Utils {
     }
 
     public static boolean tableExists(android.database.sqlite.SQLiteDatabase database, String tableName) {
-        Cursor cursor = database.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name= ?", new String[]{tableName});
-        boolean exists = false;
-        if (cursor != null) {
-            exists = cursor.getCount() > 0;
-            cursor.close();
+        if (database == null) {
+            return false;
+        }
+        boolean exists;
+        try {
+            Cursor cursor = database.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name= ?", new String[]{tableName});
+            exists = false;
+            if (cursor != null) {
+                try {
+                    exists = cursor.getCount() > 0;
+                } finally {
+                    cursor.close();
+                }
+            }
+        } finally {
+            database.close();
         }
         return exists;
     }

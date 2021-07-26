@@ -133,5 +133,7 @@ public interface ListTaskContract {
         void onFociBoundaryLongClicked();
 
         void onCDDTaskCompleteStatusEdited(String businessStatus);
+
+        void updateMbTilesMustRevalidate();
     }
 }
