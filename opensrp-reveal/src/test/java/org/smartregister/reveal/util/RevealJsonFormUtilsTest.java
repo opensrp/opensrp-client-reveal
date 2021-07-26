@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.clientandeventmodel.Event;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Geometry;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
@@ -40,11 +41,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -239,6 +243,27 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
 
         revealJsonFormUtils.populateField(form, Constants.JsonForm.SELECTED_OPERATIONAL_AREA_NAME, "TLV1", TEXT);
         assertEquals("TLV1", JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), JsonForm.SELECTED_OPERATIONAL_AREA_NAME).get(TEXT));
+    }
+
+    @Test
+    public void testPopulateSprayForm() throws JSONException {
+        String structureTypeValue = "Residential Structure";
+        String structureTypeKey = "structureType";
+        CommonPersonObject personObject = new CommonPersonObject(null, null, Collections.singletonMap(structureTypeKey, structureTypeValue), "common");
+        JSONObject form = new JSONObject(AssetHandler.readFileFromAssetsFolder(JsonForm.SPRAY_FORM, context));
+        revealJsonFormUtils.populateSprayForm(personObject, form);
+        JSONArray fields = JsonFormUtils.fields(form);
+        JSONObject structureTypeJSONObject = null;
+        for (int i = 0; i < fields.length(); i++) {
+            JSONObject field = fields.getJSONObject(i);
+            String key = field.getString(KEY);
+            if (key.equals(structureTypeKey)){
+                structureTypeJSONObject = fields.getJSONObject(i);
+            }
+        }
+
+        assertFalse(structureTypeJSONObject.isNull(VALUE));
+        assertEquals(structureTypeValue, structureTypeJSONObject.getString(VALUE));
     }
 
     @Test
