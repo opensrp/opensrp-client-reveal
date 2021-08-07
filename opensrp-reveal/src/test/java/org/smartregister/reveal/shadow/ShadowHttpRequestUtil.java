@@ -14,7 +14,7 @@ import okhttp3.OkHttpClient;
  */
 
 @Implements(HttpRequestUtil.class)
-public class HttpRequestUtilShadow {
+public class ShadowHttpRequestUtil {
 
     @Implementation
     public static void setOkHttpClient(@Nullable OkHttpClient client) {

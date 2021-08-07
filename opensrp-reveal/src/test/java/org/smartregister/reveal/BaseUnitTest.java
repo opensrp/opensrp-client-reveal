@@ -18,7 +18,7 @@ import org.smartregister.reveal.shadow.CloudantDataHandlerShadowUtils;
 import org.smartregister.reveal.shadow.CredentialsHelperShadow;
 import org.smartregister.reveal.shadow.CustomFontTextViewShadow;
 import org.smartregister.reveal.shadow.GeoJsonSourceShadow;
-import org.smartregister.reveal.shadow.HttpRequestUtilShadow;
+import org.smartregister.reveal.shadow.ShadowHttpRequestUtil;
 import org.smartregister.reveal.shadow.KujakuMapViewShadow;
 import org.smartregister.reveal.shadow.LayerShadow;
 import org.smartregister.reveal.shadow.LineLayerShadow;
@@ -35,7 +35,7 @@ import org.smartregister.util.DateTimeTypeConverter;
         MapViewShadow.class, KujakuMapViewShadow.class, RevealMapViewShadow.class,
         LayerShadow.class, SymbolLayerShadow.class, LineLayerShadow.class,
         GeoJsonSourceShadow.class, SourceShadow.class, OfflineManagerShadow.class,
-        AsyncTaskShadow.class, CloudantDataHandlerShadowUtils.class, CredentialsHelperShadow.class, HttpRequestUtilShadow.class}, sdk = Build.VERSION_CODES.P)
+        AsyncTaskShadow.class, CloudantDataHandlerShadowUtils.class, CredentialsHelperShadow.class, ShadowHttpRequestUtil.class}, sdk = Build.VERSION_CODES.P)
 public abstract class BaseUnitTest {
 
     @Rule
