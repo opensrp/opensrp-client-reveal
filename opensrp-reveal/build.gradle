@@ -164,7 +164,9 @@ android {
         }
 
         debug {
-            resValue "string", 'opensrp_base_url', '"https://reveal-stage.smartregister.org/opensrp/"'
+            resValue "string", 'opensrp_base_url', '"https://reveal-th-preview.smartregister.org/opensrp/"'
+//            resValue "string", 'opensrp_base_url', '"https://reveal-stage.smartregister.org/opensrp/"'
+//            resValue "string", 'opensrp_base_url', '"http://10.0.2.2:8080/opensrp/"'
             buildConfigField "Integer", "DATABASE_VERSION", '14'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
@@ -242,7 +244,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    implementation('org.smartregister:opensrp-client-family:2.0.4-FORM-CONFIG-RULES-FIX-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-family:2.0.4-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
         exclude group: 'org.smartregister', module: 'opensrp-client-native-form'
