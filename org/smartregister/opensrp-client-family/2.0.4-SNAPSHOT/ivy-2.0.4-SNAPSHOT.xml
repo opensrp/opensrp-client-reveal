@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
+  <info organisation="org.smartregister" module="opensrp-family" revision="2.0.4-SNAPSHOT" status="integration" publication="20210813130142"/>
+  <configurations>
+    <conf name="_internal_aapt2_binary" visibility="private" transitive="false"/>
+    <conf name="androidApis" visibility="public"/>
+    <conf name="androidTestAnnotationProcessor" visibility="private"/>
+    <conf name="androidTestApi" visibility="private" extends="androidTestCompile"/>
+    <conf name="androidTestCompile" visibility="private"/>
+    <conf name="androidTestCompileOnly" visibility="private" extends="androidTestProvided"/>
+    <conf name="androidTestDebugAnnotationProcessor" visibility="private"/>
+    <conf name="androidTestDebugApi" visibility="private" extends="androidTestDebugCompile"/>
+    <conf name="androidTestDebugCompile" visibility="private"/>
+    <conf name="androidTestDebugCompileOnly" visibility="private" extends="androidTestDebugProvided"/>
+    <conf name="androidTestDebugImplementation" visibility="private" extends="androidTestDebugApi"/>
+    <conf name="androidTestDebugProvided" visibility="private"/>
+    <conf name="androidTestDebugPublish" visibility="private"/>
+    <conf name="androidTestDebugRuntimeOnly" visibility="private" extends="androidTestDebugPublish"/>
+    <conf name="androidTestDebugWearApp" visibility="private"/>
+    <conf name="androidTestImplementation" visibility="private" extends="androidTestApi"/>
+    <conf name="androidTestProvided" visibility="private"/>
+    <conf name="androidTestPublish" visibility="private"/>
+    <conf name="androidTestRuntimeOnly" visibility="private" extends="androidTestPublish"/>
+    <conf name="androidTestUtil" visibility="private"/>
+    <conf name="androidTestWearApp" visibility="private"/>
+    <conf name="annotationProcessor" visibility="private"/>
+    <conf name="api" visibility="private" extends="compile"/>
+    <conf name="archives" visibility="public" extends="releaseRuntimeClasspath"/>
+    <conf name="compile" visibility="private"/>
+    <conf name="compileOnly" visibility="private" extends="provided"/>
+    <conf name="coreLibraryDesugaring" visibility="private"/>
+    <conf name="debugAllApiPublication" visibility="private" extends="api,debugApi"/>
+    <conf name="debugAllRuntimePublication" visibility="private" extends="debugImplementation,debugRuntimeOnly,implementation,runtimeOnly"/>
+    <conf name="debugAndroidTestAnnotationProcessorClasspath" visibility="private" extends="androidTestAnnotationProcessor,androidTestDebugAnnotationProcessor"/>
+    <conf name="debugAndroidTestCompileClasspath" visibility="private" extends="androidTestCompileOnly,androidTestDebugCompileOnly,androidTestDebugImplementation,androidTestImplementation,debugImplementation,implementation"/>
+    <conf name="debugAndroidTestRuntimeClasspath" visibility="private" extends="androidTestDebugImplementation,androidTestDebugRuntimeOnly,androidTestImplementation,androidTestRuntimeOnly,debugImplementation,debugRuntimeOnly,implementation,runtimeOnly"/>
+    <conf name="debugAnnotationProcessor" visibility="private"/>
+    <conf name="debugAnnotationProcessorClasspath" visibility="private" extends="annotationProcessor,debugAnnotationProcessor"/>
+    <conf name="debugApi" visibility="private" extends="debugCompile"/>
+    <conf name="debugApiElements" visibility="public" extends="api,debugApi"/>
+    <conf name="debugApiPublication" visibility="private" extends="api,debugApi"/>
+    <conf name="debugCompile" visibility="private"/>
+    <conf name="debugCompileClasspath" visibility="private" extends="compileOnly,debugCompileOnly,debugImplementation,implementation"/>
+    <conf name="debugCompileOnly" visibility="private" extends="debugProvided"/>
+    <conf name="debugImplementation" visibility="private" extends="debugApi"/>
+    <conf name="debugProvided" visibility="private"/>
+    <conf name="debugPublish" visibility="private"/>
+    <conf name="debugRuntimeClasspath" visibility="private" extends="debugImplementation,debugRuntimeOnly,implementation,runtimeOnly"/>
+    <conf name="debugRuntimeElements" visibility="public" extends="debugRuntimeClasspath"/>
+    <conf name="debugRuntimeOnly" visibility="private" extends="debugPublish"/>
+    <conf name="debugRuntimePublication" visibility="private" extends="debugRuntimeClasspath"/>
+    <conf name="debugUnitTestAnnotationProcessorClasspath" visibility="private" extends="testAnnotationProcessor,testDebugAnnotationProcessor"/>
+    <conf name="debugUnitTestCompileClasspath" visibility="private" extends="debugImplementation,implementation,testCompileOnly,testDebugCompileOnly,testDebugImplementation,testImplementation"/>
+    <conf name="debugUnitTestRuntimeClasspath" visibility="private" extends="debugImplementation,debugRuntimeOnly,implementation,runtimeOnly,testDebugImplementation,testDebugRuntimeOnly,testImplementation,testRuntimeOnly"/>
+    <conf name="debugWearApp" visibility="private"/>
+    <conf name="default" visibility="public"/>
+    <conf name="implementation" visibility="private" extends="api"/>
+    <conf name="jacocoAgent" visibility="private"/>
+    <conf name="jacocoAnt" visibility="private"/>
+    <conf name="lintChecks" visibility="private"/>
+    <conf name="lintClassPath" visibility="private"/>
+    <conf name="lintPublish" visibility="private"/>
+    <conf name="provided" visibility="private"/>
+    <conf name="publish" visibility="private"/>
+    <conf name="releaseAllApiPublication" visibility="private" extends="api,releaseApi"/>
+    <conf name="releaseAllRuntimePublication" visibility="private" extends="implementation,releaseImplementation,releaseRuntimeOnly,runtimeOnly"/>
+    <conf name="releaseAnnotationProcessor" visibility="private"/>
+    <conf name="releaseAnnotationProcessorClasspath" visibility="private" extends="annotationProcessor,releaseAnnotationProcessor"/>
+    <conf name="releaseApi" visibility="private" extends="releaseCompile"/>
+    <conf name="releaseApiElements" visibility="public" extends="api,releaseApi"/>
+    <conf name="releaseApiPublication" visibility="private" extends="api,releaseApi"/>
+    <conf name="releaseCompile" visibility="private"/>
+    <conf name="releaseCompileClasspath" visibility="private" extends="compileOnly,implementation,releaseCompileOnly,releaseImplementation"/>
+    <conf name="releaseCompileOnly" visibility="private" extends="releaseProvided"/>
+    <conf name="releaseImplementation" visibility="private" extends="releaseApi"/>
+    <conf name="releaseProvided" visibility="private"/>
+    <conf name="releasePublish" visibility="private"/>
+    <conf name="releaseRuntimeClasspath" visibility="private" extends="implementation,releaseImplementation,releaseRuntimeOnly,runtimeOnly"/>
+    <conf name="releaseRuntimeElements" visibility="public" extends="releaseRuntimeClasspath"/>
+    <conf name="releaseRuntimeOnly" visibility="private" extends="releasePublish"/>
+    <conf name="releaseRuntimePublication" visibility="private" extends="releaseRuntimeClasspath"/>
+    <conf name="releaseUnitTestAnnotationProcessorClasspath" visibility="private" extends="testAnnotationProcessor,testReleaseAnnotationProcessor"/>
+    <conf name="releaseUnitTestCompileClasspath" visibility="private" extends="implementation,releaseImplementation,testCompileOnly,testImplementation,testReleaseCompileOnly,testReleaseImplementation"/>
+    <conf name="releaseUnitTestRuntimeClasspath" visibility="private" extends="implementation,releaseImplementation,releaseRuntimeOnly,runtimeOnly,testImplementation,testReleaseImplementation,testReleaseRuntimeOnly,testRuntimeOnly"/>
+    <conf name="releaseWearApp" visibility="private"/>
+    <conf name="runtimeOnly" visibility="private" extends="publish"/>
+    <conf name="signatures" visibility="public"/>
+    <conf name="testAnnotationProcessor" visibility="private"/>
+    <conf name="testApi" visibility="private" extends="testCompile"/>
+    <conf name="testCompile" visibility="private"/>
+    <conf name="testCompileOnly" visibility="private" extends="testProvided"/>
+    <conf name="testDebugAnnotationProcessor" visibility="private"/>
+    <conf name="testDebugApi" visibility="private" extends="testDebugCompile"/>
+    <conf name="testDebugCompile" visibility="private"/>
+    <conf name="testDebugCompileOnly" visibility="private" extends="testDebugProvided"/>
+    <conf name="testDebugImplementation" visibility="private" extends="testDebugApi"/>
+    <conf name="testDebugProvided" visibility="private"/>
+    <conf name="testDebugPublish" visibility="private"/>
+    <conf name="testDebugRuntimeOnly" visibility="private" extends="testDebugPublish"/>
+    <conf name="testDebugWearApp" visibility="private"/>
+    <conf name="testImplementation" visibility="private" extends="testApi"/>
+    <conf name="testProvided" visibility="private"/>
+    <conf name="testPublish" visibility="private"/>
+    <conf name="testReleaseAnnotationProcessor" visibility="private"/>
+    <conf name="testReleaseApi" visibility="private" extends="testReleaseCompile"/>
+    <conf name="testReleaseCompile" visibility="private"/>
+    <conf name="testReleaseCompileOnly" visibility="private" extends="testReleaseProvided"/>
+    <conf name="testReleaseImplementation" visibility="private" extends="testReleaseApi"/>
+    <conf name="testReleaseProvided" visibility="private"/>
+    <conf name="testReleasePublish" visibility="private"/>
+    <conf name="testReleaseRuntimeOnly" visibility="private" extends="testReleasePublish"/>
+    <conf name="testReleaseWearApp" visibility="private"/>
+    <conf name="testRuntimeOnly" visibility="private" extends="testPublish"/>
+    <conf name="testWearApp" visibility="private"/>
+    <conf name="wearApp" visibility="private"/>
+  </configurations>
+  <publications>
+    <artifact name="opensrp-family" type="aar" ext="aar" conf="archives,default"/>
+    <artifact name="opensrp-family" type="aar.asc" ext="asc" conf="archives,signatures"/>
+    <artifact name="opensrp-family" type="jar.asc" ext="asc" conf="archives,signatures" m:classifier="sources"/>
+    <artifact name="opensrp-family" type="jar.asc" ext="asc" conf="archives,signatures" m:classifier="javadoc"/>
+    <artifact name="opensrp-family" type="jar" ext="jar" conf="archives" m:classifier="sources"/>
+    <artifact name="opensrp-family" type="jar" ext="jar" conf="archives" m:classifier="javadoc"/>
+    <artifact name="opensrp-family-debug" type="aar" ext="aar" conf="debugAllApiPublication,debugAllRuntimePublication" m:classifier="debug"/>
+    <artifact name="opensrp-family-debug" type="aar" ext="aar" conf="debugApiPublication,debugRuntimePublication"/>
+    <artifact name="opensrp-family-release" type="aar" ext="aar" conf="releaseAllApiPublication,releaseAllRuntimePublication" m:classifier="release"/>
+    <artifact name="opensrp-family-release" type="aar" ext="aar" conf="releaseApiPublication,releaseRuntimePublication"/>
+  </publications>
+  <dependencies>
+    <dependency org="com.android.tools.build" name="aapt2" rev="4.0.0-6051327" conf="_internal_aapt2_binary-&gt;default">
+      <artifact name="aapt2" type="jar" ext="jar" m:classifier="linux" conf="_internal_aapt2_binary"/>
+    </dependency>
+    <dependency org="androidx.test.ext" name="junit" rev="1.1.2" conf="androidTestImplementation-&gt;default"/>
+    <dependency org="androidx.test.espresso" name="espresso-core" rev="3.3.0" conf="androidTestImplementation-&gt;default"/>
+    <dependency org="androidx.multidex" name="multidex-instrumentation" rev="2.0.0" conf="debugAndroidTestCompileClasspath-&gt;default"/>
+    <dependency org="androidx.multidex" name="multidex-instrumentation" rev="2.0.0" conf="debugAndroidTestRuntimeClasspath-&gt;default"/>
+    <dependency org="org.smartregister" name="opensrp-client-core" rev="4.3.6-SNAPSHOT" conf="implementation-&gt;default">
+      <artifact name="opensrp-client-core" type="aar" ext="aar" conf="implementation"/>
+      <exclude org="com.android.support" module="appcompat-v7"/>
+      <exclude org="com.github.bmelnychuk" module="atv"/>
+      <exclude org="com.ibm.fhir" module="fhir-model"/>
+      <exclude org="com.google.guava" module="guava"/>
+      <exclude org="org.apache.httpcomponents" module="httpmime"/>
+    </dependency>
+    <dependency org="org.smartregister" name="opensrp-client-native-form" rev="2.1.1-SNAPSHOT" conf="implementation-&gt;default">
+      <artifact name="opensrp-client-native-form" type="aar" ext="aar" conf="implementation"/>
+      <exclude org="io.ona.rdt-capture" module="lib"/>
+      <exclude org="com.android.support" module="appcompat-v7"/>
+      <exclude org="com.android.support" module="design"/>
+      <exclude org="com.android.support" module="cardview-v7"/>
+      <exclude org="com.android.support" module="support-media-compat"/>
+      <exclude org="com.android.support" module="support-v4"/>
+    </dependency>
+    <dependency org="org.smartregister" name="opensrp-client-configurable-views" rev="1.1.5-SNAPSHOT" conf="implementation-&gt;default">
+      <artifact name="opensrp-client-configurable-views" type="aar" ext="aar" conf="implementation"/>
+      <exclude org="com.android.support" module="appcompat-v7"/>
+      <exclude org="org.smartregister" module="opensrp-client-core"/>
+      <exclude org="org.smartregister" module="opensrp-client-native-form"/>
+    </dependency>
+    <dependency org="androidx.appcompat" name="appcompat" rev="1.2.0" conf="implementation-&gt;default"/>
+    <dependency org="androidx.legacy" name="legacy-support-v4" rev="1.0.0" conf="implementation-&gt;default"/>
+    <dependency org="androidx.recyclerview" name="recyclerview" rev="1.1.0" conf="implementation-&gt;default"/>
+    <dependency org="com.google.android.material" name="material" rev="1.2.1" conf="implementation-&gt;default"/>
+    <dependency org="androidx.constraintlayout" name="constraintlayout" rev="2.0.4" conf="implementation-&gt;default"/>
+    <dependency org="com.google.guava" name="guava" rev="28.0-android" conf="implementation-&gt;default"/>
+    <dependency org="id.zelory" name="compressor" rev="2.1.0" conf="implementation-&gt;default"/>
+    <dependency org="org.jacoco" name="org.jacoco.agent" rev="0.8.0" conf="jacocoAgent-&gt;default"/>
+    <dependency org="org.jacoco" name="org.jacoco.ant" rev="0.8.0" conf="jacocoAnt-&gt;default"/>
+    <dependency org="com.android.tools.lint" name="lint-gradle" rev="27.0.0" conf="lintClassPath-&gt;default"/>
+    <dependency org="org.smartregister" name="opensrp-client-core" rev="4.3.6-SNAPSHOT" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="joda-time" name="joda-time" rev="2.10.6" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.jacoco" name="org.jacoco.agent" rev="0.7.9" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="net.zetetic" name="android-database-sqlcipher" rev="4.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.multidex" name="multidex" rev="2.0.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.codehaus.jackson" name="jackson-core-asl" rev="1.9.13" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.appcompat" name="appcompat" rev="1.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.annotation" name="annotation" rev="1.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.core" name="core" rev="1.3.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.lifecycle" name="lifecycle-runtime" rev="2.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.lifecycle" name="lifecycle-common" rev="2.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.arch.core" name="core-common" rev="2.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.versionedparcelable" name="versionedparcelable" rev="1.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.collection" name="collection" rev="1.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.cursoradapter" name="cursoradapter" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.fragment" name="fragment" rev="1.2.4" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.viewpager" name="viewpager" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.customview" name="customview" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.loader" name="loader" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.lifecycle" name="lifecycle-livedata" rev="2.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.arch.core" name="core-runtime" rev="2.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.lifecycle" name="lifecycle-livedata-core" rev="2.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.lifecycle" name="lifecycle-viewmodel" rev="2.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.activity" name="activity" rev="1.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.savedstate" name="savedstate" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.lifecycle" name="lifecycle-viewmodel-savedstate" rev="2.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.appcompat" name="appcompat-resources" rev="1.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.vectordrawable" name="vectordrawable" rev="1.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.vectordrawable" name="vectordrawable-animated" rev="1.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.interpolator" name="interpolator" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.drawerlayout" name="drawerlayout" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.legacy" name="legacy-support-v4" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.media" name="media" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.legacy" name="legacy-support-core-utils" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.documentfile" name="documentfile" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.localbroadcastmanager" name="localbroadcastmanager" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.print" name="print" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.legacy" name="legacy-support-core-ui" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.coordinatorlayout" name="coordinatorlayout" rev="1.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.slidingpanelayout" name="slidingpanelayout" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.swiperefreshlayout" name="swiperefreshlayout" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.asynclayoutinflater" name="asynclayoutinflater" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="commons-codec" name="commons-codec" rev="1.10" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="commons-io" name="commons-io" rev="2.4" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.apache.commons" name="commons-lang3" rev="3.10" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.mozilla" name="rhino" rev="1.7R4" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.ocpsoft" name="ocpsoft-pretty-time" rev="1.0.7" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.github.johnkil.print" name="print" rev="1.3.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.crashlytics.sdk.android" name="crashlytics" rev="2.10.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.crashlytics.sdk.android" name="crashlytics-core" rev="2.7.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="io.fabric.sdk.android" name="fabric" rev="1.4.8" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.crashlytics.sdk.android" name="answers" rev="1.4.7" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.crashlytics.sdk.android" name="beta" rev="1.2.10" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="ch.acra" name="acra" rev="4.5.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.github.ybq" name="Android-SpinKit" rev="1.4.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.mcxiaoke.volley" name="library" rev="1.0.19" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.cloudant" name="cloudant-http" rev="2.7.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.recyclerview" name="recyclerview" rev="1.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.preference" name="preference" rev="1.1.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.security" name="security-crypto" rev="1.0.0-rc03" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.crypto.tink" name="tink-android" rev="1.4.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.android.material" name="material" rev="1.2.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.cardview" name="cardview" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.annotation" name="annotation-experimental" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.transition" name="transition" rev="1.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.viewpager2" name="viewpager2" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.evernote" name="android-job" rev="1.2.6" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="commons-validator" name="commons-validator" rev="1.6" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="commons-beanutils" name="commons-beanutils" rev="1.9.2" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="commons-logging" name="commons-logging" rev="1.2" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="commons-collections" name="commons-collections" rev="3.2.2" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="commons-digester" name="commons-digester" rev="1.8.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="de.hdodenhof" name="circleimageview" rev="3.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.smartregister" name="android-p2p-sync" rev="0.3.7-SNAPSHOT" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.android.gms" name="play-services-nearby" rev="16.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.android.gms" name="play-services-base" rev="17.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.android.gms" name="play-services-basement" rev="17.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.android.gms" name="play-services-tasks" rev="17.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.android.gms" name="play-services-location" rev="16.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.android.gms" name="play-services-places-placereport" rev="16.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.android.gms" name="play-services-vision" rev="17.0.2" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.android.gms" name="play-services-vision-common" rev="17.0.2" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.android.gms" name="play-services-clearcut" rev="17.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.android.gms" name="play-services-phenotype" rev="17.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.android.gms" name="play-services-flags" rev="16.0.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.jakewharton.timber" name="timber" rev="4.7.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.jetbrains" name="annotations" rev="16.0.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.journeyapps" name="zxing-android-embedded" rev="3.6.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.zxing" name="core" rev="3.3.2" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.code.gson" name="gson" rev="2.8.6" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.commonsware.cwac" name="saferoom" rev="1.0.2" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.sqlite" name="sqlite" rev="2.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.constraintlayout" name="constraintlayout" rev="2.0.4" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.constraintlayout" name="constraintlayout-solver" rev="2.0.4" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.room" name="room-runtime" rev="2.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.room" name="room-common" rev="2.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.sqlite" name="sqlite-framework" rev="2.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.lifecycle" name="lifecycle-extensions" rev="2.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.lifecycle" name="lifecycle-process" rev="2.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="androidx.lifecycle" name="lifecycle-service" rev="2.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.smartregister" name="opensrp-client-utils" rev="0.0.4-SNAPSHOT" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.smartregister" name="opensrp-plan-evaluator" rev="1.5.1-SNAPSHOT" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.ibm.fhir" name="fhir-path" rev="4.7.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.ibm.fhir" name="fhir-registry" rev="4.7.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.ibm.fhir" name="fhir-term" rev="4.7.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.ibm.fhir" name="fhir-profile" rev="4.7.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.antlr" name="antlr4-runtime" rev="4.9.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.github.stephenc.jcip" name="jcip-annotations" rev="1.0-1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.ibm.fhir" name="fhir-core" rev="4.7.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.glassfish" name="jakarta.json" rev="1.1.5" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="jakarta.annotation" name="jakarta.annotation-api" rev="1.3.5" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.apache.commons" name="commons-text" rev="1.8" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.10.5.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.10.5" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.10.5" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="xerces" name="xercesImpl" rev="2.12.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="xml-apis" name="xml-apis" rev="1.4.01" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.firebase" name="firebase-perf" rev="19.0.7" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.firebase" name="firebase-common" rev="19.3.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.auto.value" name="auto-value-annotations" rev="1.6.5" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.firebase" name="firebase-components" rev="16.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.firebase" name="firebase-config" rev="19.0.4" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.firebase" name="firebase-abt" rev="19.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.firebase" name="firebase-measurement-connector" rev="18.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.protobuf" name="protobuf-lite" rev="3.0.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.firebase" name="firebase-iid" rev="20.1.5" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.android.gms" name="play-services-stats" rev="17.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.firebase" name="firebase-iid-interop" rev="17.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.firebase" name="firebase-installations" rev="16.2.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.firebase" name="firebase-installations-interop" rev="16.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.squareup.okhttp3" name="okhttp" rev="3.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.squareup.okio" name="okio" rev="1.6.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.smartregister" name="opensrp-client-native-form" rev="2.1.1-SNAPSHOT" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.smartregister" name="opensrp-client-simprints" rev="1.0.6-SNAPSHOT" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.simprints" name="libsimprints" rev="2020.2.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.github.bmelnychuk" name="atv" rev="1.2.9" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.github.rey5137" name="material" rev="1.2.5" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.smartregister" name="opensrp-client-materialedittext" rev="2.1.6-SNAPSHOT" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.nineoldandroids" name="library" rev="2.4.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.github.ganfra" name="material-spinner" rev="2.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.jeasy" name="easy-rules-core" rev="3.3.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.slf4j" name="slf4j-api" rev="1.7.25" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.jeasy" name="easy-rules-mvel" rev="3.3.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.jeasy" name="easy-rules-support" rev="3.3.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.fasterxml.jackson.dataformat" name="jackson-dataformat-yaml" rev="2.9.8" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.yaml" name="snakeyaml" rev="1.23" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.mvel" name="mvel2" rev="2.4.3.Final" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="io.ona.CircleProgressbar" name="lib" rev="0.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.greenrobot" name="eventbus" rev="3.1.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.github.raihan-mpower" name="FancyAlertDialog-Android" rev="0.3" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.smartregister" name="opensrp-client-configurable-views" rev="1.1.5-SNAPSHOT" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.guava" name="guava" rev="28.0-android" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.guava" name="failureaccess" rev="1.0.1" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.guava" name="listenablefuture" rev="9999.0-empty-to-avoid-conflict-with-guava" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.code.findbugs" name="jsr305" rev="3.0.2" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.checkerframework" name="checker-compat-qual" rev="2.5.5" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.errorprone" name="error_prone_annotations" rev="2.3.2" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="com.google.j2objc" name="j2objc-annotations" rev="1.3" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.codehaus.mojo" name="animal-sniffer-annotations" rev="1.17" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="id.zelory" name="compressor" rev="2.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="io.reactivex.rxjava2" name="rxjava" rev="2.1.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="org.reactivestreams" name="reactive-streams" rev="1.0.0" transitive="false" conf="releaseCompileClasspath-&gt;default"/>
+    <dependency org="junit" name="junit" rev="4.13" conf="testImplementation-&gt;default"/>
+    <dependency org="org.mockito" name="mockito-inline" rev="2.25.0" conf="testImplementation-&gt;default"/>
+    <dependency org="org.robolectric" name="robolectric" rev="4.3.1" conf="testImplementation-&gt;default"/>
+    <dependency org="org.robolectric" name="shadows-multidex" rev="4.3.1" conf="testImplementation-&gt;default"/>
+    <dependency org="org.powermock" name="powermock-module-junit4" rev="2.0.0" conf="testImplementation-&gt;default"/>
+    <dependency org="org.powermock" name="powermock-module-junit4-rule" rev="2.0.0" conf="testImplementation-&gt;default"/>
+    <dependency org="org.powermock" name="powermock-api-mockito2" rev="2.0.0" conf="testImplementation-&gt;default"/>
+    <dependency org="org.powermock" name="powermock-classloading-xstream" rev="2.0.0" conf="testImplementation-&gt;default"/>
+  </dependencies>
+</ivy-module>
