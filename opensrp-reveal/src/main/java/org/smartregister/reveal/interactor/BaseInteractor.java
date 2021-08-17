@@ -13,6 +13,7 @@ import net.sqlcipher.Cursor;
 import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -211,6 +212,10 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         JSONArray fields = JsonFormUtils.fields(jsonForm);
         JSONObject metadata = getJSONObject(jsonForm, METADATA);
         Event event = JsonFormUtils.createEvent(fields, metadata, Utils.getFormTag(), entityId, encounterType, bindType);
+        if (StringUtils.isBlank(event.getLocationId())){
+            Location currentLocation = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
+            event.setLocationId(currentLocation.getId());
+        }
         JSONObject eventJson = new JSONObject(gson.toJson(event));
         eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
         eventClientRepository.addEvent(entityId, eventJson);
