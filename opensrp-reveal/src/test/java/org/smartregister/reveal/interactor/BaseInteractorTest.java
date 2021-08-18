@@ -140,6 +140,8 @@ public class BaseInteractorTest extends BaseUnitTest {
 
     private Context context = RuntimeEnvironment.application;
 
+    private Location location = TestingUtils.getOperationalArea();
+
     @Before
     public void setUp() {
         interactor = new BaseInteractor(presenter, commonRepository);
@@ -149,6 +151,11 @@ public class BaseInteractorTest extends BaseUnitTest {
         Whitebox.setInternalState(interactor, "eventClientRepository", eventClientRepository);
         Whitebox.setInternalState(interactor, "taskUtils", taskUtils);
         Whitebox.setInternalState(interactor, "taskRepository", taskRepository);
+
+        PreferencesUtil.getInstance().setCurrentOperationalArea(location.getId());
+        Cache<Location> cache = new Cache<>();
+        cache.get(location.getId(), () -> location);
+        Whitebox.setInternalState(Utils.class, "cache", cache);
     }
 
 
@@ -209,6 +216,7 @@ public class BaseInteractorTest extends BaseUnitTest {
         assertEquals(2, event.getDetails().size());
         assertEquals(taskId, event.getDetails().get(TASK_IDENTIFIER));
         assertEquals(structureId, event.getBaseEntityId());
+        assertEquals(location.getId(), event.getLocationId());
     }
 
     @Test
@@ -253,6 +261,7 @@ public class BaseInteractorTest extends BaseUnitTest {
         assertEquals(BuildConfig.VERSION_NAME, event.getDetails().get(APP_VERSION_NAME));
         assertEquals(planIdentifier, event.getDetails().get(PLAN_IDENTIFIER));
         assertEquals(locationId, event.getDetails().get(LOCATION_PARENT));
+        assertEquals(location.getId(), event.getLocationId());
     }
 
     @Test
@@ -277,6 +286,9 @@ public class BaseInteractorTest extends BaseUnitTest {
         assertEquals("1", obs.getJSONObject(0).getJSONArray(VALUES).get(0));
         assertEquals("Microscopy", obs.getJSONObject(1).getJSONArray(VALUES).get(0));
         assertEquals(org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE, obs.getJSONObject(2).getJSONArray(VALUES).get(0));
+
+        Event event = eventClientCaptor.getValue().get(0).getEvent();
+        assertEquals(location.getId(), event.getLocationId());
     }
 
     @Test
@@ -296,12 +308,16 @@ public class BaseInteractorTest extends BaseUnitTest {
 
         interactor.saveJsonForm(formObject.toString());
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(anyString(), eventJSONObjectCaptor.capture());
+        verify(clientProcessor, timeout(ASYNC_TIMEOUT)).processClient(eventClientCaptor.capture(), eq(true));
         verify(clientProcessor, timeout(ASYNC_TIMEOUT)).calculateBusinessStatus(any());
         verify(taskRepository,timeout(ASYNC_TIMEOUT)).addOrUpdate(taskArgumentCaptor.capture());
         assertEquals(org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT, eventJSONObjectCaptor.getValue().getString("eventType"));
         assertEquals(Task.TaskStatus.COMPLETED, taskArgumentCaptor.getValue().getStatus());
         assertEquals(BaseRepository.TYPE_Created, taskArgumentCaptor.getValue().getSyncStatus());
         assertFalse(RevealApplication.getInstance().getSynced());
+
+        Event event = eventClientCaptor.getValue().get(0).getEvent();
+        assertEquals(location.getId(), event.getLocationId());
     }
 
     @Test
@@ -337,6 +353,9 @@ public class BaseInteractorTest extends BaseUnitTest {
         verify(eventClientRepository,timeout(ASYNC_TIMEOUT)).addEvent(anyString(),eventJSONObjectCaptor.capture());
         verify(clientProcessor,timeout(ASYNC_TIMEOUT)).processClient(eventClientCaptor.capture(),eq(true));
         assertEquals(CDD_SUPERVISOR_DAILY_SUMMARY,eventJSONObjectCaptor.getValue().get("eventType"));
+
+        Event event = eventClientCaptor.getValue().get(0).getEvent();
+        assertEquals(location.getId(), event.getLocationId());
 
     }
 

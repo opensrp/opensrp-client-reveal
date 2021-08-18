@@ -214,7 +214,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         Event event = JsonFormUtils.createEvent(fields, metadata, Utils.getFormTag(), entityId, encounterType, bindType);
         if (StringUtils.isBlank(event.getLocationId())){
             Location currentLocation = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
-            event.setLocationId(currentLocation.getId());
+            if (currentLocation != null) {
+                event.setLocationId(currentLocation.getId());
+            }
         }
         JSONObject eventJson = new JSONObject(gson.toJson(event));
         eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
