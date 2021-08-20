@@ -22,14 +22,13 @@ public class LoginInteractor extends BaseLoginInteractor implements BaseLoginCon
     @Override
     protected void scheduleJobsPeriodically() {
         LocationTaskServiceJob.scheduleJob(LocationTaskServiceJob.TAG,
-                BuildConfig.SYNC_INTERVAL_IN_MINUTES, getFlexValue((int) BuildConfig.SYNC_INTERVAL_IN_MINUTES));
+                Utils.getSyncInterval(), getFlexValue((int) Utils.getSyncInterval()));
 
         PullUniqueIdsServiceJob.scheduleJob(SyncServiceJob.TAG,
                 BuildConfig.PULL_UNIQUE_IDS_MINUTES, getFlexValue((int) BuildConfig.PULL_UNIQUE_IDS_MINUTES));
 
         DocumentConfigurationServiceJob
-                .scheduleJob(DocumentConfigurationServiceJob.TAG, BuildConfig.SYNC_INTERVAL_IN_MINUTES,
-                        getFlexValue((int) BuildConfig.SYNC_INTERVAL_IN_MINUTES));
+                .scheduleJob(DocumentConfigurationServiceJob.TAG, Utils.getSyncInterval(), getFlexValue((int) Utils.getSyncInterval()));
     }
 
     @Override

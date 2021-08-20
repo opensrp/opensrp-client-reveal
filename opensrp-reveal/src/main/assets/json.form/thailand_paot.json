@@ -48,7 +48,7 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "ศักยภาพของการส่งสัญญาณ",
+    "title": "พื้นที่เสี่ยงต่อการแพร่เชื้อ",
     "display_back_button": "true",
     "fields": [
       {
@@ -95,7 +95,7 @@
         "max_date": "today",
         "v_required": {
           "value": true,
-          "err": "กรุณาระบุวันที่ทำก"
+          "err": "กรุณาระบุวันที่"
         }
       },
       {

@@ -245,7 +245,10 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
             String operationalArea = name.get(name.size() - 1);
             prefsUtil.setCurrentOperationalArea(operationalArea);
-            sharedPreferences.saveDefaultLocalityId(sharedPreferences.fetchRegisteredANM(), prefsUtil.getCurrentOperationalAreaId());
+            final String currentOperationalAreaId = prefsUtil.getCurrentOperationalAreaId();
+            if (StringUtils.isNotBlank(currentOperationalAreaId)) {
+                sharedPreferences.saveDefaultLocalityId(sharedPreferences.fetchRegisteredANM(), currentOperationalAreaId);
+            }
             Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - districtOffset), name.get(name.size() - 1), entireTree);
             if (facility != null) {
                 prefsUtil.setCurrentFacility(facility.second);
@@ -418,6 +421,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     @Override
     public void updateSyncStatusDisplay(boolean synced) {
         Activity activity = view.getContext();
+        if (activity == null) return;
         NavigationView navigationView = activity.findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         syncLabel = headerView.findViewById(R.id.sync_label);
