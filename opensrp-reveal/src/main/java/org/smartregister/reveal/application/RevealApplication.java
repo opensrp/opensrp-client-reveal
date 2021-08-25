@@ -11,7 +11,7 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.vijay.jsonwizard.NativeFormLibrary;
-import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
+import com.vijay.jsonwizard.activities.NoLocaleFormConfigurationJsonWizardFormActivity;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -26,7 +26,7 @@ import org.smartregister.configurableviews.helper.JsonSpecHelper;
 import org.smartregister.domain.Setting;
 import org.smartregister.dto.UserAssignmentDTO;
 import org.smartregister.family.FamilyLibrary;
-import org.smartregister.family.activity.FamilyWizardFormActivity;
+import org.smartregister.family.activity.NoLocaleFamilyWizardFormActivity;
 import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.location.helper.LocationHelper;
@@ -138,7 +138,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.REFAPP_EC_CLIENT_FIELDS);
         } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL) {
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.SENEGAL_EC_CLIENT_FIELDS);
-        } else if(BuildConfig.BUILD_COUNTRY == Country.KENYA){
+        } else if (BuildConfig.BUILD_COUNTRY == Country.KENYA) {
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.KENYA_EC_CLIENT_FIELDS);
         }
         ConfigurableViewsLibrary.init(context);
@@ -297,7 +297,11 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             return metadata;
         }
 
-        metadata = new FamilyMetadata(FamilyWizardFormActivity.class, JsonWizardFormActivity.class, FamilyProfileActivity.class, CONFIGURATION.UNIQUE_ID_KEY, true);
+        metadata = new FamilyMetadata(NoLocaleFormConfigurationJsonWizardFormActivity.class,
+                NoLocaleFamilyWizardFormActivity.class,
+                FamilyProfileActivity.class,
+                true,
+                CONFIGURATION.UNIQUE_ID_KEY);
 
         if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
             metadata.updateFamilyRegister(JSON_FORM.THAILAND_FAMILY_REGISTER, TABLE_NAME.FAMILY, EventType.FAMILY_REGISTRATION, EventType.UPDATE_FAMILY_REGISTRATION, CONFIGURATION.FAMILY_REGISTER, RELATIONSHIP.FAMILY_HEAD, RELATIONSHIP.PRIMARY_CAREGIVER);
