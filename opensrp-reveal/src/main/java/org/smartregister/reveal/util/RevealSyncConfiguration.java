@@ -153,4 +153,9 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     public List<Pair<String, String>> getGlobalSettingsQueryParams() {
         return Collections.singletonList(Pair.create("identifier", "global_configs"));
     }
+
+    @Override
+    public boolean skipUnsyncedTasksOnFetchFromServer() {
+        return true;
+    }
 }
