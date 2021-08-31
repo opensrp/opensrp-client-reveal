@@ -258,15 +258,9 @@ public class RevealMapHelper {
 
     public static void addBaseLayers(KujakuMapView kujakuMapView, Style style, Context context) {
         BaseLayerSwitcherPlugin baseLayerSwitcherPlugin = new BaseLayerSwitcherPlugin(kujakuMapView, style);
-
-        DigitalGlobeLayer digitalGlobeLayer = new DigitalGlobeLayer();
         MapBoxLayer mapBoxLayer = new MapBoxLayer();
-
-
-        baseLayerSwitcherPlugin.addBaseLayer(digitalGlobeLayer, true);
-        baseLayerSwitcherPlugin.addBaseLayer(mapBoxLayer, false);
+        baseLayerSwitcherPlugin.addBaseLayer(mapBoxLayer, true);
         kujakuMapView.getMbTilesHelper().setMBTileLayers(context, baseLayerSwitcherPlugin);
-
         baseLayerSwitcherPlugin.show();
     }
 

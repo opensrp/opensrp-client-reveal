@@ -29,7 +29,7 @@
       "type": "raster",
       "scheme": "tms",
       "tiles": [
-        "https://access.maxar.com/earthservice/tmsaccess/tms/1.0.0/DigitalGlobe:ImageryTileService@EPSG:3857@png/{z}/{x}/{y}.png?connectId=DIGITAL_GLOBE_ID"
+        "mapbox://mapbox.satellite"
       ],
       "tileSize": 256
     },
