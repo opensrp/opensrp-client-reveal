@@ -10,17 +10,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -34,6 +24,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -82,6 +79,7 @@ import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
+import org.smartregister.util.NetworkUtils;
 
 import java.util.List;
 
@@ -107,6 +105,7 @@ import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_F
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_TASK_LISTS;
+import static org.smartregister.reveal.util.Constants.SYNC_BACK_OFF_DELAY;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 import static org.smartregister.reveal.util.Utils.displayDistanceScale;
@@ -148,7 +147,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private boolean hasRequestedLocation;
 
-    private Snackbar syncProgressSnackbar;
+    private boolean startedToastShown;
+
+    private boolean completedToastShown;
 
     private BaseDrawerContract.View drawerView;
 
@@ -204,8 +205,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeCardViews();
 
         initializeToolbar();
-
-        syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
     }
 
     private void initializeCardViews() {
@@ -730,9 +729,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void showProgressDialog(@StringRes int title, @StringRes int message) {
+        showProgressDialog(title, message, new Object[0]);
+    }
+
+    @Override
+    public void showProgressDialog(@StringRes int title, @StringRes int message, Object... formatArgs) {
         if (progressDialog != null) {
             progressDialog.setTitle(title);
-            progressDialog.setMessage(getString(message));
+            if (formatArgs.length == 0) {
+                progressDialog.setMessage(getString(message));
+            } else {
+                progressDialog.setMessage(getString(message, formatArgs));
+            }
             progressDialog.show();
         }
     }
@@ -768,8 +776,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void onSyncStart() {
-        if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
-            syncProgressSnackbar.show();
+        if (SyncStatusBroadcastReceiver.getInstance().isSyncing() && !startedToastShown) {
+            displayToast(R.string.sync_started);
+            startedToastShown = true;
+            completedToastShown = false;
         }
         toggleProgressBarView(true);
     }
@@ -777,17 +787,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onSyncInProgress(FetchStatus fetchStatus) {
         if (FetchStatus.fetched.equals(fetchStatus)) {
-            syncProgressSnackbar.show();
             return;
         }
-        syncProgressSnackbar.dismiss();
-        if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_failed, Snackbar.LENGTH_LONG).show();
+        if (startedToastShown && completedToastShown) return;
+        //To cover against consecutive sync starts firing, turn the flag off with delay
+        new Handler().postDelayed(() -> startedToastShown = false, SYNC_BACK_OFF_DELAY);
+        boolean isNetworkAvailable = NetworkUtils.isNetworkAvailable();
+        if (fetchStatus.equals(FetchStatus.fetchedFailed) && isNetworkAvailable) {
+            displayToast(org.smartregister.R.string.sync_failed);
         } else if (fetchStatus.equals(FetchStatus.nothingFetched)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_LONG).show();
+            displayToast(org.smartregister.R.string.sync_complete);
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
-            Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_LONG).show();
+            displayToast(org.smartregister.R.string.sync_failed_no_internet);
+        } else if (fetchStatus.equals(FetchStatus.fetchedFailed) && !isNetworkAvailable) {
+            displayToast(org.smartregister.R.string.sync_failed_no_internet);
         }
+        completedToastShown = true;
     }
 
     @Override
@@ -811,7 +826,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         listTaskPresenter.onResume();
 
         if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
-            syncProgressSnackbar.show();
             toggleProgressBarView(true);
         }
     }

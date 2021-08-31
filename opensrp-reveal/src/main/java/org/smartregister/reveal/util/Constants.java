@@ -79,6 +79,7 @@ public interface Constants {
     String MDA_DRUG_RECON_COMPLETE_COUNT = "mda_drug_recon_complete_count";
 
     int SMC_DISPENSE_MIN_MONTHS = 3;
+    int SYNC_BACK_OFF_DELAY = 8000;
 
     interface CONFIGURATION {
         String LOGIN = "login";

@@ -28,7 +28,7 @@ public interface ListTaskContract {
 
     interface ListTaskView extends UserLocationView, BaseDrawerContract.DrawerActivity {
 
-        void showProgressDialog(@StringRes int title, @StringRes int message);
+        void showProgressDialog(@StringRes int title, @StringRes int message, Object... formatArgs);
 
         void hideProgressDialog();
 

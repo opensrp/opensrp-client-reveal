@@ -400,5 +400,6 @@
     <string name="structure_partial_drug_distribution">Structure: PARTIAL DRUG DISTRIBUTION</string>
     <string name="individual_total_number_of_children_eligible_3_to_49_mos">Individual: TOTAL NUMBER OF ELIGIBLE CHILDREN 3-59 MOS</string>
     <string name="individual_total_treated_3_to_59_mos">Individual: TOTAL TREATED 3-59 MOS</string>
+    <string name="sync_started">Sync Started</string>
 
 </resources>
