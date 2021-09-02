@@ -9,7 +9,6 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.joda.time.DateTime;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Action;
-import org.smartregister.domain.Period;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.AllSharedPreferences;
@@ -86,7 +85,7 @@ public class TaskUtils {
         task.setGroupIdentifier(Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
         task.setStatus(READY);
         task.setBusinessStatus(businessStatus);
-        task.setPriority(Task.TaskPriority.ROUTINE);
+        task.setPriority(3);
         task.setCode(intervention);
         task.setDescription(context.getString(description));
         PlanDefinition currentPlan = planRepository.findPlanDefinitionById(prefsUtil.getCurrentPlanId());
@@ -100,9 +99,7 @@ public class TaskUtils {
         }
         task.setForEntity(entityId);
         task.setStructureId(structureId);
-        Period period= new Period();
-        period.setStart(now);
-        task.setExecutionPeriod(period);
+        task.setExecutionStartDate(now);
         task.setAuthoredOn(now);
         task.setLastModified(now);
         task.setOwner(sharedPreferences.fetchRegisteredANM());
