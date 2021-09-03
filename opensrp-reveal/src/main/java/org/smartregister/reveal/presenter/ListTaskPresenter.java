@@ -392,8 +392,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         revealApplication.setFeatureCollection(featureCollection);
         revealApplication.setOperationalArea(operationalArea);
 
-        Intent intent = new Intent(listTaskView.getContext(), EditFociBoundaryActivity.class);
-        listTaskView.getActivity().startActivity(intent);
+        if(BuildConfig.BUILD_COUNTRY != Country.NIGERIA){
+            Intent intent = new Intent(listTaskView.getContext(), EditFociBoundaryActivity.class);
+            listTaskView.getActivity().startActivity(intent);
+        }
     }
 
     @Override
