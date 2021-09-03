@@ -45,7 +45,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 23
-        versionName "5.2.3"
+        versionName "nigeria.6"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -137,7 +137,7 @@ android {
         }
 
         debug {
-            resValue "string", 'opensrp_base_url', '"https://reveal-stage.smartregister.org/opensrp/"'
+            resValue "string", 'opensrp_base_url', '"https://opensrp-smc-ng-uat.akros.online/opensrp/"'
             buildConfigField "int", "DATABASE_VERSION", '9'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
@@ -207,7 +207,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    implementation('org.smartregister:opensrp-client-family:1.3.0-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-family:2.0.4-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
         exclude group: 'org.smartregister', module: 'opensrp-client-native-form'
@@ -215,7 +215,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.13.4-SNAPSHOT@aar') {
+    ///Upgrade to latest native forms issue tracked here
+    //https://github.com/OpenSRP/opensrp-client-reveal/issues/1235
+    implementation('org.smartregister:opensrp-client-native-form:1.14.7.5-FORM-CONFIG-RULES-FIX-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'cardview-v7'
