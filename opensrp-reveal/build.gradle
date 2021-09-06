@@ -45,7 +45,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 23
-        versionName "nigeria.6"
+        versionName "nigeria.7"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
