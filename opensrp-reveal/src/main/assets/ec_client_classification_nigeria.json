@@ -1,0 +1,74 @@
+{
+  "case_classification_rules": [
+    {
+      "comment": "Spray: This rule checks whether a given case belongs to Sprayed Structures",
+      "rule": {
+        "type": "event",
+        "fields": [
+          {
+            "field": "eventType",
+            "field_value": "Family_Registration",
+            "creates_case": [
+              "ec_family"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Family_Member_Registration",
+            "creates_case": [
+              "ec_family_member"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Update_Family_Registration",
+            "creates_case": [
+              "ec_family"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Update_Family_Member_Registration",
+            "creates_case": [
+              "ec_family_member"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Archive_Family_Member",
+            "closes_case": [
+              "ec_family_member"
+            ],
+            "creates_case": [
+              "ec_family_member"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Archive_Family",
+            "closes_case": [
+              "ec_family"
+            ],
+            "creates_case": [
+              "ec_family"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "mda_adherence",
+            "creates_case": [
+              "ec_family_member"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "mda_dispense",
+            "creates_case": [
+              "ec_family_member"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
