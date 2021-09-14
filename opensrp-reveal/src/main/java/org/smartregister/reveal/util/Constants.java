@@ -326,12 +326,12 @@ public interface Constants {
     }
 
     interface Map {
-        int MAX_SELECT_ZOOM_LEVEL = 16;
+        int MAX_SELECT_ZOOM_LEVEL = 13;
         int SELECT_JURISDICTION_MAX_SELECT_ZOOM_LEVEL = 12;
         int CLICK_SELECT_RADIUS = 24;
         String NAME_PROPERTY = "name";
-        double DOWNLOAD_MAX_ZOOM = 21.0;
-        double DOWNLOAD_MIN_ZOOM = 13.5;
+        double DOWNLOAD_MAX_ZOOM = 15.0;
+        double DOWNLOAD_MIN_ZOOM = 1.0;
     }
 
     interface JsonForm {
