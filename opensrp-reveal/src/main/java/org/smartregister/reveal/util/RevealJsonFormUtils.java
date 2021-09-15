@@ -9,6 +9,7 @@ import androidx.core.util.Pair;
 import com.mapbox.geojson.Feature;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.utils.FormUtils;
+import com.vijay.jsonwizard.utils.NoLocaleFormUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -162,7 +163,7 @@ public class RevealJsonFormUtils {
     public String getFormString(Context context, String formName, String structureType) {
         String formString = null;
         try {
-            FormUtils formUtils = new FormUtils();
+            FormUtils formUtils = new NoLocaleFormUtils();
             String formattedFormName = formName.replace(JSON_FORM_FOLDER, "").replace(JSON_FILE_EXTENSION, "");
             JSONObject formStringObj = formUtils.getFormJsonFromRepositoryOrAssets(context, formattedFormName);
             if (formStringObj == null) {
