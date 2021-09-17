@@ -2,6 +2,7 @@ package org.smartregister.reveal.model;
 
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.utils.FormUtils;
+import com.vijay.jsonwizard.utils.NoLocaleFormUtils;
 
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
@@ -30,7 +31,7 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
     private final String taskBusinessStatus;
     private final String taskStatus;
     private final String structureName;
-    private final FormUtils formUtils = new FormUtils();
+    private final FormUtils formUtils = new NoLocaleFormUtils();
 
 
     public FamilyRegisterModel(String structureId, String taskId, String taskBusinessStatus, String taskStatus, String structureName) {

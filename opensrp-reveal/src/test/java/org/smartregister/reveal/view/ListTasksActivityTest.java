@@ -87,6 +87,8 @@ import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static io.ona.kujaku.utils.Constants.RequestCode.LOCATION_SETTINGS;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -1067,4 +1069,33 @@ public class ListTasksActivityTest extends BaseUnitTest {
         PreferencesUtil.getInstance().setCurrentPlan(plan);
         PreferencesUtil.getInstance().setInterventionTypeForPlan(plan, interventionType);
     }
+
+    @Test
+    public void testSetDistrictSetsText(){
+        String testDistrict = "testDistrict";
+        DrawerMenuView drawerMenuView = Whitebox.getInternalState(listTasksActivity, "drawerView");
+        TextView districtTextView = Whitebox.getInternalState(drawerMenuView, "districtTextView");
+        drawerMenuView.setDistrict(testDistrict);
+        assertThat(districtTextView.getText().toString(), containsString(testDistrict));
+        assertThat(districtTextView.getText().toString(), containsString(listTasksActivity.getString(R.string.district)));
+    }
+
+    @Test
+    public void testSetFacilitySetsText(){
+        DrawerMenuView drawerMenuView = Whitebox.getInternalState(listTasksActivity, "drawerView");
+        TextView facilityTextView = Whitebox.getInternalState(drawerMenuView, "facilityTextView");
+        String facilityName = "facility";
+        drawerMenuView.setFacility(facilityName, "Location");
+        assertThat(facilityTextView.getText().toString(), containsString(facilityName));
+        assertThat(facilityTextView.getText().toString(), containsString(listTasksActivity.getString(R.string.facility)));
+    }
+
+    @Test
+    public void testSetOperatorSetsText(){
+        DrawerMenuView drawerMenuView = Whitebox.getInternalState(listTasksActivity, "drawerView");
+        TextView operatorTextView = Whitebox.getInternalState(drawerMenuView, "operatorTextView");
+        drawerMenuView.setOperator();
+        assertThat(operatorTextView.getText().toString(), containsString(listTasksActivity.getString(R.string.operator)));
+    }
+
 }
