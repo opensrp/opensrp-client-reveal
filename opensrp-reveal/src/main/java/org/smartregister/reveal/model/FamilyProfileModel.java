@@ -1,6 +1,7 @@
 package org.smartregister.reveal.model;
 
 import com.vijay.jsonwizard.constants.JsonFormConstants;
+import com.vijay.jsonwizard.utils.NoLocaleFormUtils;
 
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
@@ -27,7 +28,7 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
 
     private CommonPersonObject familyHeadPersonObject;
 
-    private com.vijay.jsonwizard.utils.FormUtils formUtils = new com.vijay.jsonwizard.utils.FormUtils();
+    private com.vijay.jsonwizard.utils.FormUtils formUtils = new NoLocaleFormUtils();
 
 
     public FamilyProfileModel(String familyName) {
