@@ -36,6 +36,11 @@ public class RevealJsonFormActivity extends FormConfigurationJsonFormActivity im
     }
 
     @Override
+    protected boolean supportsLocaleBasedForms() {
+        return false;
+    }
+
+    @Override
     public void initializeFormFragment() {
 
         RevealJsonFormFragment revealJsonFormFragment = RevealJsonFormFragment.getFormFragment(JsonFormConstants.FIRST_STEP_NAME);
