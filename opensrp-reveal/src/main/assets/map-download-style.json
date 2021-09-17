@@ -25,12 +25,13 @@
         "features": []
       }
     },
-    "diimagery": {
+    "mapbox-streets": {
+      "url": "mapbox://mapbox.mapbox-streets-v8",
+      "type": "vector"
+    },
+    "mapbox-satellite": {
+      "url": "mapbox://mapbox.satellite",
       "type": "raster",
-      "scheme": "tms",
-      "tiles": [
-        "https://access.maxar.com/earthservice/tmsaccess/tms/1.0.0/DigitalGlobe:ImageryTileService@EPSG:3857@png/{z}/{x}/{y}.png?connectId=DIGITAL_GLOBE_ID"
-      ],
       "tileSize": 256
     },
     "select-data": {
@@ -55,7 +56,7 @@
       "id": "Thailand EarthWatch Imagery",
       "type": "raster",
       "metadata": {},
-      "source": "diimagery",
+      "source": "mapbox-satellite",
       "layout": {},
       "paint": {}
     },

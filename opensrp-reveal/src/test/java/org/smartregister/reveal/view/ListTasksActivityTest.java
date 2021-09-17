@@ -198,7 +198,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Before
     public void setUp() {
         Context.bindtypes = new ArrayList<>();
-        listTasksActivity = Robolectric.buildActivity(ListTasksActivity.class).create().get();
+        listTasksActivity = Robolectric.buildActivity(ListTasksActivity.class).create().start().get();
         myLocationButton = new ImageButton(listTasksActivity);
         layerSwitcherFab = new ImageButton(listTasksActivity);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
