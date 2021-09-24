@@ -330,7 +330,7 @@ public interface Constants {
         int SELECT_JURISDICTION_MAX_SELECT_ZOOM_LEVEL = 12;
         int CLICK_SELECT_RADIUS = 24;
         String NAME_PROPERTY = "name";
-        double DOWNLOAD_MAX_ZOOM = 17.0;
+        double DOWNLOAD_MAX_ZOOM = 16.0;
         double DOWNLOAD_MIN_ZOOM = 10.0;
     }
 
