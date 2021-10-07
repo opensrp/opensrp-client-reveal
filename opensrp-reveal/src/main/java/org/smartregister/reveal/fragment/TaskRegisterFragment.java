@@ -29,6 +29,7 @@ import org.smartregister.family.util.DBConstants;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.TaskRegisterAdapter;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.BaseTaskDetails;
@@ -364,7 +365,7 @@ public class TaskRegisterFragment extends BaseDrawerRegisterFragment implements 
 
     @Override
     public void openFamilyProfile(CommonPersonObjectClient family, BaseTaskDetails taskDetails) {
-        Intent intent = new Intent(getContext(), org.smartregister.family.util.Utils.metadata().profileActivity);
+        Intent intent = new Intent(getContext(), RevealApplication.getInstance().getMetadata().profileActivity);
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID, family.getCaseId());
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_HEAD, org.smartregister.family.util.Utils.getValue(family.getColumnmaps(), DBConstants.KEY.FAMILY_HEAD, false));
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.PRIMARY_CAREGIVER, org.smartregister.family.util.Utils.getValue(family.getColumnmaps(), DBConstants.KEY.PRIMARY_CAREGIVER, false));

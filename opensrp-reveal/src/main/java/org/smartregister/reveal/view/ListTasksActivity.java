@@ -575,7 +575,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void openStructureProfile(CommonPersonObjectClient family) {
 
-        Intent intent = new Intent(getActivity(), Utils.metadata().profileActivity);
+        Intent intent = new Intent(getActivity(), RevealApplication.getInstance().getMetadata().profileActivity);
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID, family.getCaseId());
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_HEAD, Utils.getValue(family.getColumnmaps(), DBConstants.KEY.FAMILY_HEAD, false));
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.PRIMARY_CAREGIVER, Utils.getValue(family.getColumnmaps(), DBConstants.KEY.PRIMARY_CAREGIVER, false));
