@@ -17,7 +17,6 @@ import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.family.model.BaseFamilyOtherMemberProfileActivityModel;
 import org.smartregister.family.util.Constants;
 import org.smartregister.family.util.JsonFormUtils;
-import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
@@ -99,7 +98,7 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
 
     public void startFormActivity(JSONObject jsonForm) {
 
-        Intent intent = new Intent(this, Utils.metadata().familyMemberFormActivity);
+        Intent intent = new Intent(this, RevealApplication.getInstance().getMetadata().familyMemberFormActivity);
         intent.putExtra(Constants.JSON_FORM_EXTRA.JSON, jsonForm.toString());
 
         Form form = new Form();
@@ -140,7 +139,7 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
             try {
                 String jsonString = data.getStringExtra(Constants.JSON_FORM_EXTRA.JSON);
                 JSONObject form = new JSONObject(jsonString);
-                if (form.getString(JsonFormUtils.ENCOUNTER_TYPE).equals(Utils.metadata().familyMemberRegister.updateEventType)) {
+                if (form.getString(JsonFormUtils.ENCOUNTER_TYPE).equals(RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType)) {
                     presenter().updateFamilyMember(jsonString);
                 }
             } catch (Exception e) {

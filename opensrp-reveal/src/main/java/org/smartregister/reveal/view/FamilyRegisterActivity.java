@@ -11,8 +11,8 @@ import org.json.JSONObject;
 import org.smartregister.family.activity.BaseFamilyRegisterActivity;
 import org.smartregister.family.util.Constants;
 import org.smartregister.family.util.JsonFormUtils;
-import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.fragment.FamilyRegisterFragment;
 import org.smartregister.reveal.model.FamilyRegisterModel;
@@ -87,7 +87,7 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implement
 
     @Override
     public void startProfileActivity(String baseEntityId, String familyHead, String primaryCareGiver, String firstName) {
-        Intent intent = new Intent(this, Utils.metadata().profileActivity);
+        Intent intent = new Intent(this, RevealApplication.getInstance().getMetadata().profileActivity);
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID, baseEntityId);
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_HEAD, familyHead);
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.PRIMARY_CAREGIVER, primaryCareGiver);
@@ -107,7 +107,7 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implement
                 Timber.d(jsonString);
 
                 JSONObject form = new JSONObject(jsonString);
-                if (form.getString(JsonFormUtils.ENCOUNTER_TYPE).equals(Utils.metadata().familyRegister.registerEventType)) {
+                if (form.getString(JsonFormUtils.ENCOUNTER_TYPE).equals(RevealApplication.getInstance().getMetadata().familyRegister.registerEventType)) {
                     presenter().saveForm(jsonString, false);
                 }
             } catch (Exception e) {
