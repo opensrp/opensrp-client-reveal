@@ -78,6 +78,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         jsonDbMap.put(DatabaseKeys.SLEEPS_OUTDOORS, DatabaseKeys.SLEEPS_OUTDOORS);
         jsonDbMap.put(DatabaseKeys.PHONE_NUMBER, DatabaseKeys.PHONE_NUMBER);
         jsonDbMap.put(FormKeys.SURNAME, LAST_NAME);
+        jsonDbMap.put(DatabaseKeys.PREFIX, DatabaseKeys.PREFIX);
 
     }
 
