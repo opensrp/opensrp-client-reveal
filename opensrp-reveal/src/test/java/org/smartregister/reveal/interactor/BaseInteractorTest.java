@@ -47,6 +47,7 @@ import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Cache;
 import org.smartregister.util.JsonFormUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -305,15 +306,16 @@ public class BaseInteractorTest extends BaseUnitTest {
         formObject.put(DETAILS, details);
         JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), "business_status").put(VALUE, org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE);
         when(taskRepository.getTaskByIdentifier(taskId)).thenReturn(TestingUtils.getTask(taskId));
+        when(taskRepository.getTasksByEntityAndCode(any(), any(), any(), any())).thenReturn(Collections.singleton(mock(Task.class)));
 
         interactor.saveJsonForm(formObject.toString());
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(anyString(), eventJSONObjectCaptor.capture());
         verify(clientProcessor, timeout(ASYNC_TIMEOUT)).processClient(eventClientCaptor.capture(), eq(true));
         verify(clientProcessor, timeout(ASYNC_TIMEOUT)).calculateBusinessStatus(any());
-        verify(taskRepository,timeout(ASYNC_TIMEOUT)).addOrUpdate(taskArgumentCaptor.capture());
+        verify(taskRepository,timeout(ASYNC_TIMEOUT).times(2)).addOrUpdate(taskArgumentCaptor.capture());
         assertEquals(org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT, eventJSONObjectCaptor.getValue().getString("eventType"));
-        assertEquals(Task.TaskStatus.COMPLETED, taskArgumentCaptor.getValue().getStatus());
-        assertEquals(BaseRepository.TYPE_Created, taskArgumentCaptor.getValue().getSyncStatus());
+        assertEquals(Task.TaskStatus.COMPLETED, taskArgumentCaptor.getAllValues().get(0).getStatus());
+        assertEquals(BaseRepository.TYPE_Created, taskArgumentCaptor.getAllValues().get(0).getSyncStatus());
         assertFalse(RevealApplication.getInstance().getSynced());
 
         Event event = eventClientCaptor.getValue().get(0).getEvent();

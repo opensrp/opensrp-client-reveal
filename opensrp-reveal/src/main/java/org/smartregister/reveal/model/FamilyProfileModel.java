@@ -8,7 +8,6 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.model.BaseFamilyProfileModel;
 import org.smartregister.family.util.JsonFormUtils;
-import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants;
@@ -85,7 +84,7 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
         }
         form = JsonFormUtils.getFormAsJson(form, formName, entityId, currentLocationId);
 
-        if (formName.equals(Utils.metadata().familyMemberRegister.formName)) {
+        if (formName.equals(RevealApplication.getInstance().getMetadata().familyMemberRegister.formName)) {
             JsonFormUtils.updateJsonForm(form, familyHeadPersonObject.getColumnmaps().get(LAST_NAME));
         }
 

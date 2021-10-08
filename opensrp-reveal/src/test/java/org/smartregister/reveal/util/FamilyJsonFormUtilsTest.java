@@ -2,6 +2,8 @@ package org.smartregister.reveal.util;
 
 import android.content.Context;
 
+import com.vijay.jsonwizard.utils.FormUtils;
+
 import org.joda.time.DateTime;
 import org.joda.time.Years;
 import org.json.JSONException;
@@ -25,7 +27,6 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Cache;
 import org.smartregister.util.DateUtil;
-import org.smartregister.util.FormUtils;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.view.LocationPickerView;
 
@@ -35,7 +36,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.smartregister.family.util.Constants.JSON_FORM_KEY.DOB_UNKNOWN;
 import static org.smartregister.family.util.Constants.JSON_FORM_KEY.ENCOUNTER_LOCATION;
@@ -99,7 +102,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
     @Test
     public void testGetAutoPopulatedJsonEditFormString() throws JSONException {
         String formString = AssetHandler.readFileFromAssetsFolder("json.form/" + FAMILY_UPDATE + ".json", context);
-        when(formUtils.getFormJson(FAMILY_UPDATE)).thenReturn(new JSONObject(formString));
+        when(formUtils.getFormJsonFromRepositoryOrAssets(any(Context.class), eq(FAMILY_UPDATE))).thenReturn(new JSONObject(formString));
         familyJsonFormUtils = new FamilyJsonFormUtils(lpv, formUtils, locationHelper, context);
         client.getColumnmaps().put(LANDMARK, "The Luang");
         assertNull("The Luang", JsonFormUtils.getFieldValue(formString, VILLAGE_TOWN));
@@ -108,8 +111,8 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGetAutoPopulatedJsonEditForm() {
-        when(formUtils.getFormJson(anyString())).thenReturn(new JSONObject());
+    public void testGetAutoPopulatedJsonEditForm() throws JSONException {
+        when(formUtils.getFormJsonFromRepositoryOrAssets(any(Context.class), anyString())).thenReturn(new JSONObject());
         familyJsonFormUtils = new FamilyJsonFormUtils(lpv, formUtils, locationHelper, context);
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(FAMILY_UPDATE, client, UPDATE_FAMILY_REGISTRATION);
         assertNull(form);
@@ -187,7 +190,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
 
     private void setupMemberForm() throws JSONException {
         String formString = AssetHandler.readFileFromAssetsFolder("json.form/" + FAMILY_MEMBER_REGISTER + ".json", context);
-        when(formUtils.getFormJson(FAMILY_MEMBER_REGISTER)).thenReturn(new JSONObject(formString));
+        when(formUtils.getFormJsonFromRepositoryOrAssets(any(Context.class), eq(FAMILY_MEMBER_REGISTER))).thenReturn(new JSONObject(formString));
         familyJsonFormUtils = new FamilyJsonFormUtils(lpv, formUtils, locationHelper, context);
 
     }
@@ -213,7 +216,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
     @Test
     public void testGetAutoPopulatedJsonEditMemberForm() throws JSONException {
         setupMemberForm();
-        when(formUtils.getFormJson(FAMILY_MEMBER_REGISTER)).thenReturn(new JSONObject());
+        when(formUtils.getFormJsonFromRepositoryOrAssets(any(Context.class), eq(FAMILY_MEMBER_REGISTER))).thenReturn(new JSONObject());
         String locationId = UUID.randomUUID().toString();
         when(locationHelper.getOpenMrsLocationId(null)).thenReturn(locationId);
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, "Ker", false);

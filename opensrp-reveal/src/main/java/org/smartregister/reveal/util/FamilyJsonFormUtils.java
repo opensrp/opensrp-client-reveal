@@ -1,8 +1,12 @@
 package org.smartregister.reveal.util;
 
 import android.content.Context;
-import androidx.annotation.StringRes;
 import android.util.Log;
+
+import androidx.annotation.StringRes;
+
+import com.vijay.jsonwizard.utils.FormUtils;
+import com.vijay.jsonwizard.utils.NoLocaleFormUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -18,7 +22,6 @@ import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.FormKeys;
-import org.smartregister.util.FormUtils;
 import org.smartregister.view.LocationPickerView;
 
 import java.util.Date;
@@ -63,7 +66,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
     }
 
     public FamilyJsonFormUtils(Context context) throws Exception {
-        this(new LocationPickerView(context), FormUtils.getInstance(context), LocationHelper.getInstance(), context);
+        this(new LocationPickerView(context), new NoLocaleFormUtils(), LocationHelper.getInstance(), context);
     }
 
     private void initMap() {
@@ -80,7 +83,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
     public JSONObject getAutoPopulatedJsonEditFormString(String formName, CommonPersonObjectClient client, String eventType) {
         try {
-            JSONObject form = formUtils.getFormJson(formName);
+            JSONObject form = formUtils.getFormJsonFromRepositoryOrAssets(context,formName);
             if (form != null) {
                 form.put(ENTITY_ID, client.getCaseId());
                 form.put(ENCOUNTER_TYPE, eventType);
@@ -141,7 +144,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
             // get the event and the client from ec model
 
-            JSONObject form = formUtils.getFormJson(formName);
+            JSONObject form = formUtils.getFormJsonFromRepositoryOrAssets(context, formName);
             if (form != null) {
                 form.put(ENTITY_ID, client.getCaseId());
                 form.put(ENCOUNTER_TYPE, updateEventType);

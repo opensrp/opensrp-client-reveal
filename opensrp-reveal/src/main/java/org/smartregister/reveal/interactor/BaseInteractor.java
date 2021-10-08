@@ -443,7 +443,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 revealApplication.setSynced(false);
                 clientProcessor.processClient(Collections.singletonList(new EventClient(event, client)), true);
                 appExecutors.mainThread().execute(() -> {
-                    ((StructureTasksContract.Presenter) presenterCallBack).onIndexConfirmationFormSaved(taskID, Task.TaskStatus.COMPLETED, businessStatus, removedTasks);
+                    if (presenterCallBack instanceof StructureTasksContract.Presenter) {
+                        ((StructureTasksContract.Presenter) presenterCallBack).onIndexConfirmationFormSaved(taskID, Task.TaskStatus.COMPLETED, businessStatus, removedTasks);
+                    }
                 });
             } catch (Exception e) {
                 Timber.e("Error saving case confirmation data");
