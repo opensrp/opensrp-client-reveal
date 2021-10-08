@@ -315,6 +315,14 @@
           }
         },
         {
+          "column_name": "prefix",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "Prefix"
+          }
+        },
+        {
           "column_name": "occupation",
           "type": "Event",
           "json_mapping": {
