@@ -822,7 +822,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
         LocationProperty locationProperty = new LocationProperty();
         locationProperty.setUid("uniquiid");
         locationProperty.setVersion(1);
-        locationProperty.setType("Residential");
+        locationProperty.setType(Constants.StructureType.RESIDENTIAL);
         structure.setProperties(locationProperty);
         return structure;
     }
