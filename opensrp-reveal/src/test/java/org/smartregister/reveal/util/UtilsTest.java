@@ -1,5 +1,7 @@
 package org.smartregister.reveal.util;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
 
 import com.mapbox.geojson.Feature;
@@ -15,7 +17,10 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.domain.Location;
 import org.smartregister.domain.Obs;
+import org.smartregister.domain.Task;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -41,6 +46,12 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.DISPLAY_ADD_
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DISPLAY_DISTANCE_SCALE;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALIDATE_FAR_STRUCTURES;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID_;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -53,10 +64,14 @@ import static org.smartregister.reveal.util.Utils.getAdminPasswordNotNearStructu
 import static org.smartregister.reveal.util.Utils.getCoordsFromGeometry;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
+import static org.smartregister.reveal.util.Utils.getLocationById;
 import static org.smartregister.reveal.util.Utils.getResolveLocationTimeoutInSeconds;
 import static org.smartregister.reveal.util.Utils.isResidentialStructure;
 import static org.smartregister.reveal.util.Utils.showWhenTrue;
+import static org.smartregister.reveal.util.Utils.tableExists;
 import static org.smartregister.reveal.util.Utils.validateFarStructures;
+
+import net.sqlcipher.MatrixCursor;
 
 /**
  * Created by Vincent Karuri on 08/05/2019
@@ -321,6 +336,49 @@ public class UtilsTest {
         View view = mock(View.class);
         showWhenTrue(view, false);
         verify(view).setVisibility(View.GONE);
+    }
+
+    @Test
+    public void testGetLocationById() throws Exception {
+        String locationId = "location-id-1";
+        Location location = new Location();
+        location.setId(locationId);
+        RevealApplication revealApplication = initRevealApplicationMock();
+        LocationRepository locationRepository = mock(LocationRepository.class);
+        when(revealApplication.getLocationRepository()).thenReturn(locationRepository);
+        when(locationRepository.getLocationById(locationId)).thenReturn(location);
+
+        Location actualLocation = getLocationById(locationId);
+        assertNotNull(actualLocation);
+    }
+
+    @Test
+    public void testTableExists() {
+        assertFalse(tableExists(null,"task"));
+        SQLiteDatabase database = mock(SQLiteDatabase.class);
+        when(database.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name= ?",
+                new String[]{"task"})).thenReturn(createTableCountCursor());
+        assertTrue(tableExists(database,"task"));
+    }
+
+    private Cursor createTableCountCursor() {
+        net.sqlcipher.MatrixCursor cursor = new MatrixCursor(new String[]{
+                ID_,
+                CODE,
+                FOR,
+                BUSINESS_STATUS,
+                STATUS,
+                STRUCTURE_ID
+        });
+        cursor.addRow(new Object[]{
+                "task_id_1",
+                Constants.Intervention.IRS,
+                434343,
+                Constants.BusinessStatus.NOT_SPRAYED,
+                Task.TaskStatus.COMPLETED,
+                1215972243
+        });
+        return cursor;
     }
 
 }
