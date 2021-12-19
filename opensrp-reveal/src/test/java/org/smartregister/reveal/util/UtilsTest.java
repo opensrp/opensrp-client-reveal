@@ -362,7 +362,7 @@ public class UtilsTest {
     }
 
     private Cursor createTableCountCursor() {
-        net.sqlcipher.MatrixCursor cursor = new MatrixCursor(new String[]{
+        MatrixCursor cursor = new MatrixCursor(new String[]{
                 ID_,
                 CODE,
                 FOR,
