@@ -3,6 +3,7 @@ package org.smartregister.reveal.util;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.text.SpannableStringBuilder;
@@ -565,6 +566,27 @@ public class Utils {
     public static boolean isKenyaMDALite() {
         return (BuildConfig.SELECT_JURISDICTION && Country.KENYA.equals(BuildConfig.BUILD_COUNTRY));
 
+    }
+
+    public static boolean tableExists(android.database.sqlite.SQLiteDatabase database, String tableName) {
+        if (database == null) {
+            return false;
+        }
+        boolean exists;
+        try {
+            Cursor cursor = database.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name= ?", new String[]{tableName});
+            exists = false;
+            if (cursor != null) {
+                try {
+                    exists = cursor.getCount() > 0;
+                } finally {
+                    cursor.close();
+                }
+            }
+        } finally {
+            database.close();
+        }
+        return exists;
     }
 
 }

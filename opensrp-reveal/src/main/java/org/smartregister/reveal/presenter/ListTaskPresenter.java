@@ -446,6 +446,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
+    public void updateMbTilesMustRevalidate() {
+        listTaskInteractor.updateMbTilesMustRevalidate();
+    }
+
+    @Override
     public void onInterventionFormDetailsFetched(CardDetails cardDetails) {
         this.cardDetails = cardDetails;
         this.changeInterventionStatus = true;
@@ -790,6 +795,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
 
     public void onResume() {
+        updateMbTilesMustRevalidate();
         if (revealApplication.isRefreshMapOnEventSaved()) {
             refreshStructures(true);
             listTaskView.clearSelectedFeature();
